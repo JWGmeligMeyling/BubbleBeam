@@ -1,8 +1,8 @@
-# TI2206 - Group X (Tetris)
+# TI2206 - Group X (Bubble)
 
 This team consists of the following students:
 
-* Student #1
+* Jan-Willem Gmelig Meyling
 * Student #2
 * Student #3
 * Student #4
