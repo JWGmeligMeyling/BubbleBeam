@@ -1,8 +1,8 @@
-# TI2206 - Group X (Bubble)
+TI2206 - Group X (Bubble)
 
 This team consists of the following students:
 
-* Jan-Willem Gmelig Meyling
+* Jan-Willem Gmelig Meyling (j.gmeligmeyling@student.tudelft.nl)
 * Liam Clark
 * Student #3
 * Student #4

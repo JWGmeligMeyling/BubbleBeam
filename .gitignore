@@ -5,11 +5,18 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+.texpadtmp/
 
 # Package Files #
 *.jar
 *.war
 *.ear
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bin
 
 # Eclipse project files
 .project
