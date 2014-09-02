@@ -3,7 +3,7 @@
 This team consists of the following students:
 
 * Jan-Willem Gmelig Meyling
-* Student #2
+* Liam Clark
 * Student #3
 * Student #4
 * Student #5
