@@ -5,7 +5,7 @@ This team consists of the following students:
 * Jan-Willem Gmelig Meyling (j.gmeligmeyling@student.tudelft.nl)
 * Liam Clark
 * Sam Smulders (s.smulders@student.tudelft.nl)
-* Student #4
+* Luka Bavdaz (p.l.bavdaz@student.tudelft.nl)
 * Student #5
 
 ## How to start this game.
