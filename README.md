@@ -4,7 +4,7 @@ This team consists of the following students:
 
 * Jan-Willem Gmelig Meyling (j.gmeligmeyling@student.tudelft.nl)
 * Liam Clark
-* Student #3
+* Sam Smulders (s.smulders@student.tudelft.nl)
 * Student #4
 * Student #5
 
