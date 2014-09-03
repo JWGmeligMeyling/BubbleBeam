@@ -9,20 +9,20 @@
 \title{Bubble shooter}
 
 \author{
-	Clark, Liam
-    \texttt{studienr}
+    Bavdaz, Luka\\
+    \texttt{4228561}
     \and
-    Gmelig Meyling, Jan-Willem
+    Clark, Liam\\
+    \texttt{4303423}
+    \and
+    Gmelig Meyling, Jan-Willem\\
     \texttt{4305167}
     \and
-    achternaam, Luka
-    \texttt{studienr}
+    Hoek, Leon\\
+    \texttt{4021606}
     \and
-    achternaam, Sam
-    \texttt{studienr}
-    \and
-    Hoek, Leon
-    \texttt{4021606}   
+    Smulders, Sam\\
+    \texttt{4225007}
 }
 
 \date{\today}
@@ -41,6 +41,8 @@ The stakeholder wants a game like Frozen Bubble, with both the multiplayer and s
 \par In the multiplayer mode, each player has a his own canvas with a bubble gun and the bubbles to shoot (split screen). The players have different key bindings to rotate and fire the bubble gun.
 
 \section{Functional requirements}
+Each requirement is identified by a requirement identifier. This identifier consists of one or more marks pointing priority and status (\texttt{B} for must have, \texttt{CH} could have, \texttt{TBC} to be confirmed, \texttt{TBD} to be defined) and a unique number.
+
 \begin{itemize}
   \item \texttt{B-111} The player should be able to see a list of highscores
   \item \texttt{B-112} When the game has ended, the score and name of the player should be saved to the highscores
@@ -48,7 +50,7 @@ The stakeholder wants a game like Frozen Bubble, with both the multiplayer and s
 
   \item When a game is started...
   \begin{enumerate}
-    \item \texttt{B-114} The canvas is filled with randomly distributed bubbles of certain colours (for example: Joa's white, Oxford stone, Mouse's back, Ammonite and Nancy's blushes)
+    \item \texttt{B-114} The canvas is filled with randomly distributed bubbles of certain colours (for example: red, green and blue)
     \item \texttt{B-115} Bubbles in the canvas are snapped to the top of the canvas
   \end{enumerate}
   
@@ -57,29 +59,35 @@ The stakeholder wants a game like Frozen Bubble, with both the multiplayer and s
   \item Behaviour for when a bubble is shot
   \begin{enumerate}
     \item \texttt{B-118} When a bubble hits a border of the canvas, it bounces
-    \item \texttt{} When a bubble hits another bubble, it snaps to it
-    \item \texttt{B-119} When a bubble hits a group of bubbles of the same color, these bubbles should pop
-    \item \texttt{B-120} When a bubble gets isolated from any bubble at the top of the canvas, they pop
-    \item \texttt{B-121} When bubbles pop, points should be awarded to the player
-    \item \texttt{B-122} When you do not succeed in popping bubbles, the player gets a penalty
-    \item \texttt{B-123} For each a to be determined number of penalties a new row of bubbles with random colours is inserted at the top, and other bubbles are shifted down
-    \item \texttt{B-124} When a row of bubbles reaches the bottom of the canvas, the game is over
+    \item \texttt{B-119} When a bubble hits another bubble, it snaps to it
+    \item \texttt{B-120} When a bubble hits a group of bubbles of the same color, these bubbles should pop
+    \item \texttt{B-121} When a bubble gets isolated from any bubble at the top of the canvas, they pop
+    \item \texttt{B-122} When bubbles pop, points should be awarded to the player
+    \item \texttt{B-123} When you do not succeed in popping bubbles, the player gets a penalty
+    \item \texttt{B-124} For each a to be determined number of penalties a new row of bubbles with the remaining colours is inserted at the top, and other bubbles are shifted down
+    \item \texttt{B-125} When a row of bubbles reaches the bottom of the canvas, the game is over
+    \item \texttt{B-126} When all bubbles have popped, the game is finished
   \end{enumerate}
   
   \item There are two different modes to play:
   \begin{enumerate}
-      \item Singleplayer mode
+      \item \texttt{B-127} Singleplayer mode
       \begin{enumerate}
-          \item \texttt{B-xxx} In singleplayer mode, a player will face various levels with a different distribution of bubbles across the canvas
-          \item \texttt{B-xxx} When a player finishes 
+          \item \texttt{B-128} In singleplayer mode, a player will face various levels with a different distribution of bubbles across the canvas
+          \item \texttt{B-129} When a player finishes the game, a new level will appear
       \end{enumerate}
       
+      \item \texttt{B-130} Multiplayer mode
+      \begin{enumerate}
+          \item \texttt{B-131} In the multiplayer mode, each player has a his own canvas with a bubble gun and the bubbles to shoot (split screen)
+          \item \texttt{B-132} The players have different key bindings to rotate and fire the bubble gun
+          \item \texttt{B-133} When a player shoots a bubble, a new bubble is inserted in the other players screen
+          \item \texttt{TBD-134} Multiplayer over the network
+      \end{enumerate}
       
-      \item Multiplayer mode
-      
+      \item \texttt{B-135} The user should be able to switch between these modes through a menu
   \end{enumerate}
-
-
+  \item \texttt{TBD-136} Beginners tutorial
 \end{itemize}
 
 \section{Non-functional requirements}
@@ -92,7 +100,7 @@ The stakeholder wants a game like Frozen Bubble, with both the multiplayer and s
 \end{itemize}
 
 \subsection{Organizational requirements}
-This game should be developed using the Java programming language, using the Maven, Git, Devhub tools for Continious Integration and revision management and JUnit for Test-Driven Development (TDD). Within two weeks a fully functional game should be delivered with a budget of zero dollars. We have to work in a team of five.
+This game should be developed using the Java programming language, using the Maven, Git, Devhub tools for Continious Integration and revision management and JUnit for Test-Driven Development (TDD). Within two weeks a fully functional game should be delivered. We have to work in a team of five.
 
 \subsection{External requirements}
 There are no external requirements at this point of the project.
