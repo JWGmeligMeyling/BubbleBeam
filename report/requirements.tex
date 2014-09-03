@@ -8,10 +8,22 @@
 
 \title{Bubble shooter}
 
-\author{Liam Clark}
-\author{Jan-Willem Gmelig Meyling}
-\author{Luka}
-\author{Sam}
+\author{
+	Clark, Liam
+    \texttt{studienr}
+    \and
+    Gmelig Meyling, Jan-Willem
+    \texttt{4305167}
+    \and
+    achternaam, Luka
+    \texttt{studienr}
+    \and
+    achternaam, Sam
+    \texttt{studienr}
+    \and
+    Hoek, Leon
+    \texttt{4021606}   
+}
 
 \date{\today}
 
@@ -27,82 +39,63 @@ Your abstract.
 The stakeholder wants a game like Frozen Bubble, with both the multiplayer and singleplayer modes. Frozen Bubble is a Bubble shooter game, in which players have to shoot colored bubbles with a bubble gun. The bubble gun can be rotated 180 degrees and then shoot a bubble of a specific color. When the shot bubble hits a group of bubbles (two or more) of the same colour, these bubbles will pop and the player will receive an amount of points. When the player fails to hit a bubble of the same colour, a new row of bubbles will be inserted at the top, pushing the other bubbles. When one of these bubbles reaches the bottom of the screen, or all buttons are shot, the game is over, and the score will be saved into a highscore board.
 \par In the single player mode, players will face various levels with a different layout of the bubbles.
 \par In the multiplayer mode, each player has a his own canvas with a bubble gun and the bubbles to shoot (split screen). The players have different key bindings to rotate and fire the bubble gun.
-\par This game should be developed using the Java programming language, using the Maven, Git, Devhub tools for Continious Integration and revision management and JUnit for Test-Driven Development (TDD). Within two weeks a fully functional game should be delivered with a budget of zero dollars.
-\par The game should be playable for one hour without crashing.
 
-\section{Requirements definitions}
-\subsection{test}
-
-
-
-\section{Introduction}
-
-Your introduction goes here! Some examples of commonly used commands and features are listed below, to help you get started. If you have a question, please use the help menu (``?'') on the top bar to search for help or ask us a question.
-
-\section{Some \LaTeX{} Examples}
-\label{sec:examples}
-
-\subsection{How to Leave Comments}
-
-Comments can be added to the margins of the document using the \todo{Here's a comment in the margin!} todo command, as shown in the example on the right. You can also add inline comments:
-
-\todo[inline, color=green!40]{This is an inline comment.}
-
-\subsection{How to Include Figures}
-
-First you have to upload the image file (JPEG, PNG or PDF) from your computer to writeLaTeX using the upload link the project menu. Then use the includegraphics command to include it in your document. Use the figure environment and the caption command to add a number and a caption to your figure. See the code for Figure \ref{fig:frog} in this section for an example.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.3\textwidth]{frog.jpg}
-\caption{\label{fig:frog}This frog was uploaded to writeLaTeX via the project menu.}
-\end{figure}
-
-\subsection{How to Make Tables}
-
-Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example.
-
-\begin{table}
-\centering
-\begin{tabular}{l|r}
-Item & Quantity \\\hline
-Widgets & 42 \\
-Gadgets & 13
-\end{tabular}
-\caption{\label{tab:widgets}An example table.}
-\end{table}
-
-\subsection{How to Write Mathematics}
-
-\LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
-$$S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-      = \frac{1}{n}\sum_{i}^{n} X_i$$
-denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
-
-\subsection{How to Make Sections and Subsections}
-
-Use section and subsection commands to organize your document. \LaTeX{} handles all the formatting and numbering automatically. Use ref and label commands for cross-references.
-
-\subsection{How to Make Lists}
-
-You can make lists with automatic numbering \dots
-
-\begin{enumerate}
-\item Like this,
-\item and like this.
-\end{enumerate}
-\dots or bullet points \dots
+\section{Functional requirements}
 \begin{itemize}
-\item Like this,
-\item and like this.
-\end{itemize}
-\dots or with words and descriptions \dots
-\begin{description}
-\item[Word] Definition
-\item[Concept] Explanation
-\item[Idea] Text
-\end{description}
+  \item \texttt{B-111} The player should be able to see a list of highscores
+  \item \texttt{B-112} When the game has ended, the score and name of the player should be saved to the highscores
+  \item \texttt{B-113} The player should be able to start a game through some sort of menu
 
-We hope you find write\LaTeX\ useful, and please let us know if you have any feedback using the help menu above.
+  \item When a game is started...
+  \begin{enumerate}
+    \item \texttt{B-114} The canvas is filled with randomly distributed bubbles of certain colours (for example: Joa's white, Oxford stone, Mouse's back, Ammonite and Nancy's blushes)
+    \item \texttt{B-115} Bubbles in the canvas are snapped to the top of the canvas
+  \end{enumerate}
+  
+  \item \texttt{B-116} The player should be able to aim (\texttt{left}, \texttt{right}) and shoot (\texttt{space}) the bubble cannon using the keyboard
+  \item \texttt{B-117} The interface should show the colours for the upcomming bubbles to shoot
+  \item Behaviour for when a bubble is shot
+  \begin{enumerate}
+    \item \texttt{B-118} When a bubble hits a border of the canvas, it bounces
+    \item \texttt{} When a bubble hits another bubble, it snaps to it
+    \item \texttt{B-119} When a bubble hits a group of bubbles of the same color, these bubbles should pop
+    \item \texttt{B-120} When a bubble gets isolated from any bubble at the top of the canvas, they pop
+    \item \texttt{B-121} When bubbles pop, points should be awarded to the player
+    \item \texttt{B-122} When you do not succeed in popping bubbles, the player gets a penalty
+    \item \texttt{B-123} For each a to be determined number of penalties a new row of bubbles with random colours is inserted at the top, and other bubbles are shifted down
+    \item \texttt{B-124} When a row of bubbles reaches the bottom of the canvas, the game is over
+  \end{enumerate}
+  
+  \item There are two different modes to play:
+  \begin{enumerate}
+      \item Singleplayer mode
+      \begin{enumerate}
+          \item \texttt{B-xxx} In singleplayer mode, a player will face various levels with a different distribution of bubbles across the canvas
+          \item \texttt{B-xxx} When a player finishes 
+      \end{enumerate}
+      
+      
+      \item Multiplayer mode
+      
+  \end{enumerate}
+
+
+\end{itemize}
+
+\section{Non-functional requirements}
+\subsection{Product requirements}
+
+\begin{itemize}
+  \item \texttt{B-231} The game should be able to run on the desktop computers at the TU Delft
+  \item \texttt{B-232} The game should not crash within 15 minutes of usage
+  \item \texttt{B-233} The game should be easy to use
+\end{itemize}
+
+\subsection{Organizational requirements}
+This game should be developed using the Java programming language, using the Maven, Git, Devhub tools for Continious Integration and revision management and JUnit for Test-Driven Development (TDD). Within two weeks a fully functional game should be delivered with a budget of zero dollars. We have to work in a team of five.
+
+\subsection{External requirements}
+There are no external requirements at this point of the project.
+
 
 \end{document}
