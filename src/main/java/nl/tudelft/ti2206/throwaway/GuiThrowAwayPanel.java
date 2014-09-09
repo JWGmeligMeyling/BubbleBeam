@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JPanel;
 
@@ -28,7 +30,18 @@ public class GuiThrowAwayPanel extends JPanel {
 		}
 		
 		bubbleMesh.calculatePositions();
+		
+		bubbleMesh.addObserver(new Observer() {
+
+			@Override
+			public void update(Observable o, Object arg) {
+				GuiThrowAwayPanel.this.updateUI();
+			}
+			
+		});
+		
 		this.setVisible(true);
+		
 		this.addMouseListener(new MouseListener() {
 
 			@Override

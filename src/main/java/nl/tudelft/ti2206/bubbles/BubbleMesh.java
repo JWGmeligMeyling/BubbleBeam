@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Queue;
 
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
-public class BubbleMesh implements Iterable<Bubble> {
+public class BubbleMesh extends Observable implements Iterable<Bubble> {
 	
 	private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 
@@ -85,21 +86,56 @@ public class BubbleMesh implements Iterable<Bubble> {
 	}
 
 	public void insertRow() {
-		// TODO Auto-generated method stub
+		log.info("Inserting row");
+		Iterator<Bubble> bubbles = iterator();
+		Bubble child = bubbles.next();
+		Bubble previousBubble = null;
+		boolean hasBottomLeft = !child.hasBottomLeft();
 		
+		for(int i = 0; i < 10; i++) {
+			Bubble bubble = new ColouredBubble();
+			
+			if(hasBottomLeft){
+				child.bindTopLeft(bubble);
+			}
+			else {
+				child.bindTopRight(bubble);
+				if(child.hasLeft()) {
+					child.getLeft().bindTopLeft(bubble);
+				}
+			}
+			
+			if(previousBubble != null) {
+				previousBubble.bindRight(bubble);
+			}
+			previousBubble = bubble;
+			
+			if(i == 0) {
+				this.startBubbles.clear();
+				this.startBubbles.add(bubble);
+			}
+			
+			child = bubbles.next();
+		}
+		
+		calculatePositions();
+		log.info("Finished inserting row");
 	}
 
 	@Override
 	public BubbleMeshIterator iterator() {
 		return new BubbleMeshIterator();
 	}
-
+	
 	public void calculatePositions() {
 		for(Bubble bubble : this) {
 			Point newPosition = bubble.calculatePosition();
 			bubble.setPosition(newPosition);
 			log.info("Changed bubble position to {}", newPosition);
 		}
+		
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	public class BubbleMeshIterator implements Iterator<Bubble> {
