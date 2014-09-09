@@ -7,8 +7,7 @@ import javax.swing.JPanel;
 
 public class GuiThrowAwayPanel extends JPanel {
 	
-	private Bubble[] bubbels = new Bubble[200];
-	private int current=0;
+	private final BubbleMesh bubbleMesh;
 	
 	/**
 	 * 
@@ -16,13 +15,10 @@ public class GuiThrowAwayPanel extends JPanel {
 	private static final long serialVersionUID = 525456508008501827L;
 
 	public GuiThrowAwayPanel() {
+		this.bubbleMesh = BubbleMesh.parse(BubbleMesh.TEMPLATE_STRING);
+		bubbleMesh.calculatePositions();
 		this.setVisible(true);
 	}	
-	
-	public void addBubble(Bubble b){
-		bubbels[current] =b;
-		current ++;
-	}
 	
 	protected final static int WIDTH = 400;
 	protected final static int HEIGHT = 400;
@@ -33,9 +29,9 @@ public class GuiThrowAwayPanel extends JPanel {
 	}
 	
 	@Override
-	public void paintComponent(Graphics g){
-		for(int i=0; i< current; i++){
-			bubbels[i].render(g);
+	public void paintComponent(final Graphics g){
+		for(Bubble bubble : bubbleMesh) {
+			bubble.render(g);
 		}
 	}
 }
