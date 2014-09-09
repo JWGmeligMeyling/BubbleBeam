@@ -8,8 +8,11 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
+import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.game.Cannon;
@@ -26,12 +29,12 @@ public class GuiThrowAwayPanel extends JPanel {
 
 	public GuiThrowAwayPanel() {
 		try {
-			this.bubbleMesh = BubbleMesh.parse(new File("src/main/resources/board.txt"));
+			this.bubbleMesh = BubbleMesh.parse(new File("src/main/resources/anotherboard"));
 		} catch (Exception e) {
 			throw new RuntimeException("User too stupid, {put a username here}", e);
 		}
 		
-		cannon = new Cannon(200, 400);
+		cannon = new Cannon(WIDTH/2, 400);
 		cannon.bindMouseListenerTo(this);
 		
 		bubbleMesh.calculatePositions();
@@ -45,6 +48,7 @@ public class GuiThrowAwayPanel extends JPanel {
 			
 		});
 		
+		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED) );
 		this.setVisible(true);
 		
 		this.addMouseListener(new MouseListener() {
@@ -81,8 +85,8 @@ public class GuiThrowAwayPanel extends JPanel {
 		});
 	}	
 	
-	protected final static int WIDTH = 400;
-	protected final static int HEIGHT = 400;
+	public final static int WIDTH = AbstractBubble.WIDTH * 10 + AbstractBubble.WIDTH / 2 + 4;
+	public final static int HEIGHT = 400;
 	
 	@Override
 	public Dimension getPreferredSize() {
