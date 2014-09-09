@@ -37,16 +37,6 @@ public abstract class AbstractBubble implements Bubble {
 		return position.y;
 	}
 	
-	boolean shifted = false;
-	
-	public boolean isShifted() {
-		return shifted;
-	}
-	
-	public void setShifted(boolean shifted) {
-		shifted = true;
-	}
-	
 	public Point calculatePosition() {
 		if(this.topLeft != null) {
 			return new Point(topLeft.getX() + WIDTH / 2, topLeft.getY() + HEIGHT);
