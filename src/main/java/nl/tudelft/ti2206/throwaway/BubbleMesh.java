@@ -138,6 +138,11 @@ public class BubbleMesh implements Iterable<Bubble> {
 				bubbles.add(left);
 			}
 		}
+		
+		
+		public void addRow(){
+			
+		}
 
 		@Override
 		public boolean hasNext() {

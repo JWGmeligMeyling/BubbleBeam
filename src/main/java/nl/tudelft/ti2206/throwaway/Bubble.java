@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -86,26 +87,45 @@ public class Bubble {
 		}
 	}
 
-	public Color getColor() {
+	public Colour getColor() {
 		return color;
 	}
 
-	public void setColor(Color color) {
+	public void setColor(Colour color) {
 		this.color = color;
 	}
 
-	enum Color {
-		RED, GREEN, BLUE;
-
-		private static File SHINEY_BUBBLE = new File(ROOT_FOLDER, "bubble.png");
-		private static BufferedImage BUBBLE_IMAGE = _getBubbleImage();
-		public BufferedImage getBuggleImage() {
-			return BUBBLE_IMAGE;
+	
+	public interface Picture{
+		public BufferedImage getImage();
+	}
+	
+	enum Colour implements Picture {
+		RED("redbubble.png"){
+			public BufferedImage getImage() {
+				return super.i;
+			}
+		},
+	 GREEN("greenbubble.png"){
+			public BufferedImage getImage() {
+				return super.i;
+			}
+	 }, BLUE("bluebubble.png"){
+			public BufferedImage getImage() {
+				return super.i;
+			}
+			
+			
+	 };
+	 private BufferedImage i;
+	 
+	 private Colour(String filename){
+			i=getBubbleImage(new File(ROOT_FOLDER,filename));
 		}
 
-		private static BufferedImage _getBubbleImage() {
+		private static BufferedImage getBubbleImage(File file) {
 			try {
-			   BufferedImage scale=ImageIO.read(SHINEY_BUBBLE);
+			   BufferedImage scale=ImageIO.read(file);
 			   scale.getScaledInstance(WIDTH,HEIGHT,Image.SCALE_SMOOTH);
 				return scale;
 			} catch (IOException e) {
@@ -113,13 +133,19 @@ public class Bubble {
 			}
 		}
 	};
+	
+	private static final Random r=new Random();
+	private static final Colour[] colours = Colour.values();
+	public Bubble(){
+		color=colours[r.nextInt(colours.length)];
+	}
 
 
 	private static final int WIDTH = 32;
 	private static final int HEIGHT = 32;
 	private static final Point ORIGIN = new Point(0,0);
 
-	private Color color = Color.RED;
+	private Colour color = Colour.RED;
 	private Point position = ORIGIN;
 
 	public void setPosition(final Point position) {
@@ -144,7 +170,7 @@ public class Bubble {
 	}
 
 	public void render(final Graphics graphics) {
-		final BufferedImage image = color.getBuggleImage();
+		final BufferedImage image = color.getImage();
 		graphics.drawImage(image, position.x, position.y, WIDTH, HEIGHT, null);
 	}
 	
