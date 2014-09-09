@@ -14,7 +14,9 @@ public class GuiThrowAway  extends JFrame{
 		GuiThrowAwayPanel GUI = new GuiThrowAwayPanel();
 		this.add(GUI);
 		this.pack();
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
+		this.setLocationRelativeTo(null);
 	}
 	
 }

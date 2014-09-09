@@ -8,6 +8,9 @@ import java.io.File;
 
 import javax.swing.JPanel;
 
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
+
 public class GuiThrowAwayPanel extends JPanel {
 	
 	private final BubbleMesh bubbleMesh;
@@ -30,7 +33,7 @@ public class GuiThrowAwayPanel extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("mouseclick");
+				bubbleMesh.insertRow();
 			}
 
 			@Override

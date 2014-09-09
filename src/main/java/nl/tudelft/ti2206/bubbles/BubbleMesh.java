@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.throwaway;
+package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Point;
 import java.io.BufferedReader;
@@ -23,7 +23,6 @@ public class BubbleMesh implements Iterable<Bubble> {
 	private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 
 	private final List<Bubble> startBubbles;
-	private final List<Bubble> allBubbles;
 	
 	public static BubbleMesh parse(File file) throws FileNotFoundException, IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -52,29 +51,28 @@ public class BubbleMesh implements Iterable<Bubble> {
 		for(int i = 0; i < rowAmount; i++) {
 			String rowStr = rows.get(i);
 			for(int j = 0; j < rowSize; j++) {
-				if(rowStr.charAt(j) != 'x') continue;
-				Bubble bubble = bubbles[i][j] = new Bubble();
+				// if(rowStr.charAt(j) != 'x') continue;
+				Bubble bubble = bubbles[i][j] = rowStr.charAt(j) == 'x' ? new ColouredBubble()
+						: new BubblePlaceholder();
 				
 				if(i > 0) {
 					if(i % 2 == 0) { // 3rd, 5fth rows , ... 
-						bubble.setTopRight(bubbles[i-1][j]);
+						bubble.bindTopRight(bubbles[i-1][j]);
 						if(j > 1) {
-							bubble.setTopLeft(bubbles[i-1][j-1]);
+							bubble.bindTopLeft(bubbles[i-1][j-1]);
 						}
 					}
 					else {
-						bubble.setTopLeft(bubbles[i-1][j]);
+						bubble.bindTopLeft(bubbles[i-1][j]);
 						if(j < (rowSize - 1)) {
-							bubble.setTopRight(bubbles[i-1][j+1]);
+							bubble.bindTopRight(bubbles[i-1][j+1]);
 						}
 					}
 				}
 				
 				if(j > 0) {
-					bubble.setLeft(bubbles[i][j-1]);
+					bubble.bindLeft(bubbles[i][j-1]);
 				}
-				
-				result.allBubbles.add(bubble);
 			}
 		}
 		
@@ -83,8 +81,12 @@ public class BubbleMesh implements Iterable<Bubble> {
 	}
 	
 	public BubbleMesh() {
-		this.allBubbles = Lists.newArrayList();
 		this.startBubbles = Lists.newArrayList();
+	}
+
+	public void insertRow() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -137,11 +139,6 @@ public class BubbleMesh implements Iterable<Bubble> {
 				left = left.getRight();
 				bubbles.add(left);
 			}
-		}
-		
-		
-		public void addRow(){
-			
 		}
 
 		@Override
