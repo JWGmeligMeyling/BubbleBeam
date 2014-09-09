@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +23,7 @@ public class BubbleMesh implements Iterable<Bubble> {
 	private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 
 	private final List<Bubble> startBubbles;
-	
 	private final List<Bubble> allBubbles;
-	
-	public final static String TEMPLATE_STRING = "xxxxxxx\n"
-			+ "xxx x\n"
-			+ "xx xx\n"
-			+ "xxx x\n";
 	
 	public static BubbleMesh parse(File file) throws FileNotFoundException, IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -82,37 +78,18 @@ public class BubbleMesh implements Iterable<Bubble> {
 			}
 		}
 		
+		result.startBubbles.add(bubbles[0][0]);
 		return result;
 	}
 	
 	public BubbleMesh() {
-		
-//		Bubble b1 = new Bubble();
-//		Bubble b2 = new Bubble();
-//		Bubble b3 = new Bubble();
-//		Bubble b4 = new Bubble();
-//		Bubble b5 = new Bubble();
-//		Bubble b6 = new Bubble();
-//
-//		b1.setRight(b2);
-//		b2.setRight(b3);
-//		b1.setBottomRight(b4);
-//		b2.setBottomLeft(b4);
-//		b2.setBottomRight(b5);
-//		b3.setBottomLeft(b5);
-//		b4.setBottomRight(b6);
-//		b5.setBottomLeft(b6);
-
 		this.allBubbles = Lists.newArrayList();
 		this.startBubbles = Lists.newArrayList();
-		
-//		this.startBubbles = Lists.newArrayList(b1);
-//		this.allBubbles = Lists.newArrayList(b1, b2, b3, b4, b5, b6);
 	}
 
 	@Override
-	public Iterator<Bubble> iterator() {
-		return allBubbles.iterator();
+	public BubbleMeshIterator iterator() {
+		return new BubbleMeshIterator();
 	}
 
 	public List<Bubble> getStartBubbles() {
@@ -125,6 +102,62 @@ public class BubbleMesh implements Iterable<Bubble> {
 			bubble.setPosition(newPosition);
 			log.info("Changed bubble position to {}", newPosition);
 		}
+	}
+	
+	public class BubbleMeshIterator implements Iterator<Bubble> {
+		
+		private Queue<Bubble> a = new LinkedList<Bubble>();
+		private Queue<Bubble> b = new LinkedList<Bubble>();
+		
+		protected BubbleMeshIterator() {
+			
+			for(Bubble startBubble : startBubbles) {
+				addRowToQueue(a, startBubble);
+			}
+			
+			while(!a.isEmpty()) {
+				Bubble bubble = a.remove();
+				b.add(bubble);
+				
+				Bubble firstChild = null;
+				
+				if(bubble.getBottomLeft() != null) {
+					firstChild = bubble.getBottomLeft();
+				}
+				else if (bubble.getBottomRight() != null) {
+					firstChild = bubble.getBottomRight();
+				}
+				
+				if(firstChild != null && firstChild.getLeft() == null) {
+					addRowToQueue(a, firstChild);
+				}
+			}
+		}
+		
+		private void addRowToQueue(final Queue<Bubble> bubbles, final Bubble leftEdge) {
+			Bubble left = leftEdge;
+			bubbles.add(left);
+			while(left.getRight() != null) {
+				left = left.getRight();
+				bubbles.add(left);
+			}
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !b.isEmpty();
+		}
+
+		@Override
+		public Bubble next() {
+			return b.remove();
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		
 	}
 	
 }
