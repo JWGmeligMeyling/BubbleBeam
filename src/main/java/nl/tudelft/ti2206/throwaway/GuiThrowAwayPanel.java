@@ -5,10 +5,13 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import nl.tudelft.ti2206.game.Cannon;
+
 public class GuiThrowAwayPanel extends JPanel {
 	
 	private Bubble[] bubbels = new Bubble[200];
 	private int current=0;
+	private Cannon cannon;
 	
 	/**
 	 * 
@@ -34,8 +37,21 @@ public class GuiThrowAwayPanel extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g){
+		cannon.render(g);
+		
 		for(int i=0; i< current; i++){
 			bubbels[i].render(g);
+		}
+	}
+
+	public void addCannon(Cannon cannon) {
+		this.cannon = cannon;
+	}
+
+	public void gameStep() {
+		if(cannon!=null){
+			cannon.update();
+			repaint();
 		}
 	}
 }
