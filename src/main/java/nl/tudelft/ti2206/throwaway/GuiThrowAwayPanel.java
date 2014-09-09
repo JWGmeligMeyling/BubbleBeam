@@ -2,6 +2,7 @@ package nl.tudelft.ti2206.throwaway;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -31,12 +32,21 @@ public class GuiThrowAwayPanel extends JPanel {
 			throw new RuntimeException("User too stupid, {put a username here}", e);
 		}
 		
-		cannon = new Cannon(200, 400);
+		cannon = new Cannon(new Point(200, 200));
 		cannon.bindMouseListenerTo(this);
 		
 		bubbleMesh.calculatePositions();
 		
 		bubbleMesh.addObserver(new Observer() {
+
+			@Override
+			public void update(Observable o, Object arg) {
+				GuiThrowAwayPanel.this.repaint();
+			}
+			
+		});
+		
+		cannon.addObserver(new Observer() {
 
 			@Override
 			public void update(Observable o, Object arg) {
@@ -51,7 +61,7 @@ public class GuiThrowAwayPanel extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				bubbleMesh.insertRow();
+				//bubbleMesh.insertRow();
 			}
 
 			@Override
@@ -95,6 +105,12 @@ public class GuiThrowAwayPanel extends JPanel {
 		cannon.render(graphics);
 		for(Bubble bubble : bubbleMesh) {
 			bubble.render(graphics);
+		}
+	}
+
+	public void gameStep() {
+		if(cannon!=null){
+			cannon.gameStep();
 		}
 	}
 

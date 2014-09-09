@@ -133,7 +133,7 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		for(Bubble bubble : this) {
 			Point newPosition = bubble.calculatePosition();
 			bubble.setPosition(newPosition);
-			log.info("Changed bubble position to {}", newPosition);
+			// log.info("Changed bubble position to {}", newPosition);
 		}
 		
 		this.setChanged();

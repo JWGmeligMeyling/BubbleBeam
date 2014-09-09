@@ -17,7 +17,7 @@ public class GuiThrowAway extends JFrame {
 	
 	public static GuiThrowAway instance;
 	
-	private final GuiThrowAwayPanel GUI;
+	public final GuiThrowAwayPanel GUI;
 	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1); 
 	
 	public GuiThrowAway() {
@@ -43,6 +43,8 @@ public class GuiThrowAway extends JFrame {
 			@Override
 			public void run() {
 				time = System.currentTimeMillis();
+				System.out.println("hoi game step");
+				GUI.gameStep();
 			}
 			
 		}, 0, 33, TimeUnit.MILLISECONDS);
