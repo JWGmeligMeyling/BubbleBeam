@@ -92,12 +92,8 @@ public class BubbleMesh implements Iterable<Bubble> {
 		return new BubbleMeshIterator();
 	}
 
-	public List<Bubble> getStartBubbles() {
-		return startBubbles;
-	}
-
 	public void calculatePositions() {
-		for(Bubble bubble : allBubbles.subList(1, allBubbles.size())) {
+		for(Bubble bubble : this) {
 			Point newPosition = bubble.calculatePosition();
 			bubble.setPosition(newPosition);
 			log.info("Changed bubble position to {}", newPosition);

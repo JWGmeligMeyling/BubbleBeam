@@ -136,10 +136,7 @@ public class Bubble {
 		else if(this.left != null) {
 			return new Point(left.position.x + WIDTH, left.position.y);
 		}
-		else if(this.right != null) {
-			return new Point(right.position.x - WIDTH, right.position.y);			
-		}
-		return ORIGIN;
+		return position;
 	}
 
 	public Point getPosition() {
