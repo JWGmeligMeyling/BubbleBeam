@@ -2,16 +2,22 @@ package nl.tudelft.ti2206.throwaway;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.game.Cannon;
 
 public class GuiThrowAwayPanel extends JPanel {
 	
-	private Bubble[] bubbels = new Bubble[200];
-	private int current=0;
-	private Cannon cannon;
+	private final BubbleMesh bubbleMesh;
+	private final Cannon cannon;
 	
 	/**
 	 * 
@@ -19,13 +25,61 @@ public class GuiThrowAwayPanel extends JPanel {
 	private static final long serialVersionUID = 525456508008501827L;
 
 	public GuiThrowAwayPanel() {
+		try {
+			this.bubbleMesh = BubbleMesh.parse(new File("src/main/resources/board.txt"));
+		} catch (Exception e) {
+			throw new RuntimeException("User too stupid, {put a username here}", e);
+		}
+		
+		cannon = new Cannon(200, 400);
+		cannon.bindMouseListenerTo(this);
+		
+		bubbleMesh.calculatePositions();
+		
+		bubbleMesh.addObserver(new Observer() {
+
+			@Override
+			public void update(Observable o, Object arg) {
+				GuiThrowAwayPanel.this.repaint();
+			}
+			
+		});
+		
 		this.setVisible(true);
+		
+		this.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				bubbleMesh.insertRow();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 	}	
-	
-	public void addBubble(Bubble b){
-		bubbels[current] =b;
-		current ++;
-	}
 	
 	protected final static int WIDTH = 400;
 	protected final static int HEIGHT = 400;
@@ -36,22 +90,12 @@ public class GuiThrowAwayPanel extends JPanel {
 	}
 	
 	@Override
-	public void paintComponent(Graphics g){
-		cannon.render(g);
-		
-		for(int i=0; i< current; i++){
-			bubbels[i].render(g);
+	public void paintComponent(final Graphics graphics){
+		super.paintComponent(graphics);
+		cannon.render(graphics);
+		for(Bubble bubble : bubbleMesh) {
+			bubble.render(graphics);
 		}
 	}
 
-	public void addCannon(Cannon cannon) {
-		this.cannon = cannon;
-	}
-
-	public void gameStep() {
-		if(cannon!=null){
-			cannon.update();
-			repaint();
-		}
-	}
 }
