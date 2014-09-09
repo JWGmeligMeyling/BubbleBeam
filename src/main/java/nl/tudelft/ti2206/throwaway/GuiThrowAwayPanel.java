@@ -3,8 +3,6 @@ package nl.tudelft.ti2206.throwaway;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.swing.JPanel;
 
