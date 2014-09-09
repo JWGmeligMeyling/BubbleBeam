@@ -90,19 +90,19 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		Iterator<Bubble> bubbles = iterator();
 		Bubble child = bubbles.next();
 		Bubble previousBubble = null;
-		boolean hasBottomLeft = !child.hasBottomLeft();
+		boolean shift = !child.hasBottomLeft();
 		
 		for(int i = 0; i < 10; i++) {
 			Bubble bubble = new ColouredBubble();
 			
-			if(hasBottomLeft){
-				child.bindTopLeft(bubble);
+			if(shift){
+				child.bindTopRight(bubble);
+				if(child.hasRight()) {
+					child.getRight().bindTopLeft(bubble);
+				}
 			}
 			else {
-				child.bindTopRight(bubble);
-				if(child.hasLeft()) {
-					child.getLeft().bindTopLeft(bubble);
-				}
+				child.bindTopLeft(bubble);
 			}
 			
 			if(previousBubble != null) {
@@ -111,6 +111,8 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 			previousBubble = bubble;
 			
 			if(i == 0) {
+				if(shift)
+					bubble.getPosition().translate(AbstractBubble.WIDTH / 2, 0);
 				this.startBubbles.clear();
 				this.startBubbles.add(bubble);
 			}

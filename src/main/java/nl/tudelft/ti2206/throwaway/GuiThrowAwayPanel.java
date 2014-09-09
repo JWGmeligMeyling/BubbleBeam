@@ -35,7 +35,7 @@ public class GuiThrowAwayPanel extends JPanel {
 
 			@Override
 			public void update(Observable o, Object arg) {
-				GuiThrowAwayPanel.this.updateUI();
+				GuiThrowAwayPanel.this.repaint();
 			}
 			
 		});
@@ -85,9 +85,10 @@ public class GuiThrowAwayPanel extends JPanel {
 	}
 	
 	@Override
-	public void paintComponent(final Graphics g){
+	public void paintComponent(final Graphics graphics){
+		super.paintComponent(graphics);
 		for(Bubble bubble : bubbleMesh) {
-			bubble.render(g);
+			bubble.render(graphics);
 		}
 	}
 }

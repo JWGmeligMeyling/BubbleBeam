@@ -13,9 +13,9 @@ public abstract class AbstractBubble implements Bubble {
 	private Bubble bottomLeft;
 	private Bubble bottomRight;
 	
-	protected Point position = ORIGIN;
-	private static final int WIDTH = 32;
-	private static final int HEIGHT = 32;
+	protected Point position = new Point(ORIGIN.x, ORIGIN.y);
+	public static final int WIDTH = 32;
+	public static final int HEIGHT = 32;
 
 	@Override
 	public void setPosition(final Point position) {
@@ -35,6 +35,16 @@ public abstract class AbstractBubble implements Bubble {
 	@Override
 	public int getY() {
 		return position.y;
+	}
+	
+	boolean shifted = false;
+	
+	public boolean isShifted() {
+		return shifted;
+	}
+	
+	public void setShifted(boolean shifted) {
+		shifted = true;
 	}
 	
 	public Point calculatePosition() {
