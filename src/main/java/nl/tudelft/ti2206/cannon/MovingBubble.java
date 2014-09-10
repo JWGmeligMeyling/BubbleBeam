@@ -14,7 +14,7 @@ import nl.tudelft.util.Vector2f;
  */
 public class MovingBubble {
 	
-	private static final float SPEED_MULTIPLIER = 10f;
+	public static final float SPEED_MULTIPLIER = 10f;
 	
 	protected Vector2f velocity;
 	protected Vector2f truePosition;
@@ -42,7 +42,7 @@ public class MovingBubble {
 	/**
 	 * 
 	 */
-	private void bounceOnWallCollision() {
+	protected void bounceOnWallCollision() {
 		if (truePosition.x + ColouredBubble.WIDTH > screenSize.width + screenLocation.x) {
 			float xError = truePosition.x + ColouredBubble.WIDTH
 					- (screenSize.width + screenLocation.x);

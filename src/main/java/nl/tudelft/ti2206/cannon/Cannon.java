@@ -27,10 +27,10 @@ import nl.tudelft.util.Vector2f;
  * @author Luka Bavdaz
  */
 public class Cannon extends Observable implements Sprite {
-	private static final Vector2f DEFAULT_VELOCITY = new Vector2f(0f, 0f);
+	public static final Vector2f DEFAULT_VELOCITY = new Vector2f(0f, 0f);
 	
-	private static final int WIDTH = 48;
-	private static final int HEIGHT = 48;
+	public static final int WIDTH = 48;
+	public static final int HEIGHT = 48;
 	
 	public Point position;
 	public double angle = 0;
@@ -38,16 +38,16 @@ public class Cannon extends Observable implements Sprite {
 	public Bubble nextBubble, loadedBubble;
 	public MovingBubble shotBubble;
 	
-	private static File ROOT_FOLDER = new File("src/main/resources");
+	public static File ROOT_FOLDER = new File("src/main/resources");
 	
-	private static File CANNON = new File(ROOT_FOLDER, "cannon.png");
-	private static BufferedImage CANNON_IMAGE = _getCannonImage();
+	public static File CANNON = new File(ROOT_FOLDER, "cannon.png");
+	public static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
 	public BufferedImage getCannonImage() {
 		return CANNON_IMAGE;
 	}
 	
-	private static BufferedImage _getCannonImage() {
+	protected static BufferedImage _getCannonImage() {
 		try {
 			BufferedImage scale = ImageIO.read(CANNON);
 			scale.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
@@ -72,7 +72,7 @@ public class Cannon extends Observable implements Sprite {
 		fillBubbleSlots();
 	}
 	
-	private void fillBubbleSlots() {
+	protected void fillBubbleSlots() {
 		nextBubble = new ColouredBubble();
 		loadedBubble = new ColouredBubble();
 	}
@@ -109,7 +109,7 @@ public class Cannon extends Observable implements Sprite {
 				}
 			}
 			
-			private void shootBubble() {
+			public void shootBubble() {
 				Point bubbleStartPosition = new Point((position.x - AbstractBubble.WIDTH / 2)
 						+ (int) (48 * velocity.x), position.y - AbstractBubble.HEIGHT / 2
 						+ (int) (48 * velocity.y));
@@ -144,20 +144,14 @@ public class Cannon extends Observable implements Sprite {
 		drawCannon(g);
 	}
 	
-	private void drawCannon(final Graphics g) {
+	protected void drawCannon(final Graphics g) {
 		((Graphics2D) g).rotate(-angle + Math.PI / 2, position.x, position.y);
 		g.drawImage(getCannonImage(), position.x - WIDTH / 2, position.y - HEIGHT / 2 - 32,
 				position.x + WIDTH / 2, position.y + HEIGHT / 2 - 32, 0, 0, 120, 108, null);
 		((Graphics2D) g).rotate(angle - Math.PI / 2, position.x, position.y);
-		/*
-		 * g.setColor(Color.blue); g.drawRect(position.x - 8, position.y - 8,
-		 * 16, 16); g.setColor(Color.green); g.drawLine(position.x, position.y,
-		 * (int) (position.x + Math.cos(angle) * 50), (int) (position.y -
-		 * Math.sin(angle) * 50));
-		 */
 	}
 	
-	private void drawBullet(final Graphics g) {
+	protected void drawBullet(final Graphics g) {
 		shotBubble.bubble.render(g);
 	}
 	
