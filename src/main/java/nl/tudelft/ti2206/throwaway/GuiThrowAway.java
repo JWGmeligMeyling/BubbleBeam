@@ -6,18 +6,21 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.game.MouseListener;
 
 public class GuiThrowAway extends JFrame {
+
+	private static final Logger log = LoggerFactory.getLogger(GuiThrowAway.class);
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3473878919673841174L;
 	
-	public static GuiThrowAway instance;
-	
-	public final GuiThrowAwayPanel GUI;
+	private final GuiThrowAwayPanel GUI;
 	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1); 
 	
 	public GuiThrowAway() {
@@ -43,7 +46,7 @@ public class GuiThrowAway extends JFrame {
 			@Override
 			public void run() {
 				time = System.currentTimeMillis();
-				System.out.println("hoi game step");
+				log.info("Game step at {}", time);
 				GUI.gameStep();
 			}
 			

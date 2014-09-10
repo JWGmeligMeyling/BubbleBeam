@@ -32,7 +32,7 @@ public class GuiThrowAwayPanel extends JPanel {
 			throw new RuntimeException("User too stupid, {put a username here}", e);
 		}
 		
-		cannon = new Cannon(new Point(200, 200));
+		cannon = new Cannon(new Point(200, 400));
 		cannon.bindMouseListenerTo(this);
 		
 		bubbleMesh.calculatePositions();

@@ -11,10 +11,14 @@ import java.util.Observable;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Sprite;
+import nl.tudelft.util.Vector2f;
 
 public class Cannon extends Observable implements Sprite{
+	private static final Vector2f DEFAULT_VELOCITY = new Vector2f(0f,0f);
+
 	public Point position;
 	public double angle = 0;
+	public Vector2f velocity = DEFAULT_VELOCITY;
 	public Bubble nextBubble, loadedBubble;
 	public MovingBubble shotBubble;
 	
@@ -48,6 +52,7 @@ public class Cannon extends Observable implements Sprite{
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
+				velocity = new Vector2f(e.getPoint()).subtract(new Vector2f(position)).normalize();
 				angle = Math.atan2(position.y - e.getY(), e.getX() - position.x);
 				component.repaint();
 			}
@@ -64,8 +69,7 @@ public class Cannon extends Observable implements Sprite{
 			}
 			
 			private void shootBubble() {
-				shotBubble = new MovingBubble(position, loadedBubble, new Vector2f((float) Math
-						.cos(angle), (float) -Math.sin(angle)));
+				shotBubble = new MovingBubble(position, loadedBubble, velocity);
 				loadedBubble = nextBubble;
 				nextBubble = new ColouredBubble();
 			}
