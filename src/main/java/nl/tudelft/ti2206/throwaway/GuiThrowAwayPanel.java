@@ -30,7 +30,7 @@ public class GuiThrowAwayPanel extends JPanel {
 
 	public GuiThrowAwayPanel() {
 		try {
-			this.bubbleMesh = BubbleMesh.parse(new File("src/main/resources/anotherboard"));
+			this.bubbleMesh = BubbleMesh.parse(new File("src/main/resources/board.txt"));
 		} catch (Exception e) {
 			throw new RuntimeException("User too stupid, {put a username here}", e);
 		}
