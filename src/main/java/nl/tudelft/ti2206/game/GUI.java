@@ -1,14 +1,5 @@
 package nl.tudelft.ti2206.game;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
-
 import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -17,34 +8,38 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GUI {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
+import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
+
+public class GUI {
+	
 	JFrame frame;
 	GuiThrowAwayPanel gamePanel;
 	
-	//multiplayer on same machine
+	// multiplayer on same machine
 	GuiThrowAwayPanel player2Panel;
 	final boolean multiplayer = true;
 	
-	//Score-labels
+	// Score-labels
 	JLabel playerScore;
 	JLabel player2Score;
 	
-	//game-variables
+	// game-variables
 	boolean game_is_running = true;
 	public long time = System.currentTimeMillis();
-	//private static final Logger log = LoggerFactory.getLogger(GUI.class);
+	// private static final Logger log = LoggerFactory.getLogger(GUI.class);
 	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-
 	
-	//gridbag constants
+	// gridbag constants
 	final static boolean shouldFill = true;
 	final static boolean shouldWeightX = true;
 	final static boolean RIGHT_TO_LEFT = false;
 	
-	
-	protected void fillGameFrame(Container pane){
-		if(RIGHT_TO_LEFT){
+	protected void fillGameFrame(Container pane) {
+		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		}
 		pane.setLayout(new GridBagLayout());
@@ -61,8 +56,7 @@ public class GUI {
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
 		c.gridy = 0;
-		pane.add(gamePanel,c);
-		
+		pane.add(gamePanel, c);
 		
 		JButton spaceForLogo = new JButton("Space for logo");
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -76,7 +70,6 @@ public class GUI {
 		c.ipadx = 30;
 		pane.add(spaceForLogo, c);
 		
-		
 		JButton score = new JButton("Score: ");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
@@ -88,7 +81,7 @@ public class GUI {
 		c.gridy = 1;
 		c.ipadx = 30;
 		pane.add(score, c);
-		//JLabel 
+		// JLabel
 		
 		JButton menu = new JButton("Menu: ");
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -101,11 +94,11 @@ public class GUI {
 		c.gridy = 2;
 		c.ipadx = 30;
 		pane.add(menu, c);
-		//JLabel 
+		// JLabel
 		
-		//multiplayer
+		// multiplayer
 		// everything the frame must be filled with
-		if(multiplayer){
+		if (multiplayer) {
 			player2Panel = new GuiThrowAwayPanel();
 			player2Panel.setMinimumSize(player2Panel.getPreferredSize());
 			player2Panel.setMaximumSize(player2Panel.getPreferredSize());
@@ -117,15 +110,15 @@ public class GUI {
 			c.anchor = GridBagConstraints.WEST;
 			c.gridx = 3;
 			c.gridy = 0;
-			pane.add(player2Panel,c);
+			pane.add(player2Panel, c);
 			
 		}
 		
 	}
-
-	public GUI(){
+	
+	public GUI() {
 		frame = new JFrame("Bubble Shooter");
-		//JPanel gamePanel = new GuiThrowAwayPanel();
+		// JPanel gamePanel = new GuiThrowAwayPanel();
 		
 		fillGameFrame(frame.getContentPane());
 		
@@ -133,27 +126,24 @@ public class GUI {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
-		
-		while(game_is_running){
-			run();
-			
-		}
+		run();
 	}
 	
-	protected void update(){
+	protected void update() {
 		gamePanel.gameStep();
-		if(multiplayer){
-			 player2Panel.gameStep();
+		if (multiplayer) {
+			player2Panel.gameStep();
 		}
 		
 	}
+	
 	private void run() {
 		executorService.scheduleAtFixedRate(new Runnable() {
-
+			
 			@Override
 			public void run() {
 				time = System.currentTimeMillis();
-				//log.info("Game step at {}", time);
+				// log.info("Game step at {}", time);
 				update();
 			}
 			
