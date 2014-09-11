@@ -32,7 +32,8 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 			while (reader.ready()) {
 				lines.add(reader.readLine());
 			}
-			return parse(lines);
+			BubbleMesh mesh=parse(lines);
+			return mesh;
 		}
 	}
 	

@@ -181,10 +181,4 @@ public abstract class AbstractBubble implements Bubble {
 	public Point getCentre(){
 		return new Point(position.x+(WIDTH/2), position.y+(HEIGHT/2));
 	}
-	
-	public void newBindTopRight(Bubble topRight){
-		this.setTopRight(topRight);
-		if(topRight != null)
-			topRight.setBottomLeft(this);
-	}
 }

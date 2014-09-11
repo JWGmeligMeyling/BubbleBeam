@@ -26,6 +26,18 @@ public class ColouredBubble extends AbstractBubble {
 		final Point center = new Point(this.getX(), this.getY());
 		center.translate(WIDTH / 2, HEIGHT / 2);
 		fillBaseColour(g2, center, color.getColor());
+		g2.setColor(Color.black);
+		if(this.hasRight()){
+		g2.drawLine(this.getCentre().x, this.getCentre().y,this.getRight().getCentre().x ,this.getRight().getCentre().y);
+		}
+		
+		if(this.hasBottomRight()){
+			g2.drawLine(this.getCentre().x, this.getCentre().y,this.getBottomRight().getCentre().x ,this.getBottomRight().getCentre().y);
+		}
+		
+		if(this.hasBottomLeft()){
+			g2.drawLine(this.getCentre().x, this.getCentre().y,this.getBottomLeft().getCentre().x ,this.getBottomLeft().getCentre().y);
+		}
 	}
 	
 	private static float[] BASE_COLOR_GRADIENT_RANGE = new float[] { 0.0f, 1.0f };
