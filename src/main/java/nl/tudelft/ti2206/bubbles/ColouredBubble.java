@@ -90,4 +90,9 @@ public class ColouredBubble extends AbstractBubble {
 		return color;
 	}
 	
+	
+	public void pop(){
+		
+	}
+	
 }

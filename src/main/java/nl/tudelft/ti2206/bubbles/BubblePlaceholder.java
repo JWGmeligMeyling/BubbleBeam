@@ -9,5 +9,10 @@ public class BubblePlaceholder extends AbstractBubble {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public boolean intersect(Bubble other){
+		return false;
+	}
 
 }

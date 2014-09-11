@@ -43,6 +43,7 @@ public interface Bubble extends Sprite {
 	Point getCenter();
 	int getRadius();
 	
+	BubblePlaceholder getRightPosition(Bubble b);
 	BubblePlaceholder[] getPlaceHolderNeighbours();
 	Bubble[] getNeighbours();
 
