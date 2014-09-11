@@ -27,21 +27,24 @@ import nl.tudelft.util.Vector2f;
  * @author Luka Bavdaz
  */
 public class Cannon extends Observable implements Sprite {
-	public static final Vector2f DEFAULT_VELOCITY = new Vector2f(0f, 0f);
 	
-	public static final int WIDTH = 48;
-	public static final int HEIGHT = 48;
+	protected static final int WIDTH = 48;
+	protected static final int HEIGHT = 48;
 	
-	public Point position;
-	public double angle = 0;
-	public Vector2f velocity = DEFAULT_VELOCITY;
-	public Bubble nextBubble, loadedBubble;
-	public MovingBubble shotBubble;
+	protected Point position;
+	protected double angle = 0;
+	protected Vector2f direction = new Vector2f(0f, 0f);
+	protected Bubble nextBubble, loadedBubble;
+	protected MovingBubble shotBubble;
 	
-	public static File ROOT_FOLDER = new File("src/main/resources");
+	protected final boolean mouseControl;
+	protected Dimension screenSize;
+	protected Point screenLocation;
 	
-	public static File CANNON = new File(ROOT_FOLDER, "cannon.png");
-	public static BufferedImage CANNON_IMAGE = _getCannonImage();
+	protected static File ROOT_FOLDER = new File("src/main/resources");
+	
+	protected static File CANNON = new File(ROOT_FOLDER, "cannon.png");
+	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
 	public BufferedImage getCannonImage() {
 		return CANNON_IMAGE;
@@ -56,11 +59,6 @@ public class Cannon extends Observable implements Sprite {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	public final boolean mouseControl;
-	
-	protected Dimension screenSize;
-	protected Point screenLocation;
 	
 	public Cannon(Point position, Dimension dimension, Point screenLocation) {
 		this.position = position;
@@ -93,7 +91,7 @@ public class Cannon extends Observable implements Sprite {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				velocity = new Vector2f(e.getPoint()).subtract(new Vector2f(position)).normalize();
+				direction = new Vector2f(e.getPoint()).subtract(new Vector2f(position)).normalize();
 				angle = Math.atan2(position.y - e.getY(), e.getX() - position.x);
 				component.repaint();
 			}
@@ -111,9 +109,9 @@ public class Cannon extends Observable implements Sprite {
 			
 			public void shootBubble() {
 				Point bubbleStartPosition = new Point((position.x - AbstractBubble.WIDTH / 2)
-						+ (int) (48 * velocity.x), position.y - AbstractBubble.HEIGHT / 2
-						+ (int) (48 * velocity.y));
-				shotBubble = new MovingBubble(bubbleStartPosition, loadedBubble, velocity,
+						+ (int) (48 * direction.x), position.y - AbstractBubble.HEIGHT / 2
+						+ (int) (48 * direction.y));
+				shotBubble = new MovingBubble(bubbleStartPosition, loadedBubble, direction,
 						screenSize, screenLocation);
 				loadedBubble = nextBubble;
 				nextBubble = new ColouredBubble();
