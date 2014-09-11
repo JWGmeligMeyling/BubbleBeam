@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
@@ -18,9 +19,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GUI {
 
@@ -29,10 +27,10 @@ public class GUI {
 
 	// multiplayer on same machine
 	GuiThrowAwayPanel player2Panel;
-	boolean multiplayer = true;
+	boolean multiplayer = false;
 	
 
-	public static final int FPS = 30;
+	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000/FPS;
 
 	// Score-labels
@@ -43,10 +41,6 @@ public class GUI {
 
 	// game-variables
 	boolean game_is_running = true;
-	public long time = System.currentTimeMillis();
-
-	private final ScheduledExecutorService executorService = Executors
-			.newScheduledThreadPool(1);
 
 	// gridbag constants
 	final static boolean shouldFill = true;
@@ -263,18 +257,17 @@ public class GUI {
 	}
 
 	private void run() {
-		executorService.scheduleAtFixedRate(new Runnable() {
-			
+		new Timer(FRAME_PERIOD, new ActionListener() {
+
 			@Override
-			public void run() {
-				time = System.currentTimeMillis();
+			public void actionPerformed(ActionEvent e) {
 				gamePanel.gameStep();
 				if (multiplayer) {
 					player2Panel.gameStep();
 				}
 			}
 			
-		}, 0, FRAME_PERIOD, TimeUnit.MILLISECONDS);
+		}).start();
 	}
 	
 }
