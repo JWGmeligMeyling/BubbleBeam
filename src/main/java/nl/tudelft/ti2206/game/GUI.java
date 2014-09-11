@@ -3,10 +3,6 @@ package nl.tudelft.ti2206.game;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
@@ -18,6 +14,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +28,10 @@ public class GUI {
 	// multiplayer on same machine
 	GuiThrowAwayPanel player2Panel;
 	final boolean multiplayer = true;
+	
+
+	public static final int FPS = 30;
+	protected static final int FRAME_PERIOD = 1000/FPS;
 
 	// Score-labels
 	JLabel playerScore;
@@ -40,7 +42,7 @@ public class GUI {
 	// game-variables
 	boolean game_is_running = true;
 	public long time = System.currentTimeMillis();
-	private static final Logger log = LoggerFactory.getLogger(GUI.class);
+
 	private final ScheduledExecutorService executorService = Executors
 			.newScheduledThreadPool(1);
 
@@ -49,7 +51,7 @@ public class GUI {
 	final static boolean shouldWeightX = true;
 	final static boolean RIGHT_TO_LEFT = false;
 
-	protected void fillGameFrame(Container pane) {
+	protected void fillGameFrame(Container pane) throws FileNotFoundException, IOException {
 		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		}
@@ -57,18 +59,9 @@ public class GUI {
 		GridBagConstraints c = new GridBagConstraints();
 
 		// everything the frame must be filled with
-		JPanel gamePanel;
-		BubbleMesh bubbleMesh;
-		try {
-			bubbleMesh = BubbleMesh.parse(new File(
-					"src/main/resources/board.txt"));
-			gamePanel = new GuiThrowAwayPanel(bubbleMesh);
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"User too stupid, {put a username here}", e);
-		}
+		gamePanel = new GuiThrowAwayPanel(
+				BubbleMesh.parse(new File("src/main/resources/board.txt")));
 
-		gamePanel.setMinimumSize(gamePanel.getPreferredSize());
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -109,12 +102,16 @@ public class GUI {
 		// JLabel
 
 		JButton restart = new JButton("Restart");
+		
 		restart.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				restart();
 			}
+			
 		});
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -130,9 +127,9 @@ public class GUI {
 		// multiplayer
 		// everything the frame must be filled with
 		if (multiplayer) {
-			player2Panel = new GuiThrowAwayPanel(bubbleMesh);
-			player2Panel.setMinimumSize(player2Panel.getPreferredSize());
-			player2Panel.setMaximumSize(player2Panel.getPreferredSize());
+			player2Panel = new GuiThrowAwayPanel(
+					BubbleMesh.parse(new File("src/main/resources/anotherboard")));
+
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;
 			c.weighty = 0;
@@ -149,10 +146,8 @@ public class GUI {
 
 	}
 
-	public GUI() {
+	public GUI() throws FileNotFoundException, IOException {
 		frame = new JFrame("Bubble Shooter");
-		// JPanel gamePanel = new GuiThrowAwayPanel();
-
 		fillGameFrame(frame.getContentPane());
 
 		frame.pack();
@@ -172,23 +167,19 @@ public class GUI {
 		// update scoreboards
 	}
 
-	protected void update() {
-		gamePanel.gameStep();
-		if (multiplayer) {
-			player2Panel.gameStep();
-		}
-
-	}
-
 	private void run() {
 		executorService.scheduleAtFixedRate(new Runnable() {
-
+			
 			@Override
 			public void run() {
 				time = System.currentTimeMillis();
-				update();
+				gamePanel.gameStep();
+				if (multiplayer) {
+					player2Panel.gameStep();
+				}
 			}
-
-		}, 0, 33, TimeUnit.MILLISECONDS);
+			
+		}, 0, FRAME_PERIOD, TimeUnit.MILLISECONDS);
 	}
+	
 }

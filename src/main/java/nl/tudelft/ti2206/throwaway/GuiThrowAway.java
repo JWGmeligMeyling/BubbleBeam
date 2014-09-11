@@ -15,7 +15,7 @@ public class GuiThrowAway extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 3473878919673841174L;
-	public static final int FPS = 60;
+	public static final int FPS = 30;
 	protected static final int FRAME_PERIOD = 1000/FPS;
 	
 	private final GuiThrowAwayPanel GUI;

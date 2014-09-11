@@ -28,33 +28,34 @@ import nl.tudelft.util.Vector2f;
  * @author Luka Bavdaz
  */
 public class Cannon extends Observable implements Sprite {
-
+	
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
-	protected static final int Y_TRANSLATION = 32;
+	protected static final float MIN_ANGLE = (float) (Math.PI/10);
 	protected final Point LOADED_BUBBLE_POSITION;
 	protected final Point NEXT_BUBBLE_POSITION;
-
+	
 	protected Point position;
 	protected double angle = 0.0d;
 	protected Vector2f direction = new Vector2f(0f, 0f);
 	protected Bubble nextBubble, loadedBubble;
 	protected MovingBubble shotBubble;
-
+	protected int chances = 5;
+	
 	protected final boolean mouseControl;
 	protected final BubbleMesh bubbleMesh;
 	protected final Point screenLocation;
 	protected final Dimension screenSize;
 	
 	protected static File ROOT_FOLDER = new File("src/main/resources");
-
+	
 	protected static File CANNON = new File(ROOT_FOLDER, "cannon.png");
 	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
-
+	
 	public BufferedImage getCannonImage() {
 		return CANNON_IMAGE;
 	}
-
+	
 	protected static BufferedImage _getCannonImage() {
 		try {
 			BufferedImage scale = ImageIO.read(CANNON);
@@ -81,13 +82,14 @@ public class Cannon extends Observable implements Sprite {
 
 		this.screenSize = dimension;
 		this.screenLocation = screenLocation;
-
+		
 		fillBubbleSlots();
 	}
-
+	
 	protected void fillBubbleSlots() {
 		nextBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
 		loadedBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
+
 		correctBubblePositions();
 	}
 	
@@ -96,11 +98,19 @@ public class Cannon extends Observable implements Sprite {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				direction = new Vector2f(e.getPoint()).subtract(
-						new Vector2f(position)).normalize();
 				angle = Math.atan2(position.y - e.getY(), e.getX() - position.x);
+				
+				if(angle < -Math.PI/2){
+					angle = Math.PI - MIN_ANGLE;
+				} else if(angle < MIN_ANGLE) {
+					angle = MIN_ANGLE;
+				} else if(angle > Math.PI - MIN_ANGLE){
+					angle = Math.PI - MIN_ANGLE;
+				}
+				
+				direction = new Vector2f((float) Math.cos(angle), (float) -Math.sin(angle));
 			}
-
+			
 		});
 		
 		component.addMouseListener(new AbstractMouseListener() {
@@ -132,52 +142,55 @@ public class Cannon extends Observable implements Sprite {
 		loadedBubble.setPosition(LOADED_BUBBLE_POSITION);
 		nextBubble.setPosition(NEXT_BUBBLE_POSITION);
 	}
-
+	
+	@Override
 	public void render(final Graphics g) {
+		Graphics2D graphics = (Graphics2D) g;
 		if (shotBubble != null) {
-			drawBullet(g);
+			drawBullet(graphics);
 		}
-		drawCannon(g);
-		drawQueue(g);
+		drawCannon(graphics);
+		drawQueue(graphics);
 	}
-
-	protected void drawQueue(final Graphics g) {
-		loadedBubble.render(g);
-		nextBubble.render(g);
+	
+	protected void drawQueue(final Graphics graphics) {
+		loadedBubble.render(graphics);
+		nextBubble.render(graphics);
 	}
-
-	protected void drawCannon(final Graphics g) {
-		((Graphics2D) g).rotate(-angle + Math.PI / 2, position.x, position.y);
-		g.drawImage(getCannonImage(), position.x - WIDTH / 2, position.y
-				- HEIGHT / 2 - Y_TRANSLATION, position.x + WIDTH / 2, position.y + HEIGHT
-				/ 2 - Y_TRANSLATION, 0, 0, getCannonImage().getWidth(), getCannonImage().getHeight(), null);
-		((Graphics2D) g).rotate(angle - Math.PI / 2, position.x, position.y);
+	
+	protected void drawCannon(final Graphics2D graphics) {
+		graphics.rotate(-angle + Math.PI / 2, position.x, position.y);
+		graphics.drawImage(getCannonImage(), position.x - WIDTH / 2, position.y
+				- HEIGHT / 2 - 32, position.x + WIDTH / 2, position.y + HEIGHT
+				/ 2 - 32, 0, 0, 120, 108, null);
+		//		^ MAGIC NUMBERS?!
+		graphics.rotate(angle - Math.PI / 2, position.x, position.y);
 	}
-
-	protected void drawBullet(final Graphics g) {
-		shotBubble.bubble.render(g);
+	
+	protected void drawBullet(final Graphics graphics) {
+		shotBubble.bubble.render(graphics);
 	}
-
+	
 	@Override
 	public void setPosition(final Point position) {
 		this.position = position;
 	}
-
+	
 	@Override
 	public Point getPosition() {
 		return position;
 	}
-
+	
 	@Override
 	public int getX() {
 		return position.x;
 	}
-
+	
 	@Override
 	public int getY() {
 		return position.y;
 	}
-
+	
 	public void gameStep() {
 		if (shotBubble != null) {
 			shotBubble.gameStep();
