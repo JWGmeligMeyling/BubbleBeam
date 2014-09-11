@@ -46,7 +46,6 @@ public class GuiThrowAway extends JFrame {
 			@Override
 			public void run() {
 				time = System.currentTimeMillis();
-				log.info("Game step at {}", time);
 				GUI.gameStep();
 			}
 			
