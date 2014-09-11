@@ -22,6 +22,8 @@ public class GuiThrowAwayPanel extends JPanel {
 	private final Cannon cannon;
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
+	private long score = 0;
+	
 	/**
 	 * 
 	 */
@@ -65,6 +67,10 @@ public class GuiThrowAwayPanel extends JPanel {
 	public void gameStep() {
 		cannon.gameStep();
 		this.repaint();
+	}
+	
+	public long getScore(){
+		return score;
 	}
 
 }
