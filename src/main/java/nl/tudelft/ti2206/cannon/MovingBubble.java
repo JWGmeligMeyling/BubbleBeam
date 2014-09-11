@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
+import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.util.Vector2f;
 
@@ -47,6 +48,15 @@ public class MovingBubble extends ColouredBubble {
 		return diff;
 	}
 	
+	public void makeConnections(BubblePlaceholder toReplace){
+		this.bindTopLeft(toReplace.getTopLeft());
+		this.bindTopRight(toReplace.getTopRight());
+		this.bindLeft(toReplace.getLeft());
+		this.bindRight(toReplace.getRight());
+		this.bindBottomLeft(toReplace.getBottomLeft());
+		this.bindBottomRight(toReplace.getBottomRight());
+
+	}
 	/**
 	 * 
 	 */

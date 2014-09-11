@@ -28,7 +28,9 @@ public class ColouredBubble extends AbstractBubble {
 		final Point center = new Point(this.getX(), this.getY());
 		center.translate(WIDTH / 2, HEIGHT / 2);
 		fillBaseColour(g2, center, color);
-		
+	}
+	
+	protected void renderDebugLines(final Graphics2D g2) {
 		g2.setColor(Color.black);
 		if(this.hasRight()){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getRight().getCenter().x ,this.getRight().getCenter().y);

@@ -103,6 +103,21 @@ public abstract class AbstractBubble implements Bubble {
 		if(topLeft != null)
 			topLeft.setBottomRight(this);
 	}
+	@Override
+	public void bindBottomLeft(Bubble botLeft){
+		this.setBottomLeft(botLeft);
+		if(botLeft != null)
+			botLeft.setBottomLeft(this);
+	}
+	
+	@Override
+	public void bindBottomRight(Bubble botLeft){
+		this.setBottomRight(botLeft);
+		if(botLeft != null)
+			botLeft.setBottomRight(this);
+	}
+	
+	
 	
 	@Override
 	public Bubble getTopLeft() {
@@ -198,6 +213,30 @@ public abstract class AbstractBubble implements Bubble {
 	public boolean intersect(Bubble b){
 		double distance = this.getCenter().distance(b.getCenter());
 		return distance<WIDTH;
+	}
+	
+	public Bubble[] getNeighbours(){
+		Bubble[] p = {topLeft, topRight,left,right,bottomLeft,bottomRight};
+		return p;
+	}
+	
+	public BubblePlaceholder[] getPlaceHolderNeighbours(){
+		Bubble[]p=getNeighbours();
+		int i=0;
+		for(Bubble b : p){
+			if (b instanceof BubblePlaceholder){
+				i++;
+			}
+		}
+		BubblePlaceholder[] placeholderNeighbours=new BubblePlaceholder[i];
+		i=0;
+		for(Bubble b : p){
+			if (b instanceof BubblePlaceholder){
+				placeholderNeighbours[i]=(BubblePlaceholder) b;
+				i++;
+			}
+		}
+		return placeholderNeighbours;
 	}
 	
 }
