@@ -60,7 +60,7 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 				if(i > 0) {
 					if(i % 2 == 0) { // 3rd, 5fth rows , ... 
 						bubble.bindTopRight(bubbles[i-1][j]);
-						if(j > 1) {
+						if(j > 0) {
 							bubble.bindTopLeft(bubbles[i-1][j-1]);
 						}
 					}
