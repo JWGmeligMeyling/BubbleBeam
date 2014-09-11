@@ -11,6 +11,10 @@ public class ColouredBubble extends AbstractBubble {
 	
 	private final Color color;
 	
+	/**
+	 * Construct a new {@code ColouredBubble}
+	 * @param color {@link Color} that the {@code Bubble} should have
+	 */
 	public ColouredBubble(final Color color) {
 		this.color = color;
 	}

@@ -6,10 +6,10 @@ public abstract class AbstractBubble implements Bubble {
 	
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
+	public static final int RADIUS = 14;
+	public static final int SPACING = WIDTH - RADIUS * 2;
 	
 	protected static final Point ORIGIN = new Point(0,0);
-	protected static final int RADIUS = 14;
-	protected static final int SPACING = WIDTH - RADIUS * 2;
 	
 	private Bubble topLeft;
 	private Bubble topRight;

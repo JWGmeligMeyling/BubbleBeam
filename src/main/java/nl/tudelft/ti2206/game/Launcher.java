@@ -14,5 +14,5 @@ public class Launcher {
 		// This main method is called when starting your game.
 		log.info("Starting game...");
 		new GuiThrowAway();
-}
+	}
 }
