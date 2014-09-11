@@ -80,6 +80,21 @@ public abstract class AbstractBubble implements Bubble {
 		if(topLeft != null)
 			topLeft.setBottomRight(this);
 	}
+	@Override
+	public void bindBottomLeft(Bubble botLeft){
+		this.setBottomLeft(botLeft);
+		if(botLeft != null)
+			botLeft.setBottomLeft(this);
+	}
+	
+	@Override
+	public void bindBottomRight(Bubble botLeft){
+		this.setBottomRight(botLeft);
+		if(botLeft != null)
+			botLeft.setBottomRight(this);
+	}
+	
+	
 	
 	@Override
 	public Bubble getTopLeft() {
@@ -182,7 +197,7 @@ public abstract class AbstractBubble implements Bubble {
 		return new Point(position.x+(WIDTH/2), position.y+(HEIGHT/2));
 	}
 	
-	private Bubble[] getNeighbours(){
+	public Bubble[] getNeighbours(){
 		Bubble[] p = {topLeft, topRight,left,right,bottomLeft,bottomRight};
 		return p;
 	}
@@ -204,7 +219,6 @@ public abstract class AbstractBubble implements Bubble {
 			}
 		}
 		return placeholderNeighbours;
-		
 	}
 	
 }

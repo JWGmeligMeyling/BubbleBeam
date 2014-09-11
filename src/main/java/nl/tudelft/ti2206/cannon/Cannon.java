@@ -20,6 +20,7 @@ import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshIterator;
+import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Sprite;
 import nl.tudelft.util.Vector2f;
@@ -205,7 +206,10 @@ public class Cannon extends Observable implements Sprite {
 			for(Bubble bubble : b ){
 				if(bubble.intersect(shotBubble)){
 					hit=bubble;
-					
+					BubblePlaceholder[] p = hit.getPlaceHolderNeighbours();
+					shotBubble.makeConnections( p[0]);
+					shotBubble.calculatePosition();
+					shotBubble=null;
 					break;
 				}
 			}

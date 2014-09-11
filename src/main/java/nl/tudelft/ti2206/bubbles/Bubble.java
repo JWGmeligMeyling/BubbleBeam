@@ -15,6 +15,8 @@ public interface Bubble extends Sprite {
 	void bindTopRight(Bubble topRight);
 	void bindLeft(Bubble left);
 	void bindRight(Bubble right);
+	void bindBottomLeft(Bubble botLeft);
+	void bindBottomRight(Bubble botRight);
 	
 	Bubble getTopRight();
 	Bubble getTopLeft();
@@ -39,5 +41,8 @@ public interface Bubble extends Sprite {
 	
 	boolean intersect(Bubble b);
 	Point getCentre();
+	
+	BubblePlaceholder[] getPlaceHolderNeighbours();
+	Bubble[] getNeighbours();
 
 }
