@@ -60,7 +60,9 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		for(int i = 0; i < rowAmount; i++) {
 			String rowStr = rows.get(i);
 			for(int j = 0; j < rowSize; j++) {
-				Bubble bubble = bubbles[i][j] = rowStr.charAt(j) == 'x' ? new ColouredBubble(
+				AbstractBubble bubble;
+				
+				bubbles[i][j] = bubble = rowStr.charAt(j) == 'x' ? new ColouredBubble(
 						result.getRandomRemainingColor())
 						: new BubblePlaceholder();
 				
@@ -81,6 +83,10 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 				
 				if(j > 0) {
 					bubble.bindLeft(bubbles[i][j-1]);
+				}
+				
+				if(i == 0 && j == 0) {
+					bubble.setOrigin();
 				}
 			}
 		}

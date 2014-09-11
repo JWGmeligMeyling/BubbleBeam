@@ -14,6 +14,7 @@ public abstract class AbstractBubble implements Bubble {
 	
 	protected static final Point ORIGIN = new Point(0,0);
 	
+	private boolean origin = false;
 	private Bubble topLeft;
 	private Bubble topRight;
 	private Bubble left;
@@ -23,6 +24,10 @@ public abstract class AbstractBubble implements Bubble {
 	
 	private Point position = new Point(ORIGIN.x, ORIGIN.y);
 
+	public void setOrigin() {
+		origin = true;
+	}
+	
 	@Override
 	public void setPosition(final Point position) {
 		this.position = position;
@@ -64,18 +69,26 @@ public abstract class AbstractBubble implements Bubble {
 	}
 	
 	public Point calculatePosition() {
-		if(this.hasTopLeft()) {
-			return new Point(topLeft.getX() + WIDTH / 2, topLeft.getY() + HEIGHT);
+		if(!origin) {
+			if(this.hasTopLeft()) {
+				return new Point(topLeft.getX() + WIDTH / 2, topLeft.getY() + HEIGHT);
+			}
+			else if(this.hasTopRight()) {
+				return new Point(topRight.getX() - WIDTH / 2, topRight.getY() + HEIGHT);
+			}
+			else if(this.hasLeft()) {
+				return new Point(left.getX() + WIDTH, left.getY());
+			}
+			else if(this.hasRight()) {
+				return new Point(right.getX() - WIDTH, right.getY());
+			}
+			else if(this.hasBottomLeft()) {
+				return new Point(bottomLeft.getX() + WIDTH / 2, bottomLeft.getY() - HEIGHT);
+			}
+			else if(this.hasBottomRight()) {
+				return new Point(bottomRight.getX() - WIDTH / 2, bottomRight.getY() - HEIGHT);
+			}
 		}
-		else if(this.hasTopRight()) {
-			return new Point(topRight.getX() - WIDTH / 2, topRight.getY() + HEIGHT);
-		}
-		else if(this.hasLeft()) {
-			return new Point(left.getX() + WIDTH, left.getY());
-		}
-//		else if(this.hasRight()) {
-//			return new Point(right.getX() - WIDTH, right.getY());
-//		}
 		return position;
 	}
 
