@@ -21,6 +21,7 @@ public class ColouredBubble extends AbstractBubble {
 
 	@Override
 	public void render(final Graphics graphics) {
+		super.render(graphics);
 		final Graphics2D g2 = (Graphics2D) graphics;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -28,21 +29,6 @@ public class ColouredBubble extends AbstractBubble {
 		final Point center = new Point(this.getX(), this.getY());
 		center.translate(WIDTH / 2, HEIGHT / 2);
 		fillBaseColour(g2, center, color);
-	}
-	
-	protected void renderDebugLines(final Graphics2D g2) {
-		g2.setColor(Color.black);
-		if(this.hasRight()){
-			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getRight().getCenter().x ,this.getRight().getCenter().y);
-		}
-		
-		if(this.hasBottomRight()){
-			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomRight().getCenter().x ,this.getBottomRight().getCenter().y);
-		}
-		
-		if(this.hasBottomLeft()){
-			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomLeft().getCenter().x ,this.getBottomLeft().getCenter().y);
-		}
 	}
 	
 	private static float[] BASE_COLOR_GRADIENT_RANGE = new float[] { 0.0f, 1.0f };

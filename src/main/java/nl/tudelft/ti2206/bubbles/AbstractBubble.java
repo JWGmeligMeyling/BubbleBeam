@@ -1,5 +1,8 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 
 public abstract class AbstractBubble implements Bubble {
@@ -107,14 +110,14 @@ public abstract class AbstractBubble implements Bubble {
 	public void bindBottomLeft(Bubble botLeft){
 		this.setBottomLeft(botLeft);
 		if(botLeft != null)
-			botLeft.setBottomLeft(this);
+			botLeft.setTopRight(this);
 	}
 	
 	@Override
 	public void bindBottomRight(Bubble botLeft){
 		this.setBottomRight(botLeft);
 		if(botLeft != null)
-			botLeft.setBottomRight(this);
+			botLeft.setTopLeft(this);
 	}
 	
 	
@@ -255,6 +258,26 @@ public abstract class AbstractBubble implements Bubble {
 			}
 		}
 		return mindistance;
+	}
+	
+	@Override
+	public void render(Graphics graphics) {
+		renderDebugLines((Graphics2D) graphics);
+	}
+	
+	protected void renderDebugLines(final Graphics2D g2) {
+		g2.setColor(Color.black);
+		if(this.hasRight()){
+			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getRight().getCenter().x ,this.getRight().getCenter().y);
+		}
+		
+		if(this.hasBottomRight()){
+			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomRight().getCenter().x ,this.getBottomRight().getCenter().y);
+		}
+		
+		if(this.hasBottomLeft()){
+			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomLeft().getCenter().x ,this.getBottomLeft().getCenter().y);
+		}
 	}
 	
 }
