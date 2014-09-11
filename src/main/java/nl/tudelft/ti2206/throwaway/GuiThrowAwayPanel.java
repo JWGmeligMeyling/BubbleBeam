@@ -16,7 +16,7 @@ import javax.swing.border.BevelBorder;
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
-import nl.tudelft.ti2206.game.Cannon;
+import nl.tudelft.ti2206.cannon.Cannon;
 
 public class GuiThrowAwayPanel extends JPanel {
 	
@@ -35,7 +35,7 @@ public class GuiThrowAwayPanel extends JPanel {
 			throw new RuntimeException("User too stupid, {put a username here}", e);
 		}
 		
-		cannon = new Cannon(new Point(WIDTH/2, 400));
+		cannon = new Cannon(new Point(WIDTH/2, 400), this.getPreferredSize(), this.getLocation());
 		cannon.bindMouseListenerTo(this);
 		
 		bubbleMesh.calculatePositions();

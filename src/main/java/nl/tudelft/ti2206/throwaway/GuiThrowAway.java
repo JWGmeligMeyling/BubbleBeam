@@ -9,10 +9,8 @@ import javax.swing.JFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.ti2206.game.MouseListener;
-
 public class GuiThrowAway extends JFrame {
-
+	
 	private static final Logger log = LoggerFactory.getLogger(GuiThrowAway.class);
 	
 	/**
@@ -21,7 +19,7 @@ public class GuiThrowAway extends JFrame {
 	private static final long serialVersionUID = 3473878919673841174L;
 	
 	private final GuiThrowAwayPanel GUI;
-	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1); 
+	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 	
 	public GuiThrowAway() {
 		super("Bubble Shooter");
@@ -32,17 +30,16 @@ public class GuiThrowAway extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		
-		this.addMouseListener(MouseListener.INSTANCE);
 		this.setLocationRelativeTo(null);
 		
 		run();
 	}
 	
 	public long time = System.currentTimeMillis();
-
+	
 	private void run() {
 		executorService.scheduleAtFixedRate(new Runnable() {
-
+			
 			@Override
 			public void run() {
 				time = System.currentTimeMillis();
