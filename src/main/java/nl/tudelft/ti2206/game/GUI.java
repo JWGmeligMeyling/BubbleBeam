@@ -28,7 +28,7 @@ public class GUI {
 	
 	//multiplayer on same machine
 	GuiThrowAwayPanel player2Panel;
-	final boolean multiplayer = true;
+	boolean multiplayer = true;
 	
 	//Score-labels
 	JLabel playerScore;
@@ -108,7 +108,7 @@ public class GUI {
 		JButton exit = new JButton("Exit");
 		exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				exit();
+				GUI.this.exit();
 			}
 		});
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -125,23 +125,43 @@ public class GUI {
 		
 		
 		
-		JButton restart = new JButton("Restart");
-		restart.addActionListener(new ActionListener() {
+		JButton singlePlayerRestart = new JButton("Restart Single-Player");
+		singlePlayerRestart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				restart();
+				multiplayer = false;
+				GUI.this.restart();
 			}
 		});
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0;
-		c.gridheight = 2;
+		c.gridheight = 1;
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.gridx = 2;
 		c.gridy = 2;
 		c.ipadx = 30;
 		c.insets = extPadding;
-		pane.add(restart, c);
+		pane.add(singlePlayerRestart, c);
+		
+		JButton multiPlayerRestart = new JButton("Restart Multi-Player");
+		multiPlayerRestart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				multiplayer = true;
+				GUI.this.restart();
+			}
+		});
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.gridx = 2;
+		c.gridy = 3;
+		c.ipadx = 30;
+		c.insets = extPadding;
+		pane.add(multiPlayerRestart, c);
 		
 		
 		
@@ -201,8 +221,6 @@ public class GUI {
 		//todo
 	}
 	protected void restart(){
-		//send message to both gamePanel and player2Panel for reset
-		//update scoreboards
 		
 		JPanel contentPane = (JPanel) frame.getContentPane();
 		
@@ -210,6 +228,7 @@ public class GUI {
 		fillGameFrame(contentPane);
 		contentPane.revalidate();
 		contentPane.repaint();
+		frame.pack();
 		
 		updateDisplayedScore();
 		
