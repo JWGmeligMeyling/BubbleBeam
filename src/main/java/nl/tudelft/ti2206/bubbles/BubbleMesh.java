@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,15 +14,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Queue;
+import java.util.Random;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class BubbleMesh extends Observable implements Iterable<Bubble> {
 	
 	private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
+
+	private final Set<Color> remainingColors = Sets.newHashSet(Color.RED,
+			Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
 
 	private final List<Bubble> startBubbles;
 	
@@ -53,8 +60,8 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		for(int i = 0; i < rowAmount; i++) {
 			String rowStr = rows.get(i);
 			for(int j = 0; j < rowSize; j++) {
-				// if(rowStr.charAt(j) != 'x') continue;
-				Bubble bubble = bubbles[i][j] = rowStr.charAt(j) == 'x' ? new ColouredBubble()
+				Bubble bubble = bubbles[i][j] = rowStr.charAt(j) == 'x' ? new ColouredBubble(
+						result.getRandomRemainingColor())
 						: new BubblePlaceholder();
 				
 				if(i > 0) {
@@ -94,7 +101,7 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		boolean shift = !child.hasBottomLeft();
 		
 		for(int i = 0; i < 10; i++) {
-			Bubble bubble = new ColouredBubble();
+			Bubble bubble = new ColouredBubble(getRandomRemainingColor());
 			
 			if(shift){
 				child.bindTopRight(bubble);
@@ -204,4 +211,24 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		
 	}
 	
+	protected final Random RANDOM_GENERATOR = new Random();
+
+	public Color getRandomRemainingColor() {
+		final int index = RANDOM_GENERATOR.nextInt(remainingColors.size());
+		int i = 0;
+		
+		for(Color color : remainingColors) {
+			if(i == index) {
+				return color;
+			}
+			i++;
+		}
+		
+		throw new IllegalStateException("No colors available!");
+	}
+	
+	public void removeRemainingColor(final Color color) {
+		remainingColors.remove(color);
+	}
+
 }

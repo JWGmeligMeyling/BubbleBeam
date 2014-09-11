@@ -5,6 +5,7 @@ import java.awt.Point;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.throwaway.GuiThrowAway;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -14,7 +15,7 @@ import nl.tudelft.util.Vector2f;
  */
 public class MovingBubble extends ColouredBubble {
 	
-	public static final float SPEED_MULTIPLIER = 10f;
+	public static final float SPEED_MULTIPLIER = 300f / GuiThrowAway.FPS;
 	
 	protected Vector2f velocity;
 	protected Vector2f truePosition;
