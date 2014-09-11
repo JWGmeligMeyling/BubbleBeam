@@ -13,6 +13,8 @@ import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,10 +32,13 @@ public class GUI {
 	JLabel playerScore;
 	JLabel player2Score;
 	
+	//Buttons
+	
+	
 	//game-variables
 	boolean game_is_running = true;
 	public long time = System.currentTimeMillis();
-	//private static final Logger log = LoggerFactory.getLogger(GUI.class);
+	private static final Logger log = LoggerFactory.getLogger(GUI.class);
 	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
 	
@@ -61,6 +66,8 @@ public class GUI {
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
 		c.gridy = 0;
+		c.ipadx = 0;
+		c.ipady = 0;
 		pane.add(gamePanel,c);
 		
 		
@@ -74,10 +81,11 @@ public class GUI {
 		c.gridx = 2;
 		c.gridy = 0;
 		c.ipadx = 30;
+		c.ipady = 30;
 		pane.add(spaceForLogo, c);
 		
 		
-		JButton score = new JButton("Score: ");
+		playerScore = new JLabel("Score: ");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -87,10 +95,16 @@ public class GUI {
 		c.gridx = 2;
 		c.gridy = 1;
 		c.ipadx = 30;
-		pane.add(score, c);
+		c.ipady = 30;
+		pane.add(playerScore, c);
 		//JLabel 
 		
-		JButton menu = new JButton("Menu: ");
+		JButton restart = new JButton("Restart");
+		restart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				restart();
+			}
+		});
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -100,7 +114,7 @@ public class GUI {
 		c.gridx = 2;
 		c.gridy = 2;
 		c.ipadx = 30;
-		pane.add(menu, c);
+		pane.add(restart, c);
 		//JLabel 
 		
 		//multiplayer
@@ -117,6 +131,8 @@ public class GUI {
 			c.anchor = GridBagConstraints.WEST;
 			c.gridx = 3;
 			c.gridy = 0;
+			c.ipadx = 0;
+			c.ipady = 0;
 			pane.add(player2Panel,c);
 			
 		}
@@ -138,6 +154,14 @@ public class GUI {
 			run();
 			
 		}
+	}
+	
+	protected void exit(){
+		
+	}
+	protected void restart(){
+		//send message to both gamePanel and player2Panel for reset
+		//update scoreboards
 	}
 	
 	protected void update(){
