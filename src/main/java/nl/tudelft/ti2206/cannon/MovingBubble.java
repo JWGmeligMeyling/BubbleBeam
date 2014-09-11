@@ -1,9 +1,9 @@
 package nl.tudelft.ti2206.cannon;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.throwaway.GuiThrowAway;
 import nl.tudelft.util.Vector2f;
@@ -22,8 +22,10 @@ public class MovingBubble extends ColouredBubble {
 	protected Dimension screenSize;
 	protected Point screenLocation;
 	
-	public MovingBubble(Point position, Vector2f velocity, Dimension screenSize,
-			Point screenLocation) {
+	public MovingBubble(final Point position, final Vector2f velocity,
+			final Dimension screenSize, final Point screenLocation,
+			final Color color) {
+		super(color);
 		this.screenSize = screenSize;
 		this.truePosition = new Vector2f(position.x, position.y);
 		this.screenLocation = screenLocation;
@@ -38,6 +40,7 @@ public class MovingBubble extends ColouredBubble {
 		setPosition(new Point((int) Math.round(truePosition.x), (int) Math
 				.round(truePosition.y)));
 	}
+	
 	/**
 	 * 
 	 */

@@ -84,4 +84,8 @@ public class ColouredBubble extends AbstractBubble {
 		graphics.fillOval(shadowPos.x, shadowPos.y, SHADOW_DIAMETER, SHADOW_DIAMETER);
 	}
 	
+	public Color getColor() {
+		return color;
+	}
+	
 }

@@ -196,12 +196,8 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public boolean intersect(Bubble b){
-		double distance= this.getCentre().distance(b.getCentre());
+		double distance = this.getCenter().distance(b.getCenter());
 		return distance<WIDTH;
 	}
 	
-	@Override
-	public Point getCentre(){
-		return new Point(position.x+(WIDTH/2), position.y+(HEIGHT/2));
-	}
 }
