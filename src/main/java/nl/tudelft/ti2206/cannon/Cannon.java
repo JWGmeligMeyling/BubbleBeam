@@ -205,7 +205,7 @@ public class Cannon extends Observable implements Sprite {
 			for(Bubble bubble : b ){
 				if(bubble.intersect(shotBubble)){
 					hit=bubble;
-					System.out.println("we hit somethinggggg");
+					
 					break;
 				}
 			}

@@ -181,4 +181,30 @@ public abstract class AbstractBubble implements Bubble {
 	public Point getCentre(){
 		return new Point(position.x+(WIDTH/2), position.y+(HEIGHT/2));
 	}
+	
+	private Bubble[] getNeighbours(){
+		Bubble[] p = {topLeft, topRight,left,right,bottomLeft,bottomRight};
+		return p;
+	}
+	
+	public BubblePlaceholder[] getPlaceHolderNeighbours(){
+		Bubble[]p=getNeighbours();
+		int i=0;
+		for(Bubble b : p){
+			if (b instanceof BubblePlaceholder){
+				i++;
+			}
+		}
+		BubblePlaceholder[] placeholderNeighbours=new BubblePlaceholder[i];
+		i=0;
+		for(Bubble b : p){
+			if (b instanceof BubblePlaceholder){
+				placeholderNeighbours[i]=(BubblePlaceholder) b;
+				i++;
+			}
+		}
+		return placeholderNeighbours;
+		
+	}
+	
 }
