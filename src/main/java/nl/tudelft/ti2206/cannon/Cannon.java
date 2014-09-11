@@ -18,6 +18,8 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshIterator;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Sprite;
 import nl.tudelft.util.Vector2f;
@@ -122,7 +124,7 @@ public class Cannon extends Observable implements Sprite {
 								- AbstractBubble.HEIGHT / 2
 								+ (int) (48 * direction.y));
 				shotBubble = new MovingBubble(bubbleStartPosition,
-						loadedBubble, direction, screenSize, screenLocation);
+						 direction, screenSize, screenLocation);
 				loadedBubble = nextBubble;
 				nextBubble = new ColouredBubble();
 				correctBubblePositions();
@@ -173,7 +175,7 @@ public class Cannon extends Observable implements Sprite {
 	}
 
 	protected void drawBullet(final Graphics g) {
-		shotBubble.bubble.render(g);
+		shotBubble.render(g);
 	}
 
 	@Override
@@ -196,9 +198,17 @@ public class Cannon extends Observable implements Sprite {
 		return position.y;
 	}
 
-	public void gameStep() {
+	public void gameStep(BubbleMesh b) {
 		if (shotBubble != null) {
+			Bubble hit=null;
 			shotBubble.gameStep();
+			for(Bubble bubble : b ){
+				if(bubble.intersect(shotBubble)){
+					hit=bubble;
+					System.out.println("we hit somethinggggg");
+					break;
+				}
+			}
 			this.setChanged();
 			this.notifyObservers();
 		}

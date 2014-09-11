@@ -140,6 +140,13 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		this.notifyObservers();
 	}
 	
+	
+	public void snapBubble(Bubble incoming, Bubble hit){
+		
+	}
+	
+	
+	
 	public class BubbleMeshIterator implements Iterator<Bubble> {
 		
 		private Queue<Bubble> a = new LinkedList<Bubble>();

@@ -114,7 +114,7 @@ public class GuiThrowAwayPanel extends JPanel {
 
 	public void gameStep() {
 		if(cannon!=null){
-			cannon.gameStep();
+			cannon.gameStep(bubbleMesh);
 		}
 	}
 

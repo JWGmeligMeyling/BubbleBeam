@@ -12,19 +12,17 @@ import nl.tudelft.util.Vector2f;
  * @author Luka Bavdaz
  *
  */
-public class MovingBubble {
+public class MovingBubble extends ColouredBubble {
 	
 	public static final float SPEED_MULTIPLIER = 10f;
 	
 	protected Vector2f velocity;
 	protected Vector2f truePosition;
-	protected Bubble bubble;
 	protected Dimension screenSize;
 	protected Point screenLocation;
 	
-	public MovingBubble(Point position, Bubble bubble, Vector2f velocity, Dimension screenSize,
+	public MovingBubble(Point position, Vector2f velocity, Dimension screenSize,
 			Point screenLocation) {
-		this.bubble = bubble;
 		this.screenSize = screenSize;
 		this.truePosition = new Vector2f(position.x, position.y);
 		this.screenLocation = screenLocation;
@@ -36,7 +34,7 @@ public class MovingBubble {
 		
 		bounceOnWallCollision();
 		
-		bubble.setPosition(new Point((int) Math.round(truePosition.x), (int) Math
+		setPosition(new Point((int) Math.round(truePosition.x), (int) Math
 				.round(truePosition.y)));
 	}
 	/**
@@ -53,9 +51,5 @@ public class MovingBubble {
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
 		}
-	}
-
-	public Bubble getBubble() {
-		return bubble;
 	}
 }

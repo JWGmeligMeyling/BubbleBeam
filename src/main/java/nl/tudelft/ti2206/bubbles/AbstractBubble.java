@@ -171,4 +171,20 @@ public abstract class AbstractBubble implements Bubble {
 		return bottomRight != null;
 	}
 	
+	@Override
+	public boolean intersect(Bubble b){
+		double distance= this.getCentre().distance(b.getCentre());
+		return distance<WIDTH;
+	}
+	
+	@Override
+	public Point getCentre(){
+		return new Point(position.x+(WIDTH/2), position.y+(HEIGHT/2));
+	}
+	
+	public void newBindTopRight(Bubble topRight){
+		this.setTopRight(topRight);
+		if(topRight != null)
+			topRight.setBottomLeft(this);
+	}
 }

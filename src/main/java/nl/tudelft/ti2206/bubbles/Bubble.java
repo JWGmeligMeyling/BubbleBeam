@@ -36,5 +36,8 @@ public interface Bubble extends Sprite {
 	boolean hasRight();
 	boolean hasBottomLeft();
 	boolean hasBottomRight();
+	
+	boolean intersect(Bubble b);
+	Point getCentre();
 
 }
