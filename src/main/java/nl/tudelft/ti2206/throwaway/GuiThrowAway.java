@@ -17,6 +17,8 @@ public class GuiThrowAway extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 3473878919673841174L;
+	public static final int FPS = 60;
+	protected static final int FRAME_PERIOD = 1000/FPS;
 	
 	private final GuiThrowAwayPanel GUI;
 	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
@@ -47,7 +49,7 @@ public class GuiThrowAway extends JFrame {
 				GUI.gameStep();
 			}
 			
-		}, 0, 33, TimeUnit.MILLISECONDS);
+		}, 0, FRAME_PERIOD, TimeUnit.MILLISECONDS);
 	}
 	
 }
