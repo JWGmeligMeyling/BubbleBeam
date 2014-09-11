@@ -30,7 +30,11 @@ public class Cannon extends Observable implements Sprite {
 	
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
+<<<<<<< HEAD
 	protected static final float MIN_ANGLE = (float) (Math.PI/10);
+=======
+	protected static final int Y_TRANSLATION = 32;
+>>>>>>> d1997eb0ec252d6285cdcdf44741f3a749cf184a
 	protected final Point LOADED_BUBBLE_POSITION;
 	protected final Point NEXT_BUBBLE_POSITION;
 	
@@ -39,8 +43,12 @@ public class Cannon extends Observable implements Sprite {
 	protected Vector2f direction = new Vector2f(0f, 0f);
 	protected Bubble nextBubble, loadedBubble;
 	protected MovingBubble shotBubble;
+<<<<<<< HEAD
 	protected int chances = 5;
 	
+=======
+
+>>>>>>> d1997eb0ec252d6285cdcdf44741f3a749cf184a
 	protected final boolean mouseControl;
 	protected Dimension screenSize;
 	protected Point screenLocation;
@@ -124,11 +132,21 @@ public class Cannon extends Observable implements Sprite {
 			}
 			
 			public void shootBubble() {
+<<<<<<< HEAD
 				Point bubbleStartPosition = new Point((position.x - AbstractBubble.WIDTH / 2)
 						+ (int) (48 * direction.x), position.y - AbstractBubble.HEIGHT / 2
 						+ (int) (48 * direction.y));
 				shotBubble = new MovingBubble(bubbleStartPosition, loadedBubble, direction,
 						screenSize, screenLocation);
+=======
+				Point bubbleStartPosition = new Point(
+						(position.x - AbstractBubble.WIDTH / 2)
+								+ (int) (WIDTH * direction.x), position.y
+								- AbstractBubble.HEIGHT / 2
+								+ (int) (HEIGHT * direction.y));
+				shotBubble = new MovingBubble(bubbleStartPosition,
+						loadedBubble, direction, screenSize, screenLocation);
+>>>>>>> d1997eb0ec252d6285cdcdf44741f3a749cf184a
 				loadedBubble = nextBubble;
 				nextBubble = new ColouredBubble();
 				correctBubblePositions();
@@ -172,8 +190,14 @@ public class Cannon extends Observable implements Sprite {
 	
 	protected void drawCannon(final Graphics g) {
 		((Graphics2D) g).rotate(-angle + Math.PI / 2, position.x, position.y);
+<<<<<<< HEAD
 		g.drawImage(getCannonImage(), position.x - WIDTH / 2, position.y - HEIGHT / 2 - 32,
 				position.x + WIDTH / 2, position.y + HEIGHT / 2 - 32, 0, 0, 120, 108, null);
+=======
+		g.drawImage(getCannonImage(), position.x - WIDTH / 2, position.y
+				- HEIGHT / 2 - Y_TRANSLATION, position.x + WIDTH / 2, position.y + HEIGHT
+				/ 2 - Y_TRANSLATION, 0, 0, getCannonImage().getWidth(), getCannonImage().getHeight(), null);
+>>>>>>> d1997eb0ec252d6285cdcdf44741f3a749cf184a
 		((Graphics2D) g).rotate(angle - Math.PI / 2, position.x, position.y);
 	}
 	
