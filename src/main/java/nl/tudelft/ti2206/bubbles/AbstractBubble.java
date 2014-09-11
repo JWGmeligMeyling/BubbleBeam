@@ -257,4 +257,19 @@ public abstract class AbstractBubble implements Bubble {
 		return mindistance;
 	}
 	
+	/**
+	 * this is an awesome method.
+	 * 
+	 * @param toReplace new bubble
+	 */
+	public void makeConnections(Bubble toReplace){
+		this.bindTopLeft(toReplace.getTopLeft());
+		this.bindTopRight(toReplace.getTopRight());
+		this.bindLeft(toReplace.getLeft());
+		this.bindRight(toReplace.getRight());
+		this.bindBottomLeft(toReplace.getBottomLeft());
+		this.bindBottomRight(toReplace.getBottomRight());
+
+	}
+	
 }

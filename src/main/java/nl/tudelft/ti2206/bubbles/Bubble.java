@@ -32,6 +32,8 @@ public interface Bubble extends Sprite {
 	void setBottomRight(Bubble bubble);
 	void setBottomLeft(Bubble bubble);
 	
+	void makeConnections(Bubble toReplace);
+	
 	boolean hasTopRight();
 	boolean hasTopLeft();
 	boolean hasLeft();

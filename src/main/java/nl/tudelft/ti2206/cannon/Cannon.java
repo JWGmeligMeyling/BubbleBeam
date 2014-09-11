@@ -207,6 +207,7 @@ public class Cannon extends Observable implements Sprite {
 		BubblePlaceholder replacement= hit.getRightPosition(shotBubble);
 		shotBubble.makeConnections(replacement );
 		shotBubble.setPosition(shotBubble.calculatePosition());
+		shotBubble.pop();
 		shotBubble=null;
 	}
 
