@@ -23,6 +23,8 @@ public class GuiThrowAwayPanel extends JPanel {
 	private final BubbleMesh bubbleMesh;
 	private final Cannon cannon;
 	
+	private long score = 0;
+	
 	/**
 	 * 
 	 */
@@ -116,6 +118,10 @@ public class GuiThrowAwayPanel extends JPanel {
 		if(cannon!=null){
 			cannon.gameStep();
 		}
+	}
+	
+	public long getScore(){
+		return score;
 	}
 
 }
