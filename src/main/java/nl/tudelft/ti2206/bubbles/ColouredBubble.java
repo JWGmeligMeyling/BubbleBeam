@@ -10,11 +10,11 @@ import java.util.Random;
 
 public class ColouredBubble extends AbstractBubble {
 
-	private static final int RADIUS = 14;
+	public static final int RADIUS = 14;
 	private static final int DIAGONAL = RADIUS * 2;
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
-	private static final int SPACING = WIDTH - RADIUS * 2;
+	public static final int SPACING = WIDTH - RADIUS * 2;
 	private Colour color = Colour.pickRandom();
 
 	@Override
@@ -81,7 +81,7 @@ public class ColouredBubble extends AbstractBubble {
 		YELLOW(Color.YELLOW),
 		MAGENTA(Color.MAGENTA),
 		CYAN(Color.CYAN);
-
+		
 		private final Color color;
 
 		private Colour(final Color color) {
