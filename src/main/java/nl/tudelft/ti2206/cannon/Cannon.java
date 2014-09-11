@@ -7,8 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +16,11 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Sprite;
+import nl.tudelft.util.AbstractMouseListener;
+import nl.tudelft.util.AbstractMouseMotionListener;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -32,14 +33,15 @@ public class Cannon extends Observable implements Sprite {
 	protected static final int HEIGHT = 48;
 	
 	protected Point position;
-	protected double angle = 0;
+	protected double angle = 0.0d;
 	protected Vector2f direction = new Vector2f(0f, 0f);
 	protected Bubble nextBubble, loadedBubble;
 	protected MovingBubble shotBubble;
 	
 	protected final boolean mouseControl;
-	protected Dimension screenSize;
-	protected Point screenLocation;
+	protected final BubbleMesh bubbleMesh;
+	protected final Point screenLocation;
+	protected final Dimension screenSize;
 	
 	protected static File ROOT_FOLDER = new File("src/main/resources");
 	
@@ -60,8 +62,10 @@ public class Cannon extends Observable implements Sprite {
 		}
 	}
 	
-	public Cannon(Point position, Dimension dimension, Point screenLocation) {
+	public Cannon(BubbleMesh bubbleMesh, final Point position,
+			final Dimension dimension, final Point screenLocation) {
 		this.position = position;
+		this.bubbleMesh = bubbleMesh;
 		mouseControl = true;
 		
 		this.screenSize = dimension;
@@ -71,33 +75,23 @@ public class Cannon extends Observable implements Sprite {
 	}
 	
 	protected void fillBubbleSlots() {
-		nextBubble = new ColouredBubble();
-		loadedBubble = new ColouredBubble();
-	}
-	
-	public Cannon(Point position, boolean mouseControl) {
-		this.position = position;
-		this.mouseControl = mouseControl;
+		nextBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
+		loadedBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
 	}
 	
 	public void bindMouseListenerTo(final Component component) {
-		component.addMouseMotionListener(new MouseMotionListener() {
-			
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+		component.addMouseMotionListener(new AbstractMouseMotionListener() {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				direction = new Vector2f(e.getPoint()).subtract(new Vector2f(position)).normalize();
 				angle = Math.atan2(position.y - e.getY(), e.getX() - position.x);
-				component.repaint();
 			}
 			
 		});
-		component.addMouseListener(new MouseListener() {
+		
+		component.addMouseListener(new AbstractMouseListener() {
+		
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
@@ -107,32 +101,17 @@ public class Cannon extends Observable implements Sprite {
 				}
 			}
 			
-			public void shootBubble() {
-				Point bubbleStartPosition = new Point((position.x - AbstractBubble.WIDTH / 2)
-						+ (int) (48 * direction.x), position.y - AbstractBubble.HEIGHT / 2
-						+ (int) (48 * direction.y));
-				shotBubble = new MovingBubble(bubbleStartPosition, loadedBubble, direction,
-						screenSize, screenLocation);
-				loadedBubble = nextBubble;
-				nextBubble = new ColouredBubble();
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
 		});
+	}
+	
+	public void shootBubble() {
+		Point bubbleStartPosition = new Point((position.x - AbstractBubble.WIDTH / 2)
+				+ (int) (48 * direction.x), position.y - AbstractBubble.HEIGHT / 2
+				+ (int) (48 * direction.y));
+		shotBubble = new MovingBubble(bubbleStartPosition, loadedBubble, direction,
+				screenSize, screenLocation);
+		loadedBubble = nextBubble;
+		nextBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
 	}
 	
 	public void render(final Graphics g) {
@@ -179,5 +158,15 @@ public class Cannon extends Observable implements Sprite {
 			this.setChanged();
 			this.notifyObservers();
 		}
+	}
+
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getHeight() {
+		return HEIGHT;
 	}
 }

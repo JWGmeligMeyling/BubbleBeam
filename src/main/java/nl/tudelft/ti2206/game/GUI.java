@@ -4,12 +4,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
 
 import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.File;
 
 public class GUI {
 
@@ -28,7 +30,14 @@ public class GUI {
 		GridBagConstraints c = new GridBagConstraints();
 		
 		// everything the frame must be filled with
-		JPanel gamePanel = new GuiThrowAwayPanel();
+		JPanel gamePanel;
+		try {
+			BubbleMesh bubbleMesh = BubbleMesh.parse(new File("src/main/resources/board.txt"));
+			gamePanel = new GuiThrowAwayPanel(bubbleMesh);
+		} catch (Exception e) {
+			throw new RuntimeException("User too stupid, {put a username here}", e);
+		}
+		
 		gamePanel.setMinimumSize(gamePanel.getPreferredSize());
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;

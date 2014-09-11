@@ -1,17 +1,15 @@
 package nl.tudelft.ti2206.throwaway;
 
+import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
 
 public class GuiThrowAway extends JFrame {
-	
-	private static final Logger log = LoggerFactory.getLogger(GuiThrowAway.class);
 	
 	/**
 	 * 
@@ -23,7 +21,13 @@ public class GuiThrowAway extends JFrame {
 	
 	public GuiThrowAway() {
 		super("Bubble Shooter");
-		GUI = new GuiThrowAwayPanel();
+		
+		try {
+			BubbleMesh bubbleMesh = BubbleMesh.parse(new File("src/main/resources/board.txt"));
+			GUI = new GuiThrowAwayPanel(bubbleMesh);
+		} catch (Exception e) {
+			throw new RuntimeException("User too stupid, {put a username here}", e);
+		}
 		
 		this.add(GUI);
 		this.pack();
