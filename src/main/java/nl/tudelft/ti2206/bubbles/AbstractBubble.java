@@ -4,7 +4,12 @@ import java.awt.Point;
 
 public abstract class AbstractBubble implements Bubble {
 	
-	private static final Point ORIGIN = new Point(0,0);
+	public static final int WIDTH = 32;
+	public static final int HEIGHT = 32;
+	public static final int RADIUS = 14;
+	public static final int SPACING = WIDTH - RADIUS * 2;
+	
+	protected static final Point ORIGIN = new Point(0,0);
 	
 	private Bubble topLeft;
 	private Bubble topRight;
@@ -13,9 +18,7 @@ public abstract class AbstractBubble implements Bubble {
 	private Bubble bottomLeft;
 	private Bubble bottomRight;
 	
-	protected Point position = new Point(ORIGIN.x, ORIGIN.y);
-	public static final int WIDTH = 32;
-	public static final int HEIGHT = 32;
+	private Point position = new Point(ORIGIN.x, ORIGIN.y);
 
 	@Override
 	public void setPosition(final Point position) {
@@ -25,6 +28,26 @@ public abstract class AbstractBubble implements Bubble {
 	@Override
 	public Point getPosition() {
 		return position;
+	}
+	
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+	
+	@Override
+	public int getHeight() {
+		return HEIGHT;
+	}
+	
+	@Override
+	public Point getCenter() {
+		return new Point(position.x + RADIUS + SPACING, position.y + RADIUS + SPACING);
+	}
+	
+	@Override
+	public int getRadius() {
+		return RADIUS;
 	}
 
 	@Override
