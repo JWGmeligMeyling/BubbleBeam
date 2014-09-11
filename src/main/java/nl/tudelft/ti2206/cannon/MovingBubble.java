@@ -5,7 +5,6 @@ import java.awt.Point;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
-import nl.tudelft.ti2206.throwaway.GuiThrowAway;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -15,13 +14,14 @@ import nl.tudelft.util.Vector2f;
  */
 public class MovingBubble {
 	
-	public static final float SPEED_MULTIPLIER = 300f / GuiThrowAway.FPS;
+	public static final long TIME_DENOM = 10;
 	
 	protected Vector2f velocity;
 	protected Vector2f truePosition;
 	protected Bubble bubble;
 	protected Dimension screenSize;
 	protected Point screenLocation;
+	protected long previousTime;
 	
 	public MovingBubble(Point position, Bubble bubble, Vector2f velocity, Dimension screenSize,
 			Point screenLocation) {
@@ -30,16 +30,23 @@ public class MovingBubble {
 		this.truePosition = new Vector2f(position.x, position.y);
 		this.screenLocation = screenLocation;
 		this.velocity = velocity;
+		this.previousTime = System.currentTimeMillis();
 	}
 	
 	public void gameStep() {
-		truePosition = truePosition.add(velocity.multiply(SPEED_MULTIPLIER));
-		
+		long timeDifference = getTimeDifference();
+		truePosition = truePosition.add(velocity.multiply(timeDifference / TIME_DENOM));
 		bounceOnWallCollision();
-		
-		bubble.setPosition(new Point((int) Math.round(truePosition.x), (int) Math
-				.round(truePosition.y)));
+		bubble.setPosition(truePosition.toPoint());
 	}
+	
+	protected long getTimeDifference() {
+		long now = System.currentTimeMillis();
+		long diff = now - previousTime;
+		previousTime = now;
+		return diff;
+	}
+	
 	/**
 	 * 
 	 */
@@ -49,7 +56,8 @@ public class MovingBubble {
 					- (screenSize.width + screenLocation.x);
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
-		} else if (truePosition.x < screenLocation.x) {
+		}
+		else if (truePosition.x < screenLocation.x) {
 			float xError = truePosition.x - screenLocation.x;
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;

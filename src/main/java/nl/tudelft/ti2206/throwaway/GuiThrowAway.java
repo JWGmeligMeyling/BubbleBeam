@@ -1,11 +1,11 @@
 package nl.tudelft.ti2206.throwaway;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 
@@ -19,7 +19,6 @@ public class GuiThrowAway extends JFrame {
 	protected static final int FRAME_PERIOD = 1000/FPS;
 	
 	private final GuiThrowAwayPanel GUI;
-	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 	
 	public GuiThrowAway() {
 		super("Bubble Shooter");
@@ -41,18 +40,15 @@ public class GuiThrowAway extends JFrame {
 		run();
 	}
 	
-	public long time = System.currentTimeMillis();
-	
 	private void run() {
-		executorService.scheduleAtFixedRate(new Runnable() {
-			
+		new Timer(FRAME_PERIOD, new ActionListener() {
+
 			@Override
-			public void run() {
-				time = System.currentTimeMillis();
+			public void actionPerformed(ActionEvent e) {
 				GUI.gameStep();
 			}
 			
-		}, 0, FRAME_PERIOD, TimeUnit.MILLISECONDS);
+		}).start();
 	}
 	
 }
