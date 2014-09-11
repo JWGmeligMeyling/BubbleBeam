@@ -47,16 +47,7 @@ public class MovingBubble extends ColouredBubble {
 		previousTime = now;
 		return diff;
 	}
-	
-	public void makeConnections(BubblePlaceholder toReplace){
-		this.bindTopLeft(toReplace.getTopLeft());
-		this.bindTopRight(toReplace.getTopRight());
-		this.bindLeft(toReplace.getLeft());
-		this.bindRight(toReplace.getRight());
-		this.bindBottomLeft(toReplace.getBottomLeft());
-		this.bindBottomRight(toReplace.getBottomRight());
 
-	}
 	/**
 	 * 
 	 */

@@ -64,15 +64,18 @@ public abstract class AbstractBubble implements Bubble {
 	}
 	
 	public Point calculatePosition() {
-		if(this.topLeft != null) {
+		if(this.hasTopLeft()) {
 			return new Point(topLeft.getX() + WIDTH / 2, topLeft.getY() + HEIGHT);
 		}
-		else if(this.topRight != null) {
+		else if(this.hasTopRight()) {
 			return new Point(topRight.getX() - WIDTH / 2, topRight.getY() + HEIGHT);
 		}
-		else if(this.left != null) {
+		else if(this.hasLeft()) {
 			return new Point(left.getX() + WIDTH, left.getY());
 		}
+//		else if(this.hasRight()) {
+//			return new Point(right.getX() - WIDTH, right.getY());
+//		}
 		return position;
 	}
 
@@ -278,6 +281,20 @@ public abstract class AbstractBubble implements Bubble {
 		if(this.hasBottomLeft()){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomLeft().getCenter().x ,this.getBottomLeft().getCenter().y);
 		}
+	}
+	
+	/**
+	 * this is an awesome method.
+	 * 
+	 * @param toReplace new bubble
+	 */
+	public void makeConnections(Bubble toReplace){
+		this.bindTopLeft(toReplace.getTopLeft());
+		this.bindTopRight(toReplace.getTopRight());
+		this.bindLeft(toReplace.getLeft());
+		this.bindRight(toReplace.getRight());
+		this.bindBottomLeft(toReplace.getBottomLeft());
+		this.bindBottomRight(toReplace.getBottomRight());
 	}
 	
 }
