@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -34,7 +35,6 @@ public class ColouredBubble extends AbstractBubble {
 		final Point center = new Point(this.getX(), this.getY());
 		center.translate(WIDTH / 2, HEIGHT / 2);
 		fillBaseColour(g2, center, color);
-		this.renderDebugLines(g2);
 	}
 
 	private static float[] BASE_COLOR_GRADIENT_RANGE = new float[] { 0.0f, 1.0f };
@@ -99,12 +99,19 @@ public class ColouredBubble extends AbstractBubble {
 	 */
 	public void pop() {
 		Set<ColouredBubble> visited = Sets.newHashSet();
-		this.pop(visited);
-		
-		if(visited.size() > 2) {
-			visited.forEach(bubble -> {
+		Set<ColouredBubble> potentiallyIsolated = Sets.newHashSet();
+		if(this.pop(visited, potentiallyIsolated)) {
+			visited
+			.forEach(bubble -> {
 				bubble.replaceWith(new BubblePlaceholder());
 			});
+			
+			potentiallyIsolated.stream()
+				.filter(bubble -> !bubble.connectedToTop())
+				.forEach(bubble -> bubble.replaceWith(new BubblePlaceholder()));
+			
+			
+			
 		}
 	}
 	
@@ -114,10 +121,18 @@ public class ColouredBubble extends AbstractBubble {
 	 * @param visited
 	 *            {@link Set} of {@code ColouredBubbles} to be popped
 	 */
-	protected void pop(final Set<ColouredBubble> visited) {
-		this.getNeighboursOfType(ColouredBubble.class).stream()
+	protected boolean pop(final Set<ColouredBubble> visited,
+			final Set<ColouredBubble> potentiallyIsolated) {
+		List<ColouredBubble> colouredBubbles = 
+				this.getNeighboursOfType(ColouredBubble.class);
+		
+		colouredBubbles.stream()
 			.filter(bubble -> bubble.color.equals(color) && visited.add(bubble))
-			.forEach(bubble -> bubble.pop(visited));
+			.forEach(bubble -> bubble.pop(visited, potentiallyIsolated));
+		
+		potentiallyIsolated.addAll(colouredBubbles);
+		potentiallyIsolated.removeAll(visited);
+		return visited.size() > 2;
 	}
 
 }

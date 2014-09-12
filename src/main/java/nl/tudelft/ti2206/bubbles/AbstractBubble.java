@@ -5,9 +5,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public abstract class AbstractBubble implements Bubble {
 	
@@ -19,6 +21,8 @@ public abstract class AbstractBubble implements Bubble {
 	protected static final Point ORIGIN = new Point(0,0);
 	
 	private boolean origin = false;
+	private boolean top = false;
+	
 	private Bubble topLeft;
 	private Bubble topRight;
 	private Bubble left;
@@ -30,6 +34,25 @@ public abstract class AbstractBubble implements Bubble {
 
 	public void setOrigin() {
 		origin = true;
+	}
+	
+	public void setTop() {
+		top = true;
+	}
+	
+	public boolean connectedToTop() {
+		return connectedToTop(Sets.newHashSet());
+	}
+	
+	@Override
+	public boolean connectedToTop(final Set<Bubble> traversed) {
+		return top
+			|| traversed.add(this)
+			&& (
+				(hasTopLeft() && !traversed.contains(topLeft) && topLeft.connectedToTop(traversed))
+			||	(hasTopRight() && !traversed.contains(topRight) && topRight.connectedToTop(traversed))
+			||	(hasLeft() && !traversed.contains(left) && left.connectedToTop(traversed))
+			||	(hasRight() && !traversed.contains(right) && right.connectedToTop(traversed)));
 	}
 	
 	@Override
@@ -270,20 +293,20 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		renderDebugLines((Graphics2D) graphics);
+	//	renderDebugLines((Graphics2D) graphics);
 	}
 	
 	protected void renderDebugLines(final Graphics2D g2) {
 		g2.setColor(Color.black);
-		if(this.hasRight()){
+		if(this.hasRight() && this.right.getLeft().equals(this)){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getRight().getCenter().x ,this.getRight().getCenter().y);
 		}
 		
-		if(this.hasBottomRight()){
+		if(this.hasBottomRight() && this.bottomRight.getTopLeft().equals(this)){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomRight().getCenter().x ,this.getBottomRight().getCenter().y);
 		}
 		
-		if(this.hasBottomLeft()){
+		if(this.hasBottomLeft() && this.bottomLeft.getTopRight().equals(this)){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomLeft().getCenter().x ,this.getBottomLeft().getCenter().y);
 		}
 	}

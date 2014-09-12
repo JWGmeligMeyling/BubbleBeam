@@ -2,6 +2,7 @@ package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A {@code} BubblePlaceholder represents a place that a Bubble can snap on to.
@@ -49,5 +50,8 @@ public interface Bubble extends Sprite {
 	<T> List<T> getNeighboursOfType(Class<T> type);
 	BubblePlaceholder getSnapPosition(Bubble b);
 	void replaceWith(Bubble newBubble);
+
+	boolean connectedToTop();
+	boolean connectedToTop(Set<Bubble> traversed);
 
 }

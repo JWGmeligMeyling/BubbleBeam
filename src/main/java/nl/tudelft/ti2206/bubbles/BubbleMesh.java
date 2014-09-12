@@ -80,6 +80,9 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 						}
 					}
 				}
+				else {
+					bubble.setTop();
+				}
 				
 				if(j > 0) {
 					bubble.bindLeft(bubbles[i][j-1]);
