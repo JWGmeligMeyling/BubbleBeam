@@ -31,8 +31,9 @@ public abstract class AbstractBubble implements Bubble {
 	
 	private Point position = new Point(ORIGIN.x, ORIGIN.y);
 
-	public void setOrigin() {
-		origin = true;
+	@Override
+	public void setOrigin(boolean value) {
+		origin = value;
 	}
 	
 	public void setTop() {
