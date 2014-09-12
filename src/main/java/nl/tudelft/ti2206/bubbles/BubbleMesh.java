@@ -34,8 +34,9 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	
 	/**
 	 * Pop this bubble and it's neighbors recursively
+	 * @return true iff bubbles popped
 	 */
-	void pop(ColouredBubble target);
+	boolean pop(ColouredBubble target);
 
 	void calculatePositions();
 
@@ -107,7 +108,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				}
 				
 				if(i == 0 && j == 0) {
-					bubble.setOrigin();
+					bubble.setOrigin(true);
 				}
 			}
 		}
@@ -192,7 +193,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		}
 
 		@Override
-		public void pop(final ColouredBubble target) {
+		public boolean pop(final ColouredBubble target) {
 			Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
 			if(this.pop(target, bubblesToPop)) {			
 				bubblesToPop.forEach(bubble -> {
@@ -201,7 +202,9 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				
 				updateRemainingColors();
 				calculateScore(bubblesToPop);
+				return true;
 			}
+			return false;
 		}
 		
 		/**
@@ -271,6 +274,9 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				}
 				else {
 					child.bindTopLeft(bubble);
+					if(child.hasLeft()) {
+						child.getLeft().bindTopRight(bubble);
+					}
 				}
 				
 				if(previousBubble != null) {
@@ -279,9 +285,12 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				previousBubble = bubble;
 				
 				if(i == 0) {
+					startBubble.setOrigin(false);
 					if(shift)
-						bubble.getPosition().translate(AbstractBubble.WIDTH / 2, 0);
+						bubble.setPosition(new Point(startBubble.getX()
+								+ AbstractBubble.WIDTH / 2, startBubble.getY()));
 					startBubble = bubble;
+					startBubble.setOrigin(true);
 				}
 				
 				child = bubbles.next();

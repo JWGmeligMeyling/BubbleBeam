@@ -30,6 +30,7 @@ import nl.tudelft.util.Vector2f;
  */
 public class Cannon extends Observable implements Sprite {
 	
+	private static final int MAX_MISSES = 5;
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI/10);
@@ -41,7 +42,7 @@ public class Cannon extends Observable implements Sprite {
 	protected Vector2f direction = new Vector2f(0f, 0f);
 	protected ColouredBubble nextBubble, loadedBubble;
 	protected MovingBubble shotBubble;
-	protected int chances = 5;
+	protected int misses = 0;
 	
 	protected final boolean mouseControl;
 	protected final BubbleMesh bubbleMesh;
@@ -208,8 +209,20 @@ public class Cannon extends Observable implements Sprite {
 	public void collide(final Bubble hitTarget){
 		BubblePlaceholder snapPosition= hitTarget.getSnapPosition(shotBubble);
 		bubbleMesh.replaceBubble(snapPosition, shotBubble);
-		bubbleMesh.pop(shotBubble);
+		if(bubbleMesh.pop(shotBubble)) {
+			// good shot
+		}
+		else {
+			incrementMisses();
+		}
 		shotBubble = null;
+	}
+
+	protected void incrementMisses() {
+		if(++misses > MAX_MISSES) {
+			misses = 0;
+			bubbleMesh.insertRow();
+		}
 	}
 
 	@Override
