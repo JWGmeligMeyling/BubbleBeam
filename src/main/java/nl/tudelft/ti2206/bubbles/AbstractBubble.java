@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.List;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 public abstract class AbstractBubble implements Bubble {
 	
@@ -230,50 +234,38 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public boolean intersect(Bubble b){
-		double distance= this.getDist(b);
+		double distance= this.getDistance(b);
 		return distance<WIDTH-5;
 	}
 	
-	public Bubble[] getNeighbours(){
-		Bubble[] p = {topLeft, topRight,left,right,bottomLeft,bottomRight};
-		return p;
+	@Override
+	public List<Bubble> getNeighbours() {
+		List<Bubble> neighbours = Lists.newArrayList();
+		if(this.hasTopLeft()) neighbours.add(topLeft);
+		if(this.hasTopRight()) neighbours.add(topRight);
+		if(this.hasLeft()) neighbours.add(left);
+		if(this.hasRight()) neighbours.add(right);
+		if(this.hasBottomLeft()) neighbours.add(bottomLeft);
+		if(this.hasBottomRight()) neighbours.add(bottomRight);
+		return neighbours;
 	}
 	
-	public BubblePlaceholder[] getPlaceHolderNeighbours(){
-		Bubble[]p=getNeighbours();
-		int i=0;
-		for(Bubble b : p){
-			if (b instanceof BubblePlaceholder){
-				i++;
-			}
-		}
-		BubblePlaceholder[] placeholderNeighbours=new BubblePlaceholder[i];
-		i=0;
-		for(Bubble b : p){
-			if (b instanceof BubblePlaceholder){
-				placeholderNeighbours[i]=(BubblePlaceholder) b;
-				i++;
-			}
-		}
-		return placeholderNeighbours;
+	@Override
+	public <T> List<T> getNeighboursOfType(Class<T> type) {
+		return Lists.newArrayList(Iterables.filter(getNeighbours(), type));
 	}
 	
-	protected double getDist (Bubble b){
+	@Override
+	public double getDistance(final Bubble b){
 		return this.getCenter().distance(b.getCenter());
 	}
 	
-	public BubblePlaceholder getRightPosition(Bubble b){
-		BubblePlaceholder[] options= this.getPlaceHolderNeighbours();
-		BubblePlaceholder mindistance= options[0];
-		double mindist = mindistance.getDist(b);
-		for(BubblePlaceholder opt : options){
-			double distance= opt.getDist(b);
-			if( distance<mindist){
-				mindist=distance;
-				mindistance=opt;
-			}
-		}
-		return mindistance;
+	@Override
+	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
+		return getNeighboursOfType(BubblePlaceholder.class)
+			.stream().min((BubblePlaceholder a, BubblePlaceholder b) ->
+				a.getDistance(bubble) < b.getDistance(bubble) ? -1 : 1)
+			.get();
 	}
 	
 	@Override
@@ -296,18 +288,15 @@ public abstract class AbstractBubble implements Bubble {
 		}
 	}
 	
-	/**
-	 * this is an awesome method.
-	 * 
-	 * @param toReplace new bubble
-	 */
-	public void makeConnections(Bubble toReplace){
-		this.bindTopLeft(toReplace.getTopLeft());
-		this.bindTopRight(toReplace.getTopRight());
-		this.bindLeft(toReplace.getLeft());
-		this.bindRight(toReplace.getRight());
-		this.bindBottomLeft(toReplace.getBottomLeft());
-		this.bindBottomRight(toReplace.getBottomRight());
+	@Override
+	public void replaceWith(final Bubble toReplace){
+		toReplace.bindTopLeft(topLeft);
+		toReplace.bindTopRight(topRight);
+		toReplace.bindLeft(left);
+		toReplace.bindRight(right);
+		toReplace.bindBottomLeft(bottomLeft);
+		toReplace.bindBottomRight(bottomRight);
+		toReplace.setPosition(position);
 	}
 	
 }

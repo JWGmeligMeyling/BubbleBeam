@@ -195,7 +195,7 @@ public class Cannon extends Observable implements Sprite {
 			for(Bubble bubble : b ){
 				if(bubble.intersect(shotBubble)){
 					hit=bubble;
-					this.Collided(hit);
+					this.collide(hit);
 					break;
 				}
 			}
@@ -203,12 +203,17 @@ public class Cannon extends Observable implements Sprite {
 		
 	}
 	
-	public void Collided(Bubble hit){
-		BubblePlaceholder replacement= hit.getRightPosition(shotBubble);
-		shotBubble.makeConnections(replacement );
-		shotBubble.setPosition(shotBubble.calculatePosition());
+	/**
+	 * Hit a certain {@link Bubble} and snap to the closest
+	 * {@link BubblePlaceholder}
+	 * 
+	 * @param hitTarget
+	 */
+	public void collide(final Bubble hitTarget){
+		BubblePlaceholder snapPosition= hitTarget.getSnapPosition(shotBubble);
+		snapPosition.replaceWith(shotBubble);
 		shotBubble.pop();
-		shotBubble=null;
+		shotBubble = null;
 	}
 
 	@Override

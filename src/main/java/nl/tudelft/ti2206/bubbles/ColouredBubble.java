@@ -94,31 +94,30 @@ public class ColouredBubble extends AbstractBubble {
 		return color;
 	}
 
+	/**
+	 * Pop this bubble and it's neighbors recursively
+	 */
 	public void pop() {
 		Set<ColouredBubble> visited = Sets.newHashSet();
-		pop(visited);
-
-	}
-
-	
-	public void pop(Set<ColouredBubble> visited) {
-		for (Bubble b : this.getNeighbours()) {
-			if (b instanceof ColouredBubble) {
-				ColouredBubble other = (ColouredBubble) b;
-				if (!visited.contains(other)) {
-
-					if (this.color.equals(other.getColor())){
-					visited.add(other);
-					other.pop(visited);
-					if(visited.size()>2){
-						BubblePlaceholder replacement= new BubblePlaceholder();
-						replacement.makeConnections(this);
-						replacement.calculatePosition();
-					}
-					}
-				}
-			}
+		this.pop(visited);
+		
+		if(visited.size() > 2) {
+			visited.forEach(bubble -> {
+				bubble.replaceWith(new BubblePlaceholder());
+			});
 		}
+	}
+	
+	/**
+	 * Recursively search for neighboring bubbles of the same color
+	 * 
+	 * @param visited
+	 *            {@link Set} of {@code ColouredBubbles} to be popped
+	 */
+	protected void pop(final Set<ColouredBubble> visited) {
+		this.getNeighboursOfType(ColouredBubble.class).stream()
+			.filter(bubble -> bubble.color.equals(color) && visited.add(bubble))
+			.forEach(bubble -> bubble.pop(visited));
 	}
 
 }

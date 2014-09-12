@@ -113,6 +113,20 @@ public class AbstractBubbleTest {
 		verify(other).setBottomLeft(bubble);
 		assertEquals(other, bubble.getTopRight());
 	}
+
+	@Test
+	public void testBindBottomLeft() {
+		bubble.bindBottomLeft(other);
+		verify(other).setTopRight(bubble);
+		assertEquals(other, bubble.getBottomLeft());
+	}
+	
+	@Test
+	public void testBindBottomRight() {
+		bubble.bindBottomRight(other);
+		verify(other).setTopLeft(bubble);
+		assertEquals(other, bubble.getBottomRight());
+	}
 	
 	@Test
 	public void testBindLeft() {
