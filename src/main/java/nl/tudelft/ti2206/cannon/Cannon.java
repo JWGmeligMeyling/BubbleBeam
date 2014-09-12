@@ -188,17 +188,13 @@ public class Cannon extends Observable implements Sprite {
 		return position.y;
 	}
 
-	public void gameStep(BubbleMesh b) {
+	public void gameStep() {
 		if (shotBubble != null) {
-			Bubble hit=null;
 			shotBubble.gameStep();
-			for(Bubble bubble : b ){
-				if(bubble.intersect(shotBubble)){
-					hit=bubble;
-					this.collide(hit);
-					break;
-				}
-			}
+
+			bubbleMesh.stream()
+				.filter(bubble -> bubble.intersect(shotBubble)).findAny()
+				.ifPresent(bubble -> this.collide(bubble));
 		}
 		
 	}
