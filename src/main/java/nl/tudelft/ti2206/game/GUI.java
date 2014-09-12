@@ -190,7 +190,7 @@ public class GUI {
 		// everything the frame must be filled with
 		if (multiplayer) {
 			player2Panel = new GuiThrowAwayPanel(
-					BubbleMesh.parse(new File("src/main/resources/anotherboard")));
+					BubbleMesh.parse(new File("src/main/resources/anotherboard.txt")));
 
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;

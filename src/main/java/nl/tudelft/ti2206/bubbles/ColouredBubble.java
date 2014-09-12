@@ -112,7 +112,7 @@ public class ColouredBubble extends AbstractBubble {
 	 * @return true iff the {@code Bubble} is connected to the top
 	 */
 	protected boolean connectedToTop(final Set<ColouredBubble> bubblesHit) {
-		return top || (bubblesHit.add(this) &&
+		return bubblesHit.add(this) && ( top ||
 				this.getNeighboursOfType(ColouredBubble.class).stream()
 					.anyMatch(bubble -> bubble.connectedToTop(bubblesHit)));
 	}
