@@ -1,22 +1,44 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.Collections;
+import java.util.List;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 public abstract class AbstractBubble implements Bubble {
 	
-	private static final Point ORIGIN = new Point(0,0);
-	
-	private Bubble topLeft;
-	private Bubble topRight;
-	private Bubble left;
-	private Bubble right;
-	private Bubble bottomLeft;
-	private Bubble bottomRight;
-	
-	protected Point position = new Point(ORIGIN.x, ORIGIN.y);
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
+	public static final int RADIUS = 14;
+	public static final int SPACING = WIDTH - RADIUS * 2;
+	
+	protected static final Point ORIGIN = new Point(0,0);
+	
+	protected boolean origin = false;
+	protected boolean top = false;
+	
+	protected Bubble topLeft;
+	protected Bubble topRight;
+	protected Bubble left;
+	protected Bubble right;
+	protected Bubble bottomLeft;
+	protected Bubble bottomRight;
+	
+	private Point position = new Point(ORIGIN.x, ORIGIN.y);
 
+	public void setOrigin() {
+		origin = true;
+	}
+	
+	public void setTop() {
+		top = true;
+	}
+	
 	@Override
 	public void setPosition(final Point position) {
 		this.position = position;
@@ -25,6 +47,26 @@ public abstract class AbstractBubble implements Bubble {
 	@Override
 	public Point getPosition() {
 		return position;
+	}
+	
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+	
+	@Override
+	public int getHeight() {
+		return HEIGHT;
+	}
+	
+	@Override
+	public Point getCenter() {
+		return new Point(position.x + RADIUS + SPACING, position.y + RADIUS + SPACING);
+	}
+	
+	@Override
+	public int getRadius() {
+		return RADIUS;
 	}
 
 	@Override
@@ -38,14 +80,25 @@ public abstract class AbstractBubble implements Bubble {
 	}
 	
 	public Point calculatePosition() {
-		if(this.topLeft != null) {
-			return new Point(topLeft.getX() + WIDTH / 2, topLeft.getY() + HEIGHT);
-		}
-		else if(this.topRight != null) {
-			return new Point(topRight.getX() - WIDTH / 2, topRight.getY() + HEIGHT);
-		}
-		else if(this.left != null) {
-			return new Point(left.getX() + WIDTH, left.getY());
+		if(!origin) {
+			if(this.hasTopLeft()) {
+				return new Point(topLeft.getX() + WIDTH / 2, topLeft.getY() + HEIGHT);
+			}
+			else if(this.hasTopRight()) {
+				return new Point(topRight.getX() - WIDTH / 2, topRight.getY() + HEIGHT);
+			}
+			else if(this.hasLeft()) {
+				return new Point(left.getX() + WIDTH, left.getY());
+			}
+			else if(this.hasRight()) {
+				return new Point(right.getX() - WIDTH, right.getY());
+			}
+			else if(this.hasBottomLeft()) {
+				return new Point(bottomLeft.getX() + WIDTH / 2, bottomLeft.getY() - HEIGHT);
+			}
+			else if(this.hasBottomRight()) {
+				return new Point(bottomRight.getX() - WIDTH / 2, bottomRight.getY() - HEIGHT);
+			}
 		}
 		return position;
 	}
@@ -80,6 +133,21 @@ public abstract class AbstractBubble implements Bubble {
 		if(topLeft != null)
 			topLeft.setBottomRight(this);
 	}
+	@Override
+	public void bindBottomLeft(Bubble botLeft){
+		this.setBottomLeft(botLeft);
+		if(botLeft != null)
+			botLeft.setTopRight(this);
+	}
+	
+	@Override
+	public void bindBottomRight(Bubble botLeft){
+		this.setBottomRight(botLeft);
+		if(botLeft != null)
+			botLeft.setTopLeft(this);
+	}
+	
+	
 	
 	@Override
 	public Bubble getTopLeft() {
@@ -169,6 +237,58 @@ public abstract class AbstractBubble implements Bubble {
 	@Override
 	public boolean hasBottomRight() {
 		return bottomRight != null;
+	}
+	
+	@Override
+	public boolean intersect(Bubble b){
+		double distance= this.getDistance(b);
+		return distance<WIDTH-5;
+	}
+	
+	@Override
+	public List<Bubble> getNeighbours() {
+		List<Bubble> neighbours = Lists.newArrayList(topLeft, topRight, left,
+				right, bottomLeft, bottomRight);
+		neighbours.removeAll(Collections.singleton(null));
+		return neighbours;
+	}
+	
+	@Override
+	public <T> List<T> getNeighboursOfType(Class<T> type) {
+		return Lists.newArrayList(Iterables.filter(getNeighbours(), type));
+	}
+	
+	@Override
+	public double getDistance(final Bubble b){
+		return this.getCenter().distance(b.getCenter());
+	}
+	
+	@Override
+	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
+		return getNeighboursOfType(BubblePlaceholder.class)
+			.stream().min((BubblePlaceholder a, BubblePlaceholder b) ->
+				a.getDistance(bubble) < b.getDistance(bubble) ? -1 : 1)
+			.get();
+	}
+	
+	@Override
+	public void render(Graphics graphics) {
+		renderDebugLines((Graphics2D) graphics);
+	}
+	
+	protected void renderDebugLines(final Graphics2D g2) {
+		g2.setColor(Color.black);
+		if(this.hasRight() && this.right.getLeft().equals(this)){
+			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getRight().getCenter().x ,this.getRight().getCenter().y);
+		}
+		
+		if(this.hasBottomRight() && this.bottomRight.getTopLeft().equals(this)){
+			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomRight().getCenter().x ,this.getBottomRight().getCenter().y);
+		}
+		
+		if(this.hasBottomLeft() && this.bottomLeft.getTopRight().equals(this)){
+			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomLeft().getCenter().x ,this.getBottomLeft().getCenter().y);
+		}
 	}
 	
 }

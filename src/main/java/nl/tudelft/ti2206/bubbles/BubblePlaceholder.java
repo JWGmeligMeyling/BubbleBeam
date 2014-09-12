@@ -6,8 +6,12 @@ public class BubblePlaceholder extends AbstractBubble {
 
 	@Override
 	public void render(Graphics graphics) {
-		// TODO Auto-generated method stub
-
+		super.render(graphics);
 	}
-
+	
+	@Override
+	public boolean intersect(Bubble other){
+		return false;
+	}
+	
 }

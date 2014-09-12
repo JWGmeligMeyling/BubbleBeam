@@ -1,9 +1,9 @@
 package nl.tudelft.ti2206.cannon;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.util.Vector2f;
 
@@ -12,33 +12,41 @@ import nl.tudelft.util.Vector2f;
  * @author Luka Bavdaz
  *
  */
-public class MovingBubble {
+public class MovingBubble extends ColouredBubble {
 	
-	public static final float SPEED_MULTIPLIER = 10f;
+	public static final long TIME_DENOM = 5;
 	
 	protected Vector2f velocity;
 	protected Vector2f truePosition;
-	protected Bubble bubble;
 	protected Dimension screenSize;
 	protected Point screenLocation;
+	protected long previousTime;
 	
-	public MovingBubble(Point position, Bubble bubble, Vector2f velocity, Dimension screenSize,
-			Point screenLocation) {
-		this.bubble = bubble;
+	public MovingBubble(final Point position, final Vector2f velocity,
+			final Dimension screenSize, final Point screenLocation,
+			final Color color) {
+		super(color);
 		this.screenSize = screenSize;
 		this.truePosition = new Vector2f(position.x, position.y);
 		this.screenLocation = screenLocation;
 		this.velocity = velocity;
+		this.previousTime = System.currentTimeMillis();
 	}
 	
 	public void gameStep() {
-		truePosition = truePosition.add(velocity.multiply(SPEED_MULTIPLIER));
-		
+		long timeDifference = getTimeDifference();
+		truePosition = truePosition.add(velocity.multiply(timeDifference / TIME_DENOM));
 		bounceOnWallCollision();
-		
-		bubble.setPosition(new Point((int) Math.round(truePosition.x), (int) Math
-				.round(truePosition.y)));
+		this.setPosition(truePosition.toPoint());
 	}
+	
+	protected long getTimeDifference() {
+		long now = System.currentTimeMillis();
+		long diff = now - previousTime;
+		previousTime = now;
+		return diff;
+	}
+
 	/**
 	 * 
 	 */
@@ -48,14 +56,11 @@ public class MovingBubble {
 					- (screenSize.width + screenLocation.x);
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
-		} else if (truePosition.x < screenLocation.x) {
+		}
+		else if (truePosition.x < screenLocation.x) {
 			float xError = truePosition.x - screenLocation.x;
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
 		}
-	}
-
-	public Bubble getBubble() {
-		return bubble;
 	}
 }
