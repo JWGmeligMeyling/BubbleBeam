@@ -13,6 +13,7 @@ import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.cannon.Cannon;
+import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.util.ObservableObject;
 
 public class GuiThrowAwayPanel extends JPanel {
@@ -67,7 +68,7 @@ public class GuiThrowAwayPanel extends JPanel {
 		}
 	}
 
-	public void gameStep() {
+	public void gameStep() throws GameOver {
 		cannon.gameStep();
 		this.repaint();
 	}

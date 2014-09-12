@@ -20,6 +20,7 @@ import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Sprite;
+import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.util.AbstractMouseListener;
 import nl.tudelft.util.AbstractMouseMotionListener;
 import nl.tudelft.util.Vector2f;
@@ -30,7 +31,7 @@ import nl.tudelft.util.Vector2f;
  */
 public class Cannon extends Observable implements Sprite {
 	
-	private static final int MAX_MISSES = 5;
+	private static final int MAX_MISSES = 5;//5;
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI/10);
@@ -189,7 +190,7 @@ public class Cannon extends Observable implements Sprite {
 		return position.y;
 	}
 
-	public void gameStep() {
+	public void gameStep() throws GameOver{
 		if (shotBubble != null) {
 			shotBubble.gameStep();
 
@@ -205,8 +206,9 @@ public class Cannon extends Observable implements Sprite {
 	 * {@link BubblePlaceholder}
 	 * 
 	 * @param hitTarget
+	 * @throws GameOver 
 	 */
-	public void collide(final Bubble hitTarget){
+	public void collide(final Bubble hitTarget) throws GameOver{
 		BubblePlaceholder snapPosition= hitTarget.getSnapPosition(shotBubble);
 		bubbleMesh.replaceBubble(snapPosition, shotBubble);
 		if(bubbleMesh.pop(shotBubble)) {
@@ -218,8 +220,8 @@ public class Cannon extends Observable implements Sprite {
 		shotBubble = null;
 	}
 
-	protected void incrementMisses() {
-		if(++misses > MAX_MISSES) {
+	protected void incrementMisses() throws GameOver {
+		if(++misses == MAX_MISSES) {
 			misses = 0;
 			bubbleMesh.insertRow();
 		}

@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import nl.tudelft.ti2206.exception.GameOver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +42,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 	void calculatePositions();
 
-	void insertRow();
+	void insertRow() throws GameOver;
 
 	void replaceBubble(Bubble original, Bubble other);
 
@@ -173,7 +175,6 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			for(Bubble bubble : this) {
 				Point newPosition = bubble.calculatePosition();
 				bubble.setPosition(newPosition);
-				log.info("Changed bubble position to {}", newPosition);
 			}
 		}
 
@@ -256,7 +257,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		}
 
 		@Override
-		public void insertRow() {
+		public void insertRow() throws GameOver {
 			log.info("Inserting row");
 			Iterator<Bubble> bubbles = iterator();
 			Bubble child = bubbles.next();
@@ -296,8 +297,36 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				child = bubbles.next();
 			}
 			
+			removeBottomRow();
 			calculatePositions();
 			log.info("Finished inserting row");
+		}
+
+		protected void removeBottomRow() throws GameOver {
+			Bubble current = getBottomLeft();
+			while(current.hasRight()) {
+				if(current instanceof ColouredBubble)
+					throw new GameOver();
+				if(current.hasTopLeft())
+					current.getTopLeft().setBottomRight(null);
+				if(current.hasTopRight())
+					current.getTopRight().setBottomLeft(null);
+				current = current.getRight();
+			}
+			
+		}
+
+		protected Bubble getBottomLeft() {
+			Bubble current = startBubble;
+			while(current.hasBottomLeft() || current.hasBottomRight()) {
+				while(current.hasBottomRight())
+					current = current.getBottomRight();
+				while(current.hasBottomLeft())
+					current = current.getBottomLeft();
+			}
+			while(current.hasLeft())
+				current = current.getLeft();
+			return current;
 		}
 
 		@Override
