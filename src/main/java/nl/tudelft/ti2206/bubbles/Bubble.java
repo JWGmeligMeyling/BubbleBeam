@@ -48,6 +48,5 @@ public interface Bubble extends Sprite {
 	List<Bubble> getNeighbours();
 	<T> List<T> getNeighboursOfType(Class<T> type);
 	BubblePlaceholder getSnapPosition(Bubble b);
-	void replaceWith(Bubble newBubble);
 
 }

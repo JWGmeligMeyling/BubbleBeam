@@ -211,8 +211,8 @@ public class Cannon extends Observable implements Sprite {
 	 */
 	public void collide(final Bubble hitTarget){
 		BubblePlaceholder snapPosition= hitTarget.getSnapPosition(shotBubble);
-		snapPosition.replaceWith(shotBubble);
-		shotBubble.pop();
+		bubbleMesh.replaceBubble(snapPosition, shotBubble);
+		bubbleMesh.pop(shotBubble);
 		shotBubble = null;
 	}
 

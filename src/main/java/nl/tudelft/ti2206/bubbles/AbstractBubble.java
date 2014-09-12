@@ -273,7 +273,7 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-	//	renderDebugLines((Graphics2D) graphics);
+		renderDebugLines((Graphics2D) graphics);
 	}
 	
 	protected void renderDebugLines(final Graphics2D g2) {
@@ -289,17 +289,6 @@ public abstract class AbstractBubble implements Bubble {
 		if(this.hasBottomLeft() && this.bottomLeft.getTopRight().equals(this)){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBottomLeft().getCenter().x ,this.getBottomLeft().getCenter().y);
 		}
-	}
-	
-	@Override
-	public void replaceWith(final Bubble toReplace){
-		toReplace.bindTopLeft(topLeft);
-		toReplace.bindTopRight(topRight);
-		toReplace.bindLeft(left);
-		toReplace.bindRight(right);
-		toReplace.bindBottomLeft(bottomLeft);
-		toReplace.bindBottomRight(bottomRight);
-		toReplace.setPosition(position);
 	}
 	
 }

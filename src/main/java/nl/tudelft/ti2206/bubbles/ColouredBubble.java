@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -95,66 +94,27 @@ public class ColouredBubble extends AbstractBubble {
 	}
 
 	/**
-	 * Pop this bubble and it's neighbors recursively
+	 * Checks if this bubble is connected to the top
+	 * @return true iff the {@code Bubble} is connected to the top
 	 */
-	public void pop() {
-		Set<ColouredBubble> bubblesToPop = Sets.newHashSet();
-		if(this.pop(bubblesToPop)) {			
-			bubblesToPop.forEach(bubble -> {
-				bubble.replaceWith(new BubblePlaceholder());
-			});
-		}
-	}
-	
-	/**
-	 * Recursively search for neighboring bubbles of the same color
-	 * 
-	 * @param bubblesToPop
-	 *            {@link Set} of {@code ColouredBubbles} to be popped
-	 */
-	protected boolean pop(final Set<ColouredBubble> bubblesToPop) {
-		List<ColouredBubble> colouredBubbles = 
-				this.getNeighboursOfType(ColouredBubble.class);
-		
-		colouredBubbles.stream()
-			.filter(bubble -> bubble.color.equals(color) && bubblesToPop.add(bubble))
-			.forEach(bubble -> bubble.pop(bubblesToPop));
-		
-		boolean popped = bubblesToPop.size() > 2;
-		
-		if(popped) {
-			this.getNeighboursOfType(ColouredBubble.class).stream()
-				.filter(bubble -> !bubble.connectedToTop(Sets.newHashSet(bubblesToPop)) && bubblesToPop.add(bubble))
-				.forEach(bubble -> bubble.pop(bubblesToPop));
-		}
-		
-		return popped;
-	}
-
 	public boolean connectedToTop() {
 		return connectedToTop(Sets.newHashSet());
 	}
 	
-	protected boolean connectedToTop(final Set<ColouredBubble> bubblesToPop) {
-		if(top) {
-			return true;
-		}
-		else if(!bubblesToPop.add(this)) {
-			return false;
-		}
-		else {
-			return checkTopConnected(topLeft, bubblesToPop)
-				|| checkTopConnected(topRight, bubblesToPop)
-				|| checkTopConnected(right, bubblesToPop)
-				|| checkTopConnected(left, bubblesToPop);
-		}
+	/**
+	 * Checks if this bubble is connected to the top
+	 * 
+	 * @param bubblesHit
+	 *            {@link Set} of {@code Bubbles} that should be excluded from
+	 *            the search, for instance because they are set to be popped, or
+	 *            because it is one of the bubbles we are checking recursively.
+	 *            
+	 * @return true iff the {@code Bubble} is connected to the top
+	 */
+	protected boolean connectedToTop(final Set<ColouredBubble> bubblesHit) {
+		return top || (bubblesHit.add(this) &&
+				this.getNeighboursOfType(ColouredBubble.class).stream()
+					.anyMatch(bubble -> bubble.connectedToTop(bubblesHit)));
 	}
-	
-	private static boolean checkTopConnected(final Bubble position, final Set<ColouredBubble> bubblesToPop) {
-		return position != null
-			&& position instanceof ColouredBubble
-			&& ((ColouredBubble) position).connectedToTop(bubblesToPop);
-	}
-	
 	
 }

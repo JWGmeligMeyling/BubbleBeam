@@ -14,7 +14,7 @@ import nl.tudelft.util.Vector2f;
  */
 public class MovingBubble extends ColouredBubble {
 	
-	public static final long TIME_DENOM = 10;
+	public static final long TIME_DENOM = 5;
 	
 	protected Vector2f velocity;
 	protected Vector2f truePosition;

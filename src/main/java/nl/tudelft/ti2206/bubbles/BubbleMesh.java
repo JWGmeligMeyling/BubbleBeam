@@ -30,7 +30,7 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 	private final Set<Color> remainingColors = Sets.newHashSet(Color.RED,
 			Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
 
-	private final List<Bubble> startBubbles;
+	private Bubble startBubble;
 	
 	public static BubbleMesh parse(File file) throws FileNotFoundException, IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -94,14 +94,10 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 			}
 		}
 		
-		result.startBubbles.add(bubbles[0][0]);
+		result.startBubble = bubbles[0][0];
 		return result;
 	}
 	
-	public BubbleMesh() {
-		this.startBubbles = Lists.newArrayList();
-	}
-
 	public void insertRow() {
 		log.info("Inserting row");
 		Iterator<Bubble> bubbles = iterator();
@@ -130,8 +126,7 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 			if(i == 0) {
 				if(shift)
 					bubble.getPosition().translate(AbstractBubble.WIDTH / 2, 0);
-				this.startBubbles.clear();
-				this.startBubbles.add(bubble);
+				startBubble = bubble;
 			}
 			
 			child = bubbles.next();
@@ -171,9 +166,7 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 		
 		protected BubbleMeshIterator() {
 			
-			for(Bubble startBubble : startBubbles) {
-				addRowToQueue(a, startBubble);
-			}
+			addRowToQueue(a, startBubble);
 			
 			while(!a.isEmpty()) {
 				Bubble bubble = a.remove();
@@ -218,6 +211,58 @@ public class BubbleMesh extends Observable implements Iterable<Bubble> {
 			throw new UnsupportedOperationException();
 		}
 		
+	}
+	
+	/**
+	 * Pop this bubble and it's neighbors recursively
+	 */
+	public void pop(final ColouredBubble target) {
+		Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
+		if(this.pop(target, bubblesToPop)) {			
+			bubblesToPop.forEach(bubble -> {
+				this.replaceBubble(bubble, new BubblePlaceholder());
+			});
+		}
+	}
+	
+	/**
+	 * Recursively search for neighboring bubbles of the same color
+	 * 
+	 * @param bubblesToPop
+	 *            {@link Set} of {@code ColouredBubbles} to be popped
+	 */
+	protected boolean pop(final ColouredBubble target, final Set<ColouredBubble> bubblesToPop) {
+		List<ColouredBubble> colouredBubbles = 
+				target.getNeighboursOfType(ColouredBubble.class);
+		Color targetColor = target.getColor();
+		
+		colouredBubbles.stream()
+			.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
+			.forEach(bubble -> this.pop(bubble, bubblesToPop));
+		
+		boolean popped = bubblesToPop.size() > 2;
+		
+		if(popped) {
+			target.getNeighboursOfType(ColouredBubble.class).stream()
+				.filter(bubble -> !bubble.connectedToTop(Sets.newHashSet(bubblesToPop)) && bubblesToPop.add(bubble))
+				.forEach(bubble -> this.pop(bubble, bubblesToPop));
+		}
+		
+		return popped;
+	}
+	
+	public void replaceBubble(final Bubble original, final Bubble other){
+		other.bindTopLeft(original.getTopLeft());
+		other.bindTopRight(original.getTopRight());
+		other.bindLeft(original.getLeft());
+		other.bindRight(original.getRight());
+		other.bindBottomLeft(original.getBottomLeft());
+		other.bindBottomRight(original.getBottomRight());
+		other.setPosition(original.getPosition());
+		
+		if(startBubble.equals(original)) {
+			startBubble = other;
+		}
 	}
 	
 	protected final Random RANDOM_GENERATOR = new Random();
