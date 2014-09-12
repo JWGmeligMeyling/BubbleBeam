@@ -45,6 +45,12 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 	void removeRemainingColor(Color color);
 	
+	void addScoreListener(ScoreListener listener);
+	
+	interface ScoreListener {
+		void incrementScore(int amount);
+	}
+	
 	public static BubbleMesh parse(File file) throws FileNotFoundException, IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new FileInputStream(file)))) {
@@ -159,7 +165,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 		private Bubble startBubble;
 		
-		
+		private final List<ScoreListener> scoreListeners = Lists.newArrayList();
 		
 		@Override
 		public void calculatePositions() {
@@ -193,14 +199,59 @@ public interface BubbleMesh extends Iterable<Bubble> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
 				});
 				
-				remainingColors.removeIf(color -> this.stream()
-					.filter(bubble -> bubble instanceof ColouredBubble)
-					.map(bubble -> (ColouredBubble) bubble)
-					.map(ColouredBubble::getColor)
-					.distinct().noneMatch(a -> a.equals(color)));
+				updateRemainingColors();
+				calculateScore(bubblesToPop);
 			}
 		}
 		
+		/**
+		 * Recursively search for neighboring bubbles of the same color
+		 * 
+		 * @param bubblesToPop
+		 *            {@link Set} of {@code ColouredBubbles} to be popped
+		 */
+		protected boolean pop(final ColouredBubble target, final Set<ColouredBubble> bubblesToPop) {
+			final List<ColouredBubble> colouredBubbles = 
+					target.getNeighboursOfType(ColouredBubble.class);
+			Color targetColor = target.getColor();
+			
+			// Find neighboring bubbles of the same colour, and pop them
+			// recursively. Add them to a set in order to check if we have not already popped
+			// this bubble in the current call.
+			colouredBubbles.stream()
+				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
+				.forEach(bubble -> this.pop(bubble, bubblesToPop));
+			
+			boolean popped = bubblesToPop.size() > 2;
+			
+			if(popped) {
+				// If bubbles have been popped, check for isolated regions
+				// These can be found by calling the pop function on neighboring
+				// bubbles that can only connect to the top through a popped
+				// bubble. These bubbles can be found by calling the connected
+				// to top function.
+				colouredBubbles.stream()
+					.filter(bubble -> !bubble.connectedToTop(Sets.newHashSet(bubblesToPop)) && bubblesToPop.add(bubble))
+					.forEach(bubble -> this.pop(bubble, bubblesToPop));
+			}
+			
+			return popped;
+		}
+
+		protected void updateRemainingColors() {
+			remainingColors.removeIf(color -> this.stream()
+				.filter(bubble -> bubble instanceof ColouredBubble)
+				.map(bubble -> (ColouredBubble) bubble)
+				.map(ColouredBubble::getColor)
+				.distinct().noneMatch(a -> a.equals(color)));
+		}
+		
+		protected void calculateScore(final Set<ColouredBubble> bubbles) {
+			int amount = bubbles.size() * bubbles.size() * 25;
+			scoreListeners.forEach(
+					scoreListener -> scoreListener.incrementScore(amount));
+		}
+
 		@Override
 		public void insertRow() {
 			log.info("Inserting row");
@@ -299,42 +350,9 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			
 		}
 
-		/**
-		 * Recursively search for neighboring bubbles of the same color
-		 * 
-		 * @param bubblesToPop
-		 *            {@link Set} of {@code ColouredBubbles} to be popped
-		 */
-		protected boolean pop(final ColouredBubble target, final Set<ColouredBubble> bubblesToPop) {
-			List<ColouredBubble> colouredBubbles = 
-					target.getNeighboursOfType(ColouredBubble.class);
-			Color targetColor = target.getColor();
-			
-			// Find neighboring bubbles of the same colour, and pop them
-			// recursively. Add them to a set in order to check if we have not already popped
-			// this bubble in the current call.
-			colouredBubbles.stream()
-				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
-				.forEach(bubble -> this.pop(bubble, bubblesToPop));
-			
-			boolean popped = bubblesToPop.size() > 2;
-			
-			if(popped) {
-				// If bubbles have been popped, check for isolated regions
-				// These can be found by calling the pop function on neighboring
-				// bubbles that can only connect to the top through a popped
-				// bubble. These bubbles can be found by calling the connected
-				// to top function.
-				target.getNeighboursOfType(ColouredBubble.class).stream()
-					.filter(bubble -> !bubble.connectedToTop(Sets.newHashSet(bubblesToPop)) && bubblesToPop.add(bubble))
-					.forEach(bubble -> this.pop(bubble, bubblesToPop));
-			}
-			
-			return popped;
-		}
-		
 		protected final Random RANDOM_GENERATOR = new Random();
-
+		
+		@Override
 		public Color getRandomRemainingColor() {
 			final int index = RANDOM_GENERATOR.nextInt(remainingColors.size());
 			if(!remainingColors.isEmpty()) {
@@ -348,6 +366,11 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		@Override
 		public void removeRemainingColor(final Color color) {
 			remainingColors.remove(color);
+		}
+
+		@Override
+		public void addScoreListener(final ScoreListener listener) {
+			scoreListeners.add(listener);
 		}
 
 	}

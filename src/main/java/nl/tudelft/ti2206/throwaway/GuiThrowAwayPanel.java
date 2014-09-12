@@ -3,6 +3,7 @@ package nl.tudelft.ti2206.throwaway;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.cannon.Cannon;
+import nl.tudelft.util.ObservableObject;
 
 public class GuiThrowAwayPanel extends JPanel {
 	
@@ -22,7 +24,7 @@ public class GuiThrowAwayPanel extends JPanel {
 	private final Cannon cannon;
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
-	private long score = 0;
+	private ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
 	/**
 	 * 
@@ -31,6 +33,7 @@ public class GuiThrowAwayPanel extends JPanel {
 
 	public GuiThrowAwayPanel(final BubbleMesh bubbleMesh) {
 		this.bubbleMesh = bubbleMesh;
+		bubbleMesh.addScoreListener((amount) -> { setScore(getScore() + amount); });
 		this.cannon = new Cannon(bubbleMesh, new Point(WIDTH / 2, 400),
 				this.getPreferredSize(), this.getLocation());
 		this.cannon.bindMouseListenerTo(this);
@@ -68,9 +71,17 @@ public class GuiThrowAwayPanel extends JPanel {
 		cannon.gameStep();
 		this.repaint();
 	}
-	
-	public long getScore(){
-		return score;
+
+	public long getScore() {
+		return score.getValue();
 	}
 
+	public void setScore(final long value) {
+		score.setValue(value);
+	}
+
+	public void observeScore(final Observer o) {
+		score.addObserver(o);
+	}
+	
 }

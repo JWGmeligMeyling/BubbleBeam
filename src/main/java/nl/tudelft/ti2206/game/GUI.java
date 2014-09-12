@@ -65,6 +65,7 @@ public class GUI {
 		// everything the frame must be filled with
 		gamePanel = new GuiThrowAwayPanel(
 				BubbleMesh.parse(new File("src/main/resources/board.txt")));
+		gamePanel.observeScore((a, b) -> updateDisplayedScore());
 
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;
@@ -108,12 +109,8 @@ public class GUI {
 		c.insets = noPadding;
 		pane.add(spaceForLogo, c);
 		
-		JButton exit = new JButton("Exit");
-		exit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e){
-				GUI.this.exit();
-			}
-		});
+		final JButton exit = new JButton("Exit");
+		exit.addActionListener((event) -> GUI.this.exit());
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
@@ -128,13 +125,10 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(exit, c); 
 		
-		JButton singlePlayerRestart = new JButton("Restart Single-Player");
-		singlePlayerRestart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e){
-				multiplayer = false;
-				GUI.this.restart();
-			}
-			
+		final JButton singlePlayerRestart = new JButton("Restart Single-Player");
+		singlePlayerRestart.addActionListener((event) -> {
+			multiplayer = false;
+			GUI.this.restart();
 		});
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -149,12 +143,10 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(singlePlayerRestart, c);
 		
-		JButton multiPlayerRestart = new JButton("Restart Multi-Player");
-		multiPlayerRestart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e){
-				multiplayer = true;
-				GUI.this.restart();
-			}
+		final JButton multiPlayerRestart = new JButton("Restart Multi-Player");
+		multiPlayerRestart.addActionListener((event) -> {
+			multiplayer = true;
+			GUI.this.restart();
 		});
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -182,15 +174,12 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(version, c);
 		
-		
 		//multiplayer
-
-
-
 		// everything the frame must be filled with
 		if (multiplayer) {
 			player2Panel = new GuiThrowAwayPanel(
-					BubbleMesh.parse(new File("src/main/resources/anotherboard.txt")));
+					BubbleMesh.parse(new File("src/main/resources/spekboard.txt")));
+			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;
@@ -221,6 +210,8 @@ public class GUI {
 			pane.add(player2Score, c);
 			
 		}
+		
+		updateDisplayedScore();
 
 	}
 
@@ -265,7 +256,7 @@ public class GUI {
 	 * This function will then display the new score on the screen.
 	 */
 	public void updateDisplayedScore(){
-		playerScore.setText("Score: "+ gamePanel.getScore());
+		playerScore.setText("Score: " + gamePanel.getScore());
 		if(multiplayer){
 			
 			player2Score.setText("Score: "+ player2Panel.getScore());
