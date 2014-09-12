@@ -72,12 +72,11 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		
 		for(int i = 0; i < rowAmount; i++) {
 			String rowStr = rows.get(i);
+			
 			for(int j = 0; j < rowSize; j++) {
-				AbstractBubble bubble;
 				
-				bubbles[i][j] = bubble = rowStr.charAt(j) == 'x' ? new ColouredBubble(
-						result.getRandomRemainingColor())
-						: new BubblePlaceholder();
+				AbstractBubble bubble;
+				bubbles[i][j] = bubble = parseBubble(rowStr.charAt(j), result);
 				
 				if(i > 0) {
 					if(i % 2 == 0) { // 3rd, 5fth rows , ... 
@@ -109,6 +108,46 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		
 		result.startBubble = bubbles[0][0];
 		return result;
+	}
+	
+	static AbstractBubble parseBubble(final char character, final BubbleMesh bubbleMesh) {
+		if(character == ' ') {
+			return new BubblePlaceholder();
+		}
+		else {
+			Color color;
+			switch(character) {
+			case 'r':
+			case 'R':
+				color = Color.RED;
+				break;
+			case 'g':
+			case 'G':
+				color = Color.GREEN;
+				break;
+			case 'b':
+			case 'B':
+				color = Color.BLUE;
+				break;
+			case 'C':
+			case 'c':
+				color = Color.CYAN;
+				break;
+			case 'M':
+			case 'm':
+				color = Color.MAGENTA;
+				break;
+			case 'Y':
+			case 'y':
+				color = Color.YELLOW;
+				break;
+			default:
+				color = bubbleMesh.getRandomRemainingColor();
+				break;
+			}
+			return new ColouredBubble(color);
+		}
+		
 	}
 	
 	public static class BubbleMeshImpl implements BubbleMesh {
