@@ -4,12 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public abstract class AbstractBubble implements Bubble {
 	
@@ -20,15 +19,15 @@ public abstract class AbstractBubble implements Bubble {
 	
 	protected static final Point ORIGIN = new Point(0,0);
 	
-	private boolean origin = false;
-	private boolean top = false;
+	protected boolean origin = false;
+	protected boolean top = false;
 	
-	private Bubble topLeft;
-	private Bubble topRight;
-	private Bubble left;
-	private Bubble right;
-	private Bubble bottomLeft;
-	private Bubble bottomRight;
+	protected Bubble topLeft;
+	protected Bubble topRight;
+	protected Bubble left;
+	protected Bubble right;
+	protected Bubble bottomLeft;
+	protected Bubble bottomRight;
 	
 	private Point position = new Point(ORIGIN.x, ORIGIN.y);
 
@@ -38,21 +37,6 @@ public abstract class AbstractBubble implements Bubble {
 	
 	public void setTop() {
 		top = true;
-	}
-	
-	public boolean connectedToTop() {
-		return connectedToTop(Sets.newHashSet());
-	}
-	
-	@Override
-	public boolean connectedToTop(final Set<Bubble> traversed) {
-		return top
-			|| traversed.add(this)
-			&& (
-				(hasTopLeft() && !traversed.contains(topLeft) && topLeft.connectedToTop(traversed))
-			||	(hasTopRight() && !traversed.contains(topRight) && topRight.connectedToTop(traversed))
-			||	(hasLeft() && !traversed.contains(left) && left.connectedToTop(traversed))
-			||	(hasRight() && !traversed.contains(right) && right.connectedToTop(traversed)));
 	}
 	
 	@Override
@@ -263,13 +247,9 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public List<Bubble> getNeighbours() {
-		List<Bubble> neighbours = Lists.newArrayList();
-		if(this.hasTopLeft()) neighbours.add(topLeft);
-		if(this.hasTopRight()) neighbours.add(topRight);
-		if(this.hasLeft()) neighbours.add(left);
-		if(this.hasRight()) neighbours.add(right);
-		if(this.hasBottomLeft()) neighbours.add(bottomLeft);
-		if(this.hasBottomRight()) neighbours.add(bottomRight);
+		List<Bubble> neighbours = Lists.newArrayList(topLeft, topRight, left,
+				right, bottomLeft, bottomRight);
+		neighbours.removeAll(Collections.singleton(null));
 		return neighbours;
 	}
 	

@@ -98,41 +98,58 @@ public class ColouredBubble extends AbstractBubble {
 	 * Pop this bubble and it's neighbors recursively
 	 */
 	public void pop() {
-		Set<ColouredBubble> visited = Sets.newHashSet();
-		Set<ColouredBubble> potentiallyIsolated = Sets.newHashSet();
-		if(this.pop(visited, potentiallyIsolated)) {
-			visited
-			.forEach(bubble -> {
+		Set<ColouredBubble> bubblesToPop = Sets.newHashSet();
+		if(this.pop(bubblesToPop)) {			
+			bubblesToPop.forEach(bubble -> {
 				bubble.replaceWith(new BubblePlaceholder());
 			});
-			
-			potentiallyIsolated.stream()
-				.filter(bubble -> !bubble.connectedToTop())
-				.forEach(bubble -> bubble.replaceWith(new BubblePlaceholder()));
-			
-			
-			
 		}
 	}
 	
 	/**
 	 * Recursively search for neighboring bubbles of the same color
 	 * 
-	 * @param visited
+	 * @param bubblesToPop
 	 *            {@link Set} of {@code ColouredBubbles} to be popped
 	 */
-	protected boolean pop(final Set<ColouredBubble> visited,
-			final Set<ColouredBubble> potentiallyIsolated) {
+	protected boolean pop(final Set<ColouredBubble> bubblesToPop) {
 		List<ColouredBubble> colouredBubbles = 
 				this.getNeighboursOfType(ColouredBubble.class);
 		
 		colouredBubbles.stream()
-			.filter(bubble -> bubble.color.equals(color) && visited.add(bubble))
-			.forEach(bubble -> bubble.pop(visited, potentiallyIsolated));
+			.filter(bubble -> bubble.color.equals(color) && bubblesToPop.add(bubble))
+			.forEach(bubble -> bubble.pop(bubblesToPop));
 		
-		potentiallyIsolated.addAll(colouredBubbles);
-		potentiallyIsolated.removeAll(visited);
-		return visited.size() > 2;
+		boolean popped = bubblesToPop.size() > 2;
+		
+		if(popped) {
+			this.getNeighboursOfType(ColouredBubble.class).stream()
+				.filter(bubble -> !bubble.connectedToTop(bubblesToPop) && bubblesToPop.add(bubble))
+				.forEach(bubble -> bubble.pop(bubblesToPop));
+		}
+		
+		return popped;
 	}
 
+	public boolean connectedToTop() {
+		return connectedToTop(Sets.newHashSet());
+	}
+	
+	protected boolean connectedToTop(final Set<ColouredBubble> bubblesToPop) {
+		return top
+				|| !bubblesToPop.contains(this)
+				&& (checkTopConnected(topLeft, bubblesToPop)
+						|| checkTopConnected(topRight, bubblesToPop)
+						|| checkTopConnected(right, bubblesToPop)
+						|| checkTopConnected(left, bubblesToPop));
+	}
+	
+	private static boolean checkTopConnected(final Bubble position, final Set<ColouredBubble> bubblesToPop) {
+		return position != null
+			&& position instanceof ColouredBubble
+			&& !bubblesToPop.contains(position)
+			&& ((ColouredBubble) position).connectedToTop(bubblesToPop);
+	}
+	
+	
 }
