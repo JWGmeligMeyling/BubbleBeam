@@ -124,7 +124,7 @@ public class ColouredBubble extends AbstractBubble {
 		
 		if(popped) {
 			this.getNeighboursOfType(ColouredBubble.class).stream()
-				.filter(bubble -> !bubble.connectedToTop(bubblesToPop) && bubblesToPop.add(bubble))
+				.filter(bubble -> !bubble.connectedToTop(Sets.newHashSet(bubblesToPop)) && bubblesToPop.add(bubble))
 				.forEach(bubble -> bubble.pop(bubblesToPop));
 		}
 		
@@ -136,18 +136,23 @@ public class ColouredBubble extends AbstractBubble {
 	}
 	
 	protected boolean connectedToTop(final Set<ColouredBubble> bubblesToPop) {
-		return top
-				|| !bubblesToPop.contains(this)
-				&& (checkTopConnected(topLeft, bubblesToPop)
-						|| checkTopConnected(topRight, bubblesToPop)
-						|| checkTopConnected(right, bubblesToPop)
-						|| checkTopConnected(left, bubblesToPop));
+		if(top) {
+			return true;
+		}
+		else if(!bubblesToPop.add(this)) {
+			return false;
+		}
+		else {
+			return checkTopConnected(topLeft, bubblesToPop)
+				|| checkTopConnected(topRight, bubblesToPop)
+				|| checkTopConnected(right, bubblesToPop)
+				|| checkTopConnected(left, bubblesToPop);
+		}
 	}
 	
 	private static boolean checkTopConnected(final Bubble position, final Set<ColouredBubble> bubblesToPop) {
 		return position != null
 			&& position instanceof ColouredBubble
-			&& !bubblesToPop.contains(position)
 			&& ((ColouredBubble) position).connectedToTop(bubblesToPop);
 	}
 	

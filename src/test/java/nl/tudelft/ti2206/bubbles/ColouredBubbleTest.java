@@ -1,10 +1,8 @@
 package nl.tudelft.ti2206.bubbles;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
