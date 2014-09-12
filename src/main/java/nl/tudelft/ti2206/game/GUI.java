@@ -21,6 +21,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author leon Hoek
+ * Class that contains the GUI-frame and starts the game-loop
+ */
+
 public class GUI {
 
 	JFrame frame;
@@ -163,6 +168,18 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(multiPlayerRestart, c);
 		
+		JLabel version = new JLabel("Version: " + "buildnumber");	//TODO how to add versionnumber from POM-file
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.SOUTH;
+		c.gridx = 2;
+		c.gridy = 4;
+		c.ipadx = 30;
+		c.insets = extPadding;
+		pane.add(version, c);
 		
 		
 		//multiplayer
