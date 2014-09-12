@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
 
 import java.awt.ComponentOrientation;
@@ -275,7 +276,11 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gamePanel.gameStep();
+				try {
+					gamePanel.gameStep();
+				} catch (GameOver exception) {
+					restart();
+				}
 				if (multiplayer) {
 					player2Panel.gameStep();
 				}
