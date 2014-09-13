@@ -17,6 +17,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -162,7 +164,7 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(multiPlayerRestart, c);
 
-		JLabel version = new JLabel("Version: " + "buildnumber");	//TODO how to add versionnumber from POM-file
+		JLabel version = new JLabel("Version: 0.1 Alpha");	//TODO how to add versionnumber from POM-file
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 1;
@@ -182,6 +184,28 @@ public class GUI {
 					BubbleMesh.parse(new File("src/main/resources/spekboard.txt")));
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 
+			player2Panel.addKeyListener(new KeyListener(){
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+			
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;
 			c.weighty = 0;

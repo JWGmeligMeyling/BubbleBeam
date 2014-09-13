@@ -4,14 +4,13 @@
 
 	<groupId>nl.tudelft.ti2206</groupId>
 	<artifactId>game</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1 Alpha</version>
 
 	<prerequisites>
 		<maven>3.1.0</maven>
 	</prerequisites>
 
-	<name>ti2206-game</name>
-	<description>My super epic game...</description>
+	<name>ti2206-Bubblebeam</name>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -113,4 +112,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	<description>A multiplayer bubble-game</description>
 </project>
