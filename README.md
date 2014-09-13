@@ -1,12 +1,12 @@
-TI2206 - Group X (Bubble)
+TI2206 - Group 12 (Bubble)
 
 This team consists of the following students:
 
 * Jan-Willem Gmelig Meyling (j.gmeligmeyling@student.tudelft.nl)
-* Liam Clark
+* Liam Clark (l.clark@student.tudelft.nl)
 * Sam Smulders (s.smulders@student.tudelft.nl)
 * Luka Bavdaz (p.l.bavdaz@student.tudelft.nl)
-* Student #5
+* Leon Hoek (l.j.hoek@student.tudelft.nl)
 
 ## How to start this game.
 
