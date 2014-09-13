@@ -183,28 +183,6 @@ public class GUI {
 			player2Panel = new GuiThrowAwayPanel(
 					BubbleMesh.parse(new File("src/main/resources/spekboard.txt")));
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
-
-			player2Panel.addKeyListener(new KeyListener(){
-
-				@Override
-				public void keyTyped(KeyEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void keyPressed(KeyEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void keyReleased(KeyEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-			});
 			
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;
