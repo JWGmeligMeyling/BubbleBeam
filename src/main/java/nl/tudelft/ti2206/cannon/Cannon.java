@@ -197,6 +197,11 @@ public class Cannon extends Observable implements Sprite {
 			bubbleMesh.stream()
 				.filter(bubble -> bubble.intersect(shotBubble)).findAny()
 				.ifPresent(bubble -> this.collide(bubble));
+			
+			//check for top Border
+			if(shotBubble.hitsTopBorder()){
+				//snap bubble into grid TODO
+			}
 		}
 		
 	}
