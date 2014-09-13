@@ -199,8 +199,8 @@ public class Cannon extends Observable implements Sprite {
 				.ifPresent(bubble -> this.collide(bubble));
 			
 			//check for top Border
-			if(shotBubble.hitsTopBorder()){
-				//snap bubble into grid TODO
+			if(shotBubble != null && shotBubble.hitsTopBorder()){
+				//BubbleMesh.replaceBubble();
 			}
 		}
 		
