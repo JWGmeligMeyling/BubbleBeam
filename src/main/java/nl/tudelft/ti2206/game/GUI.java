@@ -98,7 +98,7 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(playerScore, c);
 		
-		JButton spaceForLogo = new JButton("Space for logo");
+		JLabel spaceForLogo = new JLabel("");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0;
