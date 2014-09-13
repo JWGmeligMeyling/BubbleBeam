@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Observable;
 
 import javax.imageio.ImageIO;
@@ -21,6 +22,7 @@ import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Sprite;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
 import nl.tudelft.util.AbstractMouseListener;
 import nl.tudelft.util.AbstractMouseMotionListener;
 import nl.tudelft.util.Vector2f;
@@ -211,15 +213,36 @@ public class Cannon extends Observable implements Sprite {
 	
 	protected void collideWithTopBorder(){		//doesnt work yet TODO
 		if(shotBubble != null){
-			bubbleMesh.stream().filter(bubble -> bubble.intersect(shotBubble)).findAny().ifPresent(bubble -> System.out.println(bubble)/*bubble -> bubbleMesh.replaceBubble(bubble,shotBubble)*/);
+			Iterator<Bubble> bubbles = bubbleMesh.iterator();
+			Bubble current;
+			Bubble origin = null;
+			while (bubbles.hasNext()){
+				current = bubbles.next();
+				if(current.getPosition().equals(AbstractBubble.ORIGIN)){
+					origin = current;
+					break;
+				}
+			}
+			//at this point we have found the (invisible) bubble in the top left corner
+			try{
+				int xPositionInBubbles = (shotBubble.getPosition().x - origin.getPosition().x)/AbstractBubble.WIDTH;
+				for(int i = 0; i < xPositionInBubbles; i++){
+					origin = origin.getRight();
+				}
+				
+				bubbleMesh.replaceBubble(origin, shotBubble);
+				if(bubbleMesh.pop(shotBubble)) {
+					// good shot
+				}
+				else {
+					incrementMisses();
+				}
+				shotBubble = null;
+			} catch(NullPointerException e){
+				System.out.println("Bubble couldn't be found at the top of the board");
+			}
 		}
-		if(bubbleMesh.pop(shotBubble)) {
-			// good shot
-		}
-		else {
-			incrementMisses();
-		}
-		shotBubble = null;
+		
 	}
 	
 	/**

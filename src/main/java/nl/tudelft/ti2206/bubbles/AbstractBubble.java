@@ -17,7 +17,7 @@ public abstract class AbstractBubble implements Bubble {
 	public static final int RADIUS = 14;
 	public static final int SPACING = WIDTH - RADIUS * 2;
 	
-	protected static final Point ORIGIN = new Point(0,0);
+	public static final Point ORIGIN = new Point(0,0);
 	
 	protected boolean origin = false;
 	protected boolean top = false;
@@ -34,6 +34,10 @@ public abstract class AbstractBubble implements Bubble {
 	@Override
 	public void setOrigin(boolean value) {
 		origin = value;
+	}
+	
+	public boolean atOrigin(){
+		return origin;
 	}
 	
 	public void setTop() {
