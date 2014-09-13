@@ -230,7 +230,7 @@ public class GUI {
 	}
 
 	protected void exit(){
-		//todo
+		System.exit(0);
 	}
 
 	protected void restart() {

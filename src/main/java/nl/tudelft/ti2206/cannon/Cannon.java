@@ -200,10 +200,26 @@ public class Cannon extends Observable implements Sprite {
 			
 			//check for top Border
 			if(shotBubble != null && shotBubble.hitsTopBorder()){
-				//BubbleMesh.replaceBubble();
+				collideWithTopBorder();
 			}
 		}
 		
+	}
+	/**
+	 * Hit the top Border of the playing field and snap to the closest {@link BubblePlaceholder}
+	 */
+	
+	protected void collideWithTopBorder(){		//doesnt work yet TODO
+		if(shotBubble != null){
+			bubbleMesh.stream().filter(bubble -> bubble.intersect(shotBubble)).findAny().ifPresent(bubble -> System.out.println(bubble)/*bubble -> bubbleMesh.replaceBubble(bubble,shotBubble)*/);
+		}
+		if(bubbleMesh.pop(shotBubble)) {
+			// good shot
+		}
+		else {
+			incrementMisses();
+		}
+		shotBubble = null;
 	}
 	
 	/**
