@@ -8,7 +8,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 
@@ -50,9 +49,6 @@ public class Cannon extends Observable implements Sprite {
 	protected final Point screenLocation;
 	protected final Dimension screenSize;
 	
-	protected static File ROOT_FOLDER = new File("src/main/resources");
-	
-	protected static File CANNON = new File(ROOT_FOLDER, "cannon.png");
 	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
 	public BufferedImage getCannonImage() {
@@ -61,7 +57,7 @@ public class Cannon extends Observable implements Sprite {
 	
 	protected static BufferedImage _getCannonImage() {
 		try {
-			BufferedImage scale = ImageIO.read(CANNON);
+			BufferedImage scale = ImageIO.read(Cannon.class.getResourceAsStream("/cannon.png"));
 			scale.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			return scale;
 		} catch (IOException e) {

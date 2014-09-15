@@ -17,7 +17,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -65,7 +64,7 @@ public class GUI {
 		
 		// everything the frame must be filled with
 		gamePanel = new GuiThrowAwayPanel(
-				BubbleMesh.parse(new File("src/main/resources/bugboard.txt")));
+				BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));
 		gamePanel.observeScore((a, b) -> updateDisplayedScore());
 
 		c.fill = GridBagConstraints.NONE;
@@ -179,7 +178,7 @@ public class GUI {
 		// everything the frame must be filled with
 		if (multiplayer) {
 			player2Panel = new GuiThrowAwayPanel(
-					BubbleMesh.parse(new File("src/main/resources/spekboard.txt")));
+					BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 			
 			c.fill = GridBagConstraints.NONE;

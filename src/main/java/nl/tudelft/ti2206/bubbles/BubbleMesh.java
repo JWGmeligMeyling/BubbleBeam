@@ -3,10 +3,8 @@ package nl.tudelft.ti2206.bubbles;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -70,23 +68,23 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	 */
 	boolean bubbleIsTop(Bubble target);
 	
-	public static BubbleMesh parse(File file) throws FileNotFoundException, IOException {
+	public static BubbleMesh parse(final InputStream inputstream) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(file)))) {
+				inputstream))) {
 			List<String> lines = Lists.newArrayList();
 			while (reader.ready()) {
 				lines.add(reader.readLine());
 			}
-			BubbleMesh mesh=parse(lines);
+			BubbleMesh mesh = parse(lines);
 			return mesh;
 		}
 	}
-	
-	public static BubbleMesh parse(String string) {
+
+	public static BubbleMesh parse(final String string) {
 		return parse(Arrays.asList(string.split("[\r\n]+")));
 	}
 	
-	public static BubbleMesh parse(List<String> rows) {
+	public static BubbleMesh parse(final List<String> rows) {
 		int rowAmount = rows.size();
 		if (rowAmount < 1)
 			throw new IllegalArgumentException("Wrong file format");
