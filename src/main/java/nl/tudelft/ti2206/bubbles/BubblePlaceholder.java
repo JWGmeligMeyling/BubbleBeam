@@ -10,8 +10,7 @@ public class BubblePlaceholder extends AbstractBubble {
 	}
 	
 	@Override
-	public boolean intersect(Bubble other){
-		return false;
-	}
-	
+	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
+		return this;
+	}	
 }

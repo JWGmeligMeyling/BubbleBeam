@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.util.Vector2f;
 
