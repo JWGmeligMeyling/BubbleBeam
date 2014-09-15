@@ -2,6 +2,9 @@ package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.stream.Stream;
+
+import com.google.common.collect.Lists;
 
 /**
  * A {@code} BubblePlaceholder represents a place that a Bubble can snap on to.
@@ -50,5 +53,15 @@ public interface Bubble extends Sprite {
 	BubblePlaceholder getSnapPosition(Bubble b);
 
 	void setOrigin(boolean value);
+	
+	default Stream<Bubble> traverseRight() {
+		final List<Bubble> bubbles = Lists.newArrayList(this);
+		Bubble current = this;
+		while(current.hasRight()) {
+			current = current.getRight();
+			bubbles.add(current);
+		}
+		return bubbles.stream();
+	};
 
 }
