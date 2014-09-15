@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 
 public interface BubbleMesh extends Iterable<Bubble> {
@@ -31,7 +32,10 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	default Stream<Bubble> stream() {
 	    return StreamSupport.stream(spliterator(), false);
 	}
-
+	
+	/**
+	 * @return a random remaining {@link Color}
+	 */
 	Color getRandomRemainingColor();
 	
 	/**
@@ -40,19 +44,31 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	 */
 	boolean pop(ColouredBubble target);
 
+	/**
+	 * Calculate the positions for the bubbles
+	 */
 	void calculatePositions();
 
+	/**
+	 * Insert a new row of bubbles at the top
+	 * @throws GameOver
+	 */
 	void insertRow() throws GameOver;
-
-	void replaceBubble(Bubble original, Bubble other);
-
-	void removeRemainingColor(Color color);
+	
+	/**
+	 * Replace a {@code Bubble} in the mesh for another {@code Bubble}
+	 * @param original {@code Bubble} to be replaced
+	 * @param replacement 
+	 */
+	void replaceBubble(Bubble original, Bubble replacement);
 	
 	void addScoreListener(ScoreListener listener);
 	
-	interface ScoreListener {
-		void incrementScore(int amount);
-	}
+	/**
+	 * @param target
+	 * @return true if the given {@link Bubble} is in the top row
+	 */
+	boolean bubbleIsTop(Bubble target);
 	
 	public static BubbleMesh parse(File file) throws FileNotFoundException, IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -100,9 +116,6 @@ public interface BubbleMesh extends Iterable<Bubble> {
 							bubble.bindTopRight(bubbles[i-1][j+1]);
 						}
 					}
-				}
-				else {
-					bubble.setTop();
 				}
 				
 				if(j > 0) {
@@ -159,6 +172,10 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		
 	}
 	
+	interface ScoreListener {
+		void incrementScore(int amount);
+	}
+
 	public static class BubbleMeshImpl implements BubbleMesh {
 		
 		private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
@@ -179,24 +196,24 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		}
 
 		@Override
-		public void replaceBubble(final Bubble original, final Bubble other){
-			other.bindTopLeft(original.getTopLeft());
-			other.bindTopRight(original.getTopRight());
-			other.bindLeft(original.getLeft());
-			other.bindRight(original.getRight());
-			other.bindBottomLeft(original.getBottomLeft());
-			other.bindBottomRight(original.getBottomRight());
-			other.setPosition(original.getPosition());
+		public void replaceBubble(final Bubble original, final Bubble replacement){
+			replacement.bindTopLeft(original.getTopLeft());
+			replacement.bindTopRight(original.getTopRight());
+			replacement.bindLeft(original.getLeft());
+			replacement.bindRight(original.getRight());
+			replacement.bindBottomLeft(original.getBottomLeft());
+			replacement.bindBottomRight(original.getBottomRight());
+			replacement.setPosition(original.getPosition());
 			
 			if(startBubble.equals(original)) {
-				startBubble = other;
+				startBubble = replacement;
 			}
 		}
 
 		@Override
 		public boolean pop(final ColouredBubble target) {
 			Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
-			if(this.pop(target, bubblesToPop)) {			
+			if(this.pop(target, bubblesToPop)) {
 				bubblesToPop.forEach(bubble -> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
 				});
@@ -214,7 +231,9 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		 * @param bubblesToPop
 		 *            {@link Set} of {@code ColouredBubbles} to be popped
 		 */
-		protected boolean pop(final ColouredBubble target, final Set<ColouredBubble> bubblesToPop) {
+		protected boolean pop(final ColouredBubble target,
+				final Set<ColouredBubble> bubblesToPop) {
+			
 			final List<ColouredBubble> colouredBubbles = 
 					target.getNeighboursOfType(ColouredBubble.class);
 			Color targetColor = target.getColor();
@@ -235,13 +254,41 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				// bubble. These bubbles can be found by calling the connected
 				// to top function.
 				colouredBubbles.stream()
-					.filter(bubble -> !bubble.connectedToTop(Sets.newHashSet(bubblesToPop)) && bubblesToPop.add(bubble))
+					.filter(bubble -> !connectedToTop(bubble, Queues.newArrayDeque(bubblesToPop)) && bubblesToPop.add(bubble))
 					.forEach(bubble -> this.pop(bubble, bubblesToPop));
 			}
 			
 			return popped;
 		}
+		
+		@Override
+		public boolean bubbleIsTop(final Bubble target) {
+			return startBubble.traverseRight().anyMatch(bubble -> bubble.equals(target));
+		}
 
+		/**
+		 * @param target
+		 * @param bubblesHit
+		 * @return true if a bubble is connected to a top row bubble
+		 */
+		protected boolean connectedToTop(final ColouredBubble target,
+				final Queue<ColouredBubble> bubblesHit) {
+			
+			boolean result = false;
+			if(!bubblesHit.contains(target)) {
+				bubblesHit.add(target);
+				result = bubbleIsTop(target) || target.getNeighboursOfType(ColouredBubble.class).stream()
+						.anyMatch(bubble -> connectedToTop(bubble, bubblesHit));
+				bubblesHit.remove(target);
+			}
+			
+			return result;
+		}
+
+		/**
+		 * Update the remaining colors list based on the colors that still exist
+		 * in the mesh
+		 */
 		protected void updateRemainingColors() {
 			remainingColors.removeIf(color -> this.stream()
 				.filter(bubble -> bubble instanceof ColouredBubble)
@@ -250,6 +297,10 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				.distinct().noneMatch(a -> a.equals(color)));
 		}
 		
+		/**
+		 * Calculate the points for this shot and notify the score listeners
+		 * @param bubbles
+		 */
 		protected void calculateScore(final Set<ColouredBubble> bubbles) {
 			int amount = bubbles.size() * bubbles.size() * 25;
 			scoreListeners.forEach(
@@ -315,7 +366,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			}
 			
 		}
-
+		
 		protected Bubble getBottomLeft() {
 			Bubble current = startBubble;
 			while(current.hasBottomLeft() || current.hasBottomRight()) {
@@ -401,7 +452,10 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			}
 		}
 		
-		@Override
+		/**
+		 * Remove a color from the remaining colors list
+		 * @param color
+		 */
 		public void removeRemainingColor(final Color color) {
 			remainingColors.remove(color);
 		}

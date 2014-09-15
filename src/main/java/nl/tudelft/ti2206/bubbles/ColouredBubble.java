@@ -6,9 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
-import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 public class ColouredBubble extends AbstractBubble {
 
@@ -91,30 +88,6 @@ public class ColouredBubble extends AbstractBubble {
 
 	public Color getColor() {
 		return color;
-	}
-
-	/**
-	 * Checks if this bubble is connected to the top
-	 * @return true iff the {@code Bubble} is connected to the top
-	 */
-	public boolean connectedToTop() {
-		return connectedToTop(Sets.newHashSet());
-	}
-	
-	/**
-	 * Checks if this bubble is connected to the top
-	 * 
-	 * @param bubblesHit
-	 *            {@link Set} of {@code Bubbles} that should be excluded from
-	 *            the search, for instance because they are set to be popped, or
-	 *            because it is one of the bubbles we are checking recursively.
-	 *            
-	 * @return true iff the {@code Bubble} is connected to the top
-	 */
-	protected boolean connectedToTop(final Set<ColouredBubble> bubblesHit) {
-		return bubblesHit.add(this) && ( top ||
-				this.getNeighboursOfType(ColouredBubble.class).stream()
-					.anyMatch(bubble -> bubble.connectedToTop(bubblesHit)));
 	}
 	
 }
