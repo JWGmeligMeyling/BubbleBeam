@@ -28,7 +28,7 @@ import java.io.IOException;
 public class GUI {
 
 	JFrame frame;
-	GuiThrowAwayPanel gamePanel;
+	GuiThrowAwayPanel player1Panel;
 
 	// multiplayer on same machine
 	GuiThrowAwayPanel player2Panel;
@@ -42,7 +42,6 @@ public class GUI {
 	JLabel playerScore;
 	JLabel player2Score;
 
-	// Buttons
 
 	// game-variables
 	boolean game_is_running = true;
@@ -59,13 +58,14 @@ public class GUI {
 		pane.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
+		//two presets for use with the GridBagLayout
 		Insets extPadding = new Insets(10, 10, 10, 10);
 		Insets noPadding = new Insets(0,0,0,0);
 		
 		// everything the frame must be filled with
-		gamePanel = new GuiThrowAwayPanel(
+		player1Panel = new GuiThrowAwayPanel(
 				BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));
-		gamePanel.observeScore((a, b) -> updateDisplayedScore());
+		player1Panel.observeScore((a, b) -> updateDisplayedScore());
 
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;
@@ -78,7 +78,7 @@ public class GUI {
 		c.ipadx = 0;
 		c.ipady = 0;
 		c.insets = extPadding;
-		pane.add(gamePanel,c);
+		pane.add(player1Panel,c);
 		
 		//score-label
 		playerScore = new JLabel("Score: ");
@@ -175,7 +175,7 @@ public class GUI {
 		pane.add(version, c);
 		
 		//multiplayer
-		// everything the frame must be filled with
+		// everything the frame must be filled with for a local multiplayer
 		if (multiplayer) {
 			player2Panel = new GuiThrowAwayPanel(
 					BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));
@@ -215,6 +215,11 @@ public class GUI {
 
 	}
 
+	/**
+	 * Makes a new frame filled with the gamecontrols and then passes control to GUI.run()
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public GUI() throws FileNotFoundException, IOException {
 		frame = new JFrame("Bubble Shooter");
 
@@ -232,6 +237,9 @@ public class GUI {
 		System.exit(0);
 	}
 
+	/**
+	 * Function that restarts the game by removing everything from the frame and filling it up with new gamePanels.
+	 */
 	protected void restart() {
 		JPanel contentPane = (JPanel) frame.getContentPane();
 		
@@ -256,7 +264,7 @@ public class GUI {
 	 * This function will then display the new score on the screen.
 	 */
 	public void updateDisplayedScore(){
-		playerScore.setText("Score: " + gamePanel.getScore());
+		playerScore.setText("Score: " + player1Panel.getScore());
 		if(multiplayer){
 			
 			player2Score.setText("Score: "+ player2Panel.getScore());
@@ -264,7 +272,7 @@ public class GUI {
 		
 	}
 	protected void update(){
-		gamePanel.gameStep();
+		player1Panel.gameStep();
 		if(multiplayer){
 			 player2Panel.gameStep();
 		}
@@ -276,7 +284,7 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					gamePanel.gameStep();
+					player1Panel.gameStep();
 				} catch (GameOver exception) {
 					restart();
 				}
