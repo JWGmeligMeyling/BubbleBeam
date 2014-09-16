@@ -102,7 +102,7 @@ public abstract class AbstractBubble implements Bubble {
 	public void bindTopRight(Bubble topRight) {
 		this.setBubbleAt(Direction.TOPRIGHT, topRight);
 		if(topRight != null)
-			getBubbleAt(Direction.TOPRIGHT).setBubbleAt(Direction.BOTTOMLEFT, this);
+			topRight.setBubbleAt(Direction.BOTTOMLEFT, this);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public abstract class AbstractBubble implements Bubble {
 	public void bindRight(Bubble right) {
 		this.setBubbleAt(Direction.RIGHT, right);
 		if(right != null) {
-			getBubbleAt(Direction.RIGHT).setBubbleAt(Direction.LEFT, this);
+			right.setBubbleAt(Direction.LEFT, this);
 		}
 	}
 
@@ -125,8 +125,9 @@ public abstract class AbstractBubble implements Bubble {
 	public void bindTopLeft(Bubble topLeft) {
 		this.setBubbleAt(Direction.TOPLEFT, topLeft);
 		if(topLeft != null)
-			getBubbleAt(Direction.TOPLEFT).setBubbleAt(Direction.BOTTOMRIGHT, this);
+			topLeft.setBubbleAt(Direction.BOTTOMRIGHT, this);
 	}
+	
 	@Override
 	public void bindBottomLeft(Bubble botLeft){
 		this.setBubbleAt(Direction.BOTTOMLEFT, botLeft);
@@ -192,7 +193,7 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		//renderDebugLines((Graphics2D) graphics);
+		renderDebugLines((Graphics2D) graphics);
 	}
 	
 	protected void renderDebugLines(final Graphics2D g2) {
