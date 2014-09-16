@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Point;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -22,33 +23,16 @@ public interface Bubble extends Sprite {
 	void bindBottomLeft(Bubble botLeft);
 	void bindBottomRight(Bubble botRight);
 	
-	Bubble getTopRight();
-	Bubble getTopLeft();
-	Bubble getLeft();
-	Bubble getRight();
-	Bubble getBottomLeft();
-	Bubble getBottomRight();
-	
-	void setTopRight(Bubble bubble);
-	void setTopLeft(Bubble bubble);
-	void setLeft(Bubble bubble);
-	void setRight(Bubble bubble);
-	void setBottomRight(Bubble bubble);
-	void setBottomLeft(Bubble bubble);
-	
-	boolean hasTopRight();
-	boolean hasTopLeft();
-	boolean hasLeft();
-	boolean hasRight();
-	boolean hasBottomLeft();
-	boolean hasBottomRight();
+	Bubble getBubbleAt(Direction direction);
+	void setBubbleAt(Direction direction, Bubble bubble);
+	boolean hasBubbleAt(Direction direction);
 	
 	boolean intersect(Bubble b);
 	Point getCenter();
 	int getRadius();
 	double getDistance(Bubble b);
 	
-	List<Bubble> getNeighbours();
+	Collection<Bubble> getNeighbours();
 	<T> List<T> getNeighboursOfType(Class<T> type);
 	BubblePlaceholder getSnapPosition(Bubble b);
 
@@ -57,11 +41,15 @@ public interface Bubble extends Sprite {
 	default Stream<Bubble> traverseRight() {
 		final List<Bubble> bubbles = Lists.newArrayList(this);
 		Bubble current = this;
-		while(current.hasRight()) {
-			current = current.getRight();
+		while(current.hasBubbleAt(Direction.RIGHT)) {
+			current = current.getBubbleAt(Direction.RIGHT);
 			bubbles.add(current);
 		}
 		return bubbles.stream();
-	};
+	}
+	
+	enum Direction {
+		TOPLEFT, TOPRIGHT, LEFT, RIGHT, BOTTOMLEFT, BOTTOMRIGHT;
+	}
 
 }
