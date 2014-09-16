@@ -104,21 +104,21 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				
 				if(i > 0) {
 					if(i % 2 == 0) { // 3rd, 5fth rows , ... 
-						bubble.bindTopRight(bubbles[i-1][j]);
+						bubble.bind(Direction.TOPRIGHT, bubbles[i-1][j]);
 						if(j > 0) {
-							bubble.bindTopLeft(bubbles[i-1][j-1]);
+							bubble.bind(Direction.TOPLEFT, bubbles[i-1][j-1]);
 						}
 					}
 					else {
-						bubble.bindTopLeft(bubbles[i-1][j]);
+						bubble.bind(Direction.TOPLEFT, bubbles[i-1][j]);
 						if(j < (rowSize - 1)) {
-							bubble.bindTopRight(bubbles[i-1][j+1]);
+							bubble.bind(Direction.TOPRIGHT, bubbles[i-1][j+1]);
 						}
 					}
 				}
 				
 				if(j > 0) {
-					bubble.bindLeft(bubbles[i][j-1]);
+					bubble.bind(Direction.LEFT, bubbles[i][j-1]);
 				}
 				
 				if(i == 0 && j == 0) {
@@ -196,12 +196,12 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 		@Override
 		public void replaceBubble(final Bubble original, final Bubble replacement){
-			replacement.bindTopLeft(original.getBubbleAt(Direction.TOPLEFT));
-			replacement.bindTopRight(original.getBubbleAt(Direction.TOPRIGHT));
-			replacement.bindLeft(original.getBubbleAt(Direction.LEFT));
-			replacement.bindRight(original.getBubbleAt(Direction.RIGHT));
-			replacement.bindBottomLeft(original.getBubbleAt(Direction.BOTTOMLEFT));
-			replacement.bindBottomRight(original.getBubbleAt(Direction.BOTTOMRIGHT));
+			replacement.bind(Direction.TOPLEFT, original.getBubbleAt(Direction.TOPLEFT));
+			replacement.bind(Direction.TOPRIGHT, original.getBubbleAt(Direction.TOPRIGHT));
+			replacement.bind(Direction.LEFT, original.getBubbleAt(Direction.LEFT));
+			replacement.bind(Direction.RIGHT, original.getBubbleAt(Direction.RIGHT));
+			replacement.bind(Direction.BOTTOMLEFT, original.getBubbleAt(Direction.BOTTOMLEFT));
+			replacement.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
 			replacement.setPosition(original.getPosition());
 			
 			if(startBubble.equals(original)) {
@@ -262,7 +262,8 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		
 		@Override
 		public boolean bubbleIsTop(final Bubble target) {
-			return startBubble.traverseRight().anyMatch(bubble -> bubble.equals(target));
+			return startBubble.traverse(Direction.RIGHT)
+					.anyMatch(bubble -> bubble.equals(target));
 		}
 
 		/**
@@ -318,20 +319,20 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				Bubble bubble = new ColouredBubble(getRandomRemainingColor());
 				
 				if(shift){
-					child.bindTopRight(bubble);
+					child.bind(Direction.TOPRIGHT, bubble);
 					if(child.hasBubbleAt(Direction.RIGHT)) {
-						child.getBubbleAt(Direction.RIGHT).bindTopLeft(bubble);
+						child.getBubbleAt(Direction.RIGHT).bind(Direction.TOPLEFT, bubble);
 					}
 				}
 				else {
-					child.bindTopLeft(bubble);
+					child.bind(Direction.TOPLEFT, bubble);
 					if(child.hasBubbleAt(Direction.LEFT)) {
-						child.getBubbleAt(Direction.LEFT).bindTopRight(bubble);
+						child.getBubbleAt(Direction.LEFT).bind(Direction.TOPRIGHT, bubble);
 					}
 				}
 				
 				if(previousBubble != null) {
-					previousBubble.bindRight(bubble);
+					previousBubble.bind(Direction.RIGHT, bubble);
 				}
 				previousBubble = bubble;
 				

@@ -188,8 +188,7 @@ public class Cannon extends Observable implements Sprite {
 
 			bubbleMesh.stream()
 					.filter(bubble -> bubble.intersect(shotBubble)
-							&& (bubble instanceof ColouredBubble
-							|| bubbleMesh.bubbleIsTop(bubble))
+							&& ( bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble))
 						).findAny()
 				.ifPresent(bubble -> this.collide(bubble));
 		}

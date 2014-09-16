@@ -13,21 +13,15 @@ import com.google.common.collect.Lists;
  *
  */
 public interface Bubble extends Sprite {
-	
-	Point calculatePosition();
-	
-	void bindTopLeft(Bubble topLeft);
-	void bindTopRight(Bubble topRight);
-	void bindLeft(Bubble left);
-	void bindRight(Bubble right);
-	void bindBottomLeft(Bubble botLeft);
-	void bindBottomRight(Bubble botRight);
-	
+		
+	void bind(Direction direction, Bubble other);
 	Bubble getBubbleAt(Direction direction);
 	void setBubbleAt(Direction direction, Bubble bubble);
 	boolean hasBubbleAt(Direction direction);
 	
 	boolean intersect(Bubble b);
+	boolean isHittable();
+	
 	Point getCenter();
 	int getRadius();
 	double getDistance(Bubble b);
@@ -37,12 +31,13 @@ public interface Bubble extends Sprite {
 	BubblePlaceholder getSnapPosition(Bubble b);
 
 	void setOrigin(boolean value);
+	Point calculatePosition();
 	
-	default Stream<Bubble> traverseRight() {
+	default Stream<Bubble> traverse(final Direction direction) {
 		final List<Bubble> bubbles = Lists.newArrayList(this);
 		Bubble current = this;
-		while(current.hasBubbleAt(Direction.RIGHT)) {
-			current = current.getBubbleAt(Direction.RIGHT);
+		while(current.hasBubbleAt(direction)) {
+			current = current.getBubbleAt(direction);
 			bubbles.add(current);
 		}
 		return bubbles.stream();
@@ -50,6 +45,22 @@ public interface Bubble extends Sprite {
 	
 	enum Direction {
 		TOPLEFT, TOPRIGHT, LEFT, RIGHT, BOTTOMLEFT, BOTTOMRIGHT;
+		
+		public Direction opposite() {
+			return oppositeFor(this);
+		}
+		
+		public static Direction oppositeFor(final Direction direction) {
+			switch(direction) {
+			case BOTTOMLEFT: return TOPRIGHT;
+			case BOTTOMRIGHT: return TOPLEFT;
+			case LEFT: return RIGHT;
+			case RIGHT: return LEFT;
+			case TOPLEFT: return BOTTOMRIGHT;
+			case TOPRIGHT: return BOTTOMLEFT;
+			}
+			throw new IllegalArgumentException();
+		}
 	}
 
 }

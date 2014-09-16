@@ -17,7 +17,8 @@ public abstract class AbstractBubble implements Bubble {
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
 	public static final int RADIUS = 14;
-	public static final int SPACING = WIDTH - RADIUS * 2;
+	public static final int DIAMETER = RADIUS * 2;
+	public static final int SPACING = WIDTH - DIAMETER;
 	public static final Point ORIGIN = new Point(0,0);
 
 	protected boolean origin = false;
@@ -27,10 +28,6 @@ public abstract class AbstractBubble implements Bubble {
 	@Override
 	public void setOrigin(boolean value) {
 		origin = value;
-	}
-	
-	public boolean atOrigin(){
-		return origin;
 	}
 	
 	@Override
@@ -97,49 +94,12 @@ public abstract class AbstractBubble implements Bubble {
 		return position;
 	}
 
-	
 	@Override
-	public void bindTopRight(Bubble topRight) {
-		this.setBubbleAt(Direction.TOPRIGHT, topRight);
-		if(topRight != null)
-			topRight.setBubbleAt(Direction.BOTTOMLEFT, this);
-	}
-
-	@Override
-	public void bindLeft(Bubble left) {
-		this.setBubbleAt(Direction.LEFT, left);
-		if(left != null) {
-			left.setBubbleAt(Direction.RIGHT, this);
+	public void bind(final Direction direction, final Bubble other) {
+		this.setBubbleAt(direction, other);
+		if(other != null) {
+			other.setBubbleAt(direction.opposite(), this);
 		}
-	}
-
-	@Override
-	public void bindRight(Bubble right) {
-		this.setBubbleAt(Direction.RIGHT, right);
-		if(right != null) {
-			right.setBubbleAt(Direction.LEFT, this);
-		}
-	}
-
-	@Override
-	public void bindTopLeft(Bubble topLeft) {
-		this.setBubbleAt(Direction.TOPLEFT, topLeft);
-		if(topLeft != null)
-			topLeft.setBubbleAt(Direction.BOTTOMRIGHT, this);
-	}
-	
-	@Override
-	public void bindBottomLeft(Bubble botLeft){
-		this.setBubbleAt(Direction.BOTTOMLEFT, botLeft);
-		if(botLeft != null)
-			botLeft.setBubbleAt(Direction.TOPRIGHT, this);
-	}
-	
-	@Override
-	public void bindBottomRight(Bubble botLeft){
-		this.setBubbleAt(Direction.BOTTOMRIGHT, botLeft);
-		if(botLeft != null)
-			botLeft.setBubbleAt(Direction.TOPLEFT, this);
 	}
 	
 	@Override
@@ -164,8 +124,12 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public boolean intersect(Bubble b){
-		double distance= this.getDistance(b);
-		return distance<WIDTH-5;
+		return this.getDistance(b) < DIAMETER;
+	}
+	
+	@Override
+	public boolean isHittable() {
+		return false;
 	}
 	
 	@Override
@@ -193,7 +157,7 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		renderDebugLines((Graphics2D) graphics);
+//		renderDebugLines((Graphics2D) graphics);
 	}
 	
 	protected void renderDebugLines(final Graphics2D g2) {
