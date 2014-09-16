@@ -18,6 +18,11 @@ public class Vector2f extends org.lwjgl.util.vector.Vector2f {
 		super(a, b);
 	}
 	
+	public Vector2f(Vector2f direction) {
+		this.x = direction.x;
+		this.y = direction.y;
+	}
+
 	public Vector2f add(final Vector2f other) {
 		return new Vector2f(this.x + other.x, this.y + other.y);
 	}

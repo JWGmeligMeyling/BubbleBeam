@@ -126,7 +126,7 @@ public class Cannon extends Observable implements Sprite {
 		Point bubbleStartPosition = new Point((position.x - AbstractBubble.WIDTH / 2)
 				+ (int) (WIDTH * direction.x), position.y - AbstractBubble.HEIGHT / 2
 				+ (int) (WIDTH * direction.y));
-		shotBubble = new MovingBubble(bubbleStartPosition, direction,
+		shotBubble = new MovingBubble(bubbleStartPosition, new Vector2f(direction),
 				screenSize, screenLocation, loadedBubble.getColor());
 		loadedBubble = nextBubble;
 		nextBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
