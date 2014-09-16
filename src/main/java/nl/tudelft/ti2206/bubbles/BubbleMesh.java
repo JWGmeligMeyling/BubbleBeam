@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.exception.GameOver;
 
 import org.slf4j.Logger;
@@ -103,21 +104,21 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				
 				if(i > 0) {
 					if(i % 2 == 0) { // 3rd, 5fth rows , ... 
-						bubble.bindTopRight(bubbles[i-1][j]);
+						bubble.bind(Direction.TOPRIGHT, bubbles[i-1][j]);
 						if(j > 0) {
-							bubble.bindTopLeft(bubbles[i-1][j-1]);
+							bubble.bind(Direction.TOPLEFT, bubbles[i-1][j-1]);
 						}
 					}
 					else {
-						bubble.bindTopLeft(bubbles[i-1][j]);
+						bubble.bind(Direction.TOPLEFT, bubbles[i-1][j]);
 						if(j < (rowSize - 1)) {
-							bubble.bindTopRight(bubbles[i-1][j+1]);
+							bubble.bind(Direction.TOPRIGHT, bubbles[i-1][j+1]);
 						}
 					}
 				}
 				
 				if(j > 0) {
-					bubble.bindLeft(bubbles[i][j-1]);
+					bubble.bind(Direction.LEFT, bubbles[i][j-1]);
 				}
 				
 				if(i == 0 && j == 0) {
@@ -195,12 +196,12 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 		@Override
 		public void replaceBubble(final Bubble original, final Bubble replacement){
-			replacement.bindTopLeft(original.getTopLeft());
-			replacement.bindTopRight(original.getTopRight());
-			replacement.bindLeft(original.getLeft());
-			replacement.bindRight(original.getRight());
-			replacement.bindBottomLeft(original.getBottomLeft());
-			replacement.bindBottomRight(original.getBottomRight());
+			replacement.bind(Direction.TOPLEFT, original.getBubbleAt(Direction.TOPLEFT));
+			replacement.bind(Direction.TOPRIGHT, original.getBubbleAt(Direction.TOPRIGHT));
+			replacement.bind(Direction.LEFT, original.getBubbleAt(Direction.LEFT));
+			replacement.bind(Direction.RIGHT, original.getBubbleAt(Direction.RIGHT));
+			replacement.bind(Direction.BOTTOMLEFT, original.getBubbleAt(Direction.BOTTOMLEFT));
+			replacement.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
 			replacement.setPosition(original.getPosition());
 			
 			if(startBubble.equals(original)) {
@@ -261,7 +262,8 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		
 		@Override
 		public boolean bubbleIsTop(final Bubble target) {
-			return startBubble.traverseRight().anyMatch(bubble -> bubble.equals(target));
+			return startBubble.traverse(Direction.RIGHT)
+					.anyMatch(bubble -> bubble.equals(target));
 		}
 
 		/**
@@ -311,26 +313,26 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			Iterator<Bubble> bubbles = iterator();
 			Bubble child = bubbles.next();
 			Bubble previousBubble = null;
-			boolean shift = !child.hasBottomLeft();
+			boolean shift = !child.hasBubbleAt(Direction.BOTTOMLEFT);
 			
 			for(int i = 0; i < 10; i++) {
 				Bubble bubble = new ColouredBubble(getRandomRemainingColor());
 				
 				if(shift){
-					child.bindTopRight(bubble);
-					if(child.hasRight()) {
-						child.getRight().bindTopLeft(bubble);
+					child.bind(Direction.TOPRIGHT, bubble);
+					if(child.hasBubbleAt(Direction.RIGHT)) {
+						child.getBubbleAt(Direction.RIGHT).bind(Direction.TOPLEFT, bubble);
 					}
 				}
 				else {
-					child.bindTopLeft(bubble);
-					if(child.hasLeft()) {
-						child.getLeft().bindTopRight(bubble);
+					child.bind(Direction.TOPLEFT, bubble);
+					if(child.hasBubbleAt(Direction.LEFT)) {
+						child.getBubbleAt(Direction.LEFT).bind(Direction.TOPRIGHT, bubble);
 					}
 				}
 				
 				if(previousBubble != null) {
-					previousBubble.bindRight(bubble);
+					previousBubble.bind(Direction.RIGHT, bubble);
 				}
 				previousBubble = bubble;
 				
@@ -353,28 +355,28 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 		protected void removeBottomRow() throws GameOver {
 			Bubble current = getBottomLeft();
-			while(current.hasRight()) {
+			while(current.hasBubbleAt(Direction.RIGHT)) {
 				if(current instanceof ColouredBubble)
 					throw new GameOver();
-				if(current.hasTopLeft())
-					current.getTopLeft().setBottomRight(null);
-				if(current.hasTopRight())
-					current.getTopRight().setBottomLeft(null);
-				current = current.getRight();
+				if(current.hasBubbleAt(Direction.TOPLEFT))
+					current.getBubbleAt(Direction.TOPLEFT).setBubbleAt(Direction.BOTTOMRIGHT, null);
+				if(current.hasBubbleAt(Direction.TOPRIGHT))
+					current.getBubbleAt(Direction.TOPRIGHT).setBubbleAt(Direction.BOTTOMLEFT, null);
+				current = current.getBubbleAt(Direction.RIGHT);
 			}
 			
 		}
 		
 		protected Bubble getBottomLeft() {
 			Bubble current = startBubble;
-			while(current.hasBottomLeft() || current.hasBottomRight()) {
-				while(current.hasBottomRight())
-					current = current.getBottomRight();
-				while(current.hasBottomLeft())
-					current = current.getBottomLeft();
+			while(current.hasBubbleAt(Direction.BOTTOMLEFT) || current.hasBubbleAt(Direction.BOTTOMRIGHT)) {
+				while(current.hasBubbleAt(Direction.BOTTOMRIGHT))
+					current = current.getBubbleAt(Direction.BOTTOMRIGHT);
+				while(current.hasBubbleAt(Direction.BOTTOMLEFT))
+					current = current.getBubbleAt(Direction.BOTTOMLEFT);
 			}
-			while(current.hasLeft())
-				current = current.getLeft();
+			while(current.hasBubbleAt(Direction.LEFT))
+				current = current.getBubbleAt(Direction.LEFT);
 			return current;
 		}
 
@@ -398,14 +400,14 @@ public interface BubbleMesh extends Iterable<Bubble> {
 					
 					Bubble firstChild = null;
 					
-					if(bubble.getBottomLeft() != null) {
-						firstChild = bubble.getBottomLeft();
+					if(bubble.getBubbleAt(Direction.BOTTOMLEFT) != null) {
+						firstChild = bubble.getBubbleAt(Direction.BOTTOMLEFT);
 					}
-					else if (bubble.getBottomRight() != null) {
-						firstChild = bubble.getBottomRight();
+					else if (bubble.getBubbleAt(Direction.BOTTOMRIGHT) != null) {
+						firstChild = bubble.getBubbleAt(Direction.BOTTOMRIGHT);
 					}
 					
-					if(firstChild != null && firstChild.getLeft() == null) {
+					if(firstChild != null && firstChild.getBubbleAt(Direction.LEFT) == null) {
 						addRowToQueue(a, firstChild);
 					}
 				}
@@ -414,8 +416,8 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			private void addRowToQueue(final Queue<Bubble> bubbles, final Bubble leftEdge) {
 				Bubble left = leftEdge;
 				bubbles.add(left);
-				while(left.getRight() != null) {
-					left = left.getRight();
+				while(left.getBubbleAt(Direction.RIGHT) != null) {
+					left = left.getBubbleAt(Direction.RIGHT);
 					bubbles.add(left);
 				}
 			}

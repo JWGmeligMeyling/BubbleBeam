@@ -33,19 +33,19 @@ public class ColouredBubble extends AbstractBubble {
 		fillBaseColour(g2, center, color);
 	}
 
-	private static float[] BASE_COLOR_GRADIENT_RANGE = new float[] { 0.0f, 1.0f };
+	protected static float[] BASE_COLOR_GRADIENT_RANGE = new float[] { 0.0f, 1.0f };
 
-	private void fillBaseColour(final Graphics2D graphics, final Point center,
+	protected void fillBaseColour(final Graphics2D graphics, final Point center,
 			final Color baseColor) {
 		final Point position = getPosition();
 		graphics.setColor(baseColor);
-		graphics.setPaint(new RadialGradientPaint(center, RADIUS,
-				BASE_COLOR_GRADIENT_RANGE, new Color[] { baseColor.brighter(),
-						baseColor.darker() }));
+//		graphics.setPaint(new RadialGradientPaint(center, RADIUS,
+//				BASE_COLOR_GRADIENT_RANGE, new Color[] { baseColor.brighter(),
+//						baseColor.darker() }));
 		graphics.fillOval(position.x + SPACING, position.y + SPACING,
 				2 * RADIUS, 2 * RADIUS);
-		applyHighlight(graphics, center);
-		applyShadow(graphics, center);
+//		applyHighlight(graphics, center);
+//		applyShadow(graphics, center);
 	}
 
 	private static int HIGHLIGHT_OFFSET = 8, HIGHLIGHT_RADIUS = 6,
@@ -54,7 +54,7 @@ public class ColouredBubble extends AbstractBubble {
 	private static Color[] HIGHLIGHT_GRADIENT_COLOURS = new Color[] {
 			new Color(1.0f, 1.0f, 1.0f, 0.5f), new Color(1.0f, 1.0f, 1.0f, 0f) };
 
-	private void applyHighlight(final Graphics2D graphics, final Point center) {
+	protected void applyHighlight(final Graphics2D graphics, final Point center) {
 		final Point position = getPosition();
 		Point highlightPos = new Point(position.x + HIGHLIGHT_OFFSET,
 				position.y + HIGHLIGHT_OFFSET);
@@ -73,7 +73,7 @@ public class ColouredBubble extends AbstractBubble {
 	private static Color[] SHADOW_GRADIENT_COLOURS = new Color[] {
 			new Color(0.0f, 0.0f, 0.0f, 0.2f), new Color(0.0f, 0.0f, 0.0f, 0f) };
 
-	private void applyShadow(final Graphics2D graphics, final Point center) {
+	protected void applyShadow(final Graphics2D graphics, final Point center) {
 		final Point position = getPosition();
 		Point shadowPos = new Point(position.x + SHADOW_OFFSET, position.y
 				+ SHADOW_OFFSET);
@@ -88,6 +88,11 @@ public class ColouredBubble extends AbstractBubble {
 
 	public Color getColor() {
 		return color;
+	}
+
+	@Override
+	public boolean isHittable() {
+		return true;
 	}
 	
 }
