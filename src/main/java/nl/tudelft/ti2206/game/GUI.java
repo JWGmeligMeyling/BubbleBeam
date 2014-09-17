@@ -42,7 +42,6 @@ public class GUI {
 	JLabel playerScore;
 	JLabel player2Score;
 
-
 	// game-variables
 	boolean game_is_running = true;
 
@@ -51,7 +50,13 @@ public class GUI {
 	final static boolean shouldWeightX = true;
 	final static boolean RIGHT_TO_LEFT = false;
 
-	protected void fillGameFrame(Container pane) throws FileNotFoundException, IOException {
+	/**
+	 * fills the panel of a Frame with the game and the controls
+	 * @param pane
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private void fillGameFrame(Container pane) throws FileNotFoundException, IOException {
 		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		}
@@ -194,7 +199,7 @@ public class GUI {
 			c.insets = extPadding;
 			pane.add(player2Panel,c);
 			
-			//score-label
+			//score-label for multiplayer
 			player2Score = new JLabel("Score: ");
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.weightx = 0;
@@ -210,7 +215,7 @@ public class GUI {
 			pane.add(player2Score, c);
 			
 		}
-		
+		// upon filling the frame the score of the game is not yet displayed
 		updateDisplayedScore();
 
 	}
@@ -223,13 +228,16 @@ public class GUI {
 	public GUI() throws FileNotFoundException, IOException {
 		frame = new JFrame("Bubble Shooter");
 
+		//add the game + controls
 		fillGameFrame(frame.getContentPane());
 
+		//resize and center the frame
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 
+		//start the game
 		run();
 	}
 
@@ -238,19 +246,22 @@ public class GUI {
 	}
 
 	/**
-	 * Function that restarts the game by removing everything from the frame and filling it up with new gamePanels.
+	 * Function that restarts the game by removing everything from the frame and filling it up with new gamePanels and controls.
 	 */
 	protected void restart() {
 		JPanel contentPane = (JPanel) frame.getContentPane();
 		
+		//clear the frame from all previous content ...
 		contentPane.removeAll();
 		
+		//... and fill it again
 		try {
 			fillGameFrame(contentPane);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		
+		//make sure everything is right and also make sure the frame is the right size
 		contentPane.revalidate();
 		contentPane.repaint();
 		frame.pack();
@@ -268,10 +279,13 @@ public class GUI {
 		if(multiplayer){
 			
 			player2Score.setText("Score: "+ player2Panel.getScore());
-		}
-		
+		}	
 	}
-	protected void update(){
+	
+	/**
+	 * Periodically called function that calls the updatefunctions of the gamePanels
+	 */
+	protected void update() throws GameOver{
 		player1Panel.gameStep();
 		if(multiplayer){
 			 player2Panel.gameStep();
@@ -284,15 +298,11 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					player1Panel.gameStep();
+					GUI.this.update();
 				} catch (GameOver exception) {
 					restart();
 				}
-				if (multiplayer) {
-					player2Panel.gameStep();
-				}
 			}
-			
 		}).start();
 	}
 	
