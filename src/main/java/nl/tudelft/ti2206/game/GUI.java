@@ -179,7 +179,7 @@ public class GUI {
 		pane.add(version, c);
 		
 		//multiplayer
-		// everything the frame must be filled with for a local multiplayer
+		// everything the frame must be filled with for a network multiplayer
 		if (multiplayer) {
 			player2Panel = new NonReactiveGamePanel(
 					BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));

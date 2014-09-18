@@ -25,7 +25,7 @@ public abstract class GamePanel extends JPanel {
 	public final static int WIDTH = AbstractBubble.WIDTH * 10 + AbstractBubble.WIDTH / 2 + 4;
 	public final static int HEIGHT = 400;
 
-	private final BubbleMesh bubbleMesh;
+	protected final BubbleMesh bubbleMesh;
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
