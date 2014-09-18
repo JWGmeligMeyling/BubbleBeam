@@ -8,7 +8,6 @@ import javax.swing.Timer;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.throwaway.GuiThrowAwayPanel;
 
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -28,10 +27,10 @@ import java.io.IOException;
 public class GUI {
 
 	JFrame frame;
-	GuiThrowAwayPanel player1Panel;
+	ReactiveGamePanel player1Panel;
 
 	// multiplayer on same machine
-	GuiThrowAwayPanel player2Panel;
+	NonReactiveGamePanel player2Panel;
 	boolean multiplayer = false;
 	
 
@@ -68,7 +67,7 @@ public class GUI {
 		Insets noPadding = new Insets(0,0,0,0);
 		
 		// everything the frame must be filled with
-		player1Panel = new GuiThrowAwayPanel(
+		player1Panel = new ReactiveGamePanel(
 				BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));
 		player1Panel.observeScore((a, b) -> updateDisplayedScore());
 
@@ -182,7 +181,7 @@ public class GUI {
 		//multiplayer
 		// everything the frame must be filled with for a local multiplayer
 		if (multiplayer) {
-			player2Panel = new GuiThrowAwayPanel(
+			player2Panel = new NonReactiveGamePanel(
 					BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 			
