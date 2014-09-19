@@ -28,14 +28,13 @@ public class Server implements Runnable {
 			Socket socket;
 			try {
 				socket = serverSocket.accept();
-				Client client = new Client(socket);
-				new Thread(client).start();
+				// Client client = new Client(socket);
+				// new Thread(client).start();
 				/*
-				 * TODO
-				 * Requires a way to remove the clients from the server after
-				 * disconnecting..
+				 * TODO Requires a way to remove the clients from the server
+				 * after disconnecting..
 				 */
-				clientList.add(client);
+				// clientList.add(client);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

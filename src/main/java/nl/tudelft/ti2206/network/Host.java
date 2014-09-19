@@ -8,6 +8,11 @@ import java.net.ServerSocket;
 public class Host extends Connector implements Runnable {
 	
 	public Host(int port) {
+		super(port);
+	}
+	
+	@Override
+	protected void connect() {
 		try {
 			socket = new ServerSocket(port).accept();
 			in = new DataInputStream(socket.getInputStream());
