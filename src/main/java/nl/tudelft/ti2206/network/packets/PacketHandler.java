@@ -12,57 +12,38 @@ import java.util.ArrayList;
  * 
  * @author Sam Smulders
  */
-public abstract class PacketHandler<T extends Packet, L extends PacketListener> {
-	protected ArrayList<L> packetListeners = new ArrayList<L>();
+public abstract class PacketHandler<P extends Packet> {
+	protected ArrayList<PacketListener<P>> packetListeners = new ArrayList<PacketListener<P>>();
 	
-	public final void registerObserver(L observer) {
+	public final void registerObserver(PacketListener<P> observer) {
 		packetListeners.add(observer);
 	}
 	
-	public final void removeObserver(L observer) {
+	public final void removeObserver(PacketListener<P> observer) {
 		packetListeners.remove(observer);
 	}
 	
-	public void notifyObservers(L packet) {
-		for(L listener : packetListeners){
-			listener.update(packet);
-		}
-		packetListeners.forEach(listener -> listener.update(packet));
-	}
-	
-	public abstract void notifyObservers(Packet packet);
-	
-	public static class CannonRotate extends PacketHandler {
-		
+	public static class CannonRotate extends PacketHandler<Packet.CannonRotate> {
 		public void notifyObservers(Packet.CannonRotate packet) {
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
 	}
 	
-	public static class CannonShoot extends PacketHandler {
-		@Override
-		public void notifyObservers(Packet packet) {
-			for (PacketListener listener : packetListeners) {
-				((PacketListener.CannonShoot) listener).update((Packet.CannonShoot) packet);
-			}
+	public static class CannonShoot extends PacketHandler<Packet.CannonShoot> {
+		public void notifyObservers(Packet.CannonShoot packet) {
+			packetListeners.forEach(listener -> listener.update(packet));
 		}
 	}
 	
-	public static class BubbleMeshSync extends PacketHandler {
-		@Override
-		public void notifyObservers(Packet packet) {
-			for (PacketListener listener : packetListeners) {
-				((PacketListener.BubbleMeshSync) listener).update((Packet.BubbleMeshSync) packet);
-			}
+	public static class BubbleMeshSync extends PacketHandler<Packet.BubbleMeshSync> {
+		public void notifyObservers(Packet.BubbleMeshSync packet) {
+			packetListeners.forEach(listener -> listener.update(packet));
 		}
 	}
 	
-	public static class LoadNewBubble extends PacketHandler {
-		@Override
-		public void notifyObservers(Packet packet) {
-			for (PacketListener listener : packetListeners) {
-				((PacketListener.LoadNewBubble) listener).update((Packet.LoadNewBubble) packet);
-			}
+	public static class LoadNewBubble extends PacketHandler<Packet.LoadNewBubble> {
+		public void notifyObservers(Packet.LoadNewBubble packet) {
+			packetListeners.forEach(listener -> listener.update(packet));
 		}
 	}
 }

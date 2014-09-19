@@ -108,7 +108,7 @@ public interface Packet {
 	}
 	
 	public class LoadNewBubble implements Packet {
-		public static final byte PACKET_ID = 4;
+		public static final byte PACKET_ID = 3;
 		
 		public final Color color;
 		
