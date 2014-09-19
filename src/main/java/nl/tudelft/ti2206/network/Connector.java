@@ -23,9 +23,14 @@ public abstract class Connector implements Runnable {
 	protected DataInputStream in;
 	protected Socket socket;
 	protected PacketHandlerCollection packetHandlerCollection = new PacketHandlerCollection();
+	protected int port;
 	
 	private boolean stop;
 	
+	public Connector(int port) {
+		this.port = port;
+	}
+
 	protected Packet readPacket() {
 		try {
 			byte id = in.readByte();
@@ -54,6 +59,7 @@ public abstract class Connector implements Runnable {
 	
 	@Override
 	public void run() {
+		connect();
 		stop = false;
 		while (!stop) {
 			acceptPacket();
@@ -66,4 +72,6 @@ public abstract class Connector implements Runnable {
 			e.printStackTrace();
 		}
 	}
+
+	protected abstract void connect();
 }

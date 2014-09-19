@@ -3,9 +3,9 @@ package nl.tudelft.util;
 import java.awt.Point;
 
 public class Vector2f extends org.lwjgl.util.vector.Vector2f {
-
+	
 	private static final long serialVersionUID = -7121395633617073454L;
-
+	
 	public Vector2f() {
 		this(0.0f, 0.0f);
 	}
@@ -18,11 +18,11 @@ public class Vector2f extends org.lwjgl.util.vector.Vector2f {
 		super(a, b);
 	}
 	
-	public Vector2f(Vector2f direction) {
-		this.x = direction.x;
-		this.y = direction.y;
+	public Vector2f(Vector2f vector) {
+		this.x = vector.x;
+		this.y = vector.y;
 	}
-
+	
 	public Vector2f add(final Vector2f other) {
 		return new Vector2f(this.x + other.x, this.y + other.y);
 	}
@@ -46,7 +46,7 @@ public class Vector2f extends org.lwjgl.util.vector.Vector2f {
 	public Vector2f divide(final float scalar) {
 		return new Vector2f(this.x / scalar, this.y / scalar);
 	}
-
+	
 	public Vector2f normalize() {
 		super.normalise();
 		return this;
@@ -55,5 +55,9 @@ public class Vector2f extends org.lwjgl.util.vector.Vector2f {
 	public Point toPoint() {
 		return new Point((int) this.x, (int) this.y);
 	}
-
+	
+	@Override
+	public boolean equals(Object other) {
+		return (other instanceof Vector2f && (this.x == ((Vector2f) other).x) && (this.y == ((Vector2f) other).y));
+	}
 }
