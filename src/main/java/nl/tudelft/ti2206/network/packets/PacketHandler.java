@@ -12,26 +12,30 @@ import java.util.ArrayList;
  * 
  * @author Sam Smulders
  */
-public abstract class PacketHandler {
+public abstract class PacketHandler<T extends Packet, L extends PacketListener> {
+	protected ArrayList<L> packetListeners = new ArrayList<L>();
 	
-	protected ArrayList<PacketListener> packetListeners = new ArrayList<PacketListener>();
-	
-	public final void registerObserver(PacketListener observer) {
+	public final void registerObserver(L observer) {
 		packetListeners.add(observer);
 	}
 	
-	public final void removeObserver(PacketListener observer) {
+	public final void removeObserver(L observer) {
 		packetListeners.remove(observer);
+	}
+	
+	public void notifyObservers(L packet) {
+		for(L listener : packetListeners){
+			listener.update(packet);
+		}
+		packetListeners.forEach(listener -> listener.update(packet));
 	}
 	
 	public abstract void notifyObservers(Packet packet);
 	
 	public static class CannonRotate extends PacketHandler {
-		@Override
-		public void notifyObservers(Packet packet) {
-			for (PacketListener listener : packetListeners) {
-				((PacketListener.CannonRotate) listener).update((Packet.CannonRotate) packet);
-			}
+		
+		public void notifyObservers(Packet.CannonRotate packet) {
+			packetListeners.forEach(listener -> listener.update(packet));
 		}
 	}
 	
