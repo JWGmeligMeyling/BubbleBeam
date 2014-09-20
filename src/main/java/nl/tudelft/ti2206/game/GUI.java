@@ -33,6 +33,7 @@ public class GUI {
 	NonReactiveGamePanel player2Panel;
 	boolean multiplayer = false;
 	
+		
 
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000/FPS;
@@ -179,7 +180,7 @@ public class GUI {
 		pane.add(version, c);
 		
 		//multiplayer
-		// everything the frame must be filled with for a network multiplayer
+		// everything the frame must be filled with for a local multiplayer
 		if (multiplayer) {
 			player2Panel = new NonReactiveGamePanel(
 					BubbleMesh.parse(GUI.class.getResourceAsStream("/board.txt")));
