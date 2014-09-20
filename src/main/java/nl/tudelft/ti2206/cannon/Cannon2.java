@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.cannon;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -28,25 +29,22 @@ public class Cannon2 implements Drawable {
 	protected static final float MIN_DIRECTION_Y = (float) Math.sin(Cannon2.MIN_ANGLE);
 	protected static final float MIN_DIRECTION_X = 1f - MIN_DIRECTION_Y;
 	protected static final int ROTATE_TRANSLATION = 32;
-	protected final Point LOADED_BUBBLE_POSITION;
-	protected final Point NEXT_BUBBLE_POSITION;
 	
 	protected Point position;
 	protected double angle = Math.PI / 2;
 	protected Vector2f direction = new Vector2f(0f, 0f);
-	protected int misses = 0;
+	
+	protected final Dimension screenSize;
 	
 	protected Room room;
 	
 	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
-	public Cannon2() {
-		LOADED_BUBBLE_POSITION = new Point(position.x
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), position.y
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
-		NEXT_BUBBLE_POSITION = new Point(position.x + 60
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), position.y
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
+	public Cannon2(final Point position, final Dimension dimension) {
+		this.position = position;
+		this.position = position;
+		
+		this.screenSize = dimension;
 	}
 	
 	public void setRoom(Room room) {
