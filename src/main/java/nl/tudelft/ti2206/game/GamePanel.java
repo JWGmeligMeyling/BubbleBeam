@@ -11,6 +11,8 @@ import javax.swing.border.BevelBorder;
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.cannon.Cannon2;
+import nl.tudelft.ti2206.cannon.Room;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.util.ObservableObject;
 
@@ -27,6 +29,9 @@ public abstract class GamePanel extends JPanel {
 
 	protected final BubbleMesh bubbleMesh;
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
+	
+	//private final Room room;
+	//private final Cannon2 cannon;
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 
