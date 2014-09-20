@@ -19,17 +19,14 @@ import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
  */
 public abstract class Connector implements Runnable {
 	
+	public final static int PORT = 8989;
+	
 	protected DataOutputStream out;
 	protected DataInputStream in;
 	protected Socket socket;
 	protected PacketHandlerCollection packetHandlerCollection = new PacketHandlerCollection();
-	protected int port;
 	
 	private boolean stop;
-	
-	public Connector(int port) {
-		this.port = port;
-	}
 
 	protected Packet readPacket() {
 		try {

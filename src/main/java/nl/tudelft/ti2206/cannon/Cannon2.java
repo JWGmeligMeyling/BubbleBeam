@@ -34,7 +34,6 @@ public class Cannon2 implements Drawable {
 	protected int misses = 0;
 	
 	protected Room room;
-	protected CannonController cannonController;
 	
 	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
@@ -45,7 +44,6 @@ public class Cannon2 implements Drawable {
 		NEXT_BUBBLE_POSITION = new Point(position.x + 60
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), position.y
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
-		this.cannonController = cannonController;
 		cannonController.setCannon(this);
 	}
 	

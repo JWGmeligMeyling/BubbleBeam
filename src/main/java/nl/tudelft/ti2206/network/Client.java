@@ -8,15 +8,14 @@ import java.net.Socket;
 public class Client extends Connector {
 	public final String ip;
 	
-	public Client(String ip, int port) {
-		super(port);
+	public Client(String ip) {
 		this.ip = ip;
 	}
 	
 	@Override
 	protected void connect() {
 		try {
-			socket = new Socket(ip, port);
+			socket = new Socket(ip, PORT);
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
