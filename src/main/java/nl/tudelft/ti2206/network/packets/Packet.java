@@ -30,21 +30,20 @@ public interface Packet {
 	public class CannonRotate implements Packet {
 		public static final byte PACKET_ID = 0;
 		
-		public final Vector2f direction;
+		public final double direction;
 		
-		public CannonRotate(Vector2f direction) {
-			this.direction = new Vector2f(direction);
+		public CannonRotate(double direction) {
+			this.direction = direction;
 		}
 		
 		public CannonRotate(DataInputStream in) throws IOException {
-			this.direction = new Vector2f(in.readFloat(), in.readFloat());
+			this.direction = in.readDouble();
 		}
 		
 		@Override
 		public void send(DataOutputStream out) throws IOException {
 			out.writeByte(PACKET_ID);
-			out.writeFloat(direction.x);
-			out.writeFloat(direction.y);
+			out.writeDouble(direction);
 			out.flush();
 		}
 		

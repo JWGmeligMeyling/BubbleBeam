@@ -57,6 +57,10 @@ public abstract class Connector implements Runnable {
 		stop = true;
 	}
 	
+	public PacketHandlerCollection getPacketHandlerCollection(){
+		return packetHandlerCollection;
+	}
+	
 	@Override
 	public void run() {
 		connect();

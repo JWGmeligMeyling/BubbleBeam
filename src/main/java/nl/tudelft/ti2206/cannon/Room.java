@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.cannon;
 
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.util.Vector2f;
 
 /**
  * The Room is responsible for keeping track of all objects within the room.
@@ -22,5 +23,13 @@ public class Room {
 		this.HEIGHT = height;
 		this.cannon = cannon;
 		cannon.setRoom(this);
+	}
+	
+	public boolean canShoot() {
+		return shotBubble == null;
+	}
+
+	public void shootBubble(Vector2f direction) {
+		
 	}
 }

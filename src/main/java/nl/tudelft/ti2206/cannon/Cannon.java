@@ -98,11 +98,15 @@ public class Cannon extends Observable implements Sprite {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				double newAngle = Math.atan2(position.y - e.getY(), e.getX() - position.x);
-				//angle = Math.max(Math.PI - MIN_ANGLE, b);
-				if (MIN_ANGLE < newAngle && newAngle < Math.PI - MIN_ANGLE) {
-					angle = newAngle;
-					direction = new Vector2f((float) Math.cos(angle), (float) Math.sin(angle));
+				if (newAngle < -Math.PI / 2) {
+					newAngle = Math.PI - MIN_ANGLE;
+				} else if (newAngle < MIN_ANGLE) {
+					newAngle = MIN_ANGLE;
+				} else if (newAngle > Math.PI - MIN_ANGLE) {
+					newAngle = Math.PI - MIN_ANGLE;
 				}
+				angle = newAngle;
+				direction = new Vector2f((float) Math.cos(angle), (float) Math.sin(angle));
 			}
 			
 		});

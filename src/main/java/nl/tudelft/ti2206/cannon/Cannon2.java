@@ -22,6 +22,8 @@ public class Cannon2 implements Drawable {
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI / 10);
+	protected static final float MIN_DIRECTION_Y = (float) Math.sin(Cannon2.MIN_ANGLE);
+	protected static final float MIN_DIRECTION_X = 1f -MIN_DIRECTION_Y;
 	protected static final int ROTATE_TRANSLATION = 32;
 	protected final Point LOADED_BUBBLE_POSITION;
 	protected final Point NEXT_BUBBLE_POSITION;

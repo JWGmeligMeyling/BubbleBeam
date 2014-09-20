@@ -16,10 +16,10 @@ public class PacketHandlerCollection {
 		this.loadNewBubbleHandler = new PacketHandler.LoadNewBubble();
 	}
 	
-	public PacketHandler.CannonRotate cannonRotateHandler;
-	private PacketHandler.CannonShoot cannonShootHandler;
-	private PacketHandler.BubbleMeshSync bubbleMeshSyncHandler;
-	private PacketHandler.LoadNewBubble loadNewBubbleHandler;
+	public final PacketHandler.CannonRotate cannonRotateHandler;
+	public final PacketHandler.CannonShoot cannonShootHandler;
+	public final PacketHandler.BubbleMeshSync bubbleMeshSyncHandler;
+	public final PacketHandler.LoadNewBubble loadNewBubbleHandler;
 	
 	public void notify(Packet.CannonRotate packet) {
 		cannonRotateHandler.notifyObservers(packet);
