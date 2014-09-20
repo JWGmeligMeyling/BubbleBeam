@@ -73,6 +73,10 @@ public abstract class Connector implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	
+	public void start(){
+		new Thread(this).start();
+	}
 
 	protected abstract void connect();
 }
