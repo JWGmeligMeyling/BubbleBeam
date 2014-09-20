@@ -161,6 +161,7 @@ public class GUI {
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
 			connector = new Host();
+			connector.start();
 			GUI.this.restart();
 		});
 
@@ -180,7 +181,7 @@ public class GUI {
 				"Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
-			connector = new Client("127.0.0.1"); // tijdelijk
+			connector = new Client("127.000.000.001"); // tijdelijk
 				connector.start();
 				GUI.this.restart();
 			});
