@@ -18,16 +18,13 @@ public class MovingBubble extends ColouredBubble {
 	protected Vector2f velocity;
 	protected Vector2f truePosition;
 	protected Dimension screenSize;
-	protected Point screenLocation;
 	protected long previousTime;
 	
 	public MovingBubble(final Point position, final Vector2f velocity,
-			final Dimension screenSize, final Point screenLocation,
-			final Color color) {
+			final Dimension screenSize, final Color color) {
 		super(color);
 		this.screenSize = screenSize;
 		this.truePosition = new Vector2f(position.x, position.y);
-		this.screenLocation = screenLocation;
 		this.velocity = velocity;
 		this.previousTime = System.currentTimeMillis();
 	}
@@ -47,21 +44,21 @@ public class MovingBubble extends ColouredBubble {
 	}
 	
 	protected boolean hitsTopBorder(){
-		return (truePosition.y <= screenLocation.y);
+		return (truePosition.y <= 0);
 	}
 
 	/**
 	 * 
 	 */
 	protected void bounceOnWallCollision() {
-		if (truePosition.x + ColouredBubble.WIDTH > screenSize.width + screenLocation.x) {
+		if (truePosition.x + ColouredBubble.WIDTH > screenSize.width) {
 			float xError = truePosition.x + ColouredBubble.WIDTH
-					- (screenSize.width + screenLocation.x);
+					- (screenSize.width);
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
 		}
-		else if (truePosition.x < screenLocation.x) {
-			float xError = truePosition.x - screenLocation.x;
+		else if (truePosition.x < 0) {
+			float xError = truePosition.x;
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
 		}
