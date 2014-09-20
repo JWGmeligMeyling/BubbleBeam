@@ -1,11 +1,14 @@
 package nl.tudelft.ti2206.room;
 
-import nl.tudelft.ti2206.cannon.Cannon2;
+import java.awt.Dimension;
+import java.awt.Point;
 
-public class SlaveRoom extends Room{
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
 
-	public SlaveRoom(int width, int height, Cannon2 cannon) {
-		super(width, height, cannon);
+public class SlaveRoom extends Room {
+	
+	public SlaveRoom(Point cannonPosition, Dimension dimension, BubbleMesh bubbleMesh) {
+		super(cannonPosition, dimension, bubbleMesh);
 		// TODO Auto-generated constructor stub
 	}
 	

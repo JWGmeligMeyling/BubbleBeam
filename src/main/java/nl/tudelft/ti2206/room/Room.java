@@ -1,9 +1,5 @@
 package nl.tudelft.ti2206.room;
 
-<<<<<<< HEAD
-import java.awt.Point;
-
-=======
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -12,7 +8,6 @@ import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
->>>>>>> c24104d20cdc0f15330e2b84050064be29273b7a
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.Cannon2;
@@ -29,33 +24,22 @@ import nl.tudelft.util.Vector2f;
  *
  */
 public class Room {
-	//protected final int WIDTH, HEIGHT;
+	// protected final int WIDTH, HEIGHT;
 	protected final Cannon2 cannon;
 	private static final int MAX_MISSES = 5;
 	protected final Point LOADED_BUBBLE_POSITION;
 	protected final Point NEXT_BUBBLE_POSITION;
-	protected final Point cannonPosition;
+	public final Point cannonPosition;
 	protected final int BUBBLE_QUEUE_SPACING = 60;
 	
 	protected ColouredBubble nextBubble, loadedBubble;
 	protected MovingBubble shotBubble;
-<<<<<<< HEAD
-	public Point cannonPosition;
-=======
 	protected int misses = 0;
 	protected BubbleMesh bubbleMesh;
->>>>>>> c24104d20cdc0f15330e2b84050064be29273b7a
 	
 	protected final Dimension screenSize;
 	
-<<<<<<< HEAD
-	public Room(final int width, final int height, Cannon2 cannon) {
-		this.WIDTH = width;
-		this.HEIGHT = height;
-		this.cannon = cannon;
-=======
-	public Room(final Point cannonPosition, final Dimension dimension,
-			final BubbleMesh bubbleMesh) {
+	public Room(final Point cannonPosition, final Dimension dimension, final BubbleMesh bubbleMesh) {
 		this.bubbleMesh = bubbleMesh;
 		this.cannonPosition = cannonPosition;
 		this.screenSize = dimension;
@@ -71,7 +55,6 @@ public class Room {
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), cannonPosition.y
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
 		
->>>>>>> c24104d20cdc0f15330e2b84050064be29273b7a
 		Connector connector = new Client("127.0.0.1");
 		// new CannonControllerMultiplayer(connector);
 		connector.start();
@@ -111,8 +94,6 @@ public class Room {
 		
 	}
 	
-<<<<<<< HEAD
-=======
 	/**
 	 * Hit a certain {@link Bubble} and snap to the closest
 	 * {@link BubblePlaceholder}
@@ -140,16 +121,15 @@ public class Room {
 	
 	public void shootBubble(final Vector2f direction) {
 		Point bubbleStartPosition = new Point((cannonPosition.x - AbstractBubble.WIDTH / 2)
-				+ (int) (screenSize.height * direction.x), cannonPosition.y - AbstractBubble.HEIGHT / 2
-				+ (int) (screenSize.width * direction.y));
+				+ (int) (screenSize.height * direction.x), cannonPosition.y - AbstractBubble.HEIGHT
+				/ 2 + (int) (screenSize.width * direction.y));
 		shotBubble = new MovingBubble(bubbleStartPosition, new Vector2f(direction), screenSize,
 				loadedBubble.getColor());
 		loadedBubble = nextBubble;
 		nextBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
 		correctBubblePositions();
 	}
-
->>>>>>> c24104d20cdc0f15330e2b84050064be29273b7a
+	
 	public void addTask(Task task) {
 		// TODO Auto-generated method stub
 		
