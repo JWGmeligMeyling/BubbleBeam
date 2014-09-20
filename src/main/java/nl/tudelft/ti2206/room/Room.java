@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.room;
 
+import java.awt.Point;
+
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.Cannon2;
@@ -19,6 +21,7 @@ public class Room {
 	
 	protected ColouredBubble nextBubble, loadedBubble;
 	protected MovingBubble shotBubble;
+	public Point cannonPosition;
 	
 	protected static final int MAX_MISSES = 5;
 	
@@ -26,9 +29,8 @@ public class Room {
 		this.WIDTH = width;
 		this.HEIGHT = height;
 		this.cannon = cannon;
-		cannon.setRoom(this);
 		Connector connector = new Client("127.0.0.1");
-		//new CannonControllerMultiplayer(connector);
+		// new CannonControllerMultiplayer(connector);
 		connector.start();
 	}
 	
@@ -39,7 +41,7 @@ public class Room {
 	public void shootBubble(Vector2f direction) {
 		
 	}
-
+	
 	public void addTask(Task task) {
 		// TODO Auto-generated method stub
 		

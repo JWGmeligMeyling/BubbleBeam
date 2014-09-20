@@ -12,16 +12,15 @@ import javax.imageio.ImageIO;
 import nl.tudelft.ti2206.Drawable;
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.cannon.temp.Cannon;
-import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.Vector2f;
 
 /**
- * The Cannon is responsible for drawing the cannon and shooting.
+ * The Cannon is responsible for drawing the cannon.
  * 
  * @author Sam_
  *
  */
-public class Cannon2 implements Drawable {
+public class Cannon2 implements Drawable, CannonControllerObserver {
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI / 10);
@@ -36,8 +35,6 @@ public class Cannon2 implements Drawable {
 	protected Vector2f direction = new Vector2f(0f, 0f);
 	protected int misses = 0;
 	
-	protected Room room;
-	
 	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
 	public Cannon2() {
@@ -47,10 +44,6 @@ public class Cannon2 implements Drawable {
 		NEXT_BUBBLE_POSITION = new Point(position.x + 60
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), position.y
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
-	}
-	
-	public void setRoom(Room room) {
-		this.room = room;
 	}
 	
 	protected static BufferedImage _getCannonImage() {
@@ -77,7 +70,12 @@ public class Cannon2 implements Drawable {
 		graphics.rotate(angle - Math.PI / 2, position.x, position.y);
 	}
 	
-	public void setAngle(double angle) {
-		this.angle = angle;
+	@Override
+	public void cannonRotate(double direction) {
+		this.angle = direction;
+	}
+	
+	@Override
+	public void cannonShoot(Vector2f direction) {
 	}
 }
