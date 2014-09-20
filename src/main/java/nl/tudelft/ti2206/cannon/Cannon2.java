@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.Drawable;
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
+import nl.tudelft.ti2206.cannon.temp.Cannon;
 import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.Vector2f;
 
@@ -25,13 +26,13 @@ public class Cannon2 implements Drawable {
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI / 10);
 	protected static final float MIN_DIRECTION_Y = (float) Math.sin(Cannon2.MIN_ANGLE);
-	protected static final float MIN_DIRECTION_X = 1f -MIN_DIRECTION_Y;
+	protected static final float MIN_DIRECTION_X = 1f - MIN_DIRECTION_Y;
 	protected static final int ROTATE_TRANSLATION = 32;
 	protected final Point LOADED_BUBBLE_POSITION;
 	protected final Point NEXT_BUBBLE_POSITION;
 	
 	protected Point position;
-	protected double angle = Math.PI/2;
+	protected double angle = Math.PI / 2;
 	protected Vector2f direction = new Vector2f(0f, 0f);
 	protected int misses = 0;
 	
@@ -48,7 +49,7 @@ public class Cannon2 implements Drawable {
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
 	}
 	
-	public void setRoom(Room room){
+	public void setRoom(Room room) {
 		this.room = room;
 	}
 	
@@ -74,5 +75,9 @@ public class Cannon2 implements Drawable {
 				- ROTATE_TRANSLATION, position.x + WIDTH / 2, position.y + HEIGHT / 2
 				- ROTATE_TRANSLATION, 0, 0, CANNON_IMAGE.getWidth(), CANNON_IMAGE.getHeight(), null);
 		graphics.rotate(angle - Math.PI / 2, position.x, position.y);
+	}
+	
+	public void setAngle(double angle) {
+		this.angle = angle;
 	}
 }

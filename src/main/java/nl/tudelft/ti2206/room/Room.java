@@ -3,7 +3,6 @@ package nl.tudelft.ti2206.room;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.Cannon2;
-import nl.tudelft.ti2206.cannon.CannonControllerMultiplayer;
 import nl.tudelft.ti2206.network.Client;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.util.Vector2f;
@@ -29,7 +28,7 @@ public class Room {
 		this.cannon = cannon;
 		cannon.setRoom(this);
 		Connector connector = new Client("127.0.0.1");
-		new CannonControllerMultiplayer(connector);
+		//new CannonControllerMultiplayer(connector);
 		connector.start();
 	}
 	
