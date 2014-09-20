@@ -11,11 +11,12 @@ public class CannonControllerMultiplayer implements CannonController {
 	protected CannonRotateListener cannonRotateListener = new CannonRotateListener();
 	private Room room;
 	private Cannon2 cannon;
+	private PacketHandlerCollection packetHandlerCollection;
 	
 	public CannonControllerMultiplayer(Connector connector) {
-		PacketHandlerCollection col = connector.getPacketHandlerCollection();
-		col.cannonShootHandler.registerObserver(cannonShootListener);
-		col.cannonRotateHandler.registerObserver(cannonRotateListener);
+		packetHandlerCollection = connector.getPacketHandlerCollection();
+		packetHandlerCollection.cannonShootHandler.registerObserver(cannonShootListener);
+		packetHandlerCollection.cannonRotateHandler.registerObserver(cannonRotateListener);
 	}
 	
 	private class CannonShootListener implements PacketListener<Packet.CannonShoot> {
@@ -36,5 +37,15 @@ public class CannonControllerMultiplayer implements CannonController {
 	public void setCannon(Cannon2 cannon) {
 		this.cannon = cannon;
 		this.room = cannon.room;
+	}
+	
+	public void deconstruct() {
+		packetHandlerCollection.cannonRotateHandler.removeObserver(cannonRotateListener);
+		packetHandlerCollection.cannonShootHandler.removeObserver(cannonShootListener);
+		/*cannonShootListener = null;
+		cannonRotateListener = null;
+		room = null;
+		cannon = null;
+		packetHandlerCollection = null;*/
 	}
 }

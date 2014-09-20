@@ -29,7 +29,7 @@ public class Cannon2 implements Drawable {
 	protected final Point NEXT_BUBBLE_POSITION;
 	
 	protected Point position;
-	protected double angle = 0.0d;
+	protected double angle = Math.PI/2;
 	protected Vector2f direction = new Vector2f(0f, 0f);
 	protected int misses = 0;
 	
@@ -37,14 +37,13 @@ public class Cannon2 implements Drawable {
 	
 	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
-	public Cannon2(CannonController cannonController) {
+	public Cannon2() {
 		LOADED_BUBBLE_POSITION = new Point(position.x
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), position.y
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
 		NEXT_BUBBLE_POSITION = new Point(position.x + 60
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), position.y
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
-		cannonController.setCannon(this);
 	}
 	
 	public void setRoom(Room room){

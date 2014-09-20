@@ -1,6 +1,8 @@
 package nl.tudelft.ti2206.cannon;
 
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.network.Client;
+import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -23,13 +25,21 @@ public class Room {
 		this.HEIGHT = height;
 		this.cannon = cannon;
 		cannon.setRoom(this);
+		Connector connector = new Client("127.0.0.1");
+		new CannonControllerMultiplayer(connector);
+		connector.start();
 	}
 	
 	public boolean canShoot() {
 		return shotBubble == null;
 	}
-
+	
 	public void shootBubble(Vector2f direction) {
+		
+	}
+
+	public void addTask(Task task) {
+		// TODO Auto-generated method stub
 		
 	}
 }

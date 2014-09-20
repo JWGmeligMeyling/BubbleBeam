@@ -11,6 +11,7 @@ public class CannonControllerMouse implements CannonController, MouseMotionListe
 	protected Cannon2 cannon;
 	private Vector2f direction;
 	private Room room;
+	private RoomController roomController;
 	
 	@Override
 	public void setCannon(Cannon2 cannon) {
@@ -43,7 +44,7 @@ public class CannonControllerMouse implements CannonController, MouseMotionListe
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (room.canShoot()) {
-				room.shootBubble(direction);
+				roomController.shootBubble(direction);
 			}
 		}
 	}

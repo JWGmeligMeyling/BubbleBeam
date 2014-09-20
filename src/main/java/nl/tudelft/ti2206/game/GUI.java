@@ -161,6 +161,7 @@ public class GUI {
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
 			connector = new Host();
+			connector.start();
 			GUI.this.restart();
 		});
 

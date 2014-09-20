@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class Host extends Connector implements Runnable {
+public class Host extends Connector {
 	
 	@Override
 	protected void connect() {
