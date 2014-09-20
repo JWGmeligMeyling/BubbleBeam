@@ -25,9 +25,9 @@ public class MouseCannonController extends MasterCannonController implements Mou
 	public void mouseMoved(MouseEvent e) {
 		Vector2f dir = (new Vector2f(e.getPoint()).subtract(new Vector2f(room.cannonPosition))).normalize();
 		dir.y = Math.abs(dir.y);
-		if (dir.y < Cannon2.MIN_DIRECTION_Y) {
-			dir.x = Cannon2.MIN_DIRECTION_X * Math.signum(dir.x);
-			dir.y = Cannon2.MIN_DIRECTION_Y;
+		if (dir.y < Cannon.MIN_DIRECTION_Y) {
+			dir.x = Cannon.MIN_DIRECTION_X * Math.signum(dir.x);
+			dir.y = Cannon.MIN_DIRECTION_Y;
 		}
 		this.direction = dir;
 		this.notifyObserversRotate(Math.atan(dir.y / dir.x));

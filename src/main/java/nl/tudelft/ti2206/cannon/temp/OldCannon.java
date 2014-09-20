@@ -29,7 +29,7 @@ import nl.tudelft.util.Vector2f;
  * @author Sam Smulders
  * @author Luka Bavdaz
  */
-public class Cannon extends Observable implements Sprite {
+public class OldCannon extends Observable implements Sprite {
 	
 	private static final int MAX_MISSES = 5;
 	protected static final int WIDTH = 48;
@@ -58,7 +58,7 @@ public class Cannon extends Observable implements Sprite {
 	
 	protected static BufferedImage _getCannonImage() {
 		try {
-			BufferedImage scale = ImageIO.read(Cannon.class.getResourceAsStream("/cannon.png"));
+			BufferedImage scale = ImageIO.read(OldCannon.class.getResourceAsStream("/cannon.png"));
 			scale.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			return scale;
 		} catch (IOException e) {
@@ -66,7 +66,7 @@ public class Cannon extends Observable implements Sprite {
 		}
 	}
 	
-	public Cannon(BubbleMesh bubbleMesh, final Point position, final Dimension dimension,
+	public OldCannon(BubbleMesh bubbleMesh, final Point position, final Dimension dimension,
 			final Point screenLocation) {
 		this.position = position;
 		this.bubbleMesh = bubbleMesh;

@@ -11,21 +11,20 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.Drawable;
-import nl.tudelft.ti2206.bubbles.AbstractBubble;
-import nl.tudelft.ti2206.cannon.temp.Cannon;
+import nl.tudelft.ti2206.cannon.temp.OldCannon;
 import nl.tudelft.util.Vector2f;
 
 /**
  * The Cannon is responsible for drawing the cannon.
  * 
- * @author Sam_
+ * @author Sam Smulders
  *
  */
-public class Cannon2 implements Drawable, CannonControllerObserver {
+public class Cannon implements Drawable, CannonControllerObserver {
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI / 10);
-	protected static final float MIN_DIRECTION_Y = (float) Math.sin(Cannon2.MIN_ANGLE);
+	protected static final float MIN_DIRECTION_Y = (float) Math.sin(Cannon.MIN_ANGLE);
 	protected static final float MIN_DIRECTION_X = 1f - MIN_DIRECTION_Y;
 	protected static final int ROTATE_TRANSLATION = 32;
 	
@@ -37,7 +36,7 @@ public class Cannon2 implements Drawable, CannonControllerObserver {
 	
 	protected static BufferedImage CANNON_IMAGE = _getCannonImage();
 	
-	public Cannon2(final Point position, final Dimension dimension) {
+	public Cannon(final Point position, final Dimension dimension) {
 		this.position = position;
 		this.position = position;
 		
@@ -46,7 +45,7 @@ public class Cannon2 implements Drawable, CannonControllerObserver {
 	
 	protected static BufferedImage _getCannonImage() {
 		try {
-			BufferedImage scale = ImageIO.read(Cannon.class.getResourceAsStream("/cannon.png"));
+			BufferedImage scale = ImageIO.read(OldCannon.class.getResourceAsStream("/cannon.png"));
 			scale.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			return scale;
 		} catch (IOException e) {

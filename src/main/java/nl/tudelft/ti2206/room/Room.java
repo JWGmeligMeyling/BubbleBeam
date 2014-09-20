@@ -10,7 +10,7 @@ import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
-import nl.tudelft.ti2206.cannon.Cannon2;
+import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.network.Client;
 import nl.tudelft.ti2206.network.Connector;
@@ -19,13 +19,13 @@ import nl.tudelft.util.Vector2f;
 /**
  * The Room is responsible for keeping track of all objects within the room.
  * 
- * @author Sam_
- * @author Luka
+ * @author Sam Smulders
+ * @author Luka Bavdaz
  *
  */
 public class Room {
 	// protected final int WIDTH, HEIGHT;
-	protected final Cannon2 cannon;
+	protected final Cannon cannon;
 	private static final int MAX_MISSES = 5;
 	protected final Point LOADED_BUBBLE_POSITION;
 	protected final Point NEXT_BUBBLE_POSITION;
@@ -46,7 +46,7 @@ public class Room {
 		
 		fillBubbleSlots();
 		
-		this.cannon = new Cannon2(cannonPosition, dimension);
+		this.cannon = new Cannon(cannonPosition, dimension);
 		
 		LOADED_BUBBLE_POSITION = new Point(cannonPosition.x
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), cannonPosition.y
