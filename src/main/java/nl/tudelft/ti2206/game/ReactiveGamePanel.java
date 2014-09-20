@@ -6,8 +6,8 @@ import java.awt.Point;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.cannon.Cannon2;
-import nl.tudelft.ti2206.cannon.Room;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.room.Room;
 
 public class ReactiveGamePanel extends GamePanel {
 	

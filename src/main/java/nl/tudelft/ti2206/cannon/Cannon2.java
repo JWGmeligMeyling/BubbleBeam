@@ -9,7 +9,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import nl.tudelft.ti2206.Drawable;
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
+import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.Vector2f;
 
 /**

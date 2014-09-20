@@ -4,6 +4,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import nl.tudelft.ti2206.room.Room;
+import nl.tudelft.ti2206.room.RoomController;
 import nl.tudelft.util.Vector2f;
 
 public class CannonControllerMouse implements CannonController, MouseMotionListener, MouseListener {

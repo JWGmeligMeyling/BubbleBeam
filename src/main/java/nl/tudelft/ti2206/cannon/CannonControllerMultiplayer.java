@@ -4,6 +4,7 @@ import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
 import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.room.Room;
 
 public class CannonControllerMultiplayer implements CannonController {
 	
