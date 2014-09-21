@@ -219,16 +219,25 @@ public interface BubbleMesh extends Iterable<Bubble> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
 				});
 				
-				System.out.println(neighbours.size() + "  " + bubblesToPop.size());
+				//System.out.println(neighbours.size() + "  " + bubblesToPop.size());   //for debug
 				
 				//pop the neighbours (and their neighbours) of all the popped bubbles that are now isolated
-				neighbours.stream()
+				while(neighbours.size() != 0){
+					Set<ColouredBubble> newNeighbours = Sets.newHashSet();
+					neighbours.stream()
 					.filter(bubble -> !connectedToTop(bubble, Queues.newArrayDeque()))
 					.forEach(bubble -> {
 						this.replaceBubble(bubble, new BubblePlaceholder());
-						bubble.getNeighboursOfType(ColouredBubble.class).forEach(bubble2 -> neighbours.add(bubble2));
 						
+						//add the popped bubble to bubblesToPop for score calculation
+						bubblesToPop.add(bubble);
+						
+						bubble.getNeighboursOfType(ColouredBubble.class).forEach(bubble2 -> newNeighbours.add(bubble2));
 					});
+					neighbours = newNeighbours;
+				}
+						
+					
 							 
 				updateRemainingColors();
 				calculateScore(bubblesToPop);
