@@ -35,14 +35,15 @@ public class MultiplayerRoom extends MasterRoom {
 		
 		this.connector = connector;
 		
-		while(true){
+		/*
+		while(true){			//TODO make this better
 			if(connector.isReady()){
 				sendMesh();
 			} else {
 				break;
 			}
 		}
-		
+		*/
 	}
 	
 	// TODO: Sending the mesh somehow..
