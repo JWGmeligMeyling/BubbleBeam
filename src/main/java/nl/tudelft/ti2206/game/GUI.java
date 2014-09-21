@@ -36,6 +36,8 @@ public class GUI {
 	NonReactiveGamePanel player2Panel;
 	boolean multiplayer = false;
 	
+	protected JFormattedTextField ipaddressTextField;
+	
 
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000/FPS;
@@ -169,25 +171,7 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(multiPlayerRestart, c);
 		
-		final JButton findMultiPlayerRestart = new JButton("Find Host");
-		findMultiPlayerRestart.addActionListener((event) -> {
-			multiplayer = true;
-			GUI.this.restart();
-		});
-		
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0.5;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridx = 2;
-		c.gridy = 4;
-		c.ipadx = 30;
-		c.insets = noPadding;
-		pane.add(findMultiPlayerRestart, c);
-		
-		final JFormattedTextField ipaddressTextField = new JFormattedTextField(new MaskFormatter(
+		ipaddressTextField = new JFormattedTextField(new MaskFormatter(
 				"###.###.###.###")); // TODO change to
 										// something less buggy
 		
@@ -196,12 +180,37 @@ public class GUI {
 		c.weighty = 0;
 		c.gridheight = 1;
 		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.EAST;
+		c.anchor = GridBagConstraints.SOUTHWEST;
+		c.gridx = 2;
+		c.gridy = 4;
+		c.ipadx = 30;
+		c.insets = extPadding;
+		pane.add(ipaddressTextField, c);
+		
+		final JButton findMultiPlayerRestart = new JButton("Find Host");
+		findMultiPlayerRestart.addActionListener((event) -> {
+			multiplayer = true;
+			
+			String ipaddress = ipaddressTextField.getText();  //this text is not yet error checked
+			
+			//TODO do something with this ipaddress
+			
+			GUI.this.restart();
+		});
+		
+		c.fill = GridBagConstraints.NONE;
+		c.weightx = 0.5;
+		c.weighty = 0;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.NORTHWEST;
 		c.gridx = 2;
 		c.gridy = 5;
 		c.ipadx = 30;
-		c.insets = noPadding;
-		pane.add(ipaddressTextField, c);
+		c.insets = extPadding;
+		pane.add(findMultiPlayerRestart, c);
+		
+		
 		
 		JLabel version = new JLabel("Version: 0.1 Alpha");	//TODO how to add versionnumber from POM-file
 		c.fill = GridBagConstraints.HORIZONTAL;
