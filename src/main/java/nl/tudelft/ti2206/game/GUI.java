@@ -18,6 +18,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author leon Hoek
@@ -25,9 +29,12 @@ import java.io.IOException;
  */
 
 public class GUI {
-
+	
 	JFrame frame;
 	ReactiveGamePanel player1Panel;
+	   private final ScheduledExecutorService scheduler =
+			     Executors.newScheduledThreadPool(1);
+	Executor gamecycle;
 
 	// multiplayer on same machine
 	NonReactiveGamePanel player2Panel;
@@ -56,6 +63,8 @@ public class GUI {
 	 * @throws IOException
 	 */
 	private void fillGameFrame(Container pane) throws FileNotFoundException, IOException {
+		
+		
 		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		}
@@ -290,19 +299,31 @@ public class GUI {
 			 player2Panel.gameStep();
 		}
 	}
+	
+	
 
 	private void run() {
+		  scheduler.scheduleAtFixedRate(new Runnable() {
+		       public void run() { GUI.this.update(); }
+		     }, 0L, 33L, TimeUnit.MILLISECONDS);
+		
+		
+		
 		new Timer(FRAME_PERIOD, new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				
+				
 				try {
-					GUI.this.update();
+					player1Panel.repaint();
 				} catch (GameOver exception) {
 					restart();
 				}
 			}
 		}).start();
+		
 	}
 	
 }
