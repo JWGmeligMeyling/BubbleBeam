@@ -1,13 +1,9 @@
 package nl.tudelft.ti2206.game;
 
 import java.awt.Graphics;
-import java.awt.Point;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
-import nl.tudelft.ti2206.cannon.Cannon;
-import nl.tudelft.ti2206.cannon.temp.OldCannon;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.room.Room;
 
 public class ReactiveGamePanel extends GamePanel {
 	

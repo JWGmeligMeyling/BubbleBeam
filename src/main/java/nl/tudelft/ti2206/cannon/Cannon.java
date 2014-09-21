@@ -25,8 +25,13 @@ public class Cannon implements Drawable, CannonControllerObserver {
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI / 10);
 	protected static final float MIN_DIRECTION_Y = (float) Math.sin(Cannon.MIN_ANGLE);
-	protected static final float MIN_DIRECTION_X = 1f - MIN_DIRECTION_Y;
+	protected static final float MIN_DIRECTION_X = (float) Math.cos(Cannon.MIN_ANGLE);
 	protected static final int ROTATE_TRANSLATION = 32;
+	/*
+	 * CANNON_OUTPUT is the distance from the center of the cannon, where the
+	 * moving bubble should be created when there is shot.
+	 */
+	public static final float CANNON_OUTPUT = 60;
 	
 	protected Point position;
 	protected double angle = Math.PI / 2;

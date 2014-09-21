@@ -3,6 +3,7 @@ package nl.tudelft.ti2206.room;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
@@ -11,9 +12,9 @@ import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
+import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.network.Client;
-import nl.tudelft.ti2206.network.Connector;
+import nl.tudelft.ti2206.game.GameTickObserver;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -21,30 +22,38 @@ import nl.tudelft.util.Vector2f;
  * 
  * @author Sam Smulders
  * @author Luka Bavdaz
- *
  */
-public class Room {
-	// protected final int WIDTH, HEIGHT;
-	protected final Cannon cannon;
-	private static final int MAX_MISSES = 5;
-	protected final Point LOADED_BUBBLE_POSITION;
-	protected final Point NEXT_BUBBLE_POSITION;
-	public final Point cannonPosition;
-	protected final int BUBBLE_QUEUE_SPACING = 60;
+
+// TODO: Room shouldn't handle game over directly.
+// TODO: Move the creation of the bubble mesh into the Room
+
+public abstract class Room implements GameTickObserver {
 	
-	protected ColouredBubble nextBubble, loadedBubble;
-	protected MovingBubble shotBubble;
+	// Cannon
+	protected MouseCannonController cannonController;
+	protected final Cannon cannon;
+	public final Point cannonPosition;
+	
+	// Bubble shooting
+	protected static final int MAX_MISSES = 5;
+	private static final float MOVING_BUBBLE_SPEED = 5f;
 	protected int misses = 0;
+	protected MovingBubble shotBubble;
 	protected BubbleMesh bubbleMesh;
 	
+	// Bubble queue
+	protected ArrayList<ColouredBubble> bubbleQueue = new ArrayList<ColouredBubble>();
+	protected final Point LOADED_BUBBLE_POSITION;
+	protected final Point NEXT_BUBBLE_POSITION;
+	protected final int BUBBLE_QUEUE_SPACING = 60;
+	
+	// Room
 	protected final Dimension screenSize;
 	
 	public Room(final Point cannonPosition, final Dimension dimension, final BubbleMesh bubbleMesh) {
 		this.bubbleMesh = bubbleMesh;
 		this.cannonPosition = cannonPosition;
 		this.screenSize = dimension;
-		
-		fillBubbleSlots();
 		
 		this.cannon = new Cannon(cannonPosition, dimension);
 		
@@ -54,42 +63,33 @@ public class Room {
 		NEXT_BUBBLE_POSITION = new Point(cannonPosition.x + BUBBLE_QUEUE_SPACING
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), cannonPosition.y
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
-		
-		Connector connector = new Client("127.0.0.1");
-		// new CannonControllerMultiplayer(connector);
-		connector.start();
 	}
+	
+	public abstract void setup();
 	
 	public boolean canShoot() {
 		return shotBubble == null;
 	}
 	
-	protected void fillBubbleSlots() {
-		nextBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
-		loadedBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
-		
-		correctBubblePositions();
-	}
-	
-	public void correctBubblePositions() {
-		loadedBubble.setPosition(LOADED_BUBBLE_POSITION);
-		nextBubble.setPosition(NEXT_BUBBLE_POSITION);
-	}
-	
 	protected void drawQueue(final Graphics graphics) {
-		loadedBubble.render(graphics);
-		nextBubble.render(graphics);
+		bubbleQueue.forEach(bubble -> {
+			bubble.render(graphics);
+		});
 	}
 	
-	public void gameStep() throws GameOver {
+	// TODO: gameTick shouldn't throw GameOver.
+	@Override
+	public void gameTick() throws GameOver {
 		if (shotBubble != null) {
 			shotBubble.gameStep();
 			
-			bubbleMesh
-					.stream()
-					.filter(bubble -> bubble.intersect(shotBubble)
-							&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble))).findAny()
-					.ifPresent(bubble -> this.collide(bubble));
+			// TODO: this part kills the GameTick somehow..
+			// bubbleMesh
+			// .stream()
+			// .filter(bubble -> bubble.intersect(shotBubble)
+			// && (bubble.isHittable() ||
+			// bubbleMesh.bubbleIsTop(bubble))).findAny()
+			// .ifPresent(bubble -> this.collide(bubble));
 		}
 		
 	}
@@ -121,17 +121,33 @@ public class Room {
 	
 	public void shootBubble(final Vector2f direction) {
 		Point bubbleStartPosition = new Point((cannonPosition.x - AbstractBubble.WIDTH / 2)
-				+ (int) (screenSize.height * direction.x), cannonPosition.y - AbstractBubble.HEIGHT
-				/ 2 + (int) (screenSize.width * direction.y));
-		shotBubble = new MovingBubble(bubbleStartPosition, new Vector2f(direction), screenSize,
-				loadedBubble.getColor());
-		loadedBubble = nextBubble;
-		nextBubble = new ColouredBubble(bubbleMesh.getRandomRemainingColor());
-		correctBubblePositions();
+				+ (int) (Cannon.CANNON_OUTPUT * direction.x), cannonPosition.y - AbstractBubble.HEIGHT
+				/ 2 + (int) (Cannon.CANNON_OUTPUT * direction.y));
+		shotBubble = new MovingBubble(bubbleStartPosition, new Vector2f(
+				direction.multiply(MOVING_BUBBLE_SPEED)), screenSize, bubbleQueue.remove(0)
+				.getColor());
 	}
 	
-	public void addTask(Task task) {
-		// TODO Auto-generated method stub
-		
+	public void correctBubblePositions() {
+		if (bubbleQueue.size() > 0) {
+			bubbleQueue.get(0).setPosition(LOADED_BUBBLE_POSITION);
+			if (bubbleQueue.size() > 1) {
+				bubbleQueue.get(1).setPosition(NEXT_BUBBLE_POSITION);
+			}
+		}
+	}
+	
+	public void render(Graphics g) {
+		bubbleMesh.forEach(bubble -> bubble.render(g));
+		cannon.render(g);
+		if (shotBubble != null) {
+			shotBubble.render(g);
+		}
+		if (bubbleQueue.size() > 0) {
+			bubbleQueue.get(0).render(g);
+			if (bubbleQueue.size() > 1) {
+				bubbleQueue.get(1).render(g);
+			}
+		}
 	}
 }

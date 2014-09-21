@@ -6,8 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * GameTick notifies its observers every x milliseconds. The amount is
- * determined in the constructor.
+ * GameTick notifies its observers every {@link framePeriod} milliseconds.
  * 
  * @author Sam Smulders
  */

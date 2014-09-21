@@ -10,8 +10,8 @@ import nl.tudelft.util.Vector2f;
 public class MouseCannonController extends MasterCannonController implements MouseMotionListener,
 		MouseListener {
 	
-	protected Vector2f direction;
-	private Room room;
+	protected Vector2f direction = new Vector2f(0, 1);
+	protected final Room room;
 	
 	public MouseCannonController(Room room) {
 		this.room = room;
@@ -23,14 +23,14 @@ public class MouseCannonController extends MasterCannonController implements Mou
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		Vector2f dir = (new Vector2f(e.getPoint()).subtract(new Vector2f(room.cannonPosition))).normalize();
-		dir.y = Math.abs(dir.y);
-		if (dir.y < Cannon.MIN_DIRECTION_Y) {
+		Vector2f dir = (new Vector2f(e.getPoint()).subtract(new Vector2f(room.cannonPosition)))
+				.normalize();
+		if (dir.y > -Cannon.MIN_DIRECTION_Y) {
 			dir.x = Cannon.MIN_DIRECTION_X * Math.signum(dir.x);
-			dir.y = Cannon.MIN_DIRECTION_Y;
+			dir.y = -Cannon.MIN_DIRECTION_Y;
 		}
+		this.notifyObserversRotate(Math.atan(dir.x / dir.y) + Math.PI / 2);
 		this.direction = dir;
-		this.notifyObserversRotate(Math.atan(dir.y / dir.x));
 	}
 	
 	@Override

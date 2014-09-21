@@ -20,8 +20,8 @@ public class MovingBubble extends ColouredBubble {
 	protected Dimension screenSize;
 	protected long previousTime;
 	
-	public MovingBubble(final Point position, final Vector2f velocity,
-			final Dimension screenSize, final Color color) {
+	public MovingBubble(final Point position, final Vector2f velocity, final Dimension screenSize,
+			final Color color) {
 		super(color);
 		this.screenSize = screenSize;
 		this.truePosition = new Vector2f(position.x, position.y);
@@ -30,39 +30,25 @@ public class MovingBubble extends ColouredBubble {
 	}
 	
 	public void gameStep() {
-		long timeDifference = getTimeDifference();
-		truePosition = truePosition.add(velocity.multiply(timeDifference / TIME_DENOM));
+		truePosition = truePosition.add(velocity);
 		bounceOnWallCollision();
 		this.setPosition(truePosition.toPoint());
 	}
 	
-	protected long getTimeDifference() {
-		long now = System.currentTimeMillis();
-		long diff = now - previousTime;
-		previousTime = now;
-		return diff;
-	}
-	
-	protected boolean hitsTopBorder(){
+	protected boolean hitsTopBorder() {
 		return (truePosition.y <= 0);
 	}
-
-	/**
-	 * 
-	 */
+	
 	protected void bounceOnWallCollision() {
 		if (truePosition.x + ColouredBubble.WIDTH > screenSize.width) {
-			float xError = truePosition.x + ColouredBubble.WIDTH
-					- (screenSize.width);
+			float xError = truePosition.x + ColouredBubble.WIDTH - (screenSize.width);
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
-		}
-		else if (truePosition.x < 0) {
+		} else if (truePosition.x < 0) {
 			float xError = truePosition.x;
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
 		}
-		
 		
 	}
 }
