@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -12,7 +13,7 @@ import com.google.common.collect.Lists;
  * @author Jan-Willem
  *
  */
-public interface Bubble extends Sprite {
+public interface Bubble extends Sprite, Serializable {
 		
 	void bind(Direction direction, Bubble other);
 	Bubble getBubbleAt(Direction direction);

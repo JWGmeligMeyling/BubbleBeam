@@ -9,6 +9,8 @@ import java.awt.RenderingHints;
 
 public class ColouredBubble extends AbstractBubble {
 
+	private static final long serialVersionUID = 2822643791863887291L;
+	
 	private final Color color;
 
 	/**

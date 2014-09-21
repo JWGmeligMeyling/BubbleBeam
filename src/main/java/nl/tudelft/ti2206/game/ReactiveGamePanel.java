@@ -9,7 +9,7 @@ import nl.tudelft.ti2206.exception.GameOver;
 
 public class ReactiveGamePanel extends GamePanel {
 	
-	private final Cannon cannon;
+	private Cannon cannon;
 	
 	/**
 	 * 
@@ -32,6 +32,5 @@ public class ReactiveGamePanel extends GamePanel {
 	@Override
 	public void gameStep() throws GameOver {
 		cannon.gameStep();
-		super.gameStep();
 	}	
 }

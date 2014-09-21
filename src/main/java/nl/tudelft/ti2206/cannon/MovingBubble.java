@@ -14,17 +14,20 @@ import nl.tudelft.util.Vector2f;
  */
 public class MovingBubble extends ColouredBubble {
 	
+	private static final long serialVersionUID = -5720287124346974296L;
+
 	public static final long TIME_DENOM = 5;
 	
-	protected Vector2f velocity;
-	protected Vector2f truePosition;
-	protected Dimension screenSize;
-	protected Point screenLocation;
-	protected long previousTime;
+	transient protected Vector2f velocity;
+	transient protected Vector2f truePosition;
+	transient protected Dimension screenSize;
+	transient protected Point screenLocation;
+	transient protected long previousTime;
 	
 	public MovingBubble(final Point position, final Vector2f velocity,
 			final Dimension screenSize, final Point screenLocation,
 			final Color color) {
+		
 		super(color);
 		this.screenSize = screenSize;
 		this.truePosition = new Vector2f(position.x, position.y);

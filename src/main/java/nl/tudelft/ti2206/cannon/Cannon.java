@@ -112,6 +112,16 @@ public class Cannon extends Observable implements Sprite {
 		
 			@Override
 			public void mousePressed(MouseEvent e) {
+				
+				//hacky fix ...
+				double newAngle = Math.atan2(position.y - e.getY(), e.getX() - position.x);
+				
+				if(MIN_ANGLE < newAngle && newAngle < Math.PI - MIN_ANGLE) {
+					angle = newAngle;
+					direction = new Vector2f(e.getPoint())
+							.subtract(new Vector2f(position)).normalize();
+				}
+				// ... until here
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					if (shotBubble == null) {
 						shootBubble();
