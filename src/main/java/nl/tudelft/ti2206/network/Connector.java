@@ -26,7 +26,7 @@ public abstract class Connector implements Runnable {
 	protected Socket socket;
 	protected PacketHandlerCollection packetHandlerCollection = new PacketHandlerCollection();
 	
-	private boolean stop = true;
+	protected boolean ready = true;
 	
 	protected Packet readPacket() {
 		try {
@@ -51,7 +51,7 @@ public abstract class Connector implements Runnable {
 	}
 	
 	public void endConnection() {
-		stop = true;
+		ready = true;
 	}
 	
 	public PacketHandlerCollection getPacketHandlerCollection() {
@@ -61,8 +61,8 @@ public abstract class Connector implements Runnable {
 	@Override
 	public void run() {
 		connect();
-		stop = false;
-		while (!stop) {
+		ready = false;
+		while (!ready) {
 			acceptPacket();
 		}
 		try {
@@ -75,9 +75,13 @@ public abstract class Connector implements Runnable {
 	}
 	
 	public void start() {
-		if (stop) {
+		if (ready) {
 			new Thread(this).start();
 		}
+	}
+	
+	public boolean isReady() {
+		return ready;
 	}
 	
 	protected abstract void connect();
