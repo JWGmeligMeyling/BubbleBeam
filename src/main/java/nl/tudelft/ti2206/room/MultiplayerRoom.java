@@ -35,7 +35,14 @@ public class MultiplayerRoom extends MasterRoom {
 		
 		this.connector = connector;
 		
-		sendMesh();
+		while(true){
+			if(connector.isReady()){
+				sendMesh();
+			} else {
+				break;
+			}
+		}
+		
 	}
 	
 	// TODO: Sending the mesh somehow..

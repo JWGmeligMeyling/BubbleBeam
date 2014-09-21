@@ -38,7 +38,7 @@ public class GUI {
 	GamePanel player2Panel;
 	boolean multiplayer = false;
 	
-	Connector connector = null;
+	//Connector connector = null;
 	
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000 / FPS;
@@ -165,8 +165,8 @@ public class GUI {
 		final JButton multiPlayerRestart = new JButton("Restart Multi-Player as Host");
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
-			connector = new Host();
-			connector.start();
+			//connector = new Host();
+			//connector.start();
 			GUI.this.restart();
 		});
 		
@@ -185,10 +185,10 @@ public class GUI {
 		final JButton findMultiPlayerRestart = new JButton("Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
-			connector = new Client("127.0.0.1"); // tijdelijk
-				connector.start();
-				GUI.this.restart();
-			});
+			//connector = new Client("127.0.0.1"); // tijdelijk
+			//connector.start();
+			GUI.this.restart();
+		});
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
