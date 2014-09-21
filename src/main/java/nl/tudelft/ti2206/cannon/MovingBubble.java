@@ -30,6 +30,7 @@ public class MovingBubble extends ColouredBubble {
 		
 		super(color);
 		this.screenSize = screenSize;
+		this.position = position;
 		this.truePosition = new Vector2f(position.x, position.y);
 		this.screenLocation = screenLocation;
 		this.velocity = velocity;
