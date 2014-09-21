@@ -15,9 +15,11 @@ public class Host extends Connector {
 	@Override
 	protected void connect() {
 		try {
-			socket = new ServerSocket(PORT).accept();
+			ServerSocket serverSocket = new ServerSocket(PORT);
+			socket = serverSocket.accept();
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
+			serverSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
