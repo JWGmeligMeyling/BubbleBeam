@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,10 +31,10 @@ public class GUI {
 	
 	JFrame frame;
 	ReactiveGamePanel player1Panel;
-	   private final ScheduledExecutorService scheduler =
-			     Executors.newScheduledThreadPool(1);
-	Executor gamecycle;
-
+	
+	private final ScheduledExecutorService scheduler =
+			     Executors.newScheduledThreadPool(2);
+	
 	// multiplayer on same machine
 	NonReactiveGamePanel player2Panel;
 	boolean multiplayer = false;
@@ -303,18 +302,14 @@ public class GUI {
 	
 
 	private void run() {
-		  scheduler.scheduleAtFixedRate(new Runnable() {
-		       public void run() { GUI.this.update(); }
-		     }, 0L, 33L, TimeUnit.MILLISECONDS);
-		
-		
+		scheduler.scheduleAtFixedRate(() -> {
+			GUI.this.update();
+		}, 0L, 33L, TimeUnit.MILLISECONDS);
 		
 		new Timer(FRAME_PERIOD, new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				
 				
 				try {
 					player1Panel.repaint();
