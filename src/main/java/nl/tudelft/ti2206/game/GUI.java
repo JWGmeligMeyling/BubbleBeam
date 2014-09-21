@@ -6,7 +6,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
@@ -20,6 +24,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
+import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,11 +42,17 @@ import java.text.ParseException;
 
 public class GUI {
 	
+	private static final Logger log = LoggerFactory.getLogger(GUI.class);
+
+	
 	JFrame frame;
 	ReactiveGamePanel player1Panel;
 	
-	private final ScheduledExecutorService scheduler =
+	private static  final ScheduledExecutorService scheduler =
 			     Executors.newScheduledThreadPool(2);
+	
+	private final AsynchronousChannelGroup channels = AsynchronousChannelGroup
+			.withThreadPool(scheduler);
 	
 	// multiplayer on same machine
 	NonReactiveGamePanel player2Panel;
@@ -163,6 +179,12 @@ public class GUI {
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
 			GUI.this.restart();
+			
+			try {
+				GUI.this.requestMultiplayerConnection();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		});
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -177,9 +199,10 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(multiPlayerRestart, c);
 		
-		ipaddressTextField = new JFormattedTextField(new MaskFormatter(
-				"###.###.###.###")); // TODO change to
-										// something less buggy
+		ipaddressTextField = new JFormattedTextField(
+				new DefaultFormatterFactory(
+						new MaskFormatter("###.###.###.###")),
+				"127.000.000.001");
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.5;
@@ -198,10 +221,13 @@ public class GUI {
 			multiplayer = true;
 			
 			String ipaddress = ipaddressTextField.getText();  //this text is not yet error checked
-			
-			//TODO do something with this ipaddress
-			
 			GUI.this.restart();
+			
+			try {
+				GUI.this.connectMultiplayer(ipaddress);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		});
 		
 		c.fill = GridBagConstraints.NONE;
@@ -215,8 +241,6 @@ public class GUI {
 		c.ipadx = 30;
 		c.insets = extPadding;
 		pane.add(findMultiPlayerRestart, c);
-		
-		
 		
 		JLabel version = new JLabel("Version: 0.1 Alpha");	//TODO how to add versionnumber from POM-file
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -345,7 +369,75 @@ public class GUI {
 		}
 	}
 	
+	private final static int port = 56756;
 	
+	private void requestMultiplayerConnection() throws IOException {
+		
+		final AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel
+				.open(channels)
+				.setOption(StandardSocketOptions.SO_REUSEADDR, true)
+				.bind(new InetSocketAddress(port));
+		
+		log.info("Waiting for incomming connections on {}", new InetSocketAddress(port));
+		
+		listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
+
+			@Override
+			public void completed(AsynchronousSocketChannel result,
+					Void attachment) {
+				
+				log.info("Client connected!");
+			}
+
+			@Override
+			public void failed(Throwable exc, Void attachment) {
+				log.error(exc.getMessage(), exc);
+				close();
+				
+			}
+			
+			private void close() {
+				try {
+					listener.close();
+					channels.shutdownNow();
+				} catch (IOException e) {
+					log.warn(e.getMessage(), e);
+				}
+			}
+			
+		});
+	}
+	
+	private void connectMultiplayer(final String host) throws IOException {
+
+		final AsynchronousSocketChannel listener = AsynchronousSocketChannel
+				.open(channels);
+		
+		listener.connect(new InetSocketAddress(host, port),
+				listener,
+				new CompletionHandler<Void, AsynchronousSocketChannel>() {
+
+					@Override
+					public void completed(Void result,
+							AsynchronousSocketChannel attachment) {
+
+						log.info("Got some connectivity going on bro");
+					}
+
+					@Override
+					public void failed(Throwable exc,
+							AsynchronousSocketChannel attachment) {
+						log.error(exc.getMessage(), exc);
+
+						try {
+							attachment.close();
+						} catch (IOException e) {
+							log.warn(exc.getMessage(), e);
+						}
+					}
+
+				});
+	}
 
 	private void run() {
 		scheduler.scheduleAtFixedRate(() -> {
