@@ -1,10 +1,12 @@
 package nl.tudelft.ti2206.game;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.text.MaskFormatter;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.text.ParseException;
 
 /**
  * @author leon Hoek
@@ -38,6 +41,8 @@ public class GUI {
 	// multiplayer on same machine
 	NonReactiveGamePanel player2Panel;
 	boolean multiplayer = false;
+	
+	protected JFormattedTextField ipaddressTextField;
 	
 
 	public static final int FPS = 60;
@@ -60,10 +65,9 @@ public class GUI {
 	 * @param pane
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws ParseException 
 	 */
-	private void fillGameFrame(Container pane) throws FileNotFoundException, IOException {
-		
-		
+	private void fillGameFrame(Container pane) throws FileNotFoundException, IOException, ParseException {
 		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		}
@@ -82,7 +86,7 @@ public class GUI {
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;
 		c.weighty = 0;
-		c.gridheight = 4;
+		c.gridheight = 6;
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
@@ -101,7 +105,7 @@ public class GUI {
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.ipadx = 30;
 		c.ipady = 30;
 		c.insets = extPadding;
@@ -155,12 +159,12 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(singlePlayerRestart, c);
 		
-		final JButton multiPlayerRestart = new JButton("Restart Multi-Player");
+		final JButton multiPlayerRestart = new JButton("Restart Multi-Player as Host");
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
 			GUI.this.restart();
 		});
-
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -172,7 +176,48 @@ public class GUI {
 		c.ipadx = 30;
 		c.insets = extPadding;
 		pane.add(multiPlayerRestart, c);
-
+		
+		ipaddressTextField = new JFormattedTextField(new MaskFormatter(
+				"###.###.###.###")); // TODO change to
+										// something less buggy
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.5;
+		c.weighty = 0;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.SOUTHWEST;
+		c.gridx = 2;
+		c.gridy = 4;
+		c.ipadx = 30;
+		c.insets = extPadding;
+		pane.add(ipaddressTextField, c);
+		
+		final JButton findMultiPlayerRestart = new JButton("Find Host");
+		findMultiPlayerRestart.addActionListener((event) -> {
+			multiplayer = true;
+			
+			String ipaddress = ipaddressTextField.getText();  //this text is not yet error checked
+			
+			//TODO do something with this ipaddress
+			
+			GUI.this.restart();
+		});
+		
+		c.fill = GridBagConstraints.NONE;
+		c.weightx = 0.5;
+		c.weighty = 0;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.gridx = 2;
+		c.gridy = 5;
+		c.ipadx = 30;
+		c.insets = extPadding;
+		pane.add(findMultiPlayerRestart, c);
+		
+		
+		
 		JLabel version = new JLabel("Version: 0.1 Alpha");	//TODO how to add versionnumber from POM-file
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
@@ -181,7 +226,7 @@ public class GUI {
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.SOUTH;
 		c.gridx = 2;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.ipadx = 30;
 		c.insets = extPadding;
 		pane.add(version, c);
@@ -196,7 +241,7 @@ public class GUI {
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;
 			c.weighty = 0;
-			c.gridheight = 4;
+			c.gridheight = 6;
 			c.gridwidth = 1;
 			c.anchor = GridBagConstraints.WEST;
 			c.gridx = 3;
@@ -231,8 +276,9 @@ public class GUI {
 	 * Makes a new frame filled with the gamecontrols and then passes control to GUI.run()
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws ParseException 
 	 */
-	public GUI() throws FileNotFoundException, IOException {
+	public GUI() throws FileNotFoundException, IOException, ParseException {
 		frame = new JFrame("Bubble Shooter");
 
 		//add the game + controls
