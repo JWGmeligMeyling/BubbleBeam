@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +27,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 
-public interface BubbleMesh extends Iterable<Bubble> {
+public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	
 	default Stream<Bubble> stream() {
 	    return StreamSupport.stream(spliterator(), false);
@@ -177,6 +178,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 	public static class BubbleMeshImpl implements BubbleMesh {
 		
+		private static final long serialVersionUID = 8752696473412604308L;
 		private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 
 		private final List<Color> remainingColors = Lists.newArrayList(Color.RED,
@@ -184,7 +186,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 
 		private Bubble startBubble;
 		
-		private final List<ScoreListener> scoreListeners = Lists.newArrayList();
+		private transient final List<ScoreListener> scoreListeners = Lists.newArrayList();
 		
 		@Override
 		public void calculatePositions() {

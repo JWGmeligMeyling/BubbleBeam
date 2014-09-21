@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.multiplayer.Packet;
+import nl.tudelft.ti2206.multiplayer.Packet.PacketHandler;
 
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -22,13 +24,18 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.Channels;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -387,13 +394,35 @@ public class GUI {
 					Void attachment) {
 				
 				log.info("Client connected!");
+				
+				sendMesh(player1Panel.bubbleMesh, result);
+				
+				try (ObjectInputStream in = new ObjectInputStream(
+						Channels.newInputStream(result))) {							
+					
+					while(listener.isOpen()) {
+						Packet packet = (Packet) in.readObject();
+						packet.work(new PacketHandler() {
+							
+							@Override
+							public void updateMesh(BubbleMesh mesh) {
+								log.info("Received a message!");
+								player2Panel.bubbleMesh = mesh;
+							}
+							
+						});
+					}
+					
+				} catch (IOException | ClassNotFoundException e) {
+					log.error(e.getMessage(), e);
+				}
+				
 			}
 
 			@Override
 			public void failed(Throwable exc, Void attachment) {
 				log.error(exc.getMessage(), exc);
 				close();
-				
 			}
 			
 			private void close() {
@@ -408,29 +437,66 @@ public class GUI {
 		});
 	}
 	
+	protected void sendMesh(BubbleMesh bubbleMesh,
+			AsynchronousSocketChannel result) {
+		
+		try(ByteArrayOutputStream bas = new ByteArrayOutputStream();
+				
+			ObjectOutputStream out = new ObjectOutputStream(bas)) {
+			Packet packet = Packet.newMeshPacket(bubbleMesh);
+			out.writeObject(packet);
+			ByteBuffer buffer = ByteBuffer.wrap(bas.toByteArray());
+			result.write(buffer);
+			
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
 	private void connectMultiplayer(final String host) throws IOException {
 
 		final AsynchronousSocketChannel listener = AsynchronousSocketChannel
 				.open(channels);
 		
 		listener.connect(new InetSocketAddress(host, port),
-				listener,
-				new CompletionHandler<Void, AsynchronousSocketChannel>() {
+				null,
+				new CompletionHandler<Void, Void>() {
 
 					@Override
 					public void completed(Void result,
-							AsynchronousSocketChannel attachment) {
-
-						log.info("Got some connectivity going on bro");
+							Void attachment) {
+						
+						sendMesh(player1Panel.bubbleMesh, listener);
+						
+						try (ObjectInputStream in = new ObjectInputStream(
+								Channels.newInputStream(listener))) {							
+							
+							while(listener.isOpen()) {
+								Packet packet = (Packet) in.readObject();
+								packet.work(new PacketHandler() {
+									
+									@Override
+									public void updateMesh(BubbleMesh mesh) {
+										log.info("Received a message!");
+										player2Panel.bubbleMesh = mesh;
+									}
+									
+								});
+							}
+							
+						} catch (IOException | ClassNotFoundException e) {
+							log.error(e.getMessage(), e);
+						}
+						
 					}
 
 					@Override
 					public void failed(Throwable exc,
-							AsynchronousSocketChannel attachment) {
+							Void attachment) {
 						log.error(exc.getMessage(), exc);
 
 						try {
-							attachment.close();
+							listener.close();
 						} catch (IOException e) {
 							log.warn(exc.getMessage(), e);
 						}
