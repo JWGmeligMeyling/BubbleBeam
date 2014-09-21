@@ -13,7 +13,6 @@ import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.room.Room;
-import nl.tudelft.ti2206.room.SingleplayerRoom;
 import nl.tudelft.util.ObservableObject;
 
 public abstract class GamePanel extends JPanel {
@@ -29,17 +28,15 @@ public abstract class GamePanel extends JPanel {
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
 	public static Point cannonPosition;
-	private Room room;
+	protected Room room;	//initialized in subclasses
+	protected GameTick gameTick;
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
 	public GamePanel(final BubbleMesh bubbleMesh) {
-		cannonPosition = new Point(WIDTH / 2, 400);
-		room = new SingleplayerRoom(cannonPosition, this.getPreferredSize(), bubbleMesh, this);
-		room.setup();
-		GameTick gameTick = new GameTick(33);
+		cannonPosition = new Point(WIDTH / 2, HEIGHT);
+		gameTick = new GameTick(33);
 		gameTick.start();
-		gameTick.registerObserver(room);
 		bubbleMesh.addScoreListener((amount) -> {
 			setScore(getScore() + amount);
 		});

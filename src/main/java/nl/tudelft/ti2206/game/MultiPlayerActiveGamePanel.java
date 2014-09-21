@@ -4,19 +4,26 @@ import java.awt.Graphics;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.network.Host;
+import nl.tudelft.ti2206.room.MultiplayerRoom;
 
-public class ReactiveGamePanel extends GamePanel {
+public class MultiPlayerActiveGamePanel extends GamePanel {
 	
-	//private final Cannon cannon;
-	//private final Room room;
+	
+	Host connector;
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 525456508008501827L;
 
-	public ReactiveGamePanel(final BubbleMesh bubbleMesh) {
+	public MultiPlayerActiveGamePanel(final BubbleMesh bubbleMesh) {
 		super(bubbleMesh);
+		
+		connector = new Host();
+		room = new MultiplayerRoom(cannonPosition, this.getPreferredSize(), bubbleMesh, connector, this);
+		room.setup();
+		gameTick.registerObserver(room);
 		//this is older code, keeping it here until the multiplayer overhaul works completely
 		//this.cannon = new Cannon(bubbleMesh, new Point(WIDTH / 2, 400),
 		//		this.getPreferredSize(), this.getLocation());

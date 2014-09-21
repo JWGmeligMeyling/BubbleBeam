@@ -32,10 +32,10 @@ import nl.tudelft.ti2206.network.Host;
 public class GUI {
 	
 	JFrame frame;
-	ReactiveGamePanel player1Panel;
+	GamePanel player1Panel;
 	
 	// multiplayer on same machine
-	NonReactiveGamePanel player2Panel;
+	GamePanel player2Panel;
 	boolean multiplayer = false;
 	
 	Connector connector = null;
@@ -76,8 +76,14 @@ public class GUI {
 		Insets noPadding = new Insets(0, 0, 0, 0);
 		
 		// everything the frame must be filled with
-		player1Panel = new ReactiveGamePanel(BubbleMesh.parse(GUI.class
-				.getResourceAsStream("/board.txt")));
+		if(multiplayer){
+			player1Panel = new MultiPlayerActiveGamePanel(BubbleMesh.parse(GUI.class
+					.getResourceAsStream("/board.txt")));
+		} else {
+			player1Panel = new SinglePlayerGamePanel(BubbleMesh.parse(GUI.class
+					.getResourceAsStream("/board.txt")));
+		}
+		
 		player1Panel.observeScore((a, b) -> updateDisplayedScore());
 		
 		c.fill = GridBagConstraints.NONE;
@@ -230,7 +236,7 @@ public class GUI {
 		// multiplayer
 		// everything the frame must be filled with for a local multiplayer
 		if (multiplayer) {
-			player2Panel = new NonReactiveGamePanel(BubbleMesh.parse(GUI.class
+			player2Panel = new MultiPlayerPassiveGamePanel(BubbleMesh.parse(GUI.class
 					.getResourceAsStream("/board.txt")));
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 			
