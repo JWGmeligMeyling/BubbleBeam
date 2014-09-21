@@ -70,10 +70,24 @@ public class GUI {
 
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000/FPS;
+	
+	private final PacketHandler packetHandler = new PacketHandler() {
+		
+		@Override
+		public void updateMesh(BubbleMesh mesh) {
+			log.info("Received a message!");
+
+			if(player2Panel != null) {
+				player2Panel.bubbleMesh = mesh;
+				player2Panel.repaint();
+			}
+		}
+		
+	};
 
 	// Score-labels
-	JLabel playerScore;
-	JLabel player2Score;
+	protected JLabel playerScore;
+	protected JLabel player2Score;
 
 	// game-variables
 	boolean game_is_running = true;
@@ -402,15 +416,7 @@ public class GUI {
 					
 					while(listener.isOpen()) {
 						Packet packet = (Packet) in.readObject();
-						packet.work(new PacketHandler() {
-							
-							@Override
-							public void updateMesh(BubbleMesh mesh) {
-								log.info("Received a message!");
-								player2Panel.bubbleMesh = mesh;
-							}
-							
-						});
+						packet.work(packetHandler);
 					}
 					
 				} catch (IOException | ClassNotFoundException e) {
@@ -473,15 +479,7 @@ public class GUI {
 							
 							while(listener.isOpen()) {
 								Packet packet = (Packet) in.readObject();
-								packet.work(new PacketHandler() {
-									
-									@Override
-									public void updateMesh(BubbleMesh mesh) {
-										log.info("Received a message!");
-										player2Panel.bubbleMesh = mesh;
-									}
-									
-								});
+								packet.work(packetHandler);
 							}
 							
 						} catch (IOException | ClassNotFoundException e) {
