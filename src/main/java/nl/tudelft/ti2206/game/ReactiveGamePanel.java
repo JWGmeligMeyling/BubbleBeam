@@ -9,7 +9,7 @@ import nl.tudelft.ti2206.exception.GameOver;
 
 public class ReactiveGamePanel extends GamePanel {
 	
-	private Cannon cannon;
+	protected Cannon cannon;
 	
 	/**
 	 * 

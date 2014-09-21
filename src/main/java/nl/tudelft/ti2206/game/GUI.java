@@ -24,14 +24,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
-import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -52,8 +50,8 @@ public class GUI {
 	private static final Logger log = LoggerFactory.getLogger(GUI.class);
 
 	
-	JFrame frame;
-	ReactiveGamePanel player1Panel;
+	protected JFrame frame;
+	protected ReactiveGamePanel player1Panel;
 	
 	private static  final ScheduledExecutorService scheduler =
 			     Executors.newScheduledThreadPool(2);
@@ -62,8 +60,8 @@ public class GUI {
 			.withThreadPool(scheduler);
 	
 	// multiplayer on same machine
-	NonReactiveGamePanel player2Panel;
-	boolean multiplayer = false;
+	protected NonReactiveGamePanel player2Panel;
+	protected boolean multiplayer = false;
 	
 	protected JFormattedTextField ipaddressTextField;
 	
@@ -79,6 +77,14 @@ public class GUI {
 
 			if(player2Panel != null) {
 				player2Panel.bubbleMesh = mesh;
+				player2Panel.repaint();
+			}
+		}
+
+		@Override
+		public void updateCannon(double angle) {
+			if(player2Panel != null) {
+				player2Panel.setCannonAngle(angle);
 				player2Panel.repaint();
 			}
 		}
@@ -409,18 +415,18 @@ public class GUI {
 				
 				log.info("Client connected!");
 				
-				sendMesh(player1Panel.bubbleMesh, result);
-				
-				try (ObjectInputStream in = new ObjectInputStream(
-						Channels.newInputStream(result))) {							
+				try(ObjectOutputStream out = new ObjectOutputStream(Channels.newOutputStream(result));
+					ObjectInputStream in = new ObjectInputStream(Channels.newInputStream(result))) {
+
+					initializeConnection(out);
 					
 					while(listener.isOpen()) {
 						Packet packet = (Packet) in.readObject();
 						packet.work(packetHandler);
 					}
-					
+						
 				} catch (IOException | ClassNotFoundException e) {
-					log.error(e.getMessage(), e);
+					log.warn(e.getMessage(), e);
 				}
 				
 			}
@@ -443,22 +449,6 @@ public class GUI {
 		});
 	}
 	
-	protected void sendMesh(BubbleMesh bubbleMesh,
-			AsynchronousSocketChannel result) {
-		
-		try(ByteArrayOutputStream bas = new ByteArrayOutputStream();
-				
-			ObjectOutputStream out = new ObjectOutputStream(bas)) {
-			Packet packet = Packet.newMeshPacket(bubbleMesh);
-			out.writeObject(packet);
-			ByteBuffer buffer = ByteBuffer.wrap(bas.toByteArray());
-			result.write(buffer);
-			
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
 	private void connectMultiplayer(final String host) throws IOException {
 
 		final AsynchronousSocketChannel listener = AsynchronousSocketChannel
@@ -472,10 +462,10 @@ public class GUI {
 					public void completed(Void result,
 							Void attachment) {
 						
-						sendMesh(player1Panel.bubbleMesh, listener);
-						
-						try (ObjectInputStream in = new ObjectInputStream(
-								Channels.newInputStream(listener))) {							
+						try (ObjectOutputStream out = new ObjectOutputStream(Channels.newOutputStream(listener));
+							ObjectInputStream in = new ObjectInputStream(Channels.newInputStream(listener))) {							
+							
+							initializeConnection(out);
 							
 							while(listener.isOpen()) {
 								Packet packet = (Packet) in.readObject();
@@ -501,6 +491,18 @@ public class GUI {
 					}
 
 				});
+	}
+	
+	private void initializeConnection(final ObjectOutputStream out) throws IOException {
+		out.writeObject(Packet.newMeshPacket(player1Panel.bubbleMesh));
+		
+		player1Panel.cannon.addObserver((a,b) -> {
+			try {
+				out.writeObject(Packet.newCannonPacket(player1Panel.cannon.getAngle()));
+			} catch (Exception e) {
+				log.warn(e.getMessage(), e);
+			}
+		});
 	}
 
 	private void run() {
