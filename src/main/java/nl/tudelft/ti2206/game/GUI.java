@@ -1,13 +1,21 @@
 package nl.tudelft.ti2206.game;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.multiplayer.Packet;
+import nl.tudelft.ti2206.multiplayer.Packet.PacketHandler;
 
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -16,8 +24,23 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.Channels;
+import java.nio.channels.CompletionHandler;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.text.ParseException;
 
 /**
  * @author leon Hoek
@@ -25,21 +48,46 @@ import java.io.IOException;
  */
 
 public class GUI {
+	
+	private static final Logger log = LoggerFactory.getLogger(GUI.class);
 
+	
 	JFrame frame;
 	ReactiveGamePanel player1Panel;
-
+	
+	private static  final ScheduledExecutorService scheduler =
+			     Executors.newScheduledThreadPool(2);
+	
+	private final AsynchronousChannelGroup channels = AsynchronousChannelGroup
+			.withThreadPool(scheduler);
+	
 	// multiplayer on same machine
 	NonReactiveGamePanel player2Panel;
 	boolean multiplayer = false;
 	
+	protected JFormattedTextField ipaddressTextField;
+	
 
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000/FPS;
+	
+	private final PacketHandler packetHandler = new PacketHandler() {
+		
+		@Override
+		public void updateMesh(BubbleMesh mesh) {
+			log.info("Received a message!");
+
+			if(player2Panel != null) {
+				player2Panel.bubbleMesh = mesh;
+				player2Panel.repaint();
+			}
+		}
+		
+	};
 
 	// Score-labels
-	JLabel playerScore;
-	JLabel player2Score;
+	protected JLabel playerScore;
+	protected JLabel player2Score;
 
 	// game-variables
 	boolean game_is_running = true;
@@ -54,8 +102,9 @@ public class GUI {
 	 * @param pane
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws ParseException 
 	 */
-	private void fillGameFrame(Container pane) throws FileNotFoundException, IOException {
+	private void fillGameFrame(Container pane) throws FileNotFoundException, IOException, ParseException {
 		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		}
@@ -74,7 +123,7 @@ public class GUI {
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;
 		c.weighty = 0;
-		c.gridheight = 4;
+		c.gridheight = 6;
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
@@ -93,7 +142,7 @@ public class GUI {
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.ipadx = 30;
 		c.ipady = 30;
 		c.insets = extPadding;
@@ -147,12 +196,18 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(singlePlayerRestart, c);
 		
-		final JButton multiPlayerRestart = new JButton("Restart Multi-Player");
+		final JButton multiPlayerRestart = new JButton("Restart Multi-Player as Host");
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
 			GUI.this.restart();
+			
+			try {
+				GUI.this.requestMultiplayerConnection();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		});
-
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -164,7 +219,50 @@ public class GUI {
 		c.ipadx = 30;
 		c.insets = extPadding;
 		pane.add(multiPlayerRestart, c);
-
+		
+		ipaddressTextField = new JFormattedTextField(
+				new DefaultFormatterFactory(
+						new MaskFormatter("###.###.###.###")),
+				"127.000.000.001");
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.5;
+		c.weighty = 0;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.SOUTHWEST;
+		c.gridx = 2;
+		c.gridy = 4;
+		c.ipadx = 30;
+		c.insets = extPadding;
+		pane.add(ipaddressTextField, c);
+		
+		final JButton findMultiPlayerRestart = new JButton("Find Host");
+		findMultiPlayerRestart.addActionListener((event) -> {
+			multiplayer = true;
+			
+			String ipaddress = ipaddressTextField.getText();  //this text is not yet error checked
+			GUI.this.restart();
+			
+			try {
+				GUI.this.connectMultiplayer(ipaddress);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+		
+		c.fill = GridBagConstraints.NONE;
+		c.weightx = 0.5;
+		c.weighty = 0;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.gridx = 2;
+		c.gridy = 5;
+		c.ipadx = 30;
+		c.insets = extPadding;
+		pane.add(findMultiPlayerRestart, c);
+		
 		JLabel version = new JLabel("Version: 0.1 Alpha");	//TODO how to add versionnumber from POM-file
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
@@ -173,7 +271,7 @@ public class GUI {
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.SOUTH;
 		c.gridx = 2;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.ipadx = 30;
 		c.insets = extPadding;
 		pane.add(version, c);
@@ -188,7 +286,7 @@ public class GUI {
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;
 			c.weighty = 0;
-			c.gridheight = 4;
+			c.gridheight = 6;
 			c.gridwidth = 1;
 			c.anchor = GridBagConstraints.WEST;
 			c.gridx = 3;
@@ -223,8 +321,9 @@ public class GUI {
 	 * Makes a new frame filled with the gamecontrols and then passes control to GUI.run()
 	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws ParseException 
 	 */
-	public GUI() throws FileNotFoundException, IOException {
+	public GUI() throws FileNotFoundException, IOException, ParseException {
 		frame = new JFrame("Bubble Shooter");
 
 		//add the game + controls
@@ -290,19 +389,138 @@ public class GUI {
 			 player2Panel.gameStep();
 		}
 	}
-
-	private void run() {
-		new Timer(FRAME_PERIOD, new ActionListener() {
+	
+	private final static int port = 56756;
+	
+	private void requestMultiplayerConnection() throws IOException {
+		
+		final AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel
+				.open(channels)
+				.setOption(StandardSocketOptions.SO_REUSEADDR, true)
+				.bind(new InetSocketAddress(port));
+		
+		log.info("Waiting for incomming connections on {}", new InetSocketAddress(port));
+		
+		listener.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void completed(AsynchronousSocketChannel result,
+					Void attachment) {
+				
+				log.info("Client connected!");
+				
+				sendMesh(player1Panel.bubbleMesh, result);
+				
+				try (ObjectInputStream in = new ObjectInputStream(
+						Channels.newInputStream(result))) {							
+					
+					while(listener.isOpen()) {
+						Packet packet = (Packet) in.readObject();
+						packet.work(packetHandler);
+					}
+					
+				} catch (IOException | ClassNotFoundException e) {
+					log.error(e.getMessage(), e);
+				}
+				
+			}
+
+			@Override
+			public void failed(Throwable exc, Void attachment) {
+				log.error(exc.getMessage(), exc);
+				close();
+			}
+			
+			private void close() {
 				try {
-					GUI.this.update();
+					listener.close();
+					channels.shutdownNow();
+				} catch (IOException e) {
+					log.warn(e.getMessage(), e);
+				}
+			}
+			
+		});
+	}
+	
+	protected void sendMesh(BubbleMesh bubbleMesh,
+			AsynchronousSocketChannel result) {
+		
+		try(ByteArrayOutputStream bas = new ByteArrayOutputStream();
+				
+			ObjectOutputStream out = new ObjectOutputStream(bas)) {
+			Packet packet = Packet.newMeshPacket(bubbleMesh);
+			out.writeObject(packet);
+			ByteBuffer buffer = ByteBuffer.wrap(bas.toByteArray());
+			result.write(buffer);
+			
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	private void connectMultiplayer(final String host) throws IOException {
+
+		final AsynchronousSocketChannel listener = AsynchronousSocketChannel
+				.open(channels);
+		
+		listener.connect(new InetSocketAddress(host, port),
+				null,
+				new CompletionHandler<Void, Void>() {
+
+					@Override
+					public void completed(Void result,
+							Void attachment) {
+						
+						sendMesh(player1Panel.bubbleMesh, listener);
+						
+						try (ObjectInputStream in = new ObjectInputStream(
+								Channels.newInputStream(listener))) {							
+							
+							while(listener.isOpen()) {
+								Packet packet = (Packet) in.readObject();
+								packet.work(packetHandler);
+							}
+							
+						} catch (IOException | ClassNotFoundException e) {
+							log.error(e.getMessage(), e);
+						}
+						
+					}
+
+					@Override
+					public void failed(Throwable exc,
+							Void attachment) {
+						log.error(exc.getMessage(), exc);
+
+						try {
+							listener.close();
+						} catch (IOException e) {
+							log.warn(exc.getMessage(), e);
+						}
+					}
+
+				});
+	}
+
+	private void run() {
+		scheduler.scheduleAtFixedRate(() -> {
+			GUI.this.update();
+		}, 0L, 33L, TimeUnit.MILLISECONDS);
+		
+		new Timer(FRAME_PERIOD, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					player1Panel.repaint();
 				} catch (GameOver exception) {
 					restart();
 				}
 			}
 		}).start();
+		
 	}
 	
 }

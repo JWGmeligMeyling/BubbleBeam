@@ -14,6 +14,8 @@ import com.google.common.collect.Maps;
 
 public abstract class AbstractBubble implements Bubble {
 	
+	private static final long serialVersionUID = 9164993436657927985L;
+	
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
 	public static final int RADIUS = 14;

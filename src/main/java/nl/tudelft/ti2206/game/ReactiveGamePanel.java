@@ -32,6 +32,5 @@ public class ReactiveGamePanel extends GamePanel {
 	@Override
 	public void gameStep() throws GameOver {
 		cannon.gameStep();
-		super.gameStep();
 	}	
 }

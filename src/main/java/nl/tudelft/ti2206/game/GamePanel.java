@@ -16,16 +16,12 @@ import nl.tudelft.util.ObservableObject;
 
 public abstract class GamePanel extends JPanel {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2416543550015136242L;
 	
 	public final static int WIDTH = AbstractBubble.WIDTH * 10 + AbstractBubble.WIDTH / 2 + 4;
 	public final static int HEIGHT = 400;
 
-	protected final BubbleMesh bubbleMesh;
+	protected BubbleMesh bubbleMesh;
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
@@ -33,8 +29,8 @@ public abstract class GamePanel extends JPanel {
 	public GamePanel(final BubbleMesh bubbleMesh) {
 		this.bubbleMesh = bubbleMesh;
 		bubbleMesh.addScoreListener((amount) -> { setScore(getScore() + amount); });
-		
 		bubbleMesh.calculatePositions();
+		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED) );
 		this.setVisible(true);
 	}
