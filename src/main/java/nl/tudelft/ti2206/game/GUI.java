@@ -237,7 +237,7 @@ public class GUI {
 		// everything the frame must be filled with for a local multiplayer
 		if (multiplayer) {
 			player2Panel = new MultiPlayerPassiveGamePanel(BubbleMesh.parse(GUI.class
-					.getResourceAsStream("/board.txt")));
+					.getResourceAsStream("/board.txt")),ipaddressTextField.getText());
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 			
 			c.fill = GridBagConstraints.NONE;
