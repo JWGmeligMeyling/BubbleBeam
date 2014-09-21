@@ -8,13 +8,12 @@ import nl.tudelft.ti2206.room.SingleplayerRoom;
 
 public class SinglePlayerGamePanel extends GamePanel {
 	
-	//private final Cannon cannon;
-	//private final Room room;
-	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 525456508008501827L;
+	private static final long serialVersionUID = -5651117591089785288L;
+	
+	
 
 	public SinglePlayerGamePanel(final BubbleMesh bubbleMesh) {
 		super(bubbleMesh);

@@ -21,6 +21,7 @@ public class MultiPlayerActiveGamePanel extends GamePanel {
 		super(bubbleMesh);
 		
 		connector = new Host();
+		connector.start();
 		room = new MultiplayerRoom(cannonPosition, this.getPreferredSize(), bubbleMesh, connector, this);
 		room.setup();
 		gameTick.registerObserver(room);

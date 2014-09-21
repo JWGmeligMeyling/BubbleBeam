@@ -14,6 +14,7 @@ import java.net.Socket;
 public class Client extends Connector {
 	public final String ip;
 	
+	
 	public Client(String ip) {
 		this.ip = ip;
 	}
