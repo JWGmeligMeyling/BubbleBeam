@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.network.packets;
+package nl.tudelft.ti2206.exception;
 
 public class UnknownPacketException extends IllegalArgumentException {
 

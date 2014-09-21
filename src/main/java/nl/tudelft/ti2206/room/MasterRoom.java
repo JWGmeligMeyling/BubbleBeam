@@ -8,18 +8,18 @@ import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.util.Vector2f;
 
 /**
- * TODO: Better description.. The MasterRoom is a Room who is responsible for
- * it's own bubble creation, unlike the SlaveRoom.
+ * TODO: Remove this class?
  * 
  * @author Sam Smulders
  */
-public class MasterRoom extends Room {
+public abstract class MasterRoom extends Room {
 	
 	public MasterRoom(Point cannonPosition, Dimension dimension, BubbleMesh bubbleMesh) {
 		super(cannonPosition, dimension, bubbleMesh);
 	}
 	
 	// TODO: Can't be called in constructor because of the MultplayerRoom.
+	@Override
 	public void setup() {
 		addBubble();
 		addBubble();

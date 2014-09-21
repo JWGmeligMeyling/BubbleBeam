@@ -67,6 +67,8 @@ public abstract class Room implements GameTickObserver {
 	
 	public abstract void setup();
 	
+	public abstract void deconstruct();
+	
 	public boolean canShoot() {
 		return shotBubble == null;
 	}
@@ -119,10 +121,11 @@ public abstract class Room implements GameTickObserver {
 		}
 	}
 	
+	// TODO: Handling bubbleQueue is empty
 	public void shootBubble(final Vector2f direction) {
 		Point bubbleStartPosition = new Point((cannonPosition.x - AbstractBubble.WIDTH / 2)
-				+ (int) (Cannon.CANNON_OUTPUT * direction.x), cannonPosition.y - AbstractBubble.HEIGHT
-				/ 2 + (int) (Cannon.CANNON_OUTPUT * direction.y));
+				+ (int) (Cannon.CANNON_OUTPUT * direction.x), cannonPosition.y
+				- AbstractBubble.HEIGHT / 2 + (int) (Cannon.CANNON_OUTPUT * direction.y));
 		shotBubble = new MovingBubble(bubbleStartPosition, new Vector2f(
 				direction.multiply(MOVING_BUBBLE_SPEED)), screenSize, bubbleQueue.remove(0)
 				.getColor());

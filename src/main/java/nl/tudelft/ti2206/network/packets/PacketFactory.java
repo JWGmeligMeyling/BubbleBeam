@@ -3,6 +3,8 @@ package nl.tudelft.ti2206.network.packets;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import nl.tudelft.ti2206.exception.UnknownPacketException;
+
 /**
  * The task of the PacketFactory is to create Packets from data read from a
  * DataInputStream.
