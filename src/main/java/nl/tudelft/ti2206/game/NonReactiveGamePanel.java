@@ -2,12 +2,16 @@ package nl.tudelft.ti2206.game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.io.InputStream;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.cannon.Cannon;
 
 public class NonReactiveGamePanel extends GamePanel {
 
+	private final Cannon cannon;
+	
 	/**
 	 * 
 	 */
@@ -17,6 +21,9 @@ public class NonReactiveGamePanel extends GamePanel {
 
 	public NonReactiveGamePanel(final BubbleMesh bubbleMesh){
 		super(bubbleMesh);
+		this.cannon = new Cannon(bubbleMesh, new Point(WIDTH / 2, 400),
+				this.getPreferredSize(), this.getLocation());
+		this.cannon.bindMouseListenerTo(this);
 	}
 	
 	@Override
