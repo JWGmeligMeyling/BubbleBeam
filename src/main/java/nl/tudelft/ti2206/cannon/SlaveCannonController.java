@@ -7,8 +7,11 @@ import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.ti2206.room.Room;
 
 /**
- * The SlaveCannonController is used to copy what an other player is doing by
- * accepting packets from a given connector.
+ * The {@code SlaveCannonController} is a controller who's behaviour is
+ * determined by the data received by a connector. By listening to received
+ * {@link CannonShoot} and {@link CannonRotate} {@link Packets}, a
+ * SlaveCannonController is able to copy the behaviour of an other
+ * CannonController, like the opponents CannonController.
  * 
  * @author Sam Smulders
  */

@@ -15,10 +15,10 @@ import nl.tudelft.ti2206.cannon.temp.OldCannon;
 import nl.tudelft.util.Vector2f;
 
 /**
- * The Cannon is responsible for drawing the cannon.
+ * The {@code Cannon} is responsible for drawing the cannon. It can listen to a
+ * {@link CannonController} to execute the {@link CannonController}'s behaviour.
  * 
  * @author Sam Smulders
- *
  */
 public class Cannon implements Drawable, CannonControllerObserver {
 	protected static final int WIDTH = 48;

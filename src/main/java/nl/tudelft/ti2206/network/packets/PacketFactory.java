@@ -6,8 +6,8 @@ import java.io.IOException;
 import nl.tudelft.ti2206.exception.UnknownPacketException;
 
 /**
- * The task of the PacketFactory is to create Packets from data read from a
- * DataInputStream.
+ * The task of the {@code PacketFactory} is to create Packets from data read
+ * from a {@link DataInputStream}.
  * 
  * @author Sam Smulders
  */

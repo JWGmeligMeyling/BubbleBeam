@@ -8,25 +8,43 @@ import java.io.IOException;
 import nl.tudelft.util.Vector2f;
 
 /**
- * The Packets are responsible for constructing packages to send over an
- * OutputStream out of data given in the constructor, and the Packets are
- * responsible for retrieving the data after receiving over an InputStream.
+ * The {@code Packet} classes are responsible for constructing packets to send
+ * over an OutputStream out of data given in the constructor, and the Packets
+ * are responsible for retrieving the data after receiving over an InputStream.
  * 
- * For each type of data to be send, a new Packet class should be made. And for
- * each Packet class there should be an PacketListener interface to listen with
- * and a PacketHandler class to register the listeners and notify to from the
- * packet.
+ * For each type of data to be send, a new {@code Packet} class should be made.
+ * And for each {@code Packet} class there should be an {@link PacketListener}
+ * interface to listen with and a {@link PacketHandler} class to register the
+ * listeners and notify to from the packet.
  * 
  * Each Packet should have an unique PACKET_ID which should be used to recognise
- * the packet as raw data in the PacketFactory.
+ * the packet as raw data in the {@link PacketFactory}.
  * 
  * @author Sam Smulders
  */
 public interface Packet {
+	/**
+	 * Send this packet over a {@link DataOutputStream}.
+	 * 
+	 * @param out
+	 *            the DataOutputStream to send this package over.
+	 * @throws IOException
+	 */
 	public void send(DataOutputStream out) throws IOException;
 	
+	/**
+	 * Notifies the responsible {@Link PacketHandler} about this packet.
+	 * 
+	 * @param packetHandlerCollection
+	 */
 	public void notify(PacketHandlerCollection packetHandlerCollection);
 	
+	/**
+	 * The {@code CannonRotate} {@link Packet} is used to send and receive
+	 * information about a cannon rotating.
+	 * 
+	 * @author Sam Smulders
+	 */
 	public class CannonRotate implements Packet {
 		public static final byte PACKET_ID = 0;
 		
@@ -53,6 +71,12 @@ public interface Packet {
 		}
 	}
 	
+	/**
+	 * The {@code CannonShoot} {@link Packet} is used to send and receive
+	 * information about a cannon shooting.
+	 * 
+	 * @author Sam Smulders
+	 */
 	public class CannonShoot implements Packet {
 		public static final byte PACKET_ID = 1;
 		
@@ -80,6 +104,12 @@ public interface Packet {
 		}
 	}
 	
+	/**
+	 * The {@code BubbleMeshSync} {@link Packet} is used to send and receive the
+	 * {@link BubbleMesh}.
+	 * 
+	 * @author Sam Smulders
+	 */
 	public class BubbleMeshSync implements Packet {
 		public static final byte PACKET_ID = 2;
 		
@@ -106,6 +136,12 @@ public interface Packet {
 		}
 	}
 	
+	/**
+	 * The {@code LoadNewBubble} {@link Packet} is used to send and receive the
+	 * colour of new bubbles, to synchronise them with the opponent.
+	 * 
+	 * @author Sam Smulders
+	 */
 	public class LoadNewBubble implements Packet {
 		public static final byte PACKET_ID = 3;
 		

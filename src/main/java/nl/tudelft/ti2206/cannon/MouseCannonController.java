@@ -7,6 +7,12 @@ import java.awt.event.MouseMotionListener;
 import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.Vector2f;
 
+/**
+ * The {@code MouseCannonController} is a controller who's behaviour is
+ * determined by behaviour of the mouse.
+ * 
+ * @author Sam Smulders
+ */
 public class MouseCannonController extends CannonController implements MouseMotionListener,
 		MouseListener {
 	

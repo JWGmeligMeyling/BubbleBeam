@@ -26,8 +26,33 @@ public abstract class Connector implements Runnable {
 	protected Socket socket;
 	protected PacketHandlerCollection packetHandlerCollection = new PacketHandlerCollection();
 	
-	protected boolean ready = true;
+	protected boolean ready = false;
 	
+	/**
+	 * Connect the connector by using the {@code connect()} method and then
+	 * accepting incoming packets as long the connector is ready.
+	 */
+	@Override
+	public void run() {
+		connect();
+		ready = true;
+		while (ready) {
+			acceptPacket();
+		}
+		try {
+			in.close();
+			out.close();
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Read an incoming packet.
+	 * 
+	 * @return the packet
+	 */
 	protected Packet readPacket() {
 		try {
 			byte id = in.readByte();
@@ -38,6 +63,11 @@ public abstract class Connector implements Runnable {
 		return null;
 	}
 	
+	/**
+	 * Send a packet over the DataOutputStream.
+	 * 
+	 * @param packet
+	 */
 	public void sendPacket(Packet packet) {
 		try {
 			packet.send(out);
@@ -51,31 +81,18 @@ public abstract class Connector implements Runnable {
 	}
 	
 	public void endConnection() {
-		ready = true;
+		ready = false;
 	}
 	
 	public PacketHandlerCollection getPacketHandlerCollection() {
 		return packetHandlerCollection;
 	}
 	
-	@Override
-	public void run() {
-		connect();
-		ready = false;
-		while (!ready) {
-			acceptPacket();
-		}
-		try {
-			in.close();
-			out.close();
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
+	/**
+	 * Create a new {@link Thread} to run this {@link Connector} object with.
+	 */
 	public void start() {
-		if (ready) {
+		if (!ready) {
 			new Thread(this).start();
 		}
 	}
@@ -84,5 +101,9 @@ public abstract class Connector implements Runnable {
 		return ready;
 	}
 	
+	/**
+	 * The method to be called to make a connection with an other
+	 * {@link Connector} object.
+	 */
 	protected abstract void connect();
 }
