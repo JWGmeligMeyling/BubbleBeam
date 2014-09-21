@@ -5,8 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * The {@code Host} is a {@link Connector} who listens to a given port and waits
+ * for a connection request to establish a connection.
+ * 
+ * @author Sam Smulders
+ */
 public class Host extends Connector {
-	
 	@Override
 	protected void connect() {
 		try {
