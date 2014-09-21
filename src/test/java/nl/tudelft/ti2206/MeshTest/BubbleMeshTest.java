@@ -11,15 +11,4 @@ public class BubbleMeshTest {
 	
 	 private BubbleMesh mock;
 
-	@Before
-	public static void setUp(){
-
-		
-	}
-
-	@Test
-	public void test() {
-		fail("Not yet implemented");
-	}
-
 }
