@@ -16,8 +16,8 @@ public class MovingBubble extends ColouredBubble {
 	
 	private static final long serialVersionUID = -5720287124346974296L;
 
-	public static final long TIME_DENOM = 5;
-	
+	private static final int SPEED_MULTIPLIER = 6;
+
 	transient protected Vector2f velocity;
 	transient protected Vector2f truePosition;
 	transient protected Dimension screenSize;
@@ -38,17 +38,9 @@ public class MovingBubble extends ColouredBubble {
 	}
 	
 	public void gameStep() {
-		long timeDifference = getTimeDifference();
-		truePosition = truePosition.add(velocity.multiply(timeDifference / TIME_DENOM));
+		truePosition = truePosition.add(velocity.multiply(SPEED_MULTIPLIER));
 		bounceOnWallCollision();
 		this.setPosition(truePosition.toPoint());
-	}
-	
-	protected long getTimeDifference() {
-		long now = System.currentTimeMillis();
-		long diff = now - previousTime;
-		previousTime = now;
-		return diff;
 	}
 	
 	protected boolean hitsTopBorder(){

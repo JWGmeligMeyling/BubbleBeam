@@ -99,10 +99,15 @@ public class Cannon extends Observable implements Sprite {
 			public void mouseMoved(MouseEvent e) {
 				double newAngle = Math.atan2(position.y - e.getY(), e.getX() - position.x);
 				
-				if(MIN_ANGLE < newAngle && newAngle < Math.PI - MIN_ANGLE) {
+				if (angle != newAngle && MIN_ANGLE < newAngle
+						&& newAngle < Math.PI - MIN_ANGLE) {
+					
 					angle = newAngle;
 					direction = new Vector2f(e.getPoint())
 							.subtract(new Vector2f(position)).normalize();
+					
+					Cannon.this.setChanged();
+					Cannon.this.notifyObservers();
 				}
 			}
 			
@@ -239,6 +244,14 @@ public class Cannon extends Observable implements Sprite {
 	@Override
 	public int getHeight() {
 		return HEIGHT;
+	}
+
+	public void setAngle(double angle2) {
+		this.angle = angle2;
+	}
+
+	public double getAngle() {
+		return angle;
 	}
 	
 }
