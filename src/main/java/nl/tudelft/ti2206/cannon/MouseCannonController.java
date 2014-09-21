@@ -7,7 +7,7 @@ import java.awt.event.MouseMotionListener;
 import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.Vector2f;
 
-public class MouseCannonController extends MasterCannonController implements MouseMotionListener,
+public class MouseCannonController extends CannonController implements MouseMotionListener,
 		MouseListener {
 	
 	protected Vector2f direction = new Vector2f(0, 1);

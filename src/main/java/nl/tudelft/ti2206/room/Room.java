@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
@@ -15,6 +18,7 @@ import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.GameTickObserver;
+import nl.tudelft.ti2206.game.Launcher;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -28,6 +32,8 @@ import nl.tudelft.util.Vector2f;
 // TODO: Move the creation of the bubble mesh into the Room
 
 public abstract class Room implements GameTickObserver {
+	
+	private static final Logger log = LoggerFactory.getLogger(Room.class);
 	
 	// Cannon
 	protected MouseCannonController cannonController;
@@ -85,15 +91,16 @@ public abstract class Room implements GameTickObserver {
 		if (shotBubble != null) {
 			shotBubble.gameStep();
 			
-			// TODO: this part kills the GameTick somehow..
-			// bubbleMesh
-			// .stream()
-			// .filter(bubble -> bubble.intersect(shotBubble)
-			// && (bubble.isHittable() ||
-			// bubbleMesh.bubbleIsTop(bubble))).findAny()
-			// .ifPresent(bubble -> this.collide(bubble));
+			try {
+				bubbleMesh
+						.stream()
+						.filter(bubble -> bubble.intersect(shotBubble)
+								&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble)))
+						.findAny().ifPresent(bubble -> this.collide(bubble));
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
 		}
-		
 	}
 	
 	/**
