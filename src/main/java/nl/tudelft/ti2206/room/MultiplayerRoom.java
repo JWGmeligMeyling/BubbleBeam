@@ -45,7 +45,6 @@ public class MultiplayerRoom extends MasterRoom {
 	
 	@Override
 	protected void addBubble() {
-		System.out.println("Multiplayer bubble creation");
 		Color color = bubbleMesh.getRandomRemainingColor();
 		connector.sendPacket(new Packet.LoadNewBubble(color));
 		bubbleQueue.add(new ColouredBubble(color));
