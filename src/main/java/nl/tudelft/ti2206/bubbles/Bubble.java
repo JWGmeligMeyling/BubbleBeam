@@ -1,7 +1,6 @@
 package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Point;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -10,10 +9,10 @@ import com.google.common.collect.Lists;
 
 /**
  * A {@code} BubblePlaceholder represents a place that a Bubble can snap on to.
- * @author Jan-Willem
- *
+ * 
+ * @author Jan-Willem Gmelig Meyling
  */
-public interface Bubble extends Sprite, Serializable {
+public interface Bubble extends Sprite {
 		
 	void bind(Direction direction, Bubble other);
 	Bubble getBubbleAt(Direction direction);

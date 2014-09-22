@@ -7,10 +7,14 @@ import java.awt.Point;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
 
+/**
+ * The Bubbles on the mesh with various colours
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public class ColouredBubble extends AbstractBubble {
 
-	private static final long serialVersionUID = 2822643791863887291L;
-	
 	private final Color color;
 
 	/**

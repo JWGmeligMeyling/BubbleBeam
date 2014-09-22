@@ -12,9 +12,14 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+/**
+ * The {@code AbstractBubble} contains logic that is shared between the Bubble
+ * implementations
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public abstract class AbstractBubble implements Bubble {
-	
-	private static final long serialVersionUID = 9164993436657927985L;
 	
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;

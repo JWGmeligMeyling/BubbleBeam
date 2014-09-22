@@ -17,4 +17,5 @@ public class Launcher {
 		log.info("Starting game...");
 		new GUI();
 	}
+	
 }

@@ -2,36 +2,43 @@ package nl.tudelft.ti2206.game;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import nl.tudelft.ti2206.bubbles.AbstractBubble;
-import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.ObservableObject;
 
 public abstract class GamePanel extends JPanel {
-
+	
 	private static final long serialVersionUID = 2416543550015136242L;
 	
-	public final static int WIDTH = AbstractBubble.WIDTH * 10 + AbstractBubble.WIDTH / 2 + 4;
-	public final static int HEIGHT = 400;
-
-	protected BubbleMesh bubbleMesh;
+	protected final static int WIDTH = 340;
+	protected final static int HEIGHT = 400;
+	
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
+	public static Point cannonPosition;
+	protected Room room;	//initialized in subclasses
+	protected GameTick gameTick;
+	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
-
+	
 	public GamePanel(final BubbleMesh bubbleMesh) {
-		this.bubbleMesh = bubbleMesh;
-		bubbleMesh.addScoreListener((amount) -> { setScore(getScore() + amount); });
-		bubbleMesh.calculatePositions();
+		cannonPosition = new Point(WIDTH / 2, HEIGHT);
+		gameTick = new GameTick(33);
+		gameTick.start();
+		bubbleMesh.addScoreListener((amount) -> {
+			setScore(getScore() + amount);
+		});
 		
-		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED) );
+		bubbleMesh.calculatePositions();
+		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
 	}
 	
@@ -53,23 +60,21 @@ public abstract class GamePanel extends JPanel {
 	@Override
 	public void paintComponent(final Graphics graphics) {
 		super.paintComponent(graphics);
-		for(Bubble bubble : bubbleMesh) {
-			bubble.render(graphics);
-		}
+		room.render(graphics);
 	}
-
+	
 	public void gameStep() throws GameOver {
 		this.repaint();
 	}
-
+	
 	public long getScore() {
 		return score.getValue();
 	}
-
+	
 	public void setScore(final long value) {
 		score.setValue(value);
 	}
-
+	
 	public void observeScore(final Observer o) {
 		score.addObserver(o);
 	}
