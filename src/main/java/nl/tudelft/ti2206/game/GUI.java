@@ -10,6 +10,9 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -38,10 +41,10 @@ public class GUI {
 	GamePanel player2Panel;
 	boolean multiplayer = false;
 	
-	// Connector connector = null;
-	
+	// Repaint variables
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000 / FPS;
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
 	// Score-labels
 	JLabel playerScore;
@@ -356,17 +359,25 @@ public class GUI {
 	}
 	
 	private void run() {
+		scheduler.scheduleAtFixedRate(new Runnable() {
+			public void run() {
+				GUI.this.update();
+			}
+		}, 0L, 33L, TimeUnit.MILLISECONDS);
+		
 		new Timer(FRAME_PERIOD, new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				try {
-					GUI.this.update();
+					player1Panel.repaint();
 				} catch (GameOver exception) {
 					restart();
 				}
 			}
 		}).start();
+		
 	}
 	
 }
