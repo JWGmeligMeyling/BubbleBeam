@@ -194,7 +194,7 @@ public class GUI {
 		final JButton findMultiPlayerRestart = new JButton("Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
-			connector = new Client("127.0.0.1"); // ipaddressTextField.getText()
+			connector = new Client(ipaddressTextField.getText()); // tijdelijk
 				connector.connect();
 				GUI.this.restart();
 				connector.start();
@@ -372,6 +372,9 @@ public class GUI {
 				
 				try {
 					player1Panel.repaint();
+					if (player2Panel != null) {
+						player2Panel.repaint();
+					}
 				} catch (GameOver exception) {
 					restart();
 				}
