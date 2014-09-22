@@ -41,7 +41,6 @@ public class Host extends Connector {
 	
 	@Override
 	public void endConnection() {
-		System.out.println("serverSocketClose");
 		if (serverSocket != null) {
 			try {
 				serverSocket.close();

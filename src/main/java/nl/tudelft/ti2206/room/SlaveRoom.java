@@ -43,7 +43,6 @@ public class SlaveRoom extends Room {
 		loadNewBubbleListener = new PacketListener<Packet.LoadNewBubble>() {
 			@Override
 			public void update(Packet.LoadNewBubble packet) {
-				System.out.println("Bubble packet received in SlaveRoom");
 				bubbleQueue.add(new ColouredBubble(packet.color));
 				correctBubblePositions();
 			}

@@ -58,7 +58,6 @@ public abstract class Connector implements Runnable {
 	protected Packet readPacket() {
 		try {
 			byte id = in.readByte();
-			System.out.println("IDENTITY: " + id);
 			return PacketFactory.readPacket(id, in);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -153,7 +153,6 @@ public interface Packet {
 		}
 		
 		public LoadNewBubble(DataInputStream in) throws IOException {
-			System.out.println("Bubble packet received from inputstream");
 			this.color = new Color(in.readInt(), in.readInt(), in.readInt());
 		}
 		
