@@ -171,30 +171,4 @@ public interface Packet {
 			packetHandlerCollection.notify(this);
 		}
 	}
-	
-	/**
-	 * The {@code RoomSynRequest} {@link Packet} is used to request for
-	 * information about the loaded bubbles and the room mesh.
-	 * 
-	 * @author Sam Smulders
-	 */
-	public class RoomSynRequest implements Packet {
-		public static final byte PACKET_ID = 4;
-		
-		public RoomSynRequest(DataInputStream in) {
-		}
-		
-		public RoomSynRequest() {
-		}
-		
-		@Override
-		public void send(DataOutputStream out) throws IOException {
-			out.writeByte(PACKET_ID);
-		}
-		
-		@Override
-		public void notify(PacketHandlerCollection packetHandlerCollection) {
-			packetHandlerCollection.notify(this);
-		}
-	}
 }

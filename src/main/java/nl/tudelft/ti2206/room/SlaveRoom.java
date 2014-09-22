@@ -49,8 +49,6 @@ public class SlaveRoom extends Room {
 		};
 		packetHandlerCollection.bubbleMeshSyncHandler.registerObserver(bubbleMeshSyncListener);
 		packetHandlerCollection.loadNewBubbleHandler.registerObserver(loadNewBubbleListener);
-		
-		connector.sendPacket(new Packet.RoomSynRequest());
 	}
 	
 	@Override

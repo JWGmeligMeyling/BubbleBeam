@@ -15,14 +15,12 @@ public class PacketHandlerCollection {
 		this.cannonShootHandler = new PacketHandler.CannonShoot();
 		this.bubbleMeshSyncHandler = new PacketHandler.BubbleMeshSync();
 		this.loadNewBubbleHandler = new PacketHandler.LoadNewBubble();
-		this.roomSyncRequestHandler = new PacketHandler.RoomSyncRequest();
 	}
 	
 	public final PacketHandler.CannonRotate cannonRotateHandler;
 	public final PacketHandler.CannonShoot cannonShootHandler;
 	public final PacketHandler.BubbleMeshSync bubbleMeshSyncHandler;
 	public final PacketHandler.LoadNewBubble loadNewBubbleHandler;
-	public final PacketHandler.RoomSyncRequest roomSyncRequestHandler;
 	
 	/**
 	 * Notify the desired {@link PacketHandler}
@@ -58,10 +56,6 @@ public class PacketHandlerCollection {
 	 */
 	public void notify(Packet.LoadNewBubble packet) {
 		loadNewBubbleHandler.notifyObservers(packet);
-	}
-
-	public void notify(Packet.RoomSynRequest packet) {
-		roomSyncRequestHandler.notifyObservers(packet);
 	}
 	
 }

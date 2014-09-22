@@ -26,8 +26,6 @@ public class PacketFactory {
 			return new Packet.LoadNewBubble(in);
 		case Packet.BubbleMeshSync.PACKET_ID:
 			return new Packet.BubbleMeshSync(in);
-		case Packet.RoomSynRequest.PACKET_ID:
-			return new Packet.RoomSynRequest(in);
 		default:
 			throw (new UnknownPacketException("Packet Identifier is unknown."));
 		}

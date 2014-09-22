@@ -11,10 +11,8 @@ import nl.tudelft.ti2206.cannon.CannonMultiplayerConnector;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.Packet.RoomSynRequest;
-import nl.tudelft.ti2206.network.packets.PacketListener;
 
-public class MultiplayerRoom extends MasterRoom implements PacketListener<RoomSynRequest> {
+public class MultiplayerRoom extends MasterRoom {
 	
 	protected Connector connector;
 	protected CannonMultiplayerConnector cannonMultiplayerConnector;
@@ -57,12 +55,5 @@ public class MultiplayerRoom extends MasterRoom implements PacketListener<RoomSy
 		cannonController.removeObserver(cannonMultiplayerConnector);
 		component.removeMouseListener((MouseCannonController) cannonController);
 		component.removeMouseMotionListener((MouseCannonController) cannonController);
-	}
-	
-	@Override
-	public void update(RoomSynRequest packet) {
-		sendMesh();
-		bubbleQueue.forEach(bubble -> connector.sendPacket(new Packet.LoadNewBubble(bubble
-				.getColor())));
 	}
 }

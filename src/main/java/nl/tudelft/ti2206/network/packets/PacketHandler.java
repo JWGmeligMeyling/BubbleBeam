@@ -83,16 +83,4 @@ public abstract class PacketHandler<P extends Packet> {
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
 	}
-
-	/**
-	 * The {@code RoomSyncRequest} {@link PacketHandler} handles the
-	 * {@link RoomSynRequest} {@link Packet}s.
-	 * 
-	 * @author Sam Smulders
-	 */
-	public static class RoomSyncRequest extends PacketHandler<Packet.RoomSynRequest> {
-		public void notifyObservers(Packet.RoomSynRequest packet) {
-			packetListeners.forEach(listener -> listener.update(packet));
-		}
-	}
 }
