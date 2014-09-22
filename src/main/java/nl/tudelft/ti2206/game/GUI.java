@@ -187,10 +187,14 @@ public class GUI {
 		c.insets = extPadding;
 		pane.add(multiPlayerRestart, c);
 		
+		final JFormattedTextField ipaddressTextField = new JFormattedTextField(new MaskFormatter(
+				"###.###.###.###")); // TODO change to
+										// something less buggy
+		
 		final JButton findMultiPlayerRestart = new JButton("Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
-			connector = new Client("127.0.0.1"); // tijdelijk
+			connector = new Client("127.0.0.1"); // ipaddressTextField.getText()
 				connector.connect();
 				GUI.this.restart();
 				connector.start();
@@ -207,10 +211,6 @@ public class GUI {
 		c.ipadx = 30;
 		c.insets = extPadding;
 		pane.add(findMultiPlayerRestart, c);
-		
-		final JFormattedTextField ipaddressTextField = new JFormattedTextField(new MaskFormatter(
-				"###.###.###.###")); // TODO change to
-										// something less buggy
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
