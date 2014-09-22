@@ -53,6 +53,7 @@ public class GUI {
 	// game-variables
 	boolean game_is_running = true;
 	private Connector connector;
+	private JFrame waitFrame;
 	
 	// gridbag constants
 	final static boolean shouldFill = true;
@@ -168,11 +169,24 @@ public class GUI {
 		
 		final JButton multiPlayerRestart = new JButton("Restart Multi-Player as Host");
 		multiPlayerRestart.addActionListener((event) -> {
-			multiplayer = true;
-			connector = new Host();
-			connector.connect();
-			GUI.this.restart();
-			connector.start();
+			multiplayer = false;
+			openCancelConnectionJFrame(new Runnable() {
+				@Override
+				public void run() {
+					connector = new Host();
+					try {
+						connector.connect();
+						multiplayer = true;
+						GUI.this.restart();
+						connector.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					waitFrame.removeAll();
+					waitFrame.setVisible(false);
+					waitFrame = null;
+				}
+			});
 		});
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -193,12 +207,25 @@ public class GUI {
 		
 		final JButton findMultiPlayerRestart = new JButton("Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
-			multiplayer = true;
-			connector = new Client(ipaddressTextField.getText()); // tijdelijk
-				connector.connect();
-				GUI.this.restart();
-				connector.start();
+			multiplayer = false;
+			openCancelConnectionJFrame(new Runnable() {
+				@Override
+				public void run() {
+					connector = new Client(ipaddressTextField.getText());
+					try {
+						connector.connect();
+						multiplayer = true;
+						GUI.this.restart();
+						connector.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					waitFrame.removeAll();
+					waitFrame.setVisible(false);
+					waitFrame = null;
+				}
 			});
+		});
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
@@ -210,6 +237,7 @@ public class GUI {
 		c.gridy = 4;
 		c.ipadx = 30;
 		c.insets = extPadding;
+		ipaddressTextField.setText("127.000.000.001");
 		pane.add(findMultiPlayerRestart, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -278,6 +306,39 @@ public class GUI {
 		// upon filling the frame the score of the game is not yet displayed
 		updateDisplayedScore();
 		
+	}
+	
+	/**
+	 * Open a JFrame with a cancel option for a given connection task.
+	 * 
+	 * @param task
+	 *            to be executed and possibly be cancelled by the cancel button.
+	 * 
+	 * @author Sam Smulders
+	 */
+	protected void openCancelConnectionJFrame(Runnable task) {
+		waitFrame = new JFrame("Connecting..");
+		Thread thread = new Thread(task);
+		thread.start();
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener((event2) -> {
+			/*
+			 * Interrupt the thread, so stopping the connecor.connect() by
+			 * closing the socket won't cause the connector.start() to run.
+			 */
+			thread.interrupt();
+			/*
+			 * End searching for a connection by closing the socket.
+			 */
+			connector.endConnection();
+			waitFrame.removeAll();
+			waitFrame.setVisible(false);
+			waitFrame = null;
+		});
+		waitFrame.add(cancelButton);
+		waitFrame.pack();
+		waitFrame.setLocationRelativeTo(null);
+		waitFrame.setVisible(true);
 	}
 	
 	/**

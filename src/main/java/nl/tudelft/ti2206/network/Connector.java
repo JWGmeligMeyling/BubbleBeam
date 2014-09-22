@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketFactory;
@@ -38,9 +39,12 @@ public abstract class Connector implements Runnable {
 			acceptPacket();
 		}
 		try {
-			in.close();
-			out.close();
-			socket.close();
+			if (in != null)
+				in.close();
+			if (out != null)
+				out.close();
+			if (socket != null)
+				socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,7 +58,7 @@ public abstract class Connector implements Runnable {
 	protected Packet readPacket() {
 		try {
 			byte id = in.readByte();
-			System.out.println("IDENTITY: "+id);
+			System.out.println("IDENTITY: " + id);
 			return PacketFactory.readPacket(id, in);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -81,6 +85,13 @@ public abstract class Connector implements Runnable {
 	
 	public void endConnection() {
 		ready = false;
+		if (socket != null) {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public PacketHandlerCollection getPacketHandlerCollection() {
@@ -104,5 +115,5 @@ public abstract class Connector implements Runnable {
 	 * The method to be called to make a connection with an other
 	 * {@link Connector} object.
 	 */
-	public abstract void connect();
+	public abstract void connect() throws UnknownHostException, IOException;
 }
