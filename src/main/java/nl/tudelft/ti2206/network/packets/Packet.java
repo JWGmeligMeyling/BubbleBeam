@@ -154,15 +154,15 @@ public interface Packet {
 		
 		public LoadNewBubble(DataInputStream in) throws IOException {
 			System.out.println("Bubble packet received from inputstream");
-			this.color = new Color(in.readByte() + 128, in.readByte() + 128, in.readByte() + 128);
+			this.color = new Color(in.readInt(), in.readInt(), in.readInt());
 		}
 		
 		@Override
 		public void send(DataOutputStream out) throws IOException {
 			out.writeByte(PACKET_ID);
-			out.write(color.getRed());
-			out.write(color.getGreen());
-			out.write(color.getBlue());
+			out.writeInt(color.getRed());
+			out.writeInt(color.getGreen());
+			out.writeInt(color.getBlue());
 			out.flush();
 		}
 		
