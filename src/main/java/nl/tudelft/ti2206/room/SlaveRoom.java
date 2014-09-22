@@ -25,9 +25,9 @@ public class SlaveRoom extends Room {
 	private PacketListener<BubbleMeshSync> bubbleMeshSyncListener;
 	private PacketListener<LoadNewBubble> loadNewBubbleListener;
 	
-	public SlaveRoom(Point cannonPosition, Dimension dimension, BubbleMesh bubbleMesh,
+	public SlaveRoom(Point cannonPosition, Dimension dimension,
 			Connector connector) {
-		super(cannonPosition, dimension, bubbleMesh);
+		super(cannonPosition, dimension);
 		this.packetHandlerCollection = connector.getPacketHandlerCollection();
 		
 		cannonController = new SlaveCannonController(connector);
@@ -36,7 +36,8 @@ public class SlaveRoom extends Room {
 		bubbleMeshSyncListener = new PacketListener<Packet.BubbleMeshSync>() {
 			@Override
 			public void update(Packet.BubbleMeshSync packet) {
-				// TODO Handle this packet..
+				bubbleMesh = BubbleMesh.parse(packet.parseString);
+				bubbleMesh.calculatePositions();
 			}
 		};
 		loadNewBubbleListener = new PacketListener<Packet.LoadNewBubble>() {

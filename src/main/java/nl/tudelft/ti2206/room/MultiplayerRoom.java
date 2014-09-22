@@ -34,11 +34,13 @@ public class MultiplayerRoom extends MasterRoom {
 		component.addMouseMotionListener((MouseCannonController) cannonController);
 		
 		this.connector = connector;
+		
+		sendMesh();
 	}
 	
 	// TODO: Sending the mesh somehow..
 	protected void sendMesh() {
-		connector.sendPacket(new Packet.BubbleMeshSync(""));
+		connector.sendPacket(new Packet.BubbleMeshSync(this.bubbleMesh.toParseableString()));
 	}
 	
 	@Override

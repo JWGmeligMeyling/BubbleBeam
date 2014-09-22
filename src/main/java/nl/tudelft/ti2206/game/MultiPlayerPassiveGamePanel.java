@@ -16,7 +16,7 @@ public class MultiPlayerPassiveGamePanel extends GamePanel {
 
 	public MultiPlayerPassiveGamePanel(final BubbleMesh bubbleMesh, Connector connector){
 		super(bubbleMesh);
-		room = new SlaveRoom(cannonPosition, this.getPreferredSize(), bubbleMesh, connector);
+		room = new SlaveRoom(cannonPosition, this.getPreferredSize(), connector);
 		room.setup();
 		gameTick.registerObserver(room);
 	}

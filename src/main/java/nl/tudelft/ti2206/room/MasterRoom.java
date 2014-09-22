@@ -15,7 +15,8 @@ import nl.tudelft.util.Vector2f;
 public abstract class MasterRoom extends Room {
 	
 	public MasterRoom(Point cannonPosition, Dimension dimension, BubbleMesh bubbleMesh) {
-		super(cannonPosition, dimension, bubbleMesh);
+		super(cannonPosition, dimension);
+		this.bubbleMesh = bubbleMesh;
 	}
 	
 	// TODO: Can't be called in constructor because of the MultplayerRoom.

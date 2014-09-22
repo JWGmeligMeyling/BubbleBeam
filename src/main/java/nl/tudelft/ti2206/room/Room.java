@@ -56,8 +56,7 @@ public abstract class Room implements GameTickObserver, CannonControllerObserver
 	// Room
 	protected final Dimension screenSize;
 	
-	public Room(final Point cannonPosition, final Dimension dimension, final BubbleMesh bubbleMesh) {
-		this.bubbleMesh = bubbleMesh;
+	public Room(final Point cannonPosition, final Dimension dimension) {
 		this.cannonPosition = cannonPosition;
 		this.screenSize = dimension;
 		
@@ -150,7 +149,9 @@ public abstract class Room implements GameTickObserver, CannonControllerObserver
 	}
 	
 	public void render(Graphics g) {
-		bubbleMesh.forEach(bubble -> bubble.render(g));
+		if (bubbleMesh != null) {
+			bubbleMesh.forEach(bubble -> bubble.render(g));
+		}
 		cannon.render(g);
 		if (shotBubble != null) {
 			shotBubble.render(g);
