@@ -9,7 +9,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.room.Room;
@@ -17,13 +16,10 @@ import nl.tudelft.util.ObservableObject;
 
 public abstract class GamePanel extends JPanel {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2416543550015136242L;
 	
-	public final static int WIDTH = AbstractBubble.WIDTH * 10 + AbstractBubble.WIDTH / 2 + 4;
-	public final static int HEIGHT = 400;
+	protected final static int WIDTH = 340;
+	protected final static int HEIGHT = 400;
 	
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	

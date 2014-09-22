@@ -270,8 +270,6 @@ public interface BubbleMesh extends Iterable<Bubble> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
 				});
 				
-				//System.out.println(neighbours.size() + "  " + bubblesToPop.size());   //for debug
-				
 				//pop the neighbours (and their neighbours) of all the popped bubbles that are now isolated
 				while(neighbours.size() != 0){
 					Set<ColouredBubble> newNeighbours = Sets.newHashSet();
@@ -288,8 +286,6 @@ public interface BubbleMesh extends Iterable<Bubble> {
 					neighbours = newNeighbours;
 				}
 						
-					
-							 
 				updateRemainingColors();
 				calculateScore(bubblesToPop);
 				return true;
@@ -315,36 +311,17 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			colouredBubbles.stream()
 				.filter(bubble -> (!bubble.getColor().equals(targetColor)))
 				.forEach(bubble -> neighbours.add(bubble));
-			System.out.println(neighbours.size());
 			
-			// Find neighboring bubbles of the same colour, and pop them
-			// recursively. Add them to a set in order to check if we have not
-			// already popped
-			// this bubble in the current call.
+			/*
+			 * Find neighboring bubbles of the same colour, and pop them
+			 * recursively. Add them to a set in order to check if we have not
+			 * already popped this bubble in the current call.
+			 */
 			colouredBubbles.stream()
 				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
 				.forEach(bubble -> this.pop(bubble, bubblesToPop, neighbours));
 			
-			boolean popped = bubblesToPop.size() > 2;
-			
-			/*old code
-			if(popped) {
->>>>>>> popBugFix
-				// If bubbles have been popped, check for isolated regions
-				// These can be found by calling the pop function on neighboring
-				// bubbles that can only connect to the top through a popped
-				// bubble. These bubbles can be found by calling the connected
-				// to top function.
-				colouredBubbles
-						.stream()
-						.filter(bubble -> !connectedToTop(bubble,
-								Queues.newArrayDeque(bubblesToPop))
-								&& bubblesToPop.add(bubble))
-						.forEach(bubble -> this.pop(bubble, bubblesToPop));
-			}
-			*/
-			
-			return popped;
+			return bubblesToPop.size() > 2;
 		}
 		
 		@Override

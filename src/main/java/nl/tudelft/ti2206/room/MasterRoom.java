@@ -36,7 +36,6 @@ public abstract class MasterRoom extends Room {
 	}
 	
 	protected void addBubble() {
-		System.out.println("Master bubble creation");
 		bubbleQueue.add(new ColouredBubble(bubbleMesh.getRandomRemainingColor()));
 	}
 	

@@ -9,8 +9,8 @@ import com.google.common.collect.Lists;
 
 /**
  * A {@code} BubblePlaceholder represents a place that a Bubble can snap on to.
- * @author Jan-Willem
- *
+ * 
+ * @author Jan-Willem Gmelig Meyling
  */
 public interface Bubble extends Sprite {
 		

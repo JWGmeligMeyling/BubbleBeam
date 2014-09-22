@@ -12,6 +12,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+/**
+ * The {@code AbstractBubble} contains logic that is shared between the Bubble
+ * implementations
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public abstract class AbstractBubble implements Bubble {
 	
 	public static final int WIDTH = 32;
@@ -157,7 +164,7 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		renderDebugLines((Graphics2D) graphics);
+//		renderDebugLines((Graphics2D) graphics);
 	}
 	
 	protected void renderDebugLines(final Graphics2D g2) {

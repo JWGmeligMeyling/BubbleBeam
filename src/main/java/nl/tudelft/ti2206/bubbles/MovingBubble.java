@@ -16,7 +16,6 @@ public class MovingBubble extends ColouredBubble {
 	protected Vector2f velocity;
 	protected Vector2f truePosition;
 	protected Dimension screenSize;
-	protected long previousTime;
 	
 	public MovingBubble(final Point position, final Vector2f velocity, final Dimension screenSize,
 			final Color color) {
@@ -25,7 +24,6 @@ public class MovingBubble extends ColouredBubble {
 		this.truePosition = new Vector2f(position.x, position.y);
 		this.position = position;
 		this.velocity = velocity;
-		this.previousTime = System.currentTimeMillis();
 	}
 	
 	public void gameStep() {

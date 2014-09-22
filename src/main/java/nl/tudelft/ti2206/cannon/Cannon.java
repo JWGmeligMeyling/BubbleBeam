@@ -10,8 +10,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import nl.tudelft.ti2206.Drawable;
-import nl.tudelft.ti2206.cannon.temp.OldCannon;
+import nl.tudelft.ti2206.bubbles.Sprite;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -20,13 +19,14 @@ import nl.tudelft.util.Vector2f;
  * 
  * @author Sam Smulders
  */
-public class Cannon implements Drawable, CannonControllerObserver {
+public class Cannon implements Sprite, CannonControllerObserver {
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI / 10);
 	protected static final float MIN_DIRECTION_Y = (float) Math.sin(Cannon.MIN_ANGLE);
 	protected static final float MIN_DIRECTION_X = (float) Math.cos(Cannon.MIN_ANGLE);
 	protected static final int ROTATE_TRANSLATION = 32;
+	
 	/*
 	 * CANNON_OUTPUT is the distance from the center of the cannon, where the
 	 * moving bubble should be created when there is shot.
@@ -50,7 +50,7 @@ public class Cannon implements Drawable, CannonControllerObserver {
 	
 	protected static BufferedImage _getCannonImage() {
 		try {
-			BufferedImage scale = ImageIO.read(OldCannon.class.getResourceAsStream("/cannon.png"));
+			BufferedImage scale = ImageIO.read(Cannon.class.getResourceAsStream("/cannon.png"));
 			scale.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			return scale;
 		} catch (IOException e) {
@@ -80,4 +80,35 @@ public class Cannon implements Drawable, CannonControllerObserver {
 	@Override
 	public void cannonShoot(Vector2f direction) {
 	}
+
+	@Override
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+
+	@Override
+	public Point getPosition() {
+		return position;
+	}
+
+	@Override
+	public int getX() {
+		return position.x;
+	}
+
+	@Override
+	public int getY() {
+		return position.y;
+	}
+
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+
+	@Override
+	public int getHeight() {
+		return HEIGHT;
+	}
+	
 }
