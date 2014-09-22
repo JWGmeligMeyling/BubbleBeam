@@ -263,11 +263,33 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		@Override
 		public boolean pop(final ColouredBubble target) {
 			Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
-			if (this.pop(target, bubblesToPop)) {
+			Set<ColouredBubble> neighbours = Sets.newHashSet();
+			
+			if(this.pop(target, bubblesToPop,neighbours)) {
 				bubblesToPop.forEach(bubble -> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
 				});
 				
+				//System.out.println(neighbours.size() + "  " + bubblesToPop.size());   //for debug
+				
+				//pop the neighbours (and their neighbours) of all the popped bubbles that are now isolated
+				while(neighbours.size() != 0){
+					Set<ColouredBubble> newNeighbours = Sets.newHashSet();
+					neighbours.stream()
+					.filter(bubble -> !connectedToTop(bubble, Queues.newArrayDeque()))
+					.forEach(bubble -> {
+						this.replaceBubble(bubble, new BubblePlaceholder());
+						
+						//add the popped bubble to bubblesToPop for score calculation
+						bubblesToPop.add(bubble);
+						
+						bubble.getNeighboursOfType(ColouredBubble.class).forEach(bubble2 -> newNeighbours.add(bubble2));
+					});
+					neighbours = newNeighbours;
+				}
+						
+					
+							 
 				updateRemainingColors();
 				calculateScore(bubblesToPop);
 				return true;
@@ -281,25 +303,33 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		 * @param bubblesToPop
 		 *            {@link Set} of {@code ColouredBubbles} to be popped
 		 */
-		protected boolean pop(final ColouredBubble target, final Set<ColouredBubble> bubblesToPop) {
+		protected boolean pop(final ColouredBubble target,
+				final Set<ColouredBubble> bubblesToPop, final Set<ColouredBubble> neighbours) {
 			
 			final List<ColouredBubble> colouredBubbles = target
 					.getNeighboursOfType(ColouredBubble.class);
 			Color targetColor = target.getColor();
 			
+			// Find neighboring bubbles of another colour, and add them
+			// to the Set.
+			colouredBubbles.stream()
+				.filter(bubble -> (!bubble.getColor().equals(targetColor)))
+				.forEach(bubble -> neighbours.add(bubble));
+			System.out.println(neighbours.size());
+			
 			// Find neighboring bubbles of the same colour, and pop them
 			// recursively. Add them to a set in order to check if we have not
 			// already popped
 			// this bubble in the current call.
-			colouredBubbles
-					.stream()
-					.filter(bubble -> bubble.getColor().equals(targetColor)
-							&& bubblesToPop.add(bubble))
-					.forEach(bubble -> this.pop(bubble, bubblesToPop));
+			colouredBubbles.stream()
+				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
+				.forEach(bubble -> this.pop(bubble, bubblesToPop, neighbours));
 			
 			boolean popped = bubblesToPop.size() > 2;
 			
-			if (popped) {
+			/*old code
+			if(popped) {
+>>>>>>> popBugFix
 				// If bubbles have been popped, check for isolated regions
 				// These can be found by calling the pop function on neighboring
 				// bubbles that can only connect to the top through a popped
@@ -312,6 +342,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 								&& bubblesToPop.add(bubble))
 						.forEach(bubble -> this.pop(bubble, bubblesToPop));
 			}
+			*/
 			
 			return popped;
 		}
