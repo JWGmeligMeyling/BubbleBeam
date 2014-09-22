@@ -170,21 +170,24 @@ public class GUI {
 		final JButton multiPlayerRestart = new JButton("Restart Multi-Player as Host");
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = false;
-			openCancelConnectionJFrame(new Runnable() {
+			openCancelConnectionJFrame(new Task() {
 				@Override
 				public void run() {
 					connector = new Host();
 					try {
 						connector.connect();
-						multiplayer = true;
-						GUI.this.restart();
-						connector.start();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					waitFrame.removeAll();
-					waitFrame.setVisible(false);
-					waitFrame = null;
+					// Check if connector is setup correctly
+					if (connector.isReady()) {
+						multiplayer = true;
+						GUI.this.restart();
+						connector.start();
+						waitFrame.removeAll();
+						waitFrame.setVisible(false);
+						waitFrame = null;
+					}
 				}
 			});
 		});
@@ -208,21 +211,26 @@ public class GUI {
 		final JButton findMultiPlayerRestart = new JButton("Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
 			multiplayer = false;
-			openCancelConnectionJFrame(new Runnable() {
+			openCancelConnectionJFrame(new Task() {
 				@Override
 				public void run() {
 					connector = new Client(ipaddressTextField.getText());
 					try {
 						connector.connect();
-						multiplayer = true;
-						GUI.this.restart();
-						connector.start();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					waitFrame.removeAll();
-					waitFrame.setVisible(false);
-					waitFrame = null;
+					// Check if connector is setup correctly
+					if (connector.isReady()) {
+						multiplayer = true;
+						GUI.this.restart();
+						connector.start();
+					}
+					if (waitFrame != null) {
+						waitFrame.removeAll();
+						waitFrame.setVisible(false);
+						waitFrame = null;
+					}
 				}
 			});
 		});
@@ -316,7 +324,7 @@ public class GUI {
 	 * 
 	 * @author Sam Smulders
 	 */
-	protected void openCancelConnectionJFrame(Runnable task) {
+	protected void openCancelConnectionJFrame(Task task) {
 		waitFrame = new JFrame("Connecting..");
 		Thread thread = new Thread(task);
 		thread.start();
@@ -326,7 +334,7 @@ public class GUI {
 			 * Interrupt the thread, so stopping the connecor.connect() by
 			 * closing the socket won't cause the connector.start() to run.
 			 */
-			thread.interrupt();
+			task.interupt();
 			/*
 			 * End searching for a connection by closing the socket.
 			 */

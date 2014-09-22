@@ -5,6 +5,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The {@code Client} is a {@link Connector} who searches for a host with the
  * given address and port to establish a connection.
@@ -14,6 +17,7 @@ import java.net.Socket;
 public class Client extends Connector {
 	public final String ip;
 	
+	private static final Logger log = LoggerFactory.getLogger(Client.class);
 	
 	public Client(String ip) {
 		this.ip = ip;
@@ -27,7 +31,7 @@ public class Client extends Connector {
 			out = new DataOutputStream(socket.getOutputStream());
 			ready = true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		}
 	}
 }
