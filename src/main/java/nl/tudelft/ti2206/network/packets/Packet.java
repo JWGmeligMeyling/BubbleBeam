@@ -23,6 +23,7 @@ import nl.tudelft.util.Vector2f;
  * @author Sam Smulders
  */
 public interface Packet {
+	
 	/**
 	 * Send this packet over a {@link DataOutputStream}.
 	 * 
@@ -152,7 +153,8 @@ public interface Packet {
 		}
 		
 		public LoadNewBubble(DataInputStream in) throws IOException {
-			this.color = new Color(in.readByte(), in.readByte(), in.readByte());
+			System.out.println("Bubble packet received from inputstream");
+			this.color = new Color(in.readByte() + 128, in.readByte() + 128, in.readByte() + 128);
 		}
 		
 		@Override
@@ -162,6 +164,32 @@ public interface Packet {
 			out.write(color.getGreen());
 			out.write(color.getBlue());
 			out.flush();
+		}
+		
+		@Override
+		public void notify(PacketHandlerCollection packetHandlerCollection) {
+			packetHandlerCollection.notify(this);
+		}
+	}
+	
+	/**
+	 * The {@code RoomSynRequest} {@link Packet} is used to request for
+	 * information about the loaded bubbles and the room mesh.
+	 * 
+	 * @author Sam Smulders
+	 */
+	public class RoomSynRequest implements Packet {
+		public static final byte PACKET_ID = 4;
+		
+		public RoomSynRequest(DataInputStream in) {
+		}
+		
+		public RoomSynRequest() {
+		}
+		
+		@Override
+		public void send(DataOutputStream out) throws IOException {
+			out.writeByte(PACKET_ID);
 		}
 		
 		@Override

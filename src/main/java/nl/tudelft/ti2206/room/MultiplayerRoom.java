@@ -11,8 +11,10 @@ import nl.tudelft.ti2206.cannon.CannonMultiplayerConnector;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.ti2206.network.packets.Packet.RoomSynRequest;
+import nl.tudelft.ti2206.network.packets.PacketListener;
 
-public class MultiplayerRoom extends MasterRoom {
+public class MultiplayerRoom extends MasterRoom implements PacketListener<RoomSynRequest> {
 	
 	protected Connector connector;
 	protected CannonMultiplayerConnector cannonMultiplayerConnector;
@@ -24,26 +26,16 @@ public class MultiplayerRoom extends MasterRoom {
 		cannonController = new MouseCannonController(this);
 		cannonController.registerObserver(cannon);
 		this.component = component;
-		component.addMouseListener(cannonController);
-		component.addMouseMotionListener(cannonController);
+		component.addMouseListener((MouseCannonController) cannonController);
+		component.addMouseMotionListener((MouseCannonController) cannonController);
 		
 		this.cannonMultiplayerConnector = new CannonMultiplayerConnector(connector);
 		cannonController.registerObserver(cannonMultiplayerConnector);
 		
-		component.addMouseListener(cannonController);
-		component.addMouseMotionListener(cannonController);
+		component.addMouseListener((MouseCannonController) cannonController);
+		component.addMouseMotionListener((MouseCannonController) cannonController);
 		
 		this.connector = connector;
-		
-		/*
-		while(true){			//TODO make this better
-			if(connector.isReady()){
-				sendMesh();
-			} else {
-				break;
-			}
-		}
-		*/
 	}
 	
 	// TODO: Sending the mesh somehow..
@@ -53,16 +45,24 @@ public class MultiplayerRoom extends MasterRoom {
 	
 	@Override
 	protected void addBubble() {
+		System.out.println("Multiplayer bubble creation");
 		Color color = bubbleMesh.getRandomRemainingColor();
 		connector.sendPacket(new Packet.LoadNewBubble(color));
 		bubbleQueue.add(new ColouredBubble(color));
 	}
-
+	
 	@Override
 	public void deconstruct() {
 		cannonController.removeObserver(cannon);
 		cannonController.removeObserver(cannonMultiplayerConnector);
-		component.removeMouseListener(cannonController);
-		component.removeMouseMotionListener(cannonController);
+		component.removeMouseListener((MouseCannonController) cannonController);
+		component.removeMouseMotionListener((MouseCannonController) cannonController);
+	}
+	
+	@Override
+	public void update(RoomSynRequest packet) {
+		sendMesh();
+		bubbleQueue.forEach(bubble -> connector.sendPacket(new Packet.LoadNewBubble(bubble
+				.getColor())));
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.Point;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.cannon.SlaveCannonController;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.Packet.BubbleMeshSync;
@@ -29,6 +30,9 @@ public class SlaveRoom extends Room {
 		super(cannonPosition, dimension, bubbleMesh);
 		this.packetHandlerCollection = connector.getPacketHandlerCollection();
 		
+		cannonController = new SlaveCannonController(connector);
+		cannonController.registerObserver(cannon);
+		
 		bubbleMeshSyncListener = new PacketListener<Packet.BubbleMeshSync>() {
 			@Override
 			public void update(Packet.BubbleMeshSync packet) {
@@ -38,16 +42,18 @@ public class SlaveRoom extends Room {
 		loadNewBubbleListener = new PacketListener<Packet.LoadNewBubble>() {
 			@Override
 			public void update(Packet.LoadNewBubble packet) {
+				System.out.println("Bubble packet received in SlaveRoom");
 				bubbleQueue.add(new ColouredBubble(packet.color));
+				correctBubblePositions();
 			}
 		};
 		packetHandlerCollection.bubbleMeshSyncHandler.registerObserver(bubbleMeshSyncListener);
 		packetHandlerCollection.loadNewBubbleHandler.registerObserver(loadNewBubbleListener);
+		
+		connector.sendPacket(new Packet.RoomSynRequest());
 	}
 	
-	public void setup() {
-	}
-	
+	@Override
 	public void deconstruct() {
 		packetHandlerCollection.bubbleMeshSyncHandler.removeObserver(bubbleMeshSyncListener);
 		packetHandlerCollection.loadNewBubbleHandler.removeObserver(loadNewBubbleListener);

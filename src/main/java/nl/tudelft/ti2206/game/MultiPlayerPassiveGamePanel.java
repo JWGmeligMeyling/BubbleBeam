@@ -2,11 +2,9 @@ package nl.tudelft.ti2206.game;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.InputStream;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
-import nl.tudelft.ti2206.network.Client;
-import nl.tudelft.ti2206.room.MultiplayerRoom;
+import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.room.SlaveRoom;
 
 public class MultiPlayerPassiveGamePanel extends GamePanel {
@@ -15,13 +13,9 @@ public class MultiPlayerPassiveGamePanel extends GamePanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 3528849965271118208L;
-	
-	Client connector;
 
-	public MultiPlayerPassiveGamePanel(final BubbleMesh bubbleMesh, final String ipadress){
+	public MultiPlayerPassiveGamePanel(final BubbleMesh bubbleMesh, Connector connector){
 		super(bubbleMesh);
-		connector = new Client(ipadress);	//TODO parse-error checking ipadress
-		connector.start();
 		room = new SlaveRoom(cannonPosition, this.getPreferredSize(), bubbleMesh, connector);
 		room.setup();
 		gameTick.registerObserver(room);

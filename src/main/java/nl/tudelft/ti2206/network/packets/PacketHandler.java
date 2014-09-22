@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @author Sam Smulders
  */
 public abstract class PacketHandler<P extends Packet> {
+	
 	protected ArrayList<PacketListener<P>> packetListeners = new ArrayList<PacketListener<P>>();
 	
 	/**
@@ -79,6 +80,18 @@ public abstract class PacketHandler<P extends Packet> {
 	 */
 	public static class LoadNewBubble extends PacketHandler<Packet.LoadNewBubble> {
 		public void notifyObservers(Packet.LoadNewBubble packet) {
+			packetListeners.forEach(listener -> listener.update(packet));
+		}
+	}
+
+	/**
+	 * The {@code RoomSyncRequest} {@link PacketHandler} handles the
+	 * {@link RoomSynRequest} {@link Packet}s.
+	 * 
+	 * @author Sam Smulders
+	 */
+	public static class RoomSyncRequest extends PacketHandler<Packet.RoomSynRequest> {
+		public void notifyObservers(Packet.RoomSynRequest packet) {
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
 	}

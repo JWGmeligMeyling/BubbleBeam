@@ -13,13 +13,14 @@ import java.net.ServerSocket;
  */
 public class Host extends Connector {
 	@Override
-	protected void connect() {
+	public void connect() {
 		try {
 			ServerSocket serverSocket = new ServerSocket(PORT);
 			socket = serverSocket.accept();
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 			serverSocket.close();
+			ready = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);

@@ -5,9 +5,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
@@ -15,11 +12,14 @@ import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
-import nl.tudelft.ti2206.cannon.MouseCannonController;
+import nl.tudelft.ti2206.cannon.CannonController;
+import nl.tudelft.ti2206.cannon.CannonControllerObserver;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.GameTickObserver;
-import nl.tudelft.ti2206.game.Launcher;
 import nl.tudelft.util.Vector2f;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Room is responsible for keeping track of all objects within the room.
@@ -31,12 +31,12 @@ import nl.tudelft.util.Vector2f;
 // TODO: Room shouldn't handle game over directly.
 // TODO: Move the creation of the bubble mesh into the Room
 
-public abstract class Room implements GameTickObserver {
+public abstract class Room implements GameTickObserver, CannonControllerObserver {
 	
 	private static final Logger log = LoggerFactory.getLogger(Room.class);
 	
 	// Cannon
-	protected MouseCannonController cannonController;
+	protected CannonController cannonController;
 	protected final Cannon cannon;
 	public final Point cannonPosition;
 	
@@ -71,7 +71,9 @@ public abstract class Room implements GameTickObserver {
 				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
 	}
 	
-	public abstract void setup();
+	public void setup() {
+		cannonController.registerObserver(this);
+	}
 	
 	public abstract void deconstruct();
 	
@@ -159,5 +161,12 @@ public abstract class Room implements GameTickObserver {
 				bubbleQueue.get(1).render(g);
 			}
 		}
+	}
+	
+	public void cannonRotate(double direction) {
+	}
+	
+	public void cannonShoot(Vector2f direction) {
+		shootBubble(direction);
 	}
 }

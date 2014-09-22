@@ -38,7 +38,7 @@ public class GUI {
 	GamePanel player2Panel;
 	boolean multiplayer = false;
 	
-	//Connector connector = null;
+	// Connector connector = null;
 	
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000 / FPS;
@@ -49,6 +49,7 @@ public class GUI {
 	
 	// game-variables
 	boolean game_is_running = true;
+	private Connector connector;
 	
 	// gridbag constants
 	final static boolean shouldFill = true;
@@ -76,9 +77,9 @@ public class GUI {
 		Insets noPadding = new Insets(0, 0, 0, 0);
 		
 		// everything the frame must be filled with
-		if(multiplayer){
+		if (multiplayer) {
 			player1Panel = new MultiPlayerActiveGamePanel(BubbleMesh.parse(GUI.class
-					.getResourceAsStream("/board.txt")));
+					.getResourceAsStream("/board.txt")), connector);
 		} else {
 			player1Panel = new SinglePlayerGamePanel(BubbleMesh.parse(GUI.class
 					.getResourceAsStream("/board.txt")));
@@ -165,9 +166,10 @@ public class GUI {
 		final JButton multiPlayerRestart = new JButton("Restart Multi-Player as Host");
 		multiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
-			//connector = new Host();
-			//connector.start();
+			connector = new Host();
+			connector.connect();
 			GUI.this.restart();
+			connector.start();
 		});
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -185,10 +187,11 @@ public class GUI {
 		final JButton findMultiPlayerRestart = new JButton("Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
 			multiplayer = true;
-			//connector = new Client("127.0.0.1"); // tijdelijk
-			//connector.start();
-			GUI.this.restart();
-		});
+			connector = new Client("127.0.0.1"); // tijdelijk
+				connector.connect();
+				GUI.this.restart();
+				connector.start();
+			});
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
@@ -237,7 +240,7 @@ public class GUI {
 		// everything the frame must be filled with for a local multiplayer
 		if (multiplayer) {
 			player2Panel = new MultiPlayerPassiveGamePanel(BubbleMesh.parse(GUI.class
-					.getResourceAsStream("/board.txt")),ipaddressTextField.getText());
+					.getResourceAsStream("/board.txt")), connector);
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 			
 			c.fill = GridBagConstraints.NONE;

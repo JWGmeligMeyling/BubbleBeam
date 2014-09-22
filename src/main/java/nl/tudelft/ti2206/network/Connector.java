@@ -34,8 +34,6 @@ public abstract class Connector implements Runnable {
 	 */
 	@Override
 	public void run() {
-		connect();
-		ready = true;
 		while (ready) {
 			acceptPacket();
 		}
@@ -56,6 +54,7 @@ public abstract class Connector implements Runnable {
 	protected Packet readPacket() {
 		try {
 			byte id = in.readByte();
+			System.out.println("IDENTITY: "+id);
 			return PacketFactory.readPacket(id, in);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -92,7 +91,7 @@ public abstract class Connector implements Runnable {
 	 * Create a new {@link Thread} to run this {@link Connector} object with.
 	 */
 	public void start() {
-		if (!ready) {
+		if (ready) {
 			new Thread(this).start();
 		}
 	}
@@ -105,5 +104,5 @@ public abstract class Connector implements Runnable {
 	 * The method to be called to make a connection with an other
 	 * {@link Connector} object.
 	 */
-	protected abstract void connect();
+	public abstract void connect();
 }

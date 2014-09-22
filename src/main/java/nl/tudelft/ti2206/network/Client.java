@@ -20,11 +20,12 @@ public class Client extends Connector {
 	}
 	
 	@Override
-	protected void connect() {
+	public void connect() {
 		try {
 			socket = new Socket(ip, PORT);
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
+			ready = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

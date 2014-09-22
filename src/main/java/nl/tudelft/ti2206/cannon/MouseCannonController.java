@@ -47,7 +47,7 @@ public class MouseCannonController extends CannonController implements MouseMoti
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (room.canShoot()) {
-				room.shootBubble(direction);
+				this.notifyObserversShoot(direction);
 			}
 		}
 	}
