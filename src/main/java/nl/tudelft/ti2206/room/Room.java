@@ -92,15 +92,11 @@ public abstract class Room implements Tickable, CannonControllerObserver {
 		if (shotBubble != null) {
 			shotBubble.gameStep();
 			
-			try {
-				bubbleMesh
-						.stream()
-						.filter(bubble -> bubble.intersect(shotBubble)
-								&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble)))
-						.findAny().ifPresent(bubble -> this.collide(bubble));
-			} catch (Exception e) {
-				log.error(e.getMessage());
-			}
+			bubbleMesh
+				.stream()
+				.filter(bubble -> bubble.intersect(shotBubble)
+						&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble)))
+				.findAny().ifPresent(bubble -> this.collide(bubble));
 		}
 	}
 	

@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.ObservableObject;
 
@@ -66,10 +65,6 @@ public abstract class GamePanel extends JPanel {
 	public void paintComponent(final Graphics graphics) {
 		super.paintComponent(graphics);
 		room.render(graphics);
-	}
-	
-	public void gameStep() throws GameOver {
-		this.repaint();
 	}
 	
 	public long getScore() {

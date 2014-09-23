@@ -38,6 +38,6 @@ public class GameTick {
 			public void run() {
 				notifyObservers();
 			}
-		}, framePeriod, framePeriod, TimeUnit.MILLISECONDS);
+		}, 0l, framePeriod, TimeUnit.MILLISECONDS);
 	}
 }
