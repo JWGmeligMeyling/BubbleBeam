@@ -20,6 +20,7 @@ import nl.tudelft.util.Vector2f;
  * @author Sam Smulders
  */
 public class Cannon implements Sprite, CannonControllerObserver {
+	
 	protected static final int WIDTH = 48;
 	protected static final int HEIGHT = 48;
 	protected static final float MIN_ANGLE = (float) (Math.PI / 10);

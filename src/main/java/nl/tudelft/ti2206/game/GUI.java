@@ -10,9 +10,6 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -44,7 +41,6 @@ public class GUI {
 	// Repaint variables
 	public static final int FPS = 60;
 	protected static final int FRAME_PERIOD = 1000 / FPS;
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
 	// Score-labels
 	JLabel playerScore;
@@ -416,24 +412,7 @@ public class GUI {
 		}
 	}
 	
-	/**
-	 * Periodically called function that calls the updatefunctions of the
-	 * gamePanels
-	 */
-	protected void update() throws GameOver {
-		player1Panel.gameStep();
-		if (multiplayer) {
-			player2Panel.gameStep();
-		}
-	}
-	
 	private void run() {
-		scheduler.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				GUI.this.update();
-			}
-		}, 0L, 33L, TimeUnit.MILLISECONDS);
-		
 		new Timer(FRAME_PERIOD, new ActionListener() {
 			
 			@Override

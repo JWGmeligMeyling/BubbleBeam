@@ -22,8 +22,8 @@ import nl.tudelft.ti2206.exception.GameOver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 
 public interface BubbleMesh extends Iterable<Bubble> {
@@ -262,35 +262,34 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		
 		@Override
 		public boolean pop(final ColouredBubble target) {
-			Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
-			Set<ColouredBubble> neighbours = Sets.newHashSet();
+			final Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
 			
-			if(this.pop(target, bubblesToPop,neighbours)) {
+			if(this.pop(target, bubblesToPop)) {
+				findIsolatedBubbles(bubblesToPop);
+				
 				bubblesToPop.forEach(bubble -> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
+					log.info("Bubble popped: {}", bubble);
 				});
 				
-				//pop the neighbours (and their neighbours) of all the popped bubbles that are now isolated
-				while(neighbours.size() != 0){
-					Set<ColouredBubble> newNeighbours = Sets.newHashSet();
-					neighbours.stream()
-					.filter(bubble -> !connectedToTop(bubble, Queues.newArrayDeque()))
-					.forEach(bubble -> {
-						this.replaceBubble(bubble, new BubblePlaceholder());
-						
-						//add the popped bubble to bubblesToPop for score calculation
-						bubblesToPop.add(bubble);
-						
-						bubble.getNeighboursOfType(ColouredBubble.class).forEach(bubble2 -> newNeighbours.add(bubble2));
-					});
-					neighbours = newNeighbours;
-				}
-						
 				updateRemainingColors();
 				calculateScore(bubblesToPop);
 				return true;
 			}
+						
 			return false;
+		}
+		
+		protected void findIsolatedBubbles(final Set<ColouredBubble> bubblesToPop) {
+			
+			final Set<Bubble> connectedToTop = Sets.newHashSet();
+			final Set<ColouredBubble> allBubbles = Sets.newHashSet(Iterables
+					.filter(this, ColouredBubble.class));
+			
+			allBubbles.removeAll(bubblesToPop);
+			allBubbles.stream()
+				.filter(bubble -> !connectedToTop(bubble, connectedToTop, bubblesToPop))
+				.forEach(bubble -> log.info("Found isolated bubble {}", bubble));
 		}
 		
 		/**
@@ -300,17 +299,11 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		 *            {@link Set} of {@code ColouredBubbles} to be popped
 		 */
 		protected boolean pop(final ColouredBubble target,
-				final Set<ColouredBubble> bubblesToPop, final Set<ColouredBubble> neighbours) {
+				final Set<ColouredBubble> bubblesToPop) {
 			
 			final List<ColouredBubble> colouredBubbles = target
 					.getNeighboursOfType(ColouredBubble.class);
 			Color targetColor = target.getColor();
-			
-			// Find neighboring bubbles of another colour, and add them
-			// to the Set.
-			colouredBubbles.stream()
-				.filter(bubble -> (!bubble.getColor().equals(targetColor)))
-				.forEach(bubble -> neighbours.add(bubble));
 			
 			/*
 			 * Find neighboring bubbles of the same colour, and pop them
@@ -319,7 +312,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			 */
 			colouredBubbles.stream()
 				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
-				.forEach(bubble -> this.pop(bubble, bubblesToPop, neighbours));
+				.forEach(bubble -> this.pop(bubble, bubblesToPop));
 			
 			return bubblesToPop.size() > 2;
 		}
@@ -330,23 +323,82 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		}
 		
 		/**
+		 * 
 		 * @param target
-		 * @param bubblesHit
-		 * @return true if a bubble is connected to a top row bubble
+		 *            The {@link Bubble} to check for
+		 * @param bubblesConnectedToTop
+		 *            Bubbles that are connected to the top. The list will be
+		 *            filled with temporary values to optimize this function. To
+		 *            make the calculation even faster, a non empty list can be
+		 *            supplied.
+		 * @param bubblesToPop
+		 *            Bubbles should not be connected to the top through one of
+		 *            the bubbles in this list. Bubbles we find to be not
+		 *            connected to the top are stored in this list for
+		 *            optimization.
+		 * @return true iff the target {@link Bubble} is connected to the top,
+		 *         which means it is in the top row or connected to a top
+		 *         (hittable) bubble through other (hittable) bubbles.
 		 */
-		protected boolean connectedToTop(final ColouredBubble target,
-				final Queue<ColouredBubble> bubblesHit) {
+		protected boolean connectedToTop(final Bubble target,
+				final Set<Bubble> bubblesConnectedToTop,
+				final Set<ColouredBubble> bubblesToPop) {
 			
-			boolean result = false;
-			if (!bubblesHit.contains(target)) {
-				bubblesHit.add(target);
-				result = bubbleIsTop(target)
-						|| target.getNeighboursOfType(ColouredBubble.class).stream()
-								.anyMatch(bubble -> connectedToTop(bubble, bubblesHit));
-				bubblesHit.remove(target);
+			return connectedToTop(target, bubblesConnectedToTop, bubblesToPop,
+					Sets.newHashSet());
+		}
+		
+		/**
+		 * 
+		 * @param target
+		 *            The {@link Bubble} to check for
+		 * @param bubblesConnectedToTop
+		 *            Bubbles that are connected to the top. The list will be
+		 *            filled with temporary values to optimize this function. To
+		 *            make the calculation even faster, a non empty list can be
+		 *            supplied.
+		 * @param bubblesToPop
+		 *            Bubbles should not be connected to the top through one of
+		 *            the bubbles in this list. Bubbles we find to be not
+		 *            connected to the top are stored in this list for
+		 *            optimization.
+		 * @param walked
+		 *            The bubbles we have visited in this lookup
+		 * @return true iff the target {@link Bubble} is connected to the top,
+		 *         which means it is in the top row or connected to a top
+		 *         (hittable) bubble through other (hittable) bubbles.
+		 */
+		protected boolean connectedToTop(final Bubble target,
+				final Set<Bubble> bubblesConnectedToTop,
+				final Set<ColouredBubble> bubblesToPop,
+				final Set<Bubble> walked) {
+
+			boolean connectedToTop = false;
+			
+			// Preconditions to be at top
+			// (1) Bubble should be hittable (Coloured)
+			// (2) Bubble should not be set to be popped
+			// (3) Bubble should not be walked (we don't want a bubble to be connected through itself)
+			if(target.isHittable() && !bubblesToPop.contains(target) && walked.add(target)) {
+				// (4) The bubble is either:
+				//     - at the top row, or:
+				//     - connected to at least one bubble at the top row (recursive call)
+				connectedToTop = bubbleIsTop(target) || bubblesConnectedToTop.contains(target) ||
+						target.getNeighbours().stream()
+						.anyMatch(bubble -> connectedToTop(bubble, bubblesConnectedToTop, bubblesToPop, walked));
+				
+				// Remove this bubble for the walked set
+				walked.remove(target);
+				// Cache the calculation result
+				if(connectedToTop) {
+					bubblesConnectedToTop.add(target);
+				}
+				else {
+					bubblesToPop.add((ColouredBubble) target);
+				}
 			}
 			
-			return result;
+			return connectedToTop;
 		}
 		
 		/**

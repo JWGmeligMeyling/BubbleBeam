@@ -30,7 +30,7 @@ public abstract class AbstractBubble implements Bubble {
 
 	protected boolean origin = false;
 	protected Point position = new Point(ORIGIN.x, ORIGIN.y);
-	protected final Map<Direction, Bubble> connections  = Maps.newHashMap();
+	protected final Map<Direction, Bubble> connections  = Maps.newTreeMap();
 
 	@Override
 	public void setOrigin(boolean value) {

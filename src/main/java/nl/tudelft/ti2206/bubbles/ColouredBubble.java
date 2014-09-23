@@ -101,4 +101,9 @@ public class ColouredBubble extends AbstractBubble {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		return super.toString() + "(" + color.toString() + ")";
+	}
+	
 }

@@ -1,15 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="30 seconds">
-	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+	
+	<timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+
+	<appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.err</target>
 		<!-- encoders are assigned by default the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+		<encoder>
+			<pattern>%d{dd MMM HH:mm:ss.SSS} [%thread] %-5level %logger{36} \(%L\) - %msg%n</pattern>
+		</encoder>
+		 <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+	</appender>
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.out</target>
+		<!-- encoders are assigned by default the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+		<encoder>
+			<pattern>%d{dd MMM HH:mm:ss.SSS} [%thread] %-5level %logger{36} \(%L\) - %msg%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<!-- use the previously created timestamp to create a uniquely named log 
+			file -->
+		<file>logs/log-${bySecond}.txt</file>
 		<encoder>
 			<pattern>%d{dd MMM HH:mm:ss.SSS} [%thread] %-5level %logger{36} \(%L\) - %msg%n</pattern>
 		</encoder>
 	</appender>
 
-	<logger name="nl.tudelft.ti2206" level="INFO"/>
+	<logger name="nl.tudelft.ti2206" level="DEBUG"/>
 
 	<root level="WARN">
-		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="STDERR" />
+		<appender-ref ref="FILE" />
 	</root>
 </configuration>
