@@ -30,7 +30,11 @@ public class GameTick {
 	}
 	
 	private final int framePeriod;
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+	
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> scheduler.shutdownNow()));
+	}
 	
 	public GameTick(int framePeriod) {
 		this.framePeriod = framePeriod;
