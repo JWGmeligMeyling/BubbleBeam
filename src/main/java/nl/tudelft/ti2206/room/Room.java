@@ -15,7 +15,7 @@ import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonControllerObserver;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.GameTickObserver;
+import nl.tudelft.ti2206.game.Tickable;
 import nl.tudelft.util.Vector2f;
 
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 // TODO: Room shouldn't handle game over directly.
 // TODO: Move the creation of the bubble mesh into the Room
 
-public abstract class Room implements GameTickObserver, CannonControllerObserver {
+public abstract class Room implements Tickable, CannonControllerObserver {
 	
 	private static final Logger log = LoggerFactory.getLogger(Room.class);
 	

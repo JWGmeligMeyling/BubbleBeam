@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class GameTick {
 	
-	private ArrayList<GameTickObserver> gameTickObservers = new ArrayList<GameTickObserver>();
+	private ArrayList<Tickable> gameTickObservers = new ArrayList<Tickable>();
 	
-	public final void registerObserver(GameTickObserver observer) {
+	public final void registerObserver(Tickable observer) {
 		gameTickObservers.add(observer);
 	}
 	
-	public final void removeObserver(GameTickObserver observer) {
+	public final void removeObserver(Tickable observer) {
 		gameTickObservers.remove(observer);
 	}
 	
