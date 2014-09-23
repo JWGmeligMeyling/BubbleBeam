@@ -22,6 +22,7 @@ import nl.tudelft.ti2206.exception.GameOver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
@@ -262,39 +263,33 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		
 		@Override
 		public boolean pop(final ColouredBubble target) {
-			Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
-			Set<ColouredBubble> neighbours = Sets.newHashSet();
+			final Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
 			
-			if(this.pop(target, bubblesToPop,neighbours)) {
+			if(this.pop(target, bubblesToPop)) {
+				
+				Set<ColouredBubble> allBubbles = Sets.newHashSet(Iterables
+						.filter(this, ColouredBubble.class));
+				Queue<ColouredBubble> queue = Queues.newArrayDeque(bubblesToPop);
+				
+				allBubbles.stream()
+						.filter(bubble -> bubblesToPop.contains(bubble) == false
+								&& this.connectedToTop(bubble, queue) == false)
+					.forEach(bubble -> {
+						log.info("Added isolated bubble {}", bubble);
+						bubblesToPop.add(bubble);
+						bubblesToPop.addAll(bubble.getNeighboursOfType(ColouredBubble.class));
+					});
 				
 				bubblesToPop.forEach(bubble -> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
 					log.info("Bubble popped: {}", bubble);
 				});
 				
-				//pop the neighbours (and their neighbours) of all the popped bubbles that are now isolated
-				while(neighbours.size() != 0){
-					Set<ColouredBubble> newNeighbours = Sets.newHashSet();
-					neighbours.stream()
-					.filter(bubble -> !connectedToTop(bubble, Queues.newArrayDeque()))
-					.forEach(bubble -> {
-						this.replaceBubble(bubble, new BubblePlaceholder());
-						log.info("Bubble popped: {}", bubble);
-						
-						//add the popped bubble to bubblesToPop for score calculation
-						bubblesToPop.add(bubble);
-						bubble.getNeighboursOfType(ColouredBubble.class)
-							.forEach(bubble2 -> newNeighbours.add(bubble2));
-					});
-					
-					neighbours = newNeighbours;
-				}
-						
 				updateRemainingColors();
 				calculateScore(bubblesToPop);
 				return true;
 			}
-			
+						
 			return false;
 		}
 		
@@ -305,17 +300,11 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		 *            {@link Set} of {@code ColouredBubbles} to be popped
 		 */
 		protected boolean pop(final ColouredBubble target,
-				final Set<ColouredBubble> bubblesToPop, final Set<ColouredBubble> neighbours) {
+				final Set<ColouredBubble> bubblesToPop) {
 			
 			final List<ColouredBubble> colouredBubbles = target
 					.getNeighboursOfType(ColouredBubble.class);
 			Color targetColor = target.getColor();
-			
-			// Find neighboring bubbles of another colour, and add them
-			// to the Set.
-			colouredBubbles.stream()
-				.filter(bubble -> (!bubble.getColor().equals(targetColor)))
-				.forEach(bubble -> neighbours.add(bubble));
 			
 			/*
 			 * Find neighboring bubbles of the same colour, and pop them
@@ -324,7 +313,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			 */
 			colouredBubbles.stream()
 				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
-				.forEach(bubble -> this.pop(bubble, bubblesToPop, neighbours));
+				.forEach(bubble -> this.pop(bubble, bubblesToPop));
 			
 			return bubblesToPop.size() > 2;
 		}

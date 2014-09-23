@@ -38,7 +38,7 @@ public abstract class GamePanel extends JPanel {
 		gameTick = new GameTick(33);
 		gameTick.start();
 		bubbleMesh.addScoreListener((amount) -> {
-			log.info("Points awarded {}", amount);
+			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
 		});
 		
