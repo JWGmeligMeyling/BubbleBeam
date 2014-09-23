@@ -15,7 +15,7 @@ import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonControllerObserver;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.Tickable;
+import nl.tudelft.ti2206.game.tick.Tickable;
 import nl.tudelft.util.Vector2f;
 
 import org.slf4j.Logger;

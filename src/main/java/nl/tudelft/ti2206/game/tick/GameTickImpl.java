@@ -1,8 +1,9 @@
-package nl.tudelft.ti2206.game;
+package nl.tudelft.ti2206.game.tick;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import nl.tudelft.ti2206.exception.GameOver;
@@ -15,33 +16,22 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Sam Smulders
  */
-public class GameTick {
+public class GameTickImpl implements GameTick {
 
-	private static final Logger log = LoggerFactory.getLogger(GameTick.class);
+	private static final Logger log = LoggerFactory.getLogger(GameTickImpl.class);
 	
-	private ArrayList<Tickable> gameTickObservers = new ArrayList<Tickable>();
-	
-	public final void registerObserver(Tickable observer) {
-		gameTickObservers.add(observer);
-	}
-	
-	public final void removeObserver(Tickable observer) {
-		gameTickObservers.remove(observer);
-	}
-	
-	private final int framePeriod;
 	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 	
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> scheduler.shutdownNow()));
 	}
+
+	private ArrayList<Tickable> gameTickObservers = new ArrayList<Tickable>();
+
+	private final ScheduledFuture<?> feature;
 	
-	public GameTick(int framePeriod) {
-		this.framePeriod = framePeriod;
-	}
-	
-	public void start() {
-		scheduler.scheduleAtFixedRate(new Runnable() {
+	public GameTickImpl(final int framePeriod) {
+		this.feature = scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				gameTickObservers.forEach(listener -> {
 					try {
@@ -52,5 +42,20 @@ public class GameTick {
 				});
 			}
 		}, 0l, framePeriod, TimeUnit.MILLISECONDS);
+	}
+
+	@Override
+	public void registerObserver(Tickable observer) {
+		gameTickObservers.add(observer);
+	}
+	
+	@Override
+	public void removeObserver(Tickable observer) {
+		gameTickObservers.remove(observer);
+	}
+	
+	@Override
+	public void shutdown() {
+		feature.cancel(true);
 	}
 }

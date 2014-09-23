@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.game.tick.GameTickImpl;
 import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.ObservableObject;
 
@@ -28,14 +29,13 @@ public abstract class GamePanel extends JPanel {
 	
 	public static Point cannonPosition;
 	protected Room room;	//initialized in subclasses
-	protected GameTick gameTick;
+	protected GameTickImpl gameTick;
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
 	public GamePanel(final BubbleMesh bubbleMesh) {
 		cannonPosition = new Point(WIDTH / 2, HEIGHT);
-		gameTick = new GameTick(33);
-		gameTick.start();
+		gameTick = new GameTickImpl(33);
 		bubbleMesh.addScoreListener((amount) -> {
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
