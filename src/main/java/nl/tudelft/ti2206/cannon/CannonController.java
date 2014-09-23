@@ -2,6 +2,9 @@ package nl.tudelft.ti2206.cannon;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -13,6 +16,8 @@ import nl.tudelft.util.Vector2f;
  * @author Sam Smulders
  */
 public abstract class CannonController {
+	
+	private static final Logger log = LoggerFactory.getLogger(CannonController.class);
 	
 	protected ArrayList<CannonControllerObserver> observers = new ArrayList<CannonControllerObserver>();
 	
@@ -53,6 +58,7 @@ public abstract class CannonController {
 	 *            of shooting
 	 */
 	protected void notifyObserversShoot(Vector2f direction) {
+		log.info("Cannon shoot in direction {}", direction);
 		observers.forEach(observer -> observer.cannonShoot(direction));
 	}
 }

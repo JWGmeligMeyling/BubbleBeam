@@ -9,13 +9,17 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.room.Room;
 import nl.tudelft.util.ObservableObject;
 
 public abstract class GamePanel extends JPanel {
-	
+
+	private static final Logger log = LoggerFactory.getLogger(GamePanel.class);
 	private static final long serialVersionUID = 2416543550015136242L;
 	
 	protected final static int WIDTH = 340;
@@ -34,6 +38,7 @@ public abstract class GamePanel extends JPanel {
 		gameTick = new GameTick(33);
 		gameTick.start();
 		bubbleMesh.addScoreListener((amount) -> {
+			log.info("Points awarded {}", amount);
 			setScore(getScore() + amount);
 		});
 		

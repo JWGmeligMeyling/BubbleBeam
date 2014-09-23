@@ -2,6 +2,9 @@ package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Graphics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The {@code BubblePlaceholder} fills a space in the {@link BubbleMesh} at
  * which a new Bubble can be snapped
@@ -10,6 +13,8 @@ import java.awt.Graphics;
  *
  */
 public class BubblePlaceholder extends AbstractBubble {
+	
+	private static final Logger log = LoggerFactory.getLogger(BubblePlaceholder.class);
 
 	@Override
 	public void render(Graphics graphics) {
@@ -18,6 +23,7 @@ public class BubblePlaceholder extends AbstractBubble {
 	
 	@Override
 	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
+		log.info("Snapping to top: {}", bubble);
 		return this;
 	}
 	

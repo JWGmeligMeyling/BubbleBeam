@@ -266,8 +266,10 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			Set<ColouredBubble> neighbours = Sets.newHashSet();
 			
 			if(this.pop(target, bubblesToPop,neighbours)) {
+				
 				bubblesToPop.forEach(bubble -> {
 					this.replaceBubble(bubble, new BubblePlaceholder());
+					log.info("Bubble popped: {}", bubble);
 				});
 				
 				//pop the neighbours (and their neighbours) of all the popped bubbles that are now isolated
@@ -277,12 +279,14 @@ public interface BubbleMesh extends Iterable<Bubble> {
 					.filter(bubble -> !connectedToTop(bubble, Queues.newArrayDeque()))
 					.forEach(bubble -> {
 						this.replaceBubble(bubble, new BubblePlaceholder());
+						log.info("Bubble popped: {}", bubble);
 						
 						//add the popped bubble to bubblesToPop for score calculation
 						bubblesToPop.add(bubble);
-						
-						bubble.getNeighboursOfType(ColouredBubble.class).forEach(bubble2 -> newNeighbours.add(bubble2));
+						bubble.getNeighboursOfType(ColouredBubble.class)
+							.forEach(bubble2 -> newNeighbours.add(bubble2));
 					});
+					
 					neighbours = newNeighbours;
 				}
 						
@@ -290,6 +294,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 				calculateScore(bubblesToPop);
 				return true;
 			}
+			
 			return false;
 		}
 		
