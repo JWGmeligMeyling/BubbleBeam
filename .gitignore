@@ -6,7 +6,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 .texpadtmp/
-
+# MAC OSX #
+.DS_Store
+Thumbs.db
 # Package Files #
 *.jar
 *.war

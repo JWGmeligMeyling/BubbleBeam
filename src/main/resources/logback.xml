@@ -7,7 +7,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="nl.tudelft.ti2206" level="INFO"/>
+	<logger name="nl.tudelft.ti2206" level="DEBUG"/>
 
 	<root level="WARN">
 		<appender-ref ref="CONSOLE" />

@@ -61,6 +61,7 @@ public interface Bubble extends Sprite {
 			}
 			throw new IllegalArgumentException();
 		}
+		
 	}
 
 }

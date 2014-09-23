@@ -42,7 +42,7 @@ public abstract class Room implements Tickable, CannonControllerObserver {
 	
 	// Bubble shooting
 	protected static final int MAX_MISSES = 5;
-	private static final float MOVING_BUBBLE_SPEED = 5f;
+	private static final float MOVING_BUBBLE_SPEED = 4f;
 	protected int misses = 0;
 	protected MovingBubble shotBubble;
 	protected BubbleMesh bubbleMesh;
@@ -114,11 +114,14 @@ public abstract class Room implements Tickable, CannonControllerObserver {
 	public void collide(final Bubble hitTarget) throws GameOver {
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
 		bubbleMesh.replaceBubble(snapPosition, shotBubble);
+		log.debug("Bullet collided with {}", snapPosition);
+		
 		if (bubbleMesh.pop(shotBubble)) {
 			// good shot
 		} else {
 			incrementMisses();
 		}
+		
 		shotBubble = null;
 	}
 	
@@ -131,6 +134,7 @@ public abstract class Room implements Tickable, CannonControllerObserver {
 	
 	// TODO: Handling bubbleQueue is empty
 	public void shootBubble(final Vector2f direction) {
+		direction.normalise();
 		Point bubbleStartPosition = new Point((cannonPosition.x - AbstractBubble.WIDTH / 2)
 				+ (int) (Cannon.CANNON_OUTPUT * direction.x), cannonPosition.y
 				- AbstractBubble.HEIGHT / 2 + (int) (Cannon.CANNON_OUTPUT * direction.y));
