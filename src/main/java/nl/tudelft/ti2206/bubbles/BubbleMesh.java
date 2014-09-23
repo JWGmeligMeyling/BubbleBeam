@@ -288,7 +288,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			
 			allBubbles.removeAll(bubblesToPop);
 			allBubbles.stream()
-				.filter(bubble -> connectedToTop(bubble, connectedToTop, bubblesToPop))
+				.filter(bubble -> !connectedToTop(bubble, connectedToTop, bubblesToPop))
 				.forEach(bubble -> log.info("Found isolated bubble {}", bubble));
 		}
 		
