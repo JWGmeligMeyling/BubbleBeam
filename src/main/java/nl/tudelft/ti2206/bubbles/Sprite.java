@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 
@@ -46,5 +47,12 @@ public interface Sprite {
 	 * @return the height for this {@code Sprite}
 	 */
 	int getHeight();
+	
+	/**
+	 * @return the dimensions for this {@code Sprite}
+	 */
+	default Dimension getSize() {
+		return new Dimension(getWidth(), getHeight());
+	}
 	
 }

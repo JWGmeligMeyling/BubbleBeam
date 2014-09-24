@@ -1,64 +1,40 @@
 package nl.tudelft.ti2206.cannon;
 
-import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import nl.tudelft.ti2206.cannon.CannonListener.CannonRotateListener;
+import nl.tudelft.ti2206.cannon.CannonListener.CannonShootListener;
+import nl.tudelft.ti2206.util.mvc.Controller;
+import nl.tudelft.ti2206.util.mvc.EventTarget;
 import nl.tudelft.util.Vector2f;
 
-/**
- * The {@code CannonController} is used to handle input from a source to control
- * the cannon. The {@code CannonController} behaviour can be observed by objects
- * of the {@link CannonControllerObserver}, who can be registered and removed
- * from the CannonController.
- * 
- * @author Sam Smulders
- */
-public abstract class CannonController {
+public interface CannonController extends Controller<CannonModel>, EventTarget<CannonListener> {
 	
-	private static final Logger log = LoggerFactory.getLogger(CannonController.class);
+	public static final double MIN_ANGLE = Math.PI / 10;
+	public static final double MIN_DIRECTION_Y = Math.sin(MIN_ANGLE);
+	public static final double MIN_DIRECTION_X = Math.cos(MIN_ANGLE);
 	
-	protected ArrayList<CannonControllerObserver> observers = new ArrayList<CannonControllerObserver>();
+	void load();
 	
-	/**
-	 * Adds an observer to the registered observer list.
-	 * 
-	 * @param observer
-	 *            to be added to the registered observer list.
-	 */
-	public final void registerObserver(CannonControllerObserver observer) {
-		observers.add(observer);
+	void shoot();
+	
+	default void setAngle(final Vector2f direction) {
+		final CannonModel model = this.getModel();
+		
+		if (direction.y > -MIN_DIRECTION_Y) {
+			direction.x = (float) (MIN_DIRECTION_X * Math.signum(direction.x));
+			direction.y = (float) -MIN_DIRECTION_Y;
+		}
+		
+		model.setDirection(direction);
+		model.setAngle(Math.atan(direction.x / direction.y) + Math.PI / 2);
+		model.notifyObservers();
 	}
 	
-	/**
-	 * Remove an observer from the registered observer list.
-	 * 
-	 * @param observer
-	 *            to be removed
-	 */
-	public final void removeObserver(CannonControllerObserver observer) {
-		observers.remove(observer);
+	default void addCannonShootListener(final CannonShootListener listener) {
+		this.addEventListener(listener);
+	}
+
+	default void addCannonRotateListener(final CannonRotateListener listener) {
+		this.addEventListener(listener);
 	}
 	
-	/**
-	 * Notify all the observers on cannon rotation behaviour.
-	 * 
-	 * @param rotation
-	 *            of the cannon
-	 */
-	protected void notifyObserversRotate(double rotation) {
-		observers.forEach(observer -> observer.cannonRotate(rotation));
-	}
-	
-	/**
-	 * Notify all the observers on cannon shoot behaviour.
-	 * 
-	 * @param direction
-	 *            of shooting
-	 */
-	protected void notifyObserversShoot(Vector2f direction) {
-		log.info("Cannon shoot in direction {}", direction);
-		observers.forEach(observer -> observer.cannonShoot(direction));
-	}
 }

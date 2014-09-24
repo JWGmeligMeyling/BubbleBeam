@@ -1,10 +1,11 @@
 package nl.tudelft.ti2206.network;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,39 +17,58 @@ import org.slf4j.LoggerFactory;
  * @author Sam Smulders
  */
 public class Host extends Connector {
-	private ServerSocket serverSocket;
 
 	private static final Logger log = LoggerFactory.getLogger(Host.class);
+
+	private ServerSocket serverSocket;
+	private Socket socket;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 	
 	@Override
 	public void connect() {
 		try {
-			try {
-				serverSocket = new ServerSocket(PORT);
-			} catch (BindException e) {
-				log.debug(e.getMessage());
-				return;
-			}
+			log.info("Setting up server connection at port {}", PORT);
+			
+			serverSocket = new ServerSocket(PORT);
 			socket = serverSocket.accept();
-			in = new DataInputStream(socket.getInputStream());
-			out = new DataOutputStream(socket.getOutputStream());
-			serverSocket.close();
+			
+			out = new ObjectOutputStream(socket.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(socket.getInputStream());
+			
 			ready = true;
+			
+		}  catch (BindException e) {
+			log.warn(e.getMessage(), e);
 		} catch (IOException e) {
-			log.debug(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
+	}
+	
+
+	@Override
+	protected Socket getSocket() {
+		return socket;
+	}
+
+	@Override
+	protected ObjectInputStream getInputStream() {
+		return in;
+	}
+
+	@Override
+	protected ObjectOutputStream getOutputStream() {
+		return out;
 	}
 	
 	@Override
 	public void endConnection() {
-		if (serverSocket != null) {
-			try {
-				serverSocket.close();
-			} catch (IOException e) {
-				// Exception expected
-			}
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			log.debug(e.getMessage(), e);
 		}
-		super.endConnection();
 	}
 	
 }

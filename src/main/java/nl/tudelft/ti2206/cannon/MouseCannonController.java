@@ -1,10 +1,12 @@
 package nl.tudelft.ti2206.cannon;
 
+import java.awt.Component;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
-import nl.tudelft.ti2206.room.Room;
+import nl.tudelft.ti2206.network.Connector;
+import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.util.DefaultMouseClickListener;
+import nl.tudelft.util.DefaultMouseMoveListener;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -13,54 +15,57 @@ import nl.tudelft.util.Vector2f;
  * 
  * @author Sam Smulders
  */
-public class MouseCannonController extends CannonController implements MouseMotionListener,
-		MouseListener {
+public class MouseCannonController extends AbstractCannonController {
 	
-	protected Vector2f direction = new Vector2f(0, 1);
-	protected final Room room;
-	
-	public MouseCannonController(Room room) {
-		this.room = room;
+	public MouseCannonController() {
+		super();
 	}
 	
-	@Override
-	public void mouseDragged(MouseEvent e) {
+	public MouseCannonController(final CannonModel cannonModel) {
+		super(cannonModel);
 	}
 	
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		Vector2f dir = (new Vector2f(e.getPoint()).subtract(new Vector2f(room.cannonPosition)))
-				.normalize();
-		if (dir.y > -Cannon.MIN_DIRECTION_Y) {
-			dir.x = Cannon.MIN_DIRECTION_X * Math.signum(dir.x);
-			dir.y = -Cannon.MIN_DIRECTION_Y;
-		}
-		this.notifyObserversRotate(Math.atan(dir.x / dir.y) + Math.PI / 2);
-		this.direction = dir;
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			if (room.canShoot()) {
-				this.notifyObserversShoot(direction);
+	public void bindListenersTo(final Component component, final Cannon cannon) {
+		component.addMouseMotionListener(new DefaultMouseMoveListener() {
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				Vector2f direction = (new Vector2f(e.getPoint())
+						.subtract(new Vector2f(cannon.getPosition())))
+						.normalize();
+				MouseCannonController.this.setAngle(direction);
 			}
-		}
+			
+		});
+		
+		component.addMouseListener(new DefaultMouseClickListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1
+					&& MouseCannonController.this.getModel().isLoaded()) {
+						MouseCannonController.this.shoot();
+				}
+			}
+			
+		});
 	}
 	
-	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void bindController(final Connector connector) {
+		this.addEventListener(new CannonListener() {
+
+			@Override
+			public void shoot(final Vector2f direction) {
+//				log.info("Sending shoot packet");
+//				connector.sendPacket(new Packet.CannonShoot(direction));
+			}
+
+			@Override
+			public void rotate(final double angle) {
+				connector.sendPacket(new Packet.CannonRotate(angle));
+			}
+			
+		});
 	}
 	
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-	
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
 }

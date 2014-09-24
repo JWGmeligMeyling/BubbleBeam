@@ -21,15 +21,15 @@ import com.google.common.collect.Maps;
  */
 public abstract class AbstractBubble implements Bubble {
 	
+	private static final long serialVersionUID = -3403214887629166657L;
 	public static final int WIDTH = 32;
 	public static final int HEIGHT = 32;
 	public static final int RADIUS = 14;
-	public static final int DIAMETER = RADIUS * 2;
-	public static final int SPACING = WIDTH - DIAMETER;
 	public static final Point ORIGIN = new Point(0,0);
 
 	protected boolean origin = false;
-	protected Point position = new Point(ORIGIN.x, ORIGIN.y);
+	protected Point position = new Point(ORIGIN.x + 2, ORIGIN.y + 2);
+	protected Point center = new Point(ORIGIN.x + WIDTH / 2, ORIGIN.y + HEIGHT / 2);
 	protected final Map<Direction, Bubble> connections  = Maps.newTreeMap();
 
 	@Override
@@ -39,7 +39,16 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public void setPosition(final Point position) {
+		int width = getWidth(), height = getHeight();
 		this.position = position;
+		this.center = new Point(position.x + width / 2, position.y + height / 2);
+	}
+	
+	@Override
+	public void setCenter(final Point center) {
+		int width = getWidth(), height = getHeight();
+		this.center = center;
+		this.position = new Point(center.x - width / 2, center.y - height / 2);
 	}
 
 	@Override
@@ -59,7 +68,7 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public Point getCenter() {
-		return new Point(position.x + RADIUS + SPACING, position.y + RADIUS + SPACING);
+		return center;
 	}
 	
 	@Override
@@ -130,11 +139,6 @@ public abstract class AbstractBubble implements Bubble {
 	}
 	
 	@Override
-	public boolean intersect(Bubble b){
-		return this.getDistance(b) < DIAMETER;
-	}
-	
-	@Override
 	public boolean isHittable() {
 		return false;
 	}
@@ -147,11 +151,6 @@ public abstract class AbstractBubble implements Bubble {
 	@Override
 	public <T> List<T> getNeighboursOfType(Class<T> type) {
 		return Lists.newArrayList(Iterables.filter(getNeighbours(), type));
-	}
-	
-	@Override
-	public double getDistance(final Bubble b){
-		return this.getCenter().distance(b.getCenter());
 	}
 	
 	@Override
