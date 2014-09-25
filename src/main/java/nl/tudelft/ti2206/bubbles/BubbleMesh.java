@@ -79,6 +79,8 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 */
 	List<Color> getRemainingColours();
 
+	void replace(BubbleMesh bubbleMesh);
+
 	public static BubbleMesh parse(final InputStream inputstream) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream))) {
 			List<String> lines = Lists.newArrayList();
@@ -148,10 +150,12 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 						bubble.setOrigin(true);
 					}
 				}
+				
 			}
 			
 			BubbleMeshImpl result = new BubbleMeshImpl();
-			result.startBubble = bubbles[0][0];
+			result.leftTopBubble = bubbles[0][0];
+			result.leftBottomBubble = bubbles[rowAmount-1][0];
 			return result;
 		}
 
@@ -159,42 +163,41 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
 		
 		protected AbstractBubble parseBubble(final char character) {
-			if (character == ' ') {
+			final Color color;
+			
+			switch (character) {
+			case ' ':
 				return new BubblePlaceholder();
-			} else {
-				Color color;
-				switch (character) {
-				case 'r':
-				case 'R':
-					color = Color.RED;
+			case 'r':
+			case 'R':
+				color = Color.RED;
 				break;
-				case 'g':
-				case 'G':
-					color = Color.GREEN;
+			case 'g':
+			case 'G':
+				color = Color.GREEN;
 				break;
-				case 'b':
-				case 'B':
-					color = Color.BLUE;
+			case 'b':
+			case 'B':
+				color = Color.BLUE;
 				break;
-				case 'C':
-				case 'c':
-					color = Color.CYAN;
+			case 'C':
+			case 'c':
+				color = Color.CYAN;
 				break;
-				case 'M':
-				case 'm':
-					color = Color.MAGENTA;
+			case 'M':
+			case 'm':
+				color = Color.MAGENTA;
 				break;
-				case 'Y':
-				case 'y':
-					color = Color.YELLOW;
+			case 'Y':
+			case 'y':
+				color = Color.YELLOW;
 				break;
-				default:
-					color = getRandomRemainingColor();
+			default:
+				color = getRandomRemainingColor();
 				break;
-				}
-				return new ColouredBubble(color);
 			}
 			
+			return new ColouredBubble(color);
 		}
 		
 		protected final Random RANDOM_GENERATOR = new Random();
@@ -215,7 +218,8 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		private static final long serialVersionUID = -2580249152755739807L;
 		private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 		
-		private Bubble startBubble;
+		private Bubble leftTopBubble;
+		private Bubble leftBottomBubble;
 		
 		private transient List<ScoreListener> scoreListeners = Lists.newArrayList();
 		
@@ -229,17 +233,20 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 		@Override
 		public void replaceBubble(final Bubble original, final Bubble replacement) {
-			replacement.bind(Direction.TOPLEFT, original.getBubbleAt(Direction.TOPLEFT));
-			replacement.bind(Direction.TOPRIGHT, original.getBubbleAt(Direction.TOPRIGHT));
-			replacement.bind(Direction.LEFT, original.getBubbleAt(Direction.LEFT));
-			replacement.bind(Direction.RIGHT, original.getBubbleAt(Direction.RIGHT));
-			replacement.bind(Direction.BOTTOMLEFT, original.getBubbleAt(Direction.BOTTOMLEFT));
-			replacement.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
-			replacement.setPosition(original.getPosition());
-			
-			if (startBubble.equals(original)) {
-				startBubble = replacement;
+			if(isBottomRowBubble(original)) {
+				throw new GameOver();
 			}
+			
+			replacement.replace(original);
+			
+			if (leftTopBubble.equals(original)) {
+				leftTopBubble = replacement;
+			}
+		}
+		
+		protected boolean isBottomRowBubble(final Bubble bubble) {
+			return leftBottomBubble.traverse(Direction.RIGHT)
+					.anyMatch(other -> other.equals(bubble));
 		}
 		
 		@Override
@@ -300,7 +307,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 		@Override
 		public boolean bubbleIsTop(final Bubble target) {
-			return startBubble.traverse(Direction.RIGHT).anyMatch(bubble -> bubble.equals(target));
+			return leftTopBubble.traverse(Direction.RIGHT).anyMatch(bubble -> bubble.equals(target));
 		}
 		
 		/**
@@ -395,6 +402,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		@Override
 		public void insertRow(final GameController gameController) throws GameOver {
 			log.info("Inserting row");
+			
 			Iterator<Bubble> bubbles = iterator();
 			Bubble child = bubbles.next();
 			Bubble previousBubble = null;
@@ -421,48 +429,42 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				previousBubble = bubble;
 				
 				if (i == 0) {
-					startBubble.setOrigin(false);
+					leftTopBubble.setOrigin(false);
 					if (shift)
-						bubble.setPosition(new Point(startBubble.getX() + AbstractBubble.WIDTH / 2,
-								startBubble.getY()));
-					startBubble = bubble;
-					startBubble.setOrigin(true);
+						bubble.setPosition(new Point(leftTopBubble.getX() + AbstractBubble.WIDTH / 2,
+								leftTopBubble.getY()));
+					leftTopBubble = bubble;
+					leftTopBubble.setOrigin(true);
 				}
 				
 				child = bubbles.next();
 			}
 			
-			removeBottomRow();
+			updateBottomRow();
 			calculatePositions();
 			log.info("Finished inserting row");
 		}
 		
-		protected void removeBottomRow() throws GameOver {
-			Bubble current = getBottomLeft();
-			while (current.hasBubbleAt(Direction.RIGHT)) {
-				if (current instanceof ColouredBubble)
-					throw new GameOver();
-				if (current.hasBubbleAt(Direction.TOPLEFT))
-					current.getBubbleAt(Direction.TOPLEFT).setBubbleAt(Direction.BOTTOMRIGHT, null);
-				if (current.hasBubbleAt(Direction.TOPRIGHT))
-					current.getBubbleAt(Direction.TOPRIGHT).setBubbleAt(Direction.BOTTOMLEFT, null);
-				current = current.getBubbleAt(Direction.RIGHT);
+		protected void updateBottomRow() throws GameOver {
+			
+			// Update new bottom row
+			if(leftBottomBubble.hasBubbleAt(Direction.TOPLEFT)) {
+				leftBottomBubble = leftBottomBubble.getBubbleAt(Direction.TOPLEFT);
+			}
+			else {
+				leftBottomBubble = leftBottomBubble.getBubbleAt(Direction.TOPRIGHT);
 			}
 			
-		}
-		
-		protected Bubble getBottomLeft() {
-			Bubble current = startBubble;
-			while (current.hasBubbleAt(Direction.BOTTOMLEFT)
-					|| current.hasBubbleAt(Direction.BOTTOMRIGHT)) {
-				while (current.hasBubbleAt(Direction.BOTTOMRIGHT))
-					current = current.getBubbleAt(Direction.BOTTOMRIGHT);
-				while (current.hasBubbleAt(Direction.BOTTOMLEFT))
-					current = current.getBubbleAt(Direction.BOTTOMLEFT);
-			}
-			while (current.hasBubbleAt(Direction.LEFT))
-				current = current.getBubbleAt(Direction.LEFT);
-			return current;
+			leftBottomBubble.traverse(Direction.RIGHT).forEach(bubble -> {
+				if(bubble.isHittable()) {
+					// There shouldn't be a hittable bubble in the bottom row
+					throw new GameOver();
+				}
+
+				// Clear bindings to removed row
+				bubble.bind(Direction.BOTTOMLEFT, null);
+				bubble.bind(Direction.BOTTOMRIGHT, null);
+			});
 		}
 		
 		@Override
@@ -477,7 +479,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			
 			protected BubbleMeshIterator() {
 				
-				addRowToQueue(a, startBubble);
+				addRowToQueue(a, leftTopBubble);
 				
 				while (!a.isEmpty()) {
 					Bubble bubble = a.remove();
@@ -564,11 +566,9 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 
 		@Override
 		public void replace(BubbleMesh bubbleMesh) {
-			this.startBubble = bubbleMesh.iterator().next();
+			this.leftTopBubble = bubbleMesh.iterator().next();
 		}
 		
 	}
 
-	void replace(BubbleMesh bubbleMesh);
-	
 }
