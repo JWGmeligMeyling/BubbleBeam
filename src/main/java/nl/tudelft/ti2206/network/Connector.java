@@ -1,13 +1,15 @@
 package nl.tudelft.ti2206.network;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketFactory;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
 
 /**
@@ -18,13 +20,12 @@ import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
  *
  * @author Sam_
  */
-public abstract class Connector implements Runnable {
+public abstract  class Connector implements Runnable {
+
+	private static final Logger log = LoggerFactory.getLogger(Connector.class);
 	
 	public final static int PORT = 8989;
 	
-	protected DataOutputStream out;
-	protected DataInputStream in;
-	protected Socket socket;
 	protected PacketHandlerCollection packetHandlerCollection = new PacketHandlerCollection();
 	
 	protected boolean ready = false;
@@ -35,62 +36,59 @@ public abstract class Connector implements Runnable {
 	 */
 	@Override
 	public void run() {
-		while (ready) {
-			acceptPacket();
-		}
-		try {
-			if (in != null)
-				in.close();
-			if (out != null)
-				out.close();
-			if (socket != null)
-				socket.close();
+		try (Socket socket = getSocket();
+			ObjectInputStream inputstream = getInputStream();) {
+			
+			log.info("In event loop");
+			
+			while (ready) {
+				acceptPacket(inputstream);
+			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
+		} finally {
+			endConnection();
 		}
 	}
+	
+	protected abstract Socket getSocket();
+	protected abstract ObjectInputStream getInputStream();
+	protected abstract ObjectOutputStream getOutputStream();
 	
 	/**
 	 * Read an incoming packet.
 	 * 
 	 * @return the packet
+	 * @throws IOException 
 	 */
-	protected Packet readPacket() {
+	protected Packet readPacket(ObjectInputStream inputstream) throws IOException {
 		try {
-			byte id = in.readByte();
-			return PacketFactory.readPacket(id, in);
-		} catch (IOException e) {
-			e.printStackTrace();
+			return Packet.read(inputstream);
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
 		}
-		return null;
 	}
 	
 	/**
 	 * Send a packet over the DataOutputStream.
 	 * 
 	 * @param packet
+	 * @throws IOException 
 	 */
-	public void sendPacket(Packet packet) {
+	public void sendPacket(final Packet packet)  {
 		try {
-			packet.send(out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	protected void acceptPacket() {
-		readPacket().notify(packetHandlerCollection);
-	}
-	
-	public void endConnection() {
-		ready = false;
-		if (socket != null) {
-			try {
-				socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (ready) {
+				packet.write(getOutputStream());
 			}
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			endConnection();
 		}
+	}
+	
+	protected void acceptPacket(final ObjectInputStream inputstream) throws IOException {
+		readPacket(inputstream).notify(packetHandlerCollection);
 	}
 	
 	public PacketHandlerCollection getPacketHandlerCollection() {
@@ -102,7 +100,11 @@ public abstract class Connector implements Runnable {
 	 */
 	public void start() {
 		if (ready) {
+			log.info("Starting event loop");
 			new Thread(this).start();
+		}
+		else {
+			log.warn("Connector is not ready yet");
 		}
 	}
 	
@@ -115,4 +117,10 @@ public abstract class Connector implements Runnable {
 	 * {@link Connector} object.
 	 */
 	public abstract void connect() throws UnknownHostException, IOException;
+
+	public void endConnection() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

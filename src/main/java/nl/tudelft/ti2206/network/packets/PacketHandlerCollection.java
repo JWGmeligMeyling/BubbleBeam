@@ -1,5 +1,8 @@
 package nl.tudelft.ti2206.network.packets;
 
+import nl.tudelft.ti2206.network.packets.Packet.CannonRotate;
+import nl.tudelft.ti2206.network.packets.Packet.CannonShoot;
+
 
 /**
  * The {@code PacketHandlerCollection} is responsible for storing all the
@@ -21,6 +24,23 @@ public class PacketHandlerCollection {
 	public final PacketHandler.CannonShoot cannonShootHandler;
 	public final PacketHandler.BubbleMeshSync bubbleMeshSyncHandler;
 	public final PacketHandler.LoadNewBubble loadNewBubbleHandler;
+	
+	public void registerCannonShootHandler(final PacketListener<CannonShoot> packetListener) {
+		cannonShootHandler.registerObserver(packetListener);
+	}
+	
+	public void registerCannonRotateHandler(final PacketListener<CannonRotate> packetListener) {
+		cannonRotateHandler.registerObserver(packetListener);
+	}
+	
+	public void registerBubbleMeshSyncListener(final PacketListener<Packet.BubbleMeshSync> packetListener) {
+		bubbleMeshSyncHandler.registerObserver(packetListener);
+	}
+	
+
+	public void registerLoadNewBubbleListener(final PacketListener<Packet.AmmoPacket> packetListener) {
+		loadNewBubbleHandler.registerObserver(packetListener);
+	}
 	
 	/**
 	 * Notify the desired {@link PacketHandler}
@@ -54,8 +74,8 @@ public class PacketHandlerCollection {
 	 * 
 	 * @param packet
 	 */
-	public void notify(Packet.LoadNewBubble packet) {
+	public void notify(Packet.AmmoPacket packet) {
 		loadNewBubbleHandler.notifyObservers(packet);
 	}
-	
+
 }

@@ -1,6 +1,11 @@
 package nl.tudelft.ti2206.network.packets;
 
-import java.util.ArrayList;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Sets;
 
 /**
  * The {@code PacketHandler} is a 'Subject' which {@link PacketListeners} can
@@ -13,8 +18,10 @@ import java.util.ArrayList;
  * @author Sam Smulders
  */
 public abstract class PacketHandler<P extends Packet> {
+
+	private static final Logger log = LoggerFactory.getLogger(PacketHandler.class);
 	
-	protected ArrayList<PacketListener<P>> packetListeners = new ArrayList<PacketListener<P>>();
+	protected Set<PacketListener<P>> packetListeners = Sets.newHashSet();
 	
 	/**
 	 * Adds an observer to the registered observer list.
@@ -36,6 +43,8 @@ public abstract class PacketHandler<P extends Packet> {
 		packetListeners.remove(observer);
 	}
 	
+	public abstract void notifyObservers(P packet);
+	
 	/**
 	 * The {@code CannonRotate} {@link PacketHandler} handles the
 	 * {@link CannonRotate} {@link Packet}s.
@@ -43,9 +52,12 @@ public abstract class PacketHandler<P extends Packet> {
 	 * @author Sam Smulders
 	 */
 	public static class CannonRotate extends PacketHandler<Packet.CannonRotate> {
+		
+		@Override
 		public void notifyObservers(Packet.CannonRotate packet) {
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
+		
 	}
 	
 	/**
@@ -55,9 +67,14 @@ public abstract class PacketHandler<P extends Packet> {
 	 * @author Sam Smulders
 	 */
 	public static class CannonShoot extends PacketHandler<Packet.CannonShoot> {
+		
+		@Override
 		public void notifyObservers(Packet.CannonShoot packet) {
+			log.info("Received packet {}, dispatching to {} listeners", packet,
+					packetListeners.size());
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
+		
 	}
 	
 	/**
@@ -67,9 +84,14 @@ public abstract class PacketHandler<P extends Packet> {
 	 * @author Sam Smulders
 	 */
 	public static class BubbleMeshSync extends PacketHandler<Packet.BubbleMeshSync> {
+		
+		@Override
 		public void notifyObservers(Packet.BubbleMeshSync packet) {
+			log.info("Received packet {}, dispatching to {} listeners", packet,
+					packetListeners.size());
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
+		
 	}
 	
 	/**
@@ -78,9 +100,14 @@ public abstract class PacketHandler<P extends Packet> {
 	 * 
 	 * @author Sam Smulders
 	 */
-	public static class LoadNewBubble extends PacketHandler<Packet.LoadNewBubble> {
-		public void notifyObservers(Packet.LoadNewBubble packet) {
+	public static class LoadNewBubble extends PacketHandler<Packet.AmmoPacket> {
+		
+		@Override
+		public void notifyObservers(Packet.AmmoPacket packet) {
+			log.info("Received packet {}, dispatching to {} listeners", packet,
+					packetListeners.size());
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
+		
 	}
 }

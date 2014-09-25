@@ -38,6 +38,8 @@ public class GameTickImpl implements GameTick {
 						listener.gameTick();
 					} catch (GameOver e) {
 						log.error(e.getMessage(), e);
+					} catch (Throwable e) {
+						log.error(e.getMessage(), e);
 					}
 				});
 			}

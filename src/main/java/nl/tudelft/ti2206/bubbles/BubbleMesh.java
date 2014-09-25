@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,6 +19,7 @@ import java.util.stream.StreamSupport;
 
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.GameController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,16 +28,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public interface BubbleMesh extends Iterable<Bubble> {
+public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	
 	default Stream<Bubble> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}
-	
-	/**
-	 * @return a random remaining {@link Color}
-	 */
-	Color getRandomRemainingColor();
 	
 	/**
 	 * Pop this bubble and it's neighbors recursively
@@ -54,7 +51,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	 * 
 	 * @throws GameOver
 	 */
-	void insertRow() throws GameOver;
+	void insertRow(GameController gameController) throws GameOver;
 	
 	/**
 	 * Replace a {@code Bubble} in the mesh for another {@code Bubble}
@@ -65,6 +62,10 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	 */
 	void replaceBubble(Bubble original, Bubble replacement);
 	
+	/**
+	 * Add a score listener
+	 * @param listener
+	 */
 	void addScoreListener(ScoreListener listener);
 	
 	/**
@@ -73,6 +74,11 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	 */
 	boolean bubbleIsTop(Bubble target);
 	
+	/**
+	 * @return Get a List of colors that still exist in the mesh
+	 */
+	List<Color> getRemainingColours();
+
 	public static BubbleMesh parse(final InputStream inputstream) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream))) {
 			List<String> lines = Lists.newArrayList();
@@ -89,153 +95,129 @@ public interface BubbleMesh extends Iterable<Bubble> {
 	}
 	
 	public static BubbleMesh parse(final List<String> rows) {
-		int rowAmount = rows.size();
-		if (rowAmount < 1)
-			throw new IllegalArgumentException("Wrong file format");
-		int rowSize = rows.get(0).length();
-		
-		Bubble[][] bubbles = new Bubble[rowAmount][rowSize];
-		BubbleMeshImpl result = new BubbleMeshImpl();
-		
-		for (int i = 0; i < rowAmount; i++) {
-			String rowStr = rows.get(i);
-			
-			for (int j = 0; j < rowSize; j++) {
-				
-				AbstractBubble bubble;
-				bubbles[i][j] = bubble = parseBubble(rowStr.charAt(j), result);
-				
-				if (i > 0) {
-					if (i % 2 == 0) { // 3rd, 5fth rows , ...
-						bubble.bind(Direction.TOPRIGHT, bubbles[i - 1][j]);
-						if (j > 0) {
-							bubble.bind(Direction.TOPLEFT, bubbles[i - 1][j - 1]);
-						}
-					} else {
-						bubble.bind(Direction.TOPLEFT, bubbles[i - 1][j]);
-						if (j < (rowSize - 1)) {
-							bubble.bind(Direction.TOPRIGHT, bubbles[i - 1][j + 1]);
-						}
-					}
-				}
-				
-				if (j > 0) {
-					bubble.bind(Direction.LEFT, bubbles[i][j - 1]);
-				}
-				
-				if (i == 0 && j == 0) {
-					bubble.setOrigin(true);
-				}
-			}
-		}
-		
-		result.startBubble = bubbles[0][0];
-		return result;
-	}
-	
-	static AbstractBubble parseBubble(final char character, final BubbleMesh bubbleMesh) {
-		if (character == ' ') {
-			return new BubblePlaceholder();
-		} else {
-			Color color;
-			switch (character) {
-			case 'r':
-			case 'R':
-				color = Color.RED;
-			break;
-			case 'g':
-			case 'G':
-				color = Color.GREEN;
-			break;
-			case 'b':
-			case 'B':
-				color = Color.BLUE;
-			break;
-			case 'C':
-			case 'c':
-				color = Color.CYAN;
-			break;
-			case 'M':
-			case 'm':
-				color = Color.MAGENTA;
-			break;
-			case 'Y':
-			case 'y':
-				color = Color.YELLOW;
-			break;
-			default:
-				color = bubbleMesh.getRandomRemainingColor();
-			break;
-			}
-			return new ColouredBubble(color);
-		}
-		
-	}
-	
-	static char getCharFromBubble(Bubble bubble) {
-		if (bubble instanceof BubblePlaceholder) {
-			return (' ');
-		} else if (bubble instanceof ColouredBubble) {
-			Color color = ((ColouredBubble) bubble).getColor();
-			if (color.equals(Color.RED)) {
-				return 'r';
-			} else if (color.equals(Color.GREEN)) {
-				return 'g';
-			} else if (color.equals(Color.BLUE)) {
-				return 'b';
-			} else if (color.equals(Color.CYAN)) {
-				return 'c';
-			} else if (color.equals(Color.MAGENTA)) {
-				return 'm';
-			} else if (color.equals(Color.YELLOW)) {
-				return 'y';
-			} else {
-				throw new IllegalArgumentException();
-			}
-		}
-		throw new IllegalArgumentException();
+		return new BubbleMeshParser(rows).parse();
 	}
 	
 	interface ScoreListener {
 		void incrementScore(int amount);
 	}
 	
-	public static class BubbleMeshImpl implements BubbleMesh {
+	public static class BubbleMeshParser {
 		
-		/**
-		 * Create a string from a {@code BubbleMesh} which is able to be used as
-		 * an input for the parse method.
-		 * 
-		 * @author Sam Smulders
-		 */
-		@Override
-		public String toParseableString() {
-			String parseableString = "";
-			Bubble leftBubble = startBubble;
-			while (leftBubble != null) {
-				Bubble bubble = leftBubble;
-				parseableString += getCharFromBubble(bubble);
-				while ((bubble = bubble.getBubbleAt(Direction.RIGHT)) != null) {
-					parseableString += getCharFromBubble(bubble);
-				}
-				parseableString += '\n';
-				Bubble lBubble = leftBubble.getBubbleAt(Direction.BOTTOMLEFT);
-				if (lBubble == null) {
-					lBubble = leftBubble.getBubbleAt(Direction.BOTTOMRIGHT);
-				}
-				leftBubble = lBubble;
-			}
-			return parseableString;
+		protected final List<String> rows;
+		protected final int rowAmount;
+		protected final int rowSize;
+		protected final Bubble[][] bubbles;
+		
+		public BubbleMeshParser(final List<String> rows) {
+			this.rows = rows;
+			this.rowAmount = rows.size();
+			if (rowAmount < 1)
+				throw new IllegalArgumentException("Wrong file format");
+			this.rowSize = rows.get(0).length();
+			this.bubbles = new Bubble[rowAmount][rowSize];
 		}
 		
-		private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
-		
-		private final List<Color> remainingColors = Lists.newArrayList(Color.RED, Color.GREEN,
+		public BubbleMesh parse() {
+			for (int i = 0; i < rowAmount; i++) {
+				String rowStr = rows.get(i);
+				
+				for (int j = 0; j < rowSize; j++) {
+					
+					Bubble bubble = bubbles[i][j] = parseBubble(rowStr.charAt(j));
+					
+					if (i > 0) {
+						if (i % 2 == 0) { // 3rd, 5fth rows , ...
+							bubble.bind(Direction.TOPRIGHT, bubbles[i - 1][j]);
+							if (j > 0) {
+								bubble.bind(Direction.TOPLEFT, bubbles[i - 1][j - 1]);
+							}
+						} else {
+							bubble.bind(Direction.TOPLEFT, bubbles[i - 1][j]);
+							if (j < (rowSize - 1)) {
+								bubble.bind(Direction.TOPRIGHT, bubbles[i - 1][j + 1]);
+							}
+						}
+					}
+					
+					if (j > 0) {
+						bubble.bind(Direction.LEFT, bubbles[i][j - 1]);
+					}
+					
+					if (i == 0 && j == 0) {
+						bubble.setOrigin(true);
+					}
+				}
+			}
+			
+			BubbleMeshImpl result = new BubbleMeshImpl();
+			result.startBubble = bubbles[0][0];
+			return result;
+		}
+
+		protected final List<Color> remainingColors = Lists.newArrayList(Color.RED, Color.GREEN,
 				Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
+		
+		protected AbstractBubble parseBubble(final char character) {
+			if (character == ' ') {
+				return new BubblePlaceholder();
+			} else {
+				Color color;
+				switch (character) {
+				case 'r':
+				case 'R':
+					color = Color.RED;
+				break;
+				case 'g':
+				case 'G':
+					color = Color.GREEN;
+				break;
+				case 'b':
+				case 'B':
+					color = Color.BLUE;
+				break;
+				case 'C':
+				case 'c':
+					color = Color.CYAN;
+				break;
+				case 'M':
+				case 'm':
+					color = Color.MAGENTA;
+				break;
+				case 'Y':
+				case 'y':
+					color = Color.YELLOW;
+				break;
+				default:
+					color = getRandomRemainingColor();
+				break;
+				}
+				return new ColouredBubble(color);
+			}
+			
+		}
+		
+		protected final Random RANDOM_GENERATOR = new Random();
+		
+		protected Color getRandomRemainingColor() {
+			final int index = RANDOM_GENERATOR.nextInt(remainingColors.size());
+			if (!remainingColors.isEmpty()) {
+				return remainingColors.get(index);
+			} else {
+				throw new IllegalStateException("No colors available!");
+			}
+		}
+		
+	}
+	
+	public static class BubbleMeshImpl implements BubbleMesh {
+		
+		private static final long serialVersionUID = -2580249152755739807L;
+		private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 		
 		private Bubble startBubble;
 		
-		private final List<ScoreListener> scoreListeners = Lists.newArrayList();
+		private transient List<ScoreListener> scoreListeners = Lists.newArrayList();
 		
 		@Override
 		public void calculatePositions() {
@@ -272,7 +254,6 @@ public interface BubbleMesh extends Iterable<Bubble> {
 					log.info("Bubble popped: {}", bubble);
 				});
 				
-				updateRemainingColors();
 				calculateScore(bubblesToPop);
 				return true;
 			}
@@ -402,17 +383,6 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		}
 		
 		/**
-		 * Update the remaining colors list based on the colors that still exist
-		 * in the mesh
-		 */
-		protected void updateRemainingColors() {
-			remainingColors.removeIf(color -> this.stream()
-					.filter(bubble -> bubble instanceof ColouredBubble)
-					.map(bubble -> (ColouredBubble) bubble).map(ColouredBubble::getColor)
-					.distinct().noneMatch(a -> a.equals(color)));
-		}
-		
-		/**
 		 * Calculate the points for this shot and notify the score listeners
 		 * 
 		 * @param bubbles
@@ -423,7 +393,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 		}
 		
 		@Override
-		public void insertRow() throws GameOver {
+		public void insertRow(final GameController gameController) throws GameOver {
 			log.info("Inserting row");
 			Iterator<Bubble> bubbles = iterator();
 			Bubble child = bubbles.next();
@@ -431,7 +401,7 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			boolean shift = !child.hasBubbleAt(Direction.BOTTOMLEFT);
 			
 			for (int i = 0; i < 10; i++) {
-				Bubble bubble = new ColouredBubble(getRandomRemainingColor());
+				Bubble bubble = new ColouredBubble(gameController.getRandomRemainingColor());
 				
 				if (shift) {
 					child.bind(Direction.TOPRIGHT, bubble);
@@ -553,33 +523,52 @@ public interface BubbleMesh extends Iterable<Bubble> {
 			
 		}
 		
-		protected final Random RANDOM_GENERATOR = new Random();
-		
-		@Override
-		public Color getRandomRemainingColor() {
-			final int index = RANDOM_GENERATOR.nextInt(remainingColors.size());
-			if (!remainingColors.isEmpty()) {
-				return remainingColors.get(index);
-			} else {
-				throw new IllegalStateException("No colors available!");
-			}
-		}
-		
-		/**
-		 * Remove a color from the remaining colors list
-		 * 
-		 * @param color
-		 */
-		public void removeRemainingColor(final Color color) {
-			remainingColors.remove(color);
-		}
-		
 		@Override
 		public void addScoreListener(final ScoreListener listener) {
+			if(scoreListeners == null ) 
+				scoreListeners = Lists.newArrayList();
 			scoreListeners.add(listener);
+		}
+
+		@Override
+		public List<Color> getRemainingColours() {
+			return Lists.newArrayList(Lists
+				.newArrayList(Iterables.filter(this, ColouredBubble.class))
+				.stream().map(ColouredBubble::getColor).distinct()
+				.iterator());
+		}
+
+		static char getCharFromBubble(Bubble bubble) {
+			if (bubble instanceof BubblePlaceholder) {
+				return (' ');
+			} else if (bubble instanceof ColouredBubble) {
+				Color color = ((ColouredBubble) bubble).getColor();
+				if (color.equals(Color.RED)) {
+					return 'r';
+				} else if (color.equals(Color.GREEN)) {
+					return 'g';
+				} else if (color.equals(Color.BLUE)) {
+					return 'b';
+				} else if (color.equals(Color.CYAN)) {
+					return 'c';
+				} else if (color.equals(Color.MAGENTA)) {
+					return 'm';
+				} else if (color.equals(Color.YELLOW)) {
+					return 'y';
+				} else {
+					throw new IllegalArgumentException();
+				}
+			}
+			throw new IllegalArgumentException();
+		}
+
+		@Override
+		public void replace(BubbleMesh bubbleMesh) {
+			this.startBubble = bubbleMesh.iterator().next();
 		}
 		
 	}
+
+	void replace(BubbleMesh bubbleMesh);
 	
-	public String toParseableString();
 }
