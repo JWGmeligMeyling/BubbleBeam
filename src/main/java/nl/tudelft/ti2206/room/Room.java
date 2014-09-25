@@ -62,12 +62,10 @@ public abstract class Room implements Tickable, CannonControllerObserver {
 		
 		this.cannon = new Cannon(cannonPosition, dimension);
 		
-		LOADED_BUBBLE_POSITION = new Point(cannonPosition.x
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), cannonPosition.y
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
-		NEXT_BUBBLE_POSITION = new Point(cannonPosition.x + BUBBLE_QUEUE_SPACING
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING), cannonPosition.y
-				- (AbstractBubble.RADIUS + AbstractBubble.SPACING));
+		LOADED_BUBBLE_POSITION = new Point(cannonPosition.x - 18,
+				cannonPosition.y - 18);
+		NEXT_BUBBLE_POSITION = new Point(cannonPosition.x
+				+ BUBBLE_QUEUE_SPACING - 18, cannonPosition.y - 18);
 	}
 	
 	public void setup() {
@@ -90,7 +88,7 @@ public abstract class Room implements Tickable, CannonControllerObserver {
 	@Override
 	public void gameTick() throws GameOver {
 		if (shotBubble != null) {
-			shotBubble.gameStep();
+			shotBubble.gameTick();
 			
 			bubbleMesh
 				.stream()

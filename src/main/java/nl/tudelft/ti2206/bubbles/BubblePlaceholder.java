@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BubblePlaceholder extends AbstractBubble {
 	
+	private static final long serialVersionUID = 4254751857830339489L;
 	private static final Logger log = LoggerFactory.getLogger(BubblePlaceholder.class);
 
 	@Override
