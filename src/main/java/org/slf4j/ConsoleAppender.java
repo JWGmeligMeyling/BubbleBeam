@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableMap;
 public class ConsoleAppender implements LogAppender {
 	
 	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMM HH:mm:ss.SSS");
-
+	
 	private volatile static ConsoleAppender instance;
 	
 	private static final Map<LogPriority, PrintStream> DEFAULT_BINDINGS = ImmutableMap.of(
@@ -26,7 +26,12 @@ public class ConsoleAppender implements LogAppender {
 	
 	private Map<LogPriority, PrintStream> bindings = DEFAULT_BINDINGS;
 	
-	public static ConsoleAppender getInstance(){
+	public static ConsoleAppender getInstance() {
+		if (instance == null) {
+			synchronized (ConsoleAppender.class) {
+				instance = new ConsoleAppender();
+			}
+		}
 		return instance;
 	}
 	
