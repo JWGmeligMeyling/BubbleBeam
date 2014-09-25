@@ -16,7 +16,7 @@ public final class LogConfig {
 	 * Bind the {@code LogAppender}s here
 	 */
 	public static final List<LogAppender> LOG_APPENDERS = Lists
-			.newArrayList(new ConsoleAppender());
+			.newArrayList(ConsoleAppender.getInstance());
 	
 	/**
 	 * Add a {@code LogAppender} to the configuration
