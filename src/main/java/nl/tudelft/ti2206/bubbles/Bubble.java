@@ -38,6 +38,16 @@ public interface Bubble extends Sprite, Circle, Serializable {
 		return bubbles.stream();
 	}
 	
+	default void replace(final Bubble original) {
+		this.bind(Direction.TOPLEFT, original.getBubbleAt(Direction.TOPLEFT));
+		this.bind(Direction.TOPRIGHT, original.getBubbleAt(Direction.TOPRIGHT));
+		this.bind(Direction.LEFT, original.getBubbleAt(Direction.LEFT));
+		this.bind(Direction.RIGHT, original.getBubbleAt(Direction.RIGHT));
+		this.bind(Direction.BOTTOMLEFT, original.getBubbleAt(Direction.BOTTOMLEFT));
+		this.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
+		this.setPosition(original.getPosition());
+	}
+
 	enum Direction {
 		TOPLEFT, TOPRIGHT, LEFT, RIGHT, BOTTOMLEFT, BOTTOMRIGHT;
 		

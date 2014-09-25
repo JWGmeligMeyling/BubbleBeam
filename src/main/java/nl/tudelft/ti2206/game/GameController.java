@@ -123,21 +123,35 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * @throws GameOver
 	 */
 	protected void collide(final BubbleMesh bubbleMesh,
-			final MovingBubble shotBubble, final Bubble hitTarget)
-			throws GameOver {
+			final MovingBubble shotBubble, final Bubble hitTarget) {
 		
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
-		bubbleMesh.replaceBubble(snapPosition, shotBubble);
-		log.info("Bullet collided with {}", snapPosition);
 		
-		if (!bubbleMesh.pop(shotBubble)) {
-			incrementMisses();
+		try {
+			bubbleMesh.replaceBubble(snapPosition, shotBubble);
+			log.info("Bullet collided with {}", snapPosition);
+
+			if (!bubbleMesh.pop(shotBubble)) {
+				incrementMisses();
+			}
+
+			cannonController.load();
+		}
+		catch (GameOver e) {
+			gameOver();
+		}
+		finally {
+			model.setShotBubble(null);
 		}
 		
-		model.setShotBubble(null);
-		cannonController.load();
 	}
 	
+	protected void gameOver() {
+		log.info("Sorry dawg, the game is over");
+		model.setGameOver(true);
+		model.notifyObservers();
+	}
+
 	/**
 	 * No bubbles popped, increment misses
 	 * 
