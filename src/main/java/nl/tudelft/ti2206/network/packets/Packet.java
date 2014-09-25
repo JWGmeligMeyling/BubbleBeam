@@ -1,10 +1,15 @@
 package nl.tudelft.ti2206.network.packets;
 
 import java.awt.Color;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -21,24 +26,31 @@ import nl.tudelft.util.Vector2f;
  * the packet as raw data in the {@link PacketFactory}.
  * 
  * @author Sam Smulders
+ * @author Jan-Willem Gmelig Meyling
  */
-public interface Packet {
+public interface Packet extends Serializable {
 	
-	/**
-	 * Send this packet over a {@link DataOutputStream}.
-	 * 
-	 * @param out
-	 *            the DataOutputStream to send this package over.
-	 * @throws IOException
-	 */
-	public void send(DataOutputStream out) throws IOException;
+	static final Logger log = LoggerFactory.getLogger(Packet.class);
 	
 	/**
 	 * Notifies the responsible {@Link PacketHandler} about this packet.
 	 * 
 	 * @param packetHandlerCollection
 	 */
-	public void notify(PacketHandlerCollection packetHandlerCollection);
+	void notify(PacketHandlerCollection packetHandlerCollection);
+	
+	default void write(final ObjectOutputStream outputStream) throws IOException {
+		try {
+			outputStream.reset();
+			outputStream.writeObject(this);
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+		}
+	}
+	
+	static Packet read(final ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
+		return (Packet) inputStream.readObject();
+	}
 	
 	/**
 	 * The {@code CannonRotate} {@link Packet} is used to send and receive
@@ -47,23 +59,13 @@ public interface Packet {
 	 * @author Sam Smulders
 	 */
 	public class CannonRotate implements Packet {
-		public static final byte PACKET_ID = 0;
+		
+		private static final long serialVersionUID = -8205066675151884103L;
 		
 		public final double rotation;
 		
 		public CannonRotate(double direction) {
 			this.rotation = direction;
-		}
-		
-		public CannonRotate(DataInputStream in) throws IOException {
-			this.rotation = in.readDouble();
-		}
-		
-		@Override
-		public void send(DataOutputStream out) throws IOException {
-			out.writeByte(PACKET_ID);
-			out.writeDouble(rotation);
-			out.flush();
 		}
 		
 		@Override
@@ -79,24 +81,13 @@ public interface Packet {
 	 * @author Sam Smulders
 	 */
 	public class CannonShoot implements Packet {
-		public static final byte PACKET_ID = 1;
-		
+
+		private static final long serialVersionUID = 1546268759069464515L;
+
 		public final Vector2f direction;
 		
 		public CannonShoot(Vector2f direction) {
 			this.direction = new Vector2f(direction);
-		}
-		
-		public CannonShoot(DataInputStream in) throws IOException {
-			this.direction = new Vector2f(in.readFloat(), in.readFloat());
-		}
-		
-		@Override
-		public void send(DataOutputStream out) throws IOException {
-			out.writeByte(PACKET_ID);
-			out.writeFloat(direction.x);
-			out.writeFloat(direction.y);
-			out.flush();
 		}
 		
 		@Override
@@ -112,23 +103,13 @@ public interface Packet {
 	 * @author Sam Smulders
 	 */
 	public class BubbleMeshSync implements Packet {
-		public static final byte PACKET_ID = 2;
+
+		private static final long serialVersionUID = -8341409595602559487L;
+
+		public final BubbleMesh bubbleMesh;
 		
-		public final String parseString;
-		
-		public BubbleMeshSync(String parseString) {
-			this.parseString = parseString;
-		}
-		
-		public BubbleMeshSync(DataInputStream in) throws IOException {
-			this.parseString = in.readUTF();
-		}
-		
-		@Override
-		public void send(DataOutputStream out) throws IOException {
-			out.writeByte(PACKET_ID);
-			out.writeUTF(parseString);
-			out.flush();
+		public BubbleMeshSync(final BubbleMesh bubbleMesh) {
+			this.bubbleMesh = bubbleMesh;
 		}
 		
 		@Override
@@ -143,26 +124,15 @@ public interface Packet {
 	 * 
 	 * @author Sam Smulders
 	 */
-	public class LoadNewBubble implements Packet {
-		public static final byte PACKET_ID = 3;
+	public class AmmoPacket implements Packet {
+
+		private static final long serialVersionUID = -7036909370582903656L;
+
+		public final Color loadedBubble, nextBubble;
 		
-		public final Color color;
-		
-		public LoadNewBubble(Color color) {
-			this.color = color;
-		}
-		
-		public LoadNewBubble(DataInputStream in) throws IOException {
-			this.color = new Color(in.readInt(), in.readInt(), in.readInt());
-		}
-		
-		@Override
-		public void send(DataOutputStream out) throws IOException {
-			out.writeByte(PACKET_ID);
-			out.writeInt(color.getRed());
-			out.writeInt(color.getGreen());
-			out.writeInt(color.getBlue());
-			out.flush();
+		public AmmoPacket(Color loadedBubble, Color nextBubble) {
+			this.loadedBubble = loadedBubble;
+			this.nextBubble = nextBubble;
 		}
 		
 		@Override

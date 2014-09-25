@@ -1,8 +1,8 @@
 package nl.tudelft.ti2206.network;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import org.slf4j.Logger;
@@ -23,15 +23,35 @@ public class Client extends Connector {
 		this.ip = ip;
 	}
 	
+	private Socket socket;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
+	
 	@Override
 	public void connect() {
 		try {
+			log.info("Setting up client connection at address {}:{}", ip, PORT);
 			socket = new Socket(ip, PORT);
-			in = new DataInputStream(socket.getInputStream());
-			out = new DataOutputStream(socket.getOutputStream());
+			in = new ObjectInputStream(socket.getInputStream());
+			out = new ObjectOutputStream(socket.getOutputStream());
 			ready = true;
 		} catch (IOException e) {
-			log.debug(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	protected Socket getSocket() {
+		return socket;
+	}
+
+	@Override
+	protected ObjectInputStream getInputStream() {
+		return in;
+	}
+
+	@Override
+	protected ObjectOutputStream getOutputStream() {
+		return out;
 	}
 }

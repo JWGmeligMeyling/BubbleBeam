@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -19,17 +20,26 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.tick.GameTick;
+import nl.tudelft.ti2206.game.tick.GameTickImpl;
 import nl.tudelft.ti2206.network.Client;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.Host;
+import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.util.Task;
 
 /**
- * @author leon Hoek Class that contains the GUI-frame and starts the game-loop
+ * Class that contains the GUI-frame and starts the game-loop
+ * @author Leon Hoek 
  */
-
 public class GUI {
+	
+	private static final Logger log = LoggerFactory.getLogger(GUI.class);
 	
 	JFrame frame;
 	GamePanel player1Panel;
@@ -39,7 +49,7 @@ public class GUI {
 	boolean multiplayer = false;
 	
 	// Repaint variables
-	public static final int FPS = 60;
+	public static final int FPS = 30;
 	protected static final int FRAME_PERIOD = 1000 / FPS;
 	
 	// Score-labels
@@ -56,6 +66,8 @@ public class GUI {
 	final static boolean shouldWeightX = true;
 	final static boolean RIGHT_TO_LEFT = false;
 	
+	private final GameTick gameTick = new GameTickImpl(FRAME_PERIOD);
+	
 	/**
 	 * fills the panel of a Frame with the game and the controls
 	 * 
@@ -63,9 +75,11 @@ public class GUI {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws ParseException
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 */
 	private void fillGameFrame(Container pane) throws FileNotFoundException, IOException,
-			ParseException {
+			ParseException, InterruptedException, ExecutionException {
 		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		}
@@ -78,11 +92,11 @@ public class GUI {
 		
 		// everything the frame must be filled with
 		if (multiplayer) {
-			player1Panel = new MultiPlayerActiveGamePanel(BubbleMesh.parse(GUI.class
-					.getResourceAsStream("/board.txt")), connector);
+			player1Panel = new GamePanel(new MasterGameController(BubbleMesh.parse(GUI.class
+					.getResourceAsStream("/board.txt")), connector, gameTick));
 		} else {
-			player1Panel = new SinglePlayerGamePanel(BubbleMesh.parse(GUI.class
-					.getResourceAsStream("/board.txt")));
+			player1Panel = new GamePanel(new MasterGameController(BubbleMesh.parse(GUI.class
+					.getResourceAsStream("/board.txt")), gameTick));
 		}
 		
 		player1Panel.observeScore((a, b) -> updateDisplayedScore());
@@ -172,17 +186,16 @@ public class GUI {
 					connector = new Host();
 					try {
 						connector.connect();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					// Check if connector is setup correctly
-					if (connector.isReady()) {
 						multiplayer = true;
 						GUI.this.restart();
-						connector.start();
-						waitFrame.removeAll();
-						waitFrame.setVisible(false);
-						waitFrame = null;
+
+						if(waitFrame != null) {
+							waitFrame.removeAll();
+							waitFrame.setVisible(false);
+							waitFrame = null;
+						}
+					} catch (IOException e) {
+						log.error(e.getMessage(), e);
 					}
 				}
 			});
@@ -213,19 +226,16 @@ public class GUI {
 					connector = new Client(ipaddressTextField.getText());
 					try {
 						connector.connect();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					// Check if connector is setup correctly
-					if (connector.isReady()) {
 						multiplayer = true;
 						GUI.this.restart();
-						connector.start();
-					}
-					if (waitFrame != null) {
-						waitFrame.removeAll();
-						waitFrame.setVisible(false);
-						waitFrame = null;
+
+						if (waitFrame != null) {
+							waitFrame.removeAll();
+							waitFrame.setVisible(false);
+							waitFrame = null;
+						}
+					} catch (IOException e) {
+						log.error(e.getMessage(), e);
 					}
 				}
 			});
@@ -274,9 +284,10 @@ public class GUI {
 		// multiplayer
 		// everything the frame must be filled with for a local multiplayer
 		if (multiplayer) {
-			player2Panel = new MultiPlayerPassiveGamePanel(BubbleMesh.parse(GUI.class
-					.getResourceAsStream("/board.txt")), connector);
+			player2Panel = GamePanel.getSlaveGamePanel(connector, gameTick).get();
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
+			connector.sendPacket(new Packet.BubbleMeshSync(player1Panel
+					.getModel().getBubbleMesh()));
 			
 			c.fill = GridBagConstraints.NONE;
 			c.weightx = 0;
@@ -352,12 +363,18 @@ public class GUI {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws ParseException
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 */
-	public GUI() throws FileNotFoundException, IOException, ParseException {
+	public GUI() throws FileNotFoundException, IOException, ParseException, InterruptedException, ExecutionException {
 		frame = new JFrame("Bubble Shooter");
 		
 		// add the game + controls
-		fillGameFrame(frame.getContentPane());
+		try {
+			fillGameFrame(frame.getContentPane());
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+		}
 		
 		// resize and center the frame
 		frame.pack();
