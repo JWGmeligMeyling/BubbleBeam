@@ -51,7 +51,7 @@ public class LogLineImpl implements LogLine {
 	@Override
 	public int getLineNumber() {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-		StackTraceElement element = stackTraceElements[3];
+		StackTraceElement element = stackTraceElements[8];
 		return element.getLineNumber();
 	}
 
