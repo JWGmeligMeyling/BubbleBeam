@@ -1,8 +1,7 @@
 package nl.tudelft.ti2206.bubbles;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.awt.Point;
 import java.util.Arrays;
