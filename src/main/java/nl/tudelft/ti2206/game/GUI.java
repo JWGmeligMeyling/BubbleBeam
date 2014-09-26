@@ -108,63 +108,21 @@ public class GUI {
 		}
 		
 		player1Panel.observeScore((a, b) -> updateDisplayedScore());
-		
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridheight = 4;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.ipadx = 0;
-		c.ipady = 0;
-		c.insets = extPadding;
+		c = new GridBagConstraints(0,0,1,4,0.0,0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, extPadding, 0, 0);
 		pane.add(player1Panel, c);
 		
 		// score-label
 		playerScore = new JLabel("Score: ");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.EAST;
-		c.gridx = 0;
-		c.gridy = 4;
-		c.ipadx = 30;
-		c.ipady = 30;
-		c.insets = extPadding;
+		c = new GridBagConstraints(0,4,1,1,0.0,0.0, GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
 		pane.add(playerScore, c);
 		
 		JLabel spaceForLogo = new JLabel("");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridx = 2;
-		c.gridy = 0;
-		c.ipadx = 30;
-		c.ipady = 30;
-		c.insets = noPadding;
+		c = new GridBagConstraints(2,0,1,1,1.0,0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, noPadding, 30, 30);
 		pane.add(spaceForLogo, c);
 		
 		final JButton exit = new JButton("Exit");
 		exit.addActionListener((event) -> GUI.this.exit());
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.gridx = 2;
-		c.gridy = 1;
-		c.ipadx = 30;
-		c.ipady = 30;
-		c.insets = extPadding;
+		c = new GridBagConstraints(2,1,1,1,1.0,0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
 		pane.add(exit, c);
 		
 		final JButton singlePlayerRestart = new JButton("Restart Single-Player");
@@ -172,17 +130,7 @@ public class GUI {
 			multiplayer = false;
 			GUI.this.restart();
 		});
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.gridx = 2;
-		c.gridy = 2;
-		c.ipadx = 30;
-		c.insets = extPadding;
+		c = new GridBagConstraints(2,2,1,1,1.0,0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
 		pane.add(singlePlayerRestart, c);
 		
 		final JButton multiPlayerRestart = new JButton("Restart Multi-Player as Host");
@@ -208,22 +156,15 @@ public class GUI {
 				}
 			});
 		});
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.gridx = 2;
-		c.gridy = 3;
-		c.ipadx = 30;
-		c.insets = extPadding;
+		c = new GridBagConstraints(2,3,1,1,1.0,0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
 		pane.add(multiPlayerRestart, c);
 		
+		
 		final JFormattedTextField ipaddressTextField = new JFormattedTextField(new MaskFormatter(
-				"###.###.###.###")); // TODO change to
-										// something less buggy
+				"###.###.###.###"));
+		c = new GridBagConstraints(2,5,1,1,1.0,0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
+		ipaddressTextField.setText("127.000.000.001");
+		pane.add(ipaddressTextField, c);
 		
 		final JButton findMultiPlayerRestart = new JButton("Find Multiplayer game");
 		findMultiPlayerRestart.addActionListener((event) -> {
@@ -248,45 +189,11 @@ public class GUI {
 				}
 			});
 		});
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.gridx = 2;
-		c.gridy = 4;
-		c.ipadx = 30;
-		c.insets = extPadding;
-		ipaddressTextField.setText("127.000.000.001");
+		c = new GridBagConstraints(2,4,1,1,1.0,0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
 		pane.add(findMultiPlayerRestart, c);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.gridx = 2;
-		c.gridy = 5;
-		c.ipadx = 30;
-		c.insets = extPadding;
-		pane.add(ipaddressTextField, c);
-		
-		JLabel version = new JLabel("Version: 0.1 Alpha"); // TODO how to add
-															// versionnumber
-															// from POM-file
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.weighty = 1;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.anchor = GridBagConstraints.SOUTH;
-		c.gridx = 2;
-		c.gridy = 6;
-		c.ipadx = 30;
-		c.insets = extPadding;
+		JLabel version = new JLabel("Version: 0.3 Alpha");
+		c = new GridBagConstraints(2,6,1,1,1.0,1.0, GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
 		pane.add(version, c);
 		
 		// multiplayer
@@ -296,33 +203,12 @@ public class GUI {
 			player2Panel.observeScore((a, b) -> updateDisplayedScore());
 			connector.sendPacket(new Packet.BubbleMeshSync(player1Panel
 					.getModel().getBubbleMesh()));
-			
-			c.fill = GridBagConstraints.NONE;
-			c.weightx = 0;
-			c.weighty = 0;
-			c.gridheight = 4;
-			c.gridwidth = 1;
-			c.anchor = GridBagConstraints.WEST;
-			c.gridx = 3;
-			c.gridy = 0;
-			c.ipadx = 0;
-			c.ipady = 0;
-			c.insets = extPadding;
+			c = new GridBagConstraints(3,0,1,4,0.0,0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, extPadding, 0, 0);
 			pane.add(player2Panel, c);
 			
 			// score-label for multiplayer
 			player2Score = new JLabel("Score: ");
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.weightx = 0;
-			c.weighty = 0;
-			c.gridheight = 1;
-			c.gridwidth = 1;
-			c.anchor = GridBagConstraints.WEST;
-			c.gridx = 3;
-			c.gridy = 4;
-			c.ipadx = 30;
-			c.ipady = 30;
-			c.insets = extPadding;
+			c = new GridBagConstraints(3,4,1,1,0.0,0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, extPadding, 30, 30);
 			pane.add(player2Score, c);
 			
 		}
