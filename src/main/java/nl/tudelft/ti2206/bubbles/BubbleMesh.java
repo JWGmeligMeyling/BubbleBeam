@@ -10,9 +10,7 @@ import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -25,6 +23,8 @@ import nl.tudelft.ti2206.game.GameController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -36,14 +36,17 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	}
 	
 	/**
-	 * Pop this bubble and it's neighbors recursively
+	 * Pop this bubble and it's neighbors recursively. If bubbles pop, the
+	 * amount of points is calculated and {@link ScoreListeners} listening to
+	 * this {@code BubbleMesh} will be notified.
 	 * 
 	 * @return true iff bubbles popped
 	 */
 	boolean pop(ColouredBubble target);
 	
 	/**
-	 * Calculate the positions for the bubbles
+	 * Calculate the positions for the bubbles relative to the origin (top left
+	 * bubble)
 	 */
 	void calculatePositions();
 	
@@ -51,6 +54,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 * Insert a new row of bubbles at the top
 	 * 
 	 * @throws GameOver
+	 *             if a new row can't be inserted, the game is over
 	 */
 	void insertRow(GameController gameController) throws GameOver;
 	
@@ -165,10 +169,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				
 			}
 			
-			BubbleMeshImpl result = new BubbleMeshImpl();
-			result.topLeftBubble = bubbles[0][0];
-			result.bottomLeftBubble = bubbles[rowAmount-1][0];
-			return result;
+			return new BubbleMeshImpl(bubbles[0][0], bubbles[rowAmount-1][0]);
 		}
 
 		protected final List<Color> remainingColors = Lists.newArrayList(Color.RED, Color.GREEN,
@@ -230,11 +231,22 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		private static final long serialVersionUID = -2580249152755739807L;
 		private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 		
-		private Bubble topLeftBubble;
-		private Bubble bottomLeftBubble;
+		protected Bubble topLeftBubble;
+		protected Bubble bottomLeftBubble;
+		protected transient List<ScoreListener> scoreListeners;
 		
-		private transient List<ScoreListener> scoreListeners = Lists.newArrayList();
-		
+		/**
+		 * Construct a new BubbleMesh
+		 * @param topLeftBubble
+		 * @param bottomLeftBubble
+		 */
+		public BubbleMeshImpl(final Bubble topLeftBubble, final Bubble bottomLeftBubble) {
+			super();
+			this.topLeftBubble = topLeftBubble;
+			this.bottomLeftBubble = bottomLeftBubble;
+			this.scoreListeners = Lists.newArrayList();
+		}
+
 		@Override
 		public void calculatePositions() {
 			for (Bubble bubble : this) {
@@ -418,6 +430,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			log.info("Inserting row");
 			
 			Iterator<Bubble> bubbles = iterator();
+			assert bubbles.hasNext();
 			Bubble child = bubbles.next();
 			Bubble previousBubble = null;
 			boolean shift = !child.hasBubbleAt(Direction.BOTTOMLEFT);
@@ -449,6 +462,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 					topLeftBubble = bubble;
 				}
 				
+				assert bubbles.hasNext();
 				child = bubbles.next();
 			}
 			
@@ -486,48 +500,43 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 		public class BubbleMeshIterator implements Iterator<Bubble> {
 			
-			private Queue<Bubble> a = new LinkedList<Bubble>();
-			private Queue<Bubble> b = new LinkedList<Bubble>();
+			private Bubble currentRowStart;
+			
+			private Iterator<Bubble> currentRowIterator;
 			
 			protected BubbleMeshIterator() {
-				
-				addRowToQueue(a, topLeftBubble);
-				
-				while (!a.isEmpty()) {
-					Bubble bubble = a.remove();
-					b.add(bubble);
-					
-					Bubble firstChild = null;
-					
-					if (bubble.getBubbleAt(Direction.BOTTOMLEFT) != null) {
-						firstChild = bubble.getBubbleAt(Direction.BOTTOMLEFT);
-					} else if (bubble.getBubbleAt(Direction.BOTTOMRIGHT) != null) {
-						firstChild = bubble.getBubbleAt(Direction.BOTTOMRIGHT);
-					}
-					
-					if (firstChild != null && firstChild.getBubbleAt(Direction.LEFT) == null) {
-						addRowToQueue(a, firstChild);
-					}
-				}
-			}
-			
-			private void addRowToQueue(final Queue<Bubble> bubbles, final Bubble leftEdge) {
-				Bubble left = leftEdge;
-				bubbles.add(left);
-				while (left.getBubbleAt(Direction.RIGHT) != null) {
-					left = left.getBubbleAt(Direction.RIGHT);
-					bubbles.add(left);
-				}
+				Preconditions.checkNotNull(topLeftBubble);
+				currentRowStart = topLeftBubble;
+				currentRowIterator = currentRowStart.traverse(Direction.RIGHT)
+						.iterator();
 			}
 			
 			@Override
 			public boolean hasNext() {
-				return !b.isEmpty();
+				if(currentRowIterator.hasNext()) {
+					return true;
+				}
+				else {
+					Bubble newRowStart = currentRowStart.getBubbleAt(Direction.BOTTOMLEFT);
+					if(newRowStart == null) {
+						newRowStart = currentRowStart.getBubbleAt(Direction.BOTTOMRIGHT);
+					}
+					currentRowStart = newRowStart;
+				}
+				
+				if(currentRowStart != null) {
+					currentRowIterator = currentRowStart.traverse(Direction.RIGHT)
+							.iterator();
+					return currentRowIterator.hasNext();
+				}
+				
+				return false;
 			}
 			
 			@Override
 			public Bubble next() {
-				return b.remove();
+				if(!hasNext()) throw new IllegalStateException();
+				return currentRowIterator.next();
 			}
 			
 			@Override
@@ -559,15 +568,17 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		}
 		
 		@Override
+		@VisibleForTesting
 		public Bubble getTopLeftBubble() {
 			return topLeftBubble;
 		}
 		
 		@Override
+		@VisibleForTesting
 		public Bubble getBottomLeftBubble() {
 			return bottomLeftBubble;
 		}
-		
+
 	}
 
 }

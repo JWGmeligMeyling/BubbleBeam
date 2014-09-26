@@ -9,6 +9,7 @@ import java.util.List;
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshParser;
+
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -39,11 +40,11 @@ public class BubbleMeshParserTest {
 		BubbleMeshImpl mesh = parser.parse();
 		Bubble topLeft = mesh.getTopLeftBubble();
 
-		long amount = topLeft.traverse(Direction.RIGHT)
+		Integer amount = (int) topLeft.traverse(Direction.RIGHT)
 			.map(bubble -> ((ColouredBubble) bubble).getColor())
 			.distinct().count();
 		
-		assertTrue(amount > 4);
+		assertThat(amount, greaterThan(3));
 	}
 	
 	@Test

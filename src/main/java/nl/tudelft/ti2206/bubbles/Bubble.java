@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
@@ -95,6 +96,11 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	 */
 	Point calculatePosition();
 	
+	/**
+	 * @return the connections as map
+	 */
+	Map<Direction, Bubble> getConnections();
+
 	/**
 	 * Traverse the {@link BubbleMesh} in a given {@link Direction}, with this
 	 * {@code Bubble} as starting point.
