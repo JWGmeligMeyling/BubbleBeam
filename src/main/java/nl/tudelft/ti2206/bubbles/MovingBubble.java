@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import nl.tudelft.ti2206.game.tick.Tickable;
+import nl.tudelft.ti2206.game.backend.Tickable;
 import nl.tudelft.util.Vector2f;
 
 /**

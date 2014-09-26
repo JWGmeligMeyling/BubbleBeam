@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.game.tick;
+package nl.tudelft.ti2206.game.backend;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;

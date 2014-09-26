@@ -17,7 +17,7 @@ import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshParser;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.ScoreListener;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.GameController;
+import nl.tudelft.ti2206.game.backend.GameController;
 
 import org.junit.Test;
 

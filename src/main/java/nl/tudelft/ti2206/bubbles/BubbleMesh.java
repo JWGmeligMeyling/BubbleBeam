@@ -18,8 +18,8 @@ import java.util.stream.StreamSupport;
 
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.GameController;
-import nl.tudelft.ti2206.game.GameModel;
+import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.backend.GameModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

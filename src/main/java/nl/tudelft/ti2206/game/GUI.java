@@ -25,8 +25,9 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.tick.GameTick;
-import nl.tudelft.ti2206.game.tick.GameTickImpl;
+import nl.tudelft.ti2206.game.backend.GameTick;
+import nl.tudelft.ti2206.game.backend.GameTickImpl;
+import nl.tudelft.ti2206.game.backend.MasterGameController;
 import nl.tudelft.ti2206.network.Client;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.Host;
