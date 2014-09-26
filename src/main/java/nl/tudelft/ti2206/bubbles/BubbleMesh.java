@@ -146,9 +146,6 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 						bubble.bind(Direction.LEFT, bubbles[i][j - 1]);
 					}
 					
-					if (i == 0 && j == 0) {
-						bubble.setOrigin(true);
-					}
 				}
 				
 			}
@@ -226,8 +223,10 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		@Override
 		public void calculatePositions() {
 			for (Bubble bubble : this) {
-				Point newPosition = bubble.calculatePosition();
-				bubble.setPosition(newPosition);
+				if(bubble != leftTopBubble) {
+					Point newPosition = bubble.calculatePosition();
+					bubble.setPosition(newPosition);
+				}
 			}
 		}
 		
@@ -429,12 +428,10 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				previousBubble = bubble;
 				
 				if (i == 0) {
-					leftTopBubble.setOrigin(false);
 					if (shift)
 						bubble.setPosition(new Point(leftTopBubble.getX() + AbstractBubble.WIDTH / 2,
 								leftTopBubble.getY()));
 					leftTopBubble = bubble;
-					leftTopBubble.setOrigin(true);
 				}
 				
 				child = bubbles.next();

@@ -16,9 +16,9 @@ public class MovingBubble extends ColouredBubble implements Tickable {
 	
 	private static final long serialVersionUID = 6874942662206137844L;
 	
-	transient protected Vector2f velocity;
 	transient protected Vector2f truePosition;
-	transient protected Dimension screenSize;
+	transient protected final Vector2f velocity;
+	transient protected final Dimension screenSize;
 	
 	public MovingBubble(final Point position, final Vector2f velocity, final Dimension screenSize,
 			final Color color) {
@@ -37,8 +37,9 @@ public class MovingBubble extends ColouredBubble implements Tickable {
 	}
 	
 	protected void bounceOnWallCollision() {
-		if (truePosition.x + ColouredBubble.WIDTH > screenSize.width) {
-			float xError = truePosition.x + ColouredBubble.WIDTH - (screenSize.width);
+		int width = this.getWidth();
+		if (truePosition.x + width > screenSize.width) {
+			float xError = truePosition.x + width - (screenSize.width);
 			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
 			velocity.x = -velocity.x;
 		} else if (truePosition.x < 0) {
@@ -48,5 +49,22 @@ public class MovingBubble extends ColouredBubble implements Tickable {
 		}
 		
 	}
+	
+	public void setTruePosition(Vector2f truePosition) {
+		this.truePosition = truePosition;
+	}
+	
+	public Vector2f getTruePosition() {
+		return truePosition;
+	}
+
+	public Vector2f getVelocity() {
+		return velocity;
+	}
+
+	public Dimension getScreenSize() {
+		return screenSize;
+	}
+	
 
 }

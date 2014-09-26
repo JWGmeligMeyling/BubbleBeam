@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -19,7 +21,7 @@ import com.google.common.collect.Maps;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public abstract class AbstractBubble implements Bubble {
+public class AbstractBubble implements Bubble {
 	
 	private static final long serialVersionUID = -3403214887629166657L;
 	public static final int WIDTH = 32;
@@ -27,16 +29,10 @@ public abstract class AbstractBubble implements Bubble {
 	public static final int RADIUS = 14;
 	public static final Point ORIGIN = new Point(0,0);
 
-	protected boolean origin = false;
 	protected Point position = new Point(ORIGIN.x + 2, ORIGIN.y + 2);
 	protected Point center = new Point(ORIGIN.x + WIDTH / 2, ORIGIN.y + HEIGHT / 2);
 	protected final Map<Direction, Bubble> connections  = Maps.newTreeMap();
 
-	@Override
-	public void setOrigin(boolean value) {
-		origin = value;
-	}
-	
 	@Override
 	public void setPosition(final Point position) {
 		int width = getWidth(), height = getHeight();
@@ -85,26 +81,30 @@ public abstract class AbstractBubble implements Bubble {
 	public int getY() {
 		return position.y;
 	}
+
+	private static final List<Direction> inOrderDirections = ImmutableList.of(
+			Direction.TOPLEFT, Direction.TOPRIGHT, Direction.LEFT,
+			Direction.RIGHT, Direction.BOTTOMLEFT, Direction.BOTTOMRIGHT);
 	
+	@Override
 	public Point calculatePosition() {
-		if(!origin) {
-			if(this.hasBubbleAt(Direction.TOPLEFT)) {
-				return new Point(getBubbleAt(Direction.TOPLEFT).getX() + WIDTH / 2, getBubbleAt(Direction.TOPLEFT).getY() + HEIGHT);
-			}
-			else if(this.hasBubbleAt(Direction.TOPRIGHT)) {
-				return new Point(getBubbleAt(Direction.TOPRIGHT).getX() - WIDTH / 2, getBubbleAt(Direction.TOPRIGHT).getY() + HEIGHT);
-			}
-			else if(this.hasBubbleAt(Direction.LEFT)) {
-				return new Point(getBubbleAt(Direction.LEFT).getX() + WIDTH, getBubbleAt(Direction.LEFT).getY());
-			}
-			else if(this.hasBubbleAt(Direction.RIGHT)) {
-				return new Point(getBubbleAt(Direction.RIGHT).getX() - WIDTH, getBubbleAt(Direction.RIGHT).getY());
-			}
-			else if(this.hasBubbleAt(Direction.BOTTOMLEFT)) {
-				return new Point(getBubbleAt(Direction.BOTTOMLEFT).getX() + WIDTH / 2, getBubbleAt(Direction.BOTTOMLEFT).getY() - HEIGHT);
-			}
-			else if(this.hasBubbleAt(Direction.BOTTOMRIGHT)) {
-				return new Point(getBubbleAt(Direction.BOTTOMRIGHT).getX() - WIDTH / 2, getBubbleAt(Direction.BOTTOMRIGHT).getY() - HEIGHT);
+		for(Direction direction : inOrderDirections) {
+			Bubble bubble = this.getBubbleAt(direction);
+			if(bubble == null) 
+				continue;
+			switch(direction) {
+			case TOPLEFT:
+				return new Point(bubble.getX() + WIDTH / 2, bubble.getY() + HEIGHT);
+			case TOPRIGHT:
+				return new Point(bubble.getX() - WIDTH / 2, bubble.getY() + HEIGHT);
+			case LEFT:
+				return new Point(bubble.getX() + WIDTH, bubble.getY());
+			case RIGHT:
+				return new Point(bubble.getX() - WIDTH, bubble.getY());
+			case BOTTOMLEFT:
+				return new Point(bubble.getX() + WIDTH / 2, bubble.getY() - HEIGHT);
+			case BOTTOMRIGHT:
+				return new Point(bubble.getX() - WIDTH / 2, bubble.getY() - HEIGHT);
 			}
 		}
 		return position;
@@ -149,7 +149,7 @@ public abstract class AbstractBubble implements Bubble {
 	}
 	
 	@Override
-	public <T> List<T> getNeighboursOfType(Class<T> type) {
+	public <T extends Bubble> List<T> getNeighboursOfType(Class<T> type) {
 		return Lists.newArrayList(Iterables.filter(getNeighbours(), type));
 	}
 	
@@ -163,7 +163,7 @@ public abstract class AbstractBubble implements Bubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		renderDebugLines((Graphics2D) graphics);
+//		renderDebugLines((Graphics2D) graphics);
 	}
 	
 	protected void renderDebugLines(final Graphics2D g2) {
@@ -179,6 +179,11 @@ public abstract class AbstractBubble implements Bubble {
 		if(this.hasBubbleAt(Direction.BOTTOMLEFT) && this.getBubbleAt(Direction.BOTTOMLEFT).getBubbleAt(Direction.TOPRIGHT).equals(this)){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBubbleAt(Direction.BOTTOMLEFT).getCenter().x ,this.getBubbleAt(Direction.BOTTOMLEFT).getCenter().y);
 		}
+	}
+	
+	@VisibleForTesting
+	Map<Direction, Bubble> getConnections() {
+		return connections;
 	}
 	
 }
