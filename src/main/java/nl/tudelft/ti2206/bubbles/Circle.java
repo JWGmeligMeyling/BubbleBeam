@@ -64,7 +64,7 @@ public interface Circle {
 	 * @return true if this {@code Circle} intersects the other {@code Circle}
 	 */
 	default boolean intersect(final Circle other) {
-		return getDistance(other) < (getRadius() + other.getRadius());
+		return getDistance(other) <= (getRadius() + other.getRadius());
 	}
 	
 }

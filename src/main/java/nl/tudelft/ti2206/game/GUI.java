@@ -97,6 +97,13 @@ public class GUI {
 		} else {
 			player1Panel = new GamePanel(new MasterGameController(BubbleMesh.parse(GUI.class
 					.getResourceAsStream("/board.txt")), gameTick));
+			
+			player1Panel.getModel().addObserver((a,b) -> {
+				if(player1Panel.getModel().isGameOver()) {
+					multiplayer = false;
+					GUI.this.restart();
+				}
+			});
 		}
 		
 		player1Panel.observeScore((a, b) -> updateDisplayedScore());

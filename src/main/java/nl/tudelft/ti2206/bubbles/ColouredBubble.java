@@ -52,16 +52,12 @@ public class ColouredBubble extends AbstractBubble {
 		final Graphics2D g2 = (Graphics2D) graphics;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-
-		final Point center = new Point(this.getX(), this.getY());
-		center.translate(WIDTH / 2, HEIGHT / 2);
-		fillBaseColour(g2, center, color);
+		fillBaseColour(g2, color);
 	}
 
 	protected static float[] BASE_COLOR_GRADIENT_RANGE = new float[] { 0.0f, 1.0f };
 
-	protected void fillBaseColour(final Graphics2D graphics, final Point center,
-			final Color baseColor) {
+	protected void fillBaseColour(final Graphics2D graphics, final Color baseColor) {
 		graphics.setColor(baseColor);
 		int diameter = getRadius() * 2;
 		graphics.fillOval(paintStart.x, paintStart.y, diameter, diameter);
@@ -83,6 +79,10 @@ public class ColouredBubble extends AbstractBubble {
 	@Override
 	public String toString() {
 		return super.toString() + "(" + color.toString() + ")";
+	}
+	
+	public Point getPaintStart() {
+		return paintStart;
 	}
 
 	
