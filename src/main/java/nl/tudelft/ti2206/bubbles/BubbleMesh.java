@@ -19,6 +19,7 @@ import java.util.stream.StreamSupport;
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.GameController;
+import nl.tudelft.ti2206.game.GameModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+/**
+ * A mesh structure of {@link Bubble Bubbles}
+ *  
+ * @author Jan-Willem Gmelig Meyling
+ */
 public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	
 	default Stream<Bubble> stream() {
@@ -37,9 +43,11 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	
 	/**
 	 * Pop this bubble and it's neighbors recursively. If bubbles pop, the
-	 * amount of points is calculated and {@link ScoreListeners} listening to
-	 * this {@code BubbleMesh} will be notified.
+	 * amount of points is calculated and {@link ScoreListener ScoreListeners}
+	 * listening to this {@code BubbleMesh} will be notified.
 	 * 
+	 * @param target
+	 *            {@code Bubble} to start popping at
 	 * @return true iff bubbles popped
 	 */
 	boolean pop(ColouredBubble target);
@@ -53,8 +61,12 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	/**
 	 * Insert a new row of bubbles at the top
 	 * 
+	 * @param gameController
+	 *            A link to the current {@link GameController} in order to
+	 *            determine the {@code Colors} for the new row
 	 * @throws GameOver
 	 *             if a new row can't be inserted, the game is over
+	 * @see GameController#getRandomRemainingColor()
 	 */
 	void insertRow(GameController gameController) throws GameOver;
 	
@@ -64,17 +76,23 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 * @param original
 	 *            {@code Bubble} to be replaced
 	 * @param replacement
+	 *            {@code Bubble} to replace the other bubble with
 	 */
 	void replaceBubble(Bubble original, Bubble replacement);
 	
 	/**
 	 * Add a score listener
+	 * 
 	 * @param listener
+	 *            {@link ScoreListener} to listen to this {@code BubbleMesh}
 	 */
 	void addScoreListener(ScoreListener listener);
 	
 	/**
+	 * Check if a {@code Bubble} is at the top row
+	 * 
 	 * @param target
+	 *            {@code Bubble} to check for
 	 * @return true if the given {@link Bubble} is in the top row
 	 */
 	boolean bubbleIsTop(Bubble target);
@@ -86,7 +104,12 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 
 	/**
 	 * Replace the {@code BubbleMesh} with another one
+	 * 
 	 * @param bubbleMesh
+	 *            {@code BubbleMesh} to replace this {@code BubbleMesh} with,
+	 *            taking into account the {@link ScoreListener ScoreListeners}
+	 *            bound to this {@code BubbleMesh}
+	 * @see GameModel#setBubbleMesh(BubbleMesh)
 	 */
 	void replace(BubbleMesh bubbleMesh);
 
@@ -100,6 +123,15 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 */
 	Bubble getBottomLeftBubble();
 
+	/**
+	 * Parse a {@code BubbleMesh} from an {@code InputStream}
+	 * 
+	 * @param inputstream
+	 *            {@code InputStream}
+	 * @return The parsed {@code BubbleMesh}
+	 * @throws IOException
+	 *             If an I/O error occurs
+	 */
 	public static BubbleMesh parse(final InputStream inputstream) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream))) {
 			List<String> lines = Lists.newArrayList();
@@ -111,18 +143,52 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		}
 	}
 	
+	/**
+	 * Parse a {@code BubbleMesh} from an {@code String}
+	 * 
+	 * @param string
+	 *            {@code String} to parse
+	 * @return The parsed {@code BubbleMesh}
+	 */
 	public static BubbleMesh parse(final String string) {
 		return parse(Arrays.asList(string.split("[\r\n]+")));
 	}
 	
+	/**
+	 * Parse a {@code BubbleMesh} from a {@code List} of {@code Strings}.
+	 * 
+	 * @param rows
+	 *            {@code List} of {@code Strings} to parse
+	 * @return The parsed {@code BubbleMesh}
+	 */
 	public static BubbleMesh parse(final List<String> rows) {
 		return new BubbleMeshParser(rows).parse();
 	}
 	
+	/**
+	 * A {@code ScoreListner} can be bound to an {@link BubbleMesh} to listen
+	 * for assigned points.
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 * @see BubbleMesh#pop(ColouredBubble)
+	 */
 	interface ScoreListener {
+		
+		/**
+		 * Increment the score
+		 * 
+		 * @param amount
+		 *            Amount of points that are assigned in this pop
+		 * @see BubbleMesh#pop(ColouredBubble)
+		 */
 		void incrementScore(int amount);
 	}
 	
+	/**
+	 * A parser to parse {@link BubbleMesh BubbleMeshes} from a text file
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 */
 	public static class BubbleMeshParser {
 		
 		protected final List<String> rows;
@@ -130,6 +196,11 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		protected final int rowSize;
 		protected final Bubble[][] bubbles;
 		
+		/**
+		 * Construct a new {@code BubbleMeshParser}
+		 * @param rows
+		 * 		The input for the parser
+		 */
 		public BubbleMeshParser(final List<String> rows) {
 			this.rows = rows;
 			this.rowAmount = rows.size();
@@ -139,6 +210,10 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			this.bubbles = new Bubble[rowAmount][rowSize];
 		}
 		
+		/**
+		 * Parse
+		 * @return the created {@link BubbleMesh}
+		 */
 		public BubbleMeshImpl parse() {
 			for (int i = 0; i < rowAmount; i++) {
 				String rowStr = rows.get(i);
@@ -226,6 +301,12 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 	}
 	
+	/**
+	 * Default implementation for {@link BubbleMesh}
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 *
+	 */
 	public static class BubbleMeshImpl implements BubbleMesh {
 		
 		private static final long serialVersionUID = -2580249152755739807L;

@@ -34,6 +34,7 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	 * direction
 	 * 
 	 * @param direction
+	 *            {@link Direction} for the binding
 	 * @return the {@code Bubble} at the given {@link Direction} relative to
 	 *         this {@code Bubble}
 	 */
@@ -44,7 +45,9 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	 * {@link #bind(Direction, Bubble) bind}.
 	 * 
 	 * @param direction
+	 *            {@link Direction} for the binding
 	 * @param bubble
+	 *            {@code Bubble} to bind
 	 */
 	void setBubbleAt(Direction direction, Bubble bubble);
 	
@@ -52,6 +55,7 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	 * Check if this Bubble has a binding in a certain {@link Direction}
 	 * 
 	 * @param direction
+	 *            {@link Direction} for the binding
 	 * @return true if this {@code Bubble} has a binding in the given
 	 *         {@code Direction}
 	 */
@@ -76,7 +80,7 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	 * @param type
 	 * @return A {@link Collection} containing the surrounding {@code Bubbles}
 	 *         of a given subtype
-	 * @see {@link #getNeighbours()}
+	 * @see #getNeighbours()
 	 */
 	<T extends Bubble> List<T> getNeighboursOfType(Class<T> type);
 	
@@ -106,6 +110,7 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	 * {@code Bubble} as starting point.
 	 * 
 	 * @param direction
+	 *            {@link Direction} for the binding
 	 * @return {@link Stream} of {@code Bubbles}
 	 */
 	default Stream<Bubble> traverse(final Direction direction) {
@@ -120,9 +125,12 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	
 	/**
 	 * Replace this bubble by binding to all of its neighbours in the same
-	 * {@code Direction}
+	 * {@code Direction}. This function is called from the {@link BubbleMesh}
+	 * when {@code Bubbles} need to be replaced in the mesh.
 	 * 
 	 * @param original
+	 *            {@code Bubble} to be replaced
+	 * @see BubbleMesh#replaceBubble(Bubble, Bubble)
 	 */
 	default void replace(final Bubble original) {
 		this.bind(Direction.TOPLEFT, original.getBubbleAt(Direction.TOPLEFT));
@@ -151,6 +159,7 @@ public interface Bubble extends Sprite, Circle, Serializable {
 		
 		/**
 		 * @param direction
+		 *            direction for which to return the opposite direction
 		 * @return the opposite {@code Direction} for the given
 		 *         {@code Direction}
 		 */
