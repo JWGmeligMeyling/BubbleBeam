@@ -58,12 +58,14 @@ public class MasterGameController extends GameController {
 	 * @param connector
 	 */
 	public void bindConnector(final Connector connector) {
+		log.info("Binding {} to connector {}", this, connector);
 		this.connector = connector;
 		cannonController.bindController(connector);
 		sendInitialData(connector);
 	}
 	
 	protected void sendInitialData(final Connector connector) {
+		log.info("Sending initial data to {}", connector);
 		connector.sendPacket(new Packet.BubbleMeshSync(model.getBubbleMesh()));
 		connector.sendPacket(new Packet.AmmoPacket(
 				model.getLoadedBubble().getColor(),

@@ -2,6 +2,8 @@ package org.slf4j;
 
 import static org.slf4j.LogConfig.*;
 
+import java.util.regex.Matcher;
+
 /**
  * Default implementation for {@link Logger}
  * 
@@ -88,7 +90,7 @@ public class LoggerImpl implements Logger {
 	protected String replaceCurlyBraces(String message, Object... objects) {
 		final String braces = "\\{\\}";
 		for(Object object : objects) {
-			message = message.replaceFirst(braces, object.toString());
+			message = message.replaceFirst(braces, Matcher.quoteReplacement(object.toString()));
 		}
 		return message;
 	}
