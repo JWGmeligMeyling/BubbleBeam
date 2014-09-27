@@ -244,7 +244,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				
 			}
 			
-			return new BubbleMeshImpl(bubbles[0][0], bubbles[rowAmount-1][0]);
+			return new BubbleMeshImpl(bubbles[0][0], bubbles[rowAmount-1][0], rowSize);
 		}
 
 		protected final List<Color> remainingColors = Lists.newArrayList(Color.RED, Color.GREEN,
@@ -312,6 +312,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		private static final long serialVersionUID = -2580249152755739807L;
 		private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
 		
+		protected final int rowWidth;
 		protected Bubble topLeftBubble;
 		protected Bubble bottomLeftBubble;
 		protected transient List<ScoreListener> scoreListeners;
@@ -321,11 +322,12 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 * @param topLeftBubble
 		 * @param bottomLeftBubble
 		 */
-		public BubbleMeshImpl(final Bubble topLeftBubble, final Bubble bottomLeftBubble) {
+		public BubbleMeshImpl(final Bubble topLeftBubble, final Bubble bottomLeftBubble, final int rowWidth) {
 			super();
 			this.topLeftBubble = topLeftBubble;
 			this.bottomLeftBubble = bottomLeftBubble;
 			this.scoreListeners = Lists.newArrayList();
+			this.rowWidth = rowWidth;
 		}
 
 		@Override
@@ -516,7 +518,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			Bubble previousBubble = null;
 			boolean shift = !child.hasBubbleAt(Direction.BOTTOMLEFT);
 			
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < rowWidth; i++) {
 				Bubble bubble = new ColouredBubble(gameController.getRandomRemainingColor());
 				
 				if (shift) {
