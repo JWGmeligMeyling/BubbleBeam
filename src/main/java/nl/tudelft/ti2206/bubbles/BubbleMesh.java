@@ -65,6 +65,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	
 	/**
 	 * Add a score listener
+	 * 
 	 * @param listener
 	 */
 	void addScoreListener(ScoreListener listener);
@@ -79,23 +80,24 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 * @return Get a List of colors that still exist in the mesh
 	 */
 	List<Color> getRemainingColours();
-
+	
 	/**
 	 * Replace the {@code BubbleMesh} with another one
+	 * 
 	 * @param bubbleMesh
 	 */
 	void replace(BubbleMesh bubbleMesh);
-
+	
 	/**
 	 * @return the top left {@link Bubble} in the mesh
 	 */
 	Bubble getTopLeftBubble();
-
+	
 	/**
 	 * @return the bottom left {@link Bubble} in the mesh
 	 */
 	Bubble getBottomLeftBubble();
-
+	
 	public static BubbleMesh parse(final InputStream inputstream) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream))) {
 			List<String> lines = Lists.newArrayList();
@@ -167,10 +169,10 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			
 			BubbleMeshImpl result = new BubbleMeshImpl();
 			result.topLeftBubble = bubbles[0][0];
-			result.bottomLeftBubble = bubbles[rowAmount-1][0];
+			result.bottomLeftBubble = bubbles[rowAmount - 1][0];
 			return result;
 		}
-
+		
 		protected final List<Color> remainingColors = Lists.newArrayList(Color.RED, Color.GREEN,
 				Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
 		
@@ -183,30 +185,30 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			case 'r':
 			case 'R':
 				color = Color.RED;
-				break;
+			break;
 			case 'g':
 			case 'G':
 				color = Color.GREEN;
-				break;
+			break;
 			case 'b':
 			case 'B':
 				color = Color.BLUE;
-				break;
+			break;
 			case 'C':
 			case 'c':
 				color = Color.CYAN;
-				break;
+			break;
 			case 'M':
 			case 'm':
 				color = Color.MAGENTA;
-				break;
+			break;
 			case 'Y':
 			case 'y':
 				color = Color.YELLOW;
-				break;
+			break;
 			default:
 				color = getRandomRemainingColor();
-				break;
+			break;
 			}
 			
 			return new ColouredBubble(color);
@@ -238,7 +240,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		@Override
 		public void calculatePositions() {
 			for (Bubble bubble : this) {
-				if(bubble != topLeftBubble) {
+				if (bubble != topLeftBubble) {
 					Point newPosition = bubble.calculatePosition();
 					bubble.setPosition(newPosition);
 				}
@@ -247,7 +249,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 		@Override
 		public void replaceBubble(final Bubble original, final Bubble replacement) {
-			if(isBottomRowBubble(original)) {
+			if (isBottomRowBubble(original)) {
 				throw new GameOver();
 			}
 			
@@ -259,15 +261,15 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		}
 		
 		protected boolean isBottomRowBubble(final Bubble bubble) {
-			return bottomLeftBubble.traverse(Direction.RIGHT)
-					.anyMatch(other -> other.equals(bubble));
+			return bottomLeftBubble.traverse(Direction.RIGHT).anyMatch(
+					other -> other.equals(bubble));
 		}
 		
 		@Override
 		public boolean pop(final ColouredBubble target) {
 			final Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
 			
-			if(this.pop(target, bubblesToPop)) {
+			if (this.pop(target, bubblesToPop)) {
 				findIsolatedBubbles(bubblesToPop);
 				
 				bubblesToPop.forEach(bubble -> {
@@ -278,20 +280,20 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				calculateScore(bubblesToPop);
 				return true;
 			}
-						
+			
 			return false;
 		}
 		
 		protected void findIsolatedBubbles(final Set<ColouredBubble> bubblesToPop) {
 			
 			final Set<Bubble> connectedToTop = Sets.newHashSet();
-			final Set<ColouredBubble> allBubbles = Sets.newHashSet(Iterables
-					.filter(this, ColouredBubble.class));
+			final Set<ColouredBubble> allBubbles = Sets.newHashSet(Iterables.filter(this,
+					ColouredBubble.class));
 			
 			allBubbles.removeAll(bubblesToPop);
 			allBubbles.stream()
-				.filter(bubble -> !connectedToTop(bubble, connectedToTop, bubblesToPop))
-				.forEach(bubble -> log.info("Found isolated bubble {}", bubble));
+					.filter(bubble -> !connectedToTop(bubble, connectedToTop, bubblesToPop))
+					.forEach(bubble -> log.info("Found isolated bubble {}", bubble));
 		}
 		
 		/**
@@ -300,8 +302,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 * @param bubblesToPop
 		 *            {@link Set} of {@code ColouredBubbles} to be popped
 		 */
-		protected boolean pop(final ColouredBubble target,
-				final Set<ColouredBubble> bubblesToPop) {
+		protected boolean pop(final ColouredBubble target, final Set<ColouredBubble> bubblesToPop) {
 			
 			final List<ColouredBubble> colouredBubbles = target
 					.getNeighboursOfType(ColouredBubble.class);
@@ -312,16 +313,19 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			 * recursively. Add them to a set in order to check if we have not
 			 * already popped this bubble in the current call.
 			 */
-			colouredBubbles.stream()
-				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
-				.forEach(bubble -> this.pop(bubble, bubblesToPop));
+			colouredBubbles
+					.stream()
+					.filter(bubble -> bubble.getColor().equals(targetColor)
+							&& bubblesToPop.add(bubble))
+					.forEach(bubble -> this.pop(bubble, bubblesToPop));
 			
 			return bubblesToPop.size() > 2;
 		}
 		
 		@Override
 		public boolean bubbleIsTop(final Bubble target) {
-			return topLeftBubble.traverse(Direction.RIGHT).anyMatch(bubble -> bubble.equals(target));
+			return topLeftBubble.traverse(Direction.RIGHT)
+					.anyMatch(bubble -> bubble.equals(target));
 		}
 		
 		/**
@@ -343,11 +347,9 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 *         (hittable) bubble through other (hittable) bubbles.
 		 */
 		protected boolean connectedToTop(final Bubble target,
-				final Set<Bubble> bubblesConnectedToTop,
-				final Set<ColouredBubble> bubblesToPop) {
+				final Set<Bubble> bubblesConnectedToTop, final Set<ColouredBubble> bubblesToPop) {
 			
-			return connectedToTop(target, bubblesConnectedToTop, bubblesToPop,
-					Sets.newHashSet());
+			return connectedToTop(target, bubblesConnectedToTop, bubblesToPop, Sets.newHashSet());
 		}
 		
 		/**
@@ -371,31 +373,36 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 *         (hittable) bubble through other (hittable) bubbles.
 		 */
 		protected boolean connectedToTop(final Bubble target,
-				final Set<Bubble> bubblesConnectedToTop,
-				final Set<ColouredBubble> bubblesToPop,
+				final Set<Bubble> bubblesConnectedToTop, final Set<ColouredBubble> bubblesToPop,
 				final Set<Bubble> walked) {
-
+			
 			boolean connectedToTop = false;
 			
 			// Preconditions to be at top
 			// (1) Bubble should be hittable (Coloured)
 			// (2) Bubble should not be set to be popped
-			// (3) Bubble should not be walked (we don't want a bubble to be connected through itself)
-			if(target.isHittable() && !bubblesToPop.contains(target) && walked.add(target)) {
+			// (3) Bubble should not be walked (we don't want a bubble to be
+			// connected through itself)
+			if (target.isHittable() && !bubblesToPop.contains(target) && walked.add(target)) {
 				// (4) The bubble is either:
-				//     - at the top row, or:
-				//     - connected to at least one bubble at the top row (recursive call)
-				connectedToTop = bubbleIsTop(target) || bubblesConnectedToTop.contains(target) ||
-						target.getNeighbours().stream()
-						.anyMatch(bubble -> connectedToTop(bubble, bubblesConnectedToTop, bubblesToPop, walked));
+				// - at the top row, or:
+				// - connected to at least one bubble at the top row (recursive
+				// call)
+				connectedToTop = bubbleIsTop(target)
+						|| bubblesConnectedToTop.contains(target)
+						|| target
+								.getNeighbours()
+								.stream()
+								.anyMatch(
+										bubble -> connectedToTop(bubble, bubblesConnectedToTop,
+												bubblesToPop, walked));
 				
 				// Remove this bubble for the walked set
 				walked.remove(target);
 				// Cache the calculation result
-				if(connectedToTop) {
+				if (connectedToTop) {
 					bubblesConnectedToTop.add(target);
-				}
-				else {
+				} else {
 					bubblesToPop.add((ColouredBubble) target);
 				}
 			}
@@ -444,8 +451,8 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				
 				if (i == 0) {
 					if (shift)
-						bubble.setPosition(new Point(topLeftBubble.getX() + AbstractBubble.WIDTH / 2,
-								topLeftBubble.getY()));
+						bubble.setPosition(new Point(topLeftBubble.getX() + AbstractBubble.WIDTH
+								/ 2, topLeftBubble.getY()));
 					topLeftBubble = bubble;
 				}
 				
@@ -460,19 +467,18 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		protected void updateBottomRow() throws GameOver {
 			
 			// Update new bottom row
-			if(bottomLeftBubble.hasBubbleAt(Direction.TOPLEFT)) {
+			if (bottomLeftBubble.hasBubbleAt(Direction.TOPLEFT)) {
 				bottomLeftBubble = bottomLeftBubble.getBubbleAt(Direction.TOPLEFT);
-			}
-			else {
+			} else {
 				bottomLeftBubble = bottomLeftBubble.getBubbleAt(Direction.TOPRIGHT);
 			}
 			
 			bottomLeftBubble.traverse(Direction.RIGHT).forEach(bubble -> {
-				if(bubble.isHittable()) {
+				if (bubble.isHittable()) {
 					// There shouldn't be a hittable bubble in the bottom row
 					throw new GameOver();
 				}
-
+				
 				// Clear bindings to removed row
 				bubble.bind(Direction.BOTTOMLEFT, null);
 				bubble.bind(Direction.BOTTOMRIGHT, null);
@@ -539,19 +545,18 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 		@Override
 		public void addScoreListener(final ScoreListener listener) {
-			if(scoreListeners == null ) 
+			if (scoreListeners == null)
 				scoreListeners = Lists.newArrayList();
 			scoreListeners.add(listener);
 		}
-
+		
 		@Override
 		public List<Color> getRemainingColours() {
 			return Lists.newArrayList(Lists
-				.newArrayList(Iterables.filter(this, ColouredBubble.class))
-				.stream().map(ColouredBubble::getColor).distinct()
-				.iterator());
+					.newArrayList(Iterables.filter(this, ColouredBubble.class)).stream()
+					.map(ColouredBubble::getColor).distinct().iterator());
 		}
-
+		
 		@Override
 		public void replace(BubbleMesh bubbleMesh) {
 			this.topLeftBubble = bubbleMesh.getTopLeftBubble();
@@ -568,6 +573,24 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			return bottomLeftBubble;
 		}
 		
+		@Override
+		public boolean equals(Object other) {
+			if (other instanceof BubbleMeshImpl) {
+				BubbleMeshIterator otherIterator = ((BubbleMeshImpl) other).iterator();
+				BubbleMeshIterator thisIterator = this.iterator();
+				while (thisIterator.hasNext()) {
+					if (!thisIterator.next().equals(otherIterator.next())) {
+						System.out.println("equals" + "false1");
+						return false;
+					}
+				}
+				System.out.println("equals" + "true");
+				return true;
+			} else {
+				System.out.println("equals" + "false2");
+				return false;
+			}
+		}
 	}
-
+	
 }

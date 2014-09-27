@@ -70,8 +70,8 @@ public abstract class PacketHandler<P extends Packet> {
 		
 		@Override
 		public void notifyObservers(Packet.CannonShoot packet) {
-			log.info("Received packet {}, dispatching to {} listeners", packet,
-					packetListeners.size());
+			/*log.info("Received packet {}, dispatching to {} listeners", packet,
+					packetListeners.size());*/
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
 		
@@ -87,8 +87,8 @@ public abstract class PacketHandler<P extends Packet> {
 		
 		@Override
 		public void notifyObservers(Packet.BubbleMeshSync packet) {
-			log.info("Received packet {}, dispatching to {} listeners", packet,
-					packetListeners.size());
+			/*log.info("Received packet {}, dispatching to {} listeners", packet,
+					packetListeners.size());*/
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
 		
@@ -104,8 +104,8 @@ public abstract class PacketHandler<P extends Packet> {
 		
 		@Override
 		public void notifyObservers(Packet.AmmoPacket packet) {
-			log.info("Received packet {}, dispatching to {} listeners", packet,
-					packetListeners.size());
+			/*log.info("Received packet {}, dispatching to {} listeners", packet,
+					packetListeners.size());*/
 			packetListeners.forEach(listener -> listener.update(packet));
 		}
 		
