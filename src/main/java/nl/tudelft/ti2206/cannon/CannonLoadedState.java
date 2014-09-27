@@ -5,6 +5,12 @@ import nl.tudelft.util.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * Cannon loaded state is the state for the cannon when the cannon is loaded
+ * @author Jan-Willem Gmelig Meyling
+ * @author Leon Hoek *
+ */
 public class CannonLoadedState implements CannonState {
 
 	private static final Logger log = LoggerFactory.getLogger(CannonLoadedState.class);

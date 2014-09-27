@@ -7,6 +7,13 @@ import nl.tudelft.ti2206.util.mvc.AbstractEventTarget;
 import nl.tudelft.ti2206.util.mvc.EventTarget;
 import nl.tudelft.util.Vector2f;
 
+/**
+ * The {@code CannonModel} is the model for the {@link CannonController}
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ * @author Leon Hoek
+ *
+ */
 public class CannonModel extends Observable implements EventTarget<CannonShootListener> {
 	
 	private AbstractEventTarget<CannonShootListener> eventTarget = new AbstractEventTarget<>();
