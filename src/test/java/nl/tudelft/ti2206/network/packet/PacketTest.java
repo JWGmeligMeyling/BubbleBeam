@@ -50,16 +50,16 @@ public class PacketTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		host.endConnection();
-		client.endConnection();
+		// host.endConnection();
+		// client.endConnection();
 		
-		/*hostThread.interrupt();
-		clientThread.interrupt();*/
+		// hostThread.interrupt();
+		// clientThread.interrupt();
 		
 		receivedPacket = null;
 		
-		/*host = null;
-		client = null;*/
+		host = null;
+		client = null;
 	}
 	
 	@Test
