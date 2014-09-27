@@ -1,11 +1,17 @@
 package nl.tudelft.ti2206.cannon;
 
 import java.util.Observable;
+import java.util.Set;
 
+import nl.tudelft.ti2206.util.mvc.AbstractEventTarget;
+import nl.tudelft.ti2206.util.mvc.EventTarget;
 import nl.tudelft.util.Vector2f;
 
-public class CannonModel extends Observable {
+public class CannonModel extends Observable implements EventTarget<CannonShootListener> {
 	
+	private AbstractEventTarget<CannonShootListener> eventTarget = new AbstractEventTarget<>();
+	
+	private CannonState cannonState;
 	private double angle = Math.PI / 2;
 	private Vector2f direction = new Vector2f(0f, 0f);
 	private boolean loaded = true; // TODO make this false till game starts?
@@ -39,4 +45,32 @@ public class CannonModel extends Observable {
 	public void setLoaded(boolean loaded) {
 		this.loaded = loaded;
 	}
+
+	public CannonState getCannonState() {
+		return cannonState;
+	}
+	
+	public void setCannonState(CannonState cannonState) {
+		this.cannonState = cannonState; 
+	}
+	
+	@Override
+	public void addEventListener(CannonShootListener listener) {
+		eventTarget.addEventListener(listener);
+	}
+
+	@Override
+	public void removeEventListener(CannonShootListener listener) {
+		eventTarget.removeEventListener(listener);
+	}
+	
+	public EventTarget<CannonShootListener> getEventTarget() {
+		return eventTarget;
+	}
+
+	@Override
+	public Set<CannonShootListener> getListeners() {
+		return eventTarget.getListeners();
+	}
+	
 }

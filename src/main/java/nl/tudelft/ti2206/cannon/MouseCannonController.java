@@ -52,19 +52,9 @@ public class MouseCannonController extends AbstractCannonController {
 	}
 	
 	public void bindController(final Connector connector) {
-		this.addEventListener(new CannonListener() {
-
-			@Override
-			public void shoot(final Vector2f direction) {
-//				log.info("Sending shoot packet");
-//				connector.sendPacket(new Packet.CannonShoot(direction));
-			}
-
-			@Override
-			public void rotate(final double angle) {
-				connector.sendPacket(new Packet.CannonRotate(angle));
-			}
-			
+		model.addObserver((a,b) -> {
+			Packet packet = new Packet.CannonRotate(model.getAngle());
+			connector.sendPacket(packet);
 		});
 	}
 	
