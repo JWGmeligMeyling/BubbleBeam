@@ -3,9 +3,12 @@ package nl.tudelft.ti2206.game;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
@@ -76,9 +79,23 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		nextBubble.setCenter(new Point(cannonPosition.x + BUBBLE_QUEUE_SPACING, cannonPosition.y));
 	}
 	
+	private final static Image BACKGROUND = getBackgroundImage();
+	
+	private static Image getBackgroundImage() {
+		try {
+			return ImageIO.read(GamePanel.class.getResourceAsStream("/sb_bubbles.jpg"));
+		} catch (IOException e) {
+			log.warn(e.getMessage(), e);
+			return null;
+		}
+	}
+	
 	@Override
 	public void paintComponent(final Graphics graphics) {
 		super.paintComponent(graphics);
+		
+		if(BACKGROUND != null)
+			graphics.drawImage(BACKGROUND, 0, 0, WIDTH, HEIGHT, null);
 		
 		GameModel model = gameController.getModel();
 		
