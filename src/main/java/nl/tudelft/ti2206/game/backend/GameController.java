@@ -38,7 +38,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.getBubbleMesh().calculatePositions();
 		prepareAmmo();
 		
-		cannonController.addCannonShootListener((direction) -> {
+		cannonController.getModel().addEventListener((direction) -> {
 			GameController.this.shoot(direction);	
 		});
 		

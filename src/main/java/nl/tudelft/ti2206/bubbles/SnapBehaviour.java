@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.io.Serializable;
+
 /**
  * The {@code SnapBehaviour} defines the way a {@link MovingBubble} should snap
  * on to this Bubble. For example: moving bubbles snap to {@link ColouredBubble
@@ -11,7 +13,7 @@ package nl.tudelft.ti2206.bubbles;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public interface SnapBehaviour {
+public interface SnapBehaviour extends Serializable {
 	
 	/**
 	 * If a {@link MovingBubble} hits this {@code Bubble}, it should snap to the

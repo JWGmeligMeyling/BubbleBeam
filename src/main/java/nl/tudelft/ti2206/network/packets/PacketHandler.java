@@ -63,8 +63,6 @@ public abstract class PacketHandler<P extends Packet> {
 	/**
 	 * The {@code CannonShoot} {@link PacketHandler} handles the
 	 * {@link CannonShoot} {@link Packet}s.
-	 * 
-	 * @author Sam Smulders
 	 */
 	public static class CannonShoot extends PacketHandler<Packet.CannonShoot> {
 		
@@ -80,8 +78,6 @@ public abstract class PacketHandler<P extends Packet> {
 	/**
 	 * The {@code BubbleMeshSync} {@link PacketHandler} handles the
 	 * {@link BubbleMeshSync} {@link Packet}s.
-	 * 
-	 * @author Sam Smulders
 	 */
 	public static class BubbleMeshSync extends PacketHandler<Packet.BubbleMeshSync> {
 		
@@ -97,8 +93,6 @@ public abstract class PacketHandler<P extends Packet> {
 	/**
 	 * The {@code LoadNewBubble} {@link PacketHandler} handles the
 	 * {@link LoadNewBubble} {@link Packet}s.
-	 * 
-	 * @author Sam Smulders
 	 */
 	public static class LoadNewBubble extends PacketHandler<Packet.AmmoPacket> {
 		

@@ -11,11 +11,8 @@ public class BubblePlaceholder extends AbstractBubble {
 	
 	private static final long serialVersionUID = 4254751857830339489L;
 
-	protected final SnapBehaviour snapBehaviour = new SnapToSelf(this);
-
-	@Override
-	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
-		return snapBehaviour.getSnapPosition(bubble);
+	public BubblePlaceholder() {
+		snapBehaviour = new SnapToSelf(this);
 	}
 	
 }

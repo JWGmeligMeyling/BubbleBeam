@@ -27,6 +27,7 @@ public class ColouredBubble extends AbstractBubble {
 	 *            {@link Color} that the {@code Bubble} should have
 	 */
 	public ColouredBubble(final Color color) {
+		snapBehaviour = new SnapToClosest(this);
 		this.color = color;
 		int offset = -getRadius();
 		paintStart.translate(offset, offset);
