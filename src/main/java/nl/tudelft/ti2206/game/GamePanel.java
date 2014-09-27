@@ -28,7 +28,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	private static final long serialVersionUID = 2416543550015136242L;
 	protected final int BUBBLE_QUEUE_SPACING = 60;
 	
-	protected final static int WIDTH = 340;
+	protected final static int WIDTH = 325;
 	protected final static int HEIGHT = 400;
 	
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);

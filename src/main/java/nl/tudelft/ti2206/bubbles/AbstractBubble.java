@@ -25,12 +25,11 @@ import com.google.common.collect.Maps;
 public class AbstractBubble implements Bubble {
 	
 	private static final long serialVersionUID = -3403214887629166657L;
-	public static final int WIDTH = 32;
-	public static final int HEIGHT = 32;
-	public static final int RADIUS = 14;
-	public static final Point ORIGIN = new Point(0,0);
+	public static final int WIDTH = 22, HEIGHT = WIDTH;
+	public static final int RADIUS = 10;
+	public static final Point ORIGIN = new Point(2,2);
 
-	protected Point position = new Point(ORIGIN.x + 2, ORIGIN.y + 2);
+	protected Point position = new Point(ORIGIN.x, ORIGIN.y);
 	protected Point center = new Point(ORIGIN.x + WIDTH / 2, ORIGIN.y + HEIGHT / 2);
 	protected final Map<Direction, Bubble> connections  = Maps.newTreeMap();
 	protected final SnapBehaviour snapBehaviour = new SnapToClosest(this);
