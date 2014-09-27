@@ -67,61 +67,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
 	}
-	
-//	public static Future<GamePanel> getSlaveGamePanel(final Connector connector, final GameTick gameTick) {
-//		final Future<BubbleMesh> bubbleMeshFuture = getBubbleMeshForConnector(connector);
-//		
-//		final Deque<AmmoPacket> ammoPackets = Queues.newArrayDeque();
-//		final PacketListener<AmmoPacket> listener = (packet) -> ammoPackets.add(packet);
-//		connector.getPacketHandlerCollection().registerLoadNewBubbleListener(listener);
-//		
-//		
-//		return new ChainedFuture<GamePanel, Future<BubbleMesh>, BubbleMesh>(bubbleMeshFuture) {
-//
-//			@Override
-//			public GamePanel get(BubbleMesh bubbleMesh) throws InterruptedException, ExecutionException {
-//				log.info("Created slave panel");
-//				GameModel gameModel = new GameModel(bubbleMesh);
-//				GamePanel gamePanel = new GamePanel(new SlaveGameController(gameModel, connector, gameTick));
-//
-//				if(!ammoPackets.isEmpty()){
-//					AmmoPacket packet = ammoPackets.removeLast();
-//					gameModel.setLoadedBubbleColor(packet.loadedBubble);
-//					gameModel.setNextBubbleColor(packet.nextBubble);
-//				}
-//				
-//				connector.getPacketHandlerCollection().loadNewBubbleHandler
-//						.removeObserver(listener);
-//				
-//				return gamePanel;
-//			}
-//			
-//		 };
-//	}
-//	
-//	protected static Future<BubbleMesh> getBubbleMeshForConnector(final Connector connector) {
-//		final PacketHandlerCollection packetHandlers = connector.getPacketHandlerCollection();
-//		
-//		return new TimeoutFuture<BubbleMesh>() {
-//
-//			@Override
-//			public void start(final TimeoutFuture<BubbleMesh> future) {
-//				
-//				packetHandlers.registerBubbleMeshSyncListener(new PacketListener<BubbleMeshSync> () {
-//
-//					@Override
-//					public void update(BubbleMeshSync packet) {
-//						log.info("Received bubblemap");
-//						future.complete(packet.bubbleMesh);
-//						packetHandlers.bubbleMeshSyncHandler.removeObserver(this);
-//					}
-//					
-//				});
-//				
-//			}
-//			
-//		};
-//	}
 
 	protected void positionAmmoBubbles() {
 		GameModel gameModel = gameController.getModel();
