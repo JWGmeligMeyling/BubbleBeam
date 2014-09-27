@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import nl.tudelft.ti2206.exception.GameOver;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -158,14 +156,10 @@ public class AbstractBubble implements Bubble {
 	
 	@Override
 	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
-		BubblePlaceholder toBeReplaced = getNeighboursOfType(BubblePlaceholder.class)
+		return getNeighboursOfType(BubblePlaceholder.class)
 			.stream().min((BubblePlaceholder a, BubblePlaceholder b) ->
 				a.getDistance(bubble) < b.getDistance(bubble) ? -1 : 1)
 			.get();
-		if(!bubble.intersect(toBeReplaced)){
-			throw new GameOver();
-		}
-		return toBeReplaced;
 	}
 	
 	@Override
