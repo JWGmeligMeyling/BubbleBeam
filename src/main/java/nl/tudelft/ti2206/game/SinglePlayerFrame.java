@@ -12,11 +12,15 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayer;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.plaf.LayerUI;
 import javax.swing.text.MaskFormatter;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
@@ -83,6 +87,8 @@ public class SinglePlayerFrame extends JFrame implements
 		this.gameTick = gameTick;
 
 		gamePanel = new GamePanel(gameController);
+		
+
 		scoreLabel = new JLabel("Score: 0");
 		getModel().addObserver((a, b) ->
 			scoreLabel.setText("Score: " + getModel().getScore()));
@@ -127,7 +133,9 @@ public class SinglePlayerFrame extends JFrame implements
 	}
 
 	protected void fillGamePanel(Container contentPane) {
-		contentPane.add(gamePanel, new GridBagConstraints(0, 0, 1, 4, 0d, 0d,
+		LayerUI<JComponent> layerUI = new EffectsLayer();
+		JLayer<JComponent> jlayer = new JLayer<JComponent>(gamePanel, layerUI);
+		contentPane.add(jlayer, new GridBagConstraints(0, 0, 1, 4, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.NONE, PADDED, 0,
 				0));
 	}
