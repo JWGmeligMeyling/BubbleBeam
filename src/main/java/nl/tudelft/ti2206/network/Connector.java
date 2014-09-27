@@ -20,7 +20,7 @@ import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
  *
  * @author Sam_
  */
-public abstract  class Connector implements Runnable {
+public abstract class Connector implements Runnable {
 
 	private static final Logger log = LoggerFactory.getLogger(Connector.class);
 	
@@ -119,8 +119,7 @@ public abstract  class Connector implements Runnable {
 	public abstract void connect() throws UnknownHostException, IOException;
 
 	public void endConnection() {
-		// TODO Auto-generated method stub
-		
+		ready = false;
 	}
 
 }

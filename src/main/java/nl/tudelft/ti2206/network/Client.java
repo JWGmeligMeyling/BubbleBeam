@@ -55,4 +55,15 @@ public class Client extends Connector {
 	protected ObjectOutputStream getOutputStream() {
 		return out;
 	}
+	
+	@Override
+	public void endConnection(){
+		super.endConnection();
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.debug(e.getMessage());
+		}
+	}
 }

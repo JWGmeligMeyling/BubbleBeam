@@ -64,8 +64,10 @@ public class Host extends Connector {
 	
 	@Override
 	public void endConnection() {
+		super.endConnection();
 		try {
 			serverSocket.close();
+			socket.close();
 		} catch (IOException e) {
 			log.debug(e.getMessage(), e);
 		}
