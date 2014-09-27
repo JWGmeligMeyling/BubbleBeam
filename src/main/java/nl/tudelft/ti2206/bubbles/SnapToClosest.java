@@ -11,6 +11,7 @@ package nl.tudelft.ti2206.bubbles;
  */
 public class SnapToClosest implements SnapBehaviour {
 	
+	private static final long serialVersionUID = -4271971313720057746L;
 	private final Bubble that;
 	
 	public SnapToClosest(Bubble that) {

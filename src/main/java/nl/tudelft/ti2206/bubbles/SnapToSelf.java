@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SnapToSelf implements SnapBehaviour {
 	
+	private static final long serialVersionUID = 532307379653361657L;
+
 	private static final Logger log = LoggerFactory.getLogger(SnapBehaviour.class);
 
 	private final BubblePlaceholder that;
