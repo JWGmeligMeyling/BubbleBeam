@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.game;
+package nl.tudelft.ti2206.game.backend;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -16,8 +16,6 @@ import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.tick.GameTick;
-import nl.tudelft.ti2206.game.tick.Tickable;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
 

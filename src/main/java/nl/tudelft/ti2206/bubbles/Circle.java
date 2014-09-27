@@ -11,11 +11,13 @@ import java.awt.Point;
 public interface Circle {
 
 	/**
+	 * Get the radius for this {@code Circle}
 	 * @return the radius for this {@code Circle}
 	 */
 	int getRadius();
 	
 	/**
+	 * Get the center for this {@code Circle}
 	 * @return the center for this {@code Circle}
 	 */
 	Point getCenter();
@@ -27,6 +29,7 @@ public interface Circle {
 	void setCenter(Point center);
 	
 	/**
+	 * Get the diameter of this {@code Circle}
 	 * @return the diameter of this {@code Circle}
 	 */
 	default int getDiameter() {
@@ -34,6 +37,7 @@ public interface Circle {
 	}
 	
 	/**
+	 * Get the surface for this {@code Circle}
 	 * @return the surface for this {@code Circle}
 	 */
 	default double getSurface() {
@@ -52,6 +56,7 @@ public interface Circle {
 	}
 	
 	/**
+	 * Get the distance between two circles
 	 * @param other another {@code Circle}
 	 * @return the distance between this {@code Circle} and the other {@code Circle}
 	 */
@@ -60,6 +65,7 @@ public interface Circle {
 	}
 	
 	/**
+	 * Check if two circles intersect
 	 * @param other another {@code Circle}
 	 * @return true if this {@code Circle} intersects the other {@code Circle}
 	 */

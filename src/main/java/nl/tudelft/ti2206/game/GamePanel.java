@@ -4,10 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.Deque;
 import java.util.Observer;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -16,21 +13,14 @@ import javax.swing.border.BevelBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Queues;
-
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
-import nl.tudelft.ti2206.game.tick.GameTick;
-import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet.AmmoPacket;
-import nl.tudelft.ti2206.network.packets.Packet.BubbleMeshSync;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
-import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.backend.MasterGameController;
+import nl.tudelft.ti2206.game.backend.SlaveGameController;
 import nl.tudelft.ti2206.util.mvc.View;
-import nl.tudelft.util.ChainedFuture;
 import nl.tudelft.util.ObservableObject;
-import nl.tudelft.util.TimeoutFuture;
 
 public final class GamePanel extends JPanel implements View<GameController, GameModel> {
 
@@ -76,62 +66,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
-	}
-	
-	public static Future<GamePanel> getSlaveGamePanel(final Connector connector, final GameTick gameTick) {
-		final Future<BubbleMesh> bubbleMeshFuture = getBubbleMeshForConnector(connector);
-		
-		final Deque<AmmoPacket> ammoPackets = Queues.newArrayDeque();
-		final PacketListener<AmmoPacket> listener = (packet) -> ammoPackets.add(packet);
-		connector.getPacketHandlerCollection().registerLoadNewBubbleListener(listener);
-		
-		
-		return new ChainedFuture<GamePanel, Future<BubbleMesh>, BubbleMesh>(bubbleMeshFuture) {
-
-			@Override
-			public GamePanel get(BubbleMesh bubbleMesh) throws InterruptedException, ExecutionException {
-				log.info("Created slave panel");
-				GameModel gameModel = new GameModel(bubbleMesh);
-				GamePanel gamePanel = new GamePanel(new SlaveGameController(gameModel, connector, gameTick));
-
-				if(!ammoPackets.isEmpty()){
-					AmmoPacket packet = ammoPackets.removeLast();
-					gameModel.setLoadedBubbleColor(packet.loadedBubble);
-					gameModel.setNextBubbleColor(packet.nextBubble);
-				}
-				
-				connector.getPacketHandlerCollection().loadNewBubbleHandler
-						.removeObserver(listener);
-				
-				return gamePanel;
-			}
-			
-		 };
-	}
-	
-	protected static Future<BubbleMesh> getBubbleMeshForConnector(final Connector connector) {
-		final PacketHandlerCollection packetHandlers = connector.getPacketHandlerCollection();
-		
-		return new TimeoutFuture<BubbleMesh>() {
-
-			@Override
-			public void start(final TimeoutFuture<BubbleMesh> future) {
-				
-				packetHandlers.registerBubbleMeshSyncListener(new PacketListener<BubbleMeshSync> () {
-
-					@Override
-					public void update(BubbleMeshSync packet) {
-						log.info("Received bubblemap");
-						future.complete(packet.bubbleMesh);
-						packetHandlers.bubbleMeshSyncHandler.removeObserver(this);
-					}
-					
-				});
-				
-				connector.start();
-			}
-			
-		};
 	}
 
 	protected void positionAmmoBubbles() {

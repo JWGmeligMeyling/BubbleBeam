@@ -1,7 +1,6 @@
-package nl.tudelft.ti2206.game.tick;
+package nl.tudelft.ti2206.game.backend;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -20,17 +19,11 @@ public class GameTickImpl implements GameTick {
 
 	private static final Logger log = LoggerFactory.getLogger(GameTickImpl.class);
 	
-	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
-	
-	static {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> scheduler.shutdownNow()));
-	}
-
 	private ArrayList<Tickable> gameTickObservers = new ArrayList<Tickable>();
 
 	private final ScheduledFuture<?> feature;
 	
-	public GameTickImpl(final int framePeriod) {
+	public GameTickImpl(final int framePeriod, final ScheduledExecutorService scheduler) {
 		this.feature = scheduler.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				gameTickObservers.forEach(listener -> {

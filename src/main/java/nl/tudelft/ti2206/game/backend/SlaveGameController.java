@@ -1,8 +1,7 @@
-package nl.tudelft.ti2206.game;
+package nl.tudelft.ti2206.game.backend;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
-import nl.tudelft.ti2206.game.tick.GameTick;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
 

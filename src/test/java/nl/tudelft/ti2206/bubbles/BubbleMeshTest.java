@@ -9,15 +9,20 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshParser;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.ScoreListener;
+import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.backend.GameController;
 
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class BubbleMeshTest {
@@ -107,10 +112,117 @@ public class BubbleMeshTest {
 		verify(scoreListener).incrementScore(anyInt());
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Test
+	public void testBubbleMeshIterator() {
+		Bubble a = spy(new AbstractBubble());
+		Bubble b = spy(new AbstractBubble());
+		Bubble c = spy(new AbstractBubble());
+		
+		a.bind(Direction.RIGHT, b);
+		a.bind(Direction.BOTTOMRIGHT, c);
+		b.bind(Direction.BOTTOMLEFT, c);
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c);
+		
+		Iterator<Bubble> iterator = bubbleMesh.iterator();
+		assertEquals(ImmutableList.of(a, b, c), ImmutableList.copyOf(iterator));
+	}
+	
+	@Test
+	public void testCalculatePositions() {
+		Bubble a = spy(new AbstractBubble());
+		Bubble b = spy(new AbstractBubble());
+		Bubble c = spy(new AbstractBubble());
+		
+		a.bind(Direction.RIGHT, b);
+		a.bind(Direction.BOTTOMRIGHT, c);
+		b.bind(Direction.BOTTOMLEFT, c);
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c);
+		
+		bubbleMesh.calculatePositions();
+		verify(a, never()).calculatePosition();
+		verify(b).calculatePosition();
+		verify(c).calculatePosition();
+		
+		verify(b).setPosition(any());
+		verify(c).setPosition(any());
+	}
+	
+	@Test
+	public void testInsertRow() {
+		BubbleMeshImpl bubbleMesh = spy(new BubbleMeshParser(
+				Lists.newArrayList("rrrcccbbb ", "g         ", "          ",
+						"          ")).parse());
+		assertStronglyConnected(bubbleMesh);
+		
+		GameController gameController = mock(GameController.class);
+		when(gameController.getRandomRemainingColor()).thenReturn(Color.RED);
+		bubbleMesh.insertRow(gameController);
+
+		Iterable<Color> colors = Iterables.transform(
+				Iterables.filter(bubbleMesh, ColouredBubble.class),
+				ColouredBubble::getColor);
+
+		assertStronglyConnected(bubbleMesh);
+		assertEquals(Arrays.asList(Color.RED, Color.RED, Color.RED, Color.RED,
+				Color.RED, Color.RED, Color.RED, Color.RED, Color.RED,
+				Color.RED, Color.RED, Color.RED, Color.RED, Color.CYAN,
+				Color.CYAN, Color.CYAN, Color.BLUE, Color.BLUE, Color.BLUE,
+				Color.GREEN), ImmutableList.copyOf(colors));
+		
+		verify(bubbleMesh).updateBottomRow();
+		verify(bubbleMesh).calculatePositions();
+	}
+	
+	@Test
+	public void testInsertRowTwice() {
+		BubbleMeshImpl bubbleMesh = new BubbleMeshParser(
+				Lists.newArrayList("rrrcccbbb ", "g         ", "          ",
+						"          ", "          ")).parse();
+		
+		GameController gameController = mock(GameController.class);
+		when(gameController.getRandomRemainingColor()).thenReturn(Color.RED);
+		bubbleMesh.insertRow(gameController);
+		bubbleMesh.insertRow(gameController);
+		assertStronglyConnected(bubbleMesh);
+	}
+	
+	@Test(expected=GameOver.class)
+	public void testGameOverByInsert() {
+		BubbleMeshImpl bubbleMesh = new BubbleMeshParser(Lists.newArrayList(
+				"rrrcccbbb ", "g         ", "          ")).parse();
+		
+		GameController gameController = mock(GameController.class);
+		when(gameController.getRandomRemainingColor()).thenReturn(Color.RED);
+		
+		bubbleMesh.insertRow(gameController);
+	}
+	
+	@Test(expected=GameOver.class)
+	public void testGameOverByShoot() {
+		Bubble a = spy(new AbstractBubble());
+		Bubble b = spy(new AbstractBubble());
+		Bubble c = spy(new BubblePlaceholder());
+		
+		a.bind(Direction.RIGHT, b);
+		a.bind(Direction.BOTTOMRIGHT, c);
+		b.bind(Direction.BOTTOMLEFT, c);
+
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c);
+		bubbleMesh.replaceBubble(c, new AbstractBubble());
+	}
+	
+	public static void assertStronglyConnected(BubbleMesh bubbleMesh) {
+		for(Bubble bubble : bubbleMesh)
+			bubble.getConnections().entrySet().forEach(connection -> {
+				Direction direction = connection.getKey();
+				Bubble other = connection.getValue();
+				assertEquals(bubble, other.getBubbleAt(direction.opposite()));
+			});
+	}
+	
 	protected static <T> T testCast(Object obj, Class<T> clasz) {
 		assertThat(obj, instanceOf(clasz));
-		return (T) obj;
+		return clasz.cast(obj);
 	}
 
 }

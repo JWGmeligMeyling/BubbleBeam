@@ -4,10 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import nl.tudelft.ti2206.game.tick.Tickable;
+import nl.tudelft.ti2206.game.backend.Tickable;
 import nl.tudelft.util.Vector2f;
 
 /**
+ * The {@code MovingBubble} is a special type of {@link ColouredBubble} which
+ * can be animated in order to perform a shoot action.
+ * 
  * @author Sam Smulders
  * @author Luka Bavdaz
  *
@@ -20,6 +23,18 @@ public class MovingBubble extends ColouredBubble implements Tickable {
 	transient protected final Vector2f velocity;
 	transient protected final Dimension screenSize;
 	
+	/**
+	 * Construct a new {@code MovingBubble}
+	 * 
+	 * @param position
+	 *            position to initialize the moving bubble (the cannon)
+	 * @param velocity
+	 *            angle for the bubble
+	 * @param screenSize
+	 *            screen size, which is required to perform bounces on the walls
+	 * @param color
+	 *            {@code Color} for this {@code Bubble}
+	 */
 	public MovingBubble(final Point position, final Vector2f velocity, final Dimension screenSize,
 			final Color color) {
 		super(color);

@@ -5,9 +5,15 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 
-import nl.tudelft.ti2206.network.Client;
-import nl.tudelft.ti2206.network.Host;
+import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.Packet.AmmoPacket;
 import nl.tudelft.ti2206.network.packets.Packet.CannonRotate;
@@ -20,45 +26,47 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PacketTest {
+
 	
-	private Host host;
-	private Client client;
-	private Thread hostThread;
-	private Thread clientThread;
+	public final static int PORT = 8989;
+	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+	
+	private Connector host;
+	private Connector client;
 	
 	private Packet receivedPacket = null;
 	
 	@Before
-	public void setUp() {
-		host = spy(new Host());
-		client = spy(new Client("127.0.0.1"));
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				host.connect();
-			}
-		}).start();
+	public void setUp() throws IOException, InterruptedException, ExecutionException {
+		ServerSocket serverSocket = new ServerSocket(PORT);
 		
-		client.connect();
+		Future<Connector> hostFuture = executor.submit(() -> {
+			Socket socket = serverSocket.accept();
+			Connector host = new Connector(socket);
+			return spy(host);
+		});
 		
-		hostThread = new Thread(host);
-		clientThread = new Thread(client);
+		Future<Connector> clientFuture = executor.submit(() -> {
+			Socket socket = new Socket("127.0.0.1", PORT);
+			Connector client = new Connector(socket);
+			return spy(client);
+		});
 		
-		hostThread.start();
-		clientThread.start();
-		System.out.println("Server started");
+		host = hostFuture.get();
+		client = clientFuture.get();
+		
+		executor.execute(host);
+		executor.execute(client);
+		serverSocket.close();
 	}
 	
 	@After
-	public void tearDown() {
-		host.endConnection();
-		client.endConnection();
-		
+	public void tearDown() throws IOException {
+		client.close();
+		host.close();
 		receivedPacket = null;
-		
 		host = null;
 		client = null;
-		System.out.println("Server ended");
 	}
 	
 	@Test
