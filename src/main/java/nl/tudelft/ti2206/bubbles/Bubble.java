@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
  * 
  * @author Jan-Willem Gmelig Meyling
  */
-public interface Bubble extends Sprite, Circle, Serializable {
+public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	
 	/**
 	 * Lay a two way binding to another bubble in a certain {@link Direction}
@@ -83,16 +83,6 @@ public interface Bubble extends Sprite, Circle, Serializable {
 	 * @see #getNeighbours()
 	 */
 	<T extends Bubble> List<T> getNeighboursOfType(Class<T> type);
-	
-	/**
-	 * If a {@link MovingBubble} hits this {@code Bubble}, it should snap to the
-	 * given {@link BubblePlaceHolder}.
-	 * 
-	 * @param b
-	 * @return The {@code BubblePlaceHolder} at which the {@code MovingBubble}
-	 *         should snap
-	 */
-	BubblePlaceholder getSnapPosition(Bubble b);
 	
 	/**
 	 * @return Calculate this {@code Bubbles} position relative to it's

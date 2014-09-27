@@ -33,6 +33,7 @@ public class AbstractBubble implements Bubble {
 	protected Point position = new Point(ORIGIN.x + 2, ORIGIN.y + 2);
 	protected Point center = new Point(ORIGIN.x + WIDTH / 2, ORIGIN.y + HEIGHT / 2);
 	protected final Map<Direction, Bubble> connections  = Maps.newTreeMap();
+	protected final SnapBehaviour snapBehaviour = new SnapToClosest(this);
 
 	@Override
 	public void setPosition(final Point position) {
@@ -156,10 +157,7 @@ public class AbstractBubble implements Bubble {
 	
 	@Override
 	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
-		return getNeighboursOfType(BubblePlaceholder.class)
-			.stream().min((BubblePlaceholder a, BubblePlaceholder b) ->
-				a.getDistance(bubble) < b.getDistance(bubble) ? -1 : 1)
-			.get();
+		return snapBehaviour .getSnapPosition(bubble);
 	}
 	
 	@Override
