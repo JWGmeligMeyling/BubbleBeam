@@ -1,9 +1,15 @@
 package nl.tudelft.ti2206.bubbles;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
-import static nl.tudelft.ti2206.bubbles.Bubble.Direction.*;
+import static nl.tudelft.ti2206.bubbles.Bubble.Direction.BOTTOMRIGHT;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,8 +17,6 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.Map;
 
-import nl.tudelft.ti2206.bubbles.AbstractBubble;
-import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 
 import org.junit.Before;
@@ -105,6 +109,8 @@ public class AbstractBubbleTest {
 	public void testGetSnapPosition() {
 		Bubble placeholder = new BubblePlaceholder();
 		bubble.bind(BOTTOMRIGHT, placeholder);
+		System.out.println(mock);
+		System.out.println(bubble.snapBehaviour);
 		assertEquals(placeholder, bubble.getSnapPosition(mock));
 	}
 	
