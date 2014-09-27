@@ -32,6 +32,7 @@ public class Client extends Connector {
 		try {
 			log.info("Setting up client connection at address {}:{}", ip, PORT);
 			socket = new Socket(ip, PORT);
+			
 			in = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
 			ready = true;
