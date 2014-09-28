@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
+import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -25,12 +28,11 @@ import com.google.common.collect.Maps;
 public class AbstractBubble implements Bubble {
 	
 	private static final long serialVersionUID = -3403214887629166657L;
-	public static final int WIDTH = 32;
-	public static final int HEIGHT = 32;
-	public static final int RADIUS = 14;
-	public static final Point ORIGIN = new Point(0,0);
+	public static final int WIDTH = 22, HEIGHT = WIDTH;
+	public static final int RADIUS = 10;
+	public static final Point ORIGIN = new Point(2,2);
 
-	protected Point position = new Point(ORIGIN.x + 2, ORIGIN.y + 2);
+	protected Point position = new Point(ORIGIN.x, ORIGIN.y);
 	protected Point center = new Point(ORIGIN.x + WIDTH / 2, ORIGIN.y + HEIGHT / 2);
 	protected final Map<Direction, Bubble> connections  = Maps.newTreeMap();
 	protected SnapBehaviour snapBehaviour;
@@ -117,14 +119,6 @@ public class AbstractBubble implements Bubble {
 	}
 
 	@Override
-	public void bind(final Direction direction, final Bubble other) {
-		this.setBubbleAt(direction, other);
-		if(other != null) {
-			other.setBubbleAt(direction.opposite(), this);
-		}
-	}
-	
-	@Override
 	public Bubble getBubbleAt(final Direction direction) {
 		return connections.get(direction);
 	}
@@ -195,6 +189,16 @@ public class AbstractBubble implements Bubble {
 			bubbles.add(current);
 		}
 		return bubbles.stream();
+	}
+	
+	@Override
+	@VisibleForTesting
+	public void bind(Direction direction, Bubble other) {
+		// Mockito doesn't have support for spying default methods yet
+		setBubbleAt(direction, other);
+		if(other != null) {
+			other.setBubbleAt(direction.opposite(), this);
+		}
 	}
 	
 	@Override

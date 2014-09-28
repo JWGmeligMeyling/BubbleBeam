@@ -45,8 +45,6 @@ public class ConnectorTest {
 		executor.execute(host);
 		executor.execute(client);
 		
-		verify(client, times(0)).acceptPacket(any());
-		
 		sleep(100);
 		
 		verify(client, times(1)).acceptPacket(any());

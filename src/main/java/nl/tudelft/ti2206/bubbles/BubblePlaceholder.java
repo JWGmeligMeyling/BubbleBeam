@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.bubbles;
 
+import nl.tudelft.ti2206.bubbles.snap.SnapToSelf;
+
 /**
  * The {@code BubblePlaceholder} fills a space in the {@link BubbleMesh} at
  * which a new Bubble can be snapped

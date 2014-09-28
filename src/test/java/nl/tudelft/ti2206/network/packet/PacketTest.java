@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.Packet.AmmoPacket;
@@ -128,8 +129,9 @@ public class PacketTest {
 	
 	@Test
 	public void ammoPacketTest() {
-		Color ammo1 = Color.RED;
-		Color ammo2 = Color.BLUE;
+		ColouredBubble ammo1 = new ColouredBubble(Color.RED);
+		ColouredBubble ammo2 = new ColouredBubble(Color.GREEN);
+		
 		Packet.AmmoPacket p = new Packet.AmmoPacket(ammo1, ammo2);
 		PacketListener<AmmoPacket> packetHandler = new PacketListener<AmmoPacket>() {
 			@Override
@@ -143,8 +145,8 @@ public class PacketTest {
 		sleep(100);
 		
 		assertNotNull(receivedPacket);
-		assertTrue(((Packet.AmmoPacket) receivedPacket).loadedBubble.equals(ammo1));
-		assertTrue(((Packet.AmmoPacket) receivedPacket).nextBubble.equals(ammo2));
+		assertTrue(((ColouredBubble) ((Packet.AmmoPacket) receivedPacket).loadedBubble).getColor().equals(Color.RED));
+		assertTrue(((ColouredBubble) ((Packet.AmmoPacket) receivedPacket).nextBubble).getColor().equals(Color.GREEN));
 	}
 	
 	private void sleep(int time) {

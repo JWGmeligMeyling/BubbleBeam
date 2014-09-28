@@ -37,14 +37,9 @@ public class BubbleMeshTest {
 				.traverse(Direction.RIGHT).iterator();
 		
 		ColouredBubble a = testCast(iterator.next(), ColouredBubble.class);
-		ColouredBubble b = testCast(iterator.next(), ColouredBubble.class);
-		ColouredBubble c = testCast(iterator.next(), ColouredBubble.class);
 		
 		assertFalse(bubbleMesh.pop(a));
 		verify(bubbleMesh).pop(a);
-		verify(bubbleMesh).pop(eq(b), anySetOf(Bubble.class));
-		
-		verify(bubbleMesh, never()).pop(eq(c), any());
 		verify(bubbleMesh, never()).replaceBubble(any(), any());
 		
 		verify(scoreListener, never()).incrementScore(anyInt());
@@ -65,8 +60,6 @@ public class BubbleMeshTest {
 		
 		assertTrue(bubbleMesh.pop(a));
 		verify(bubbleMesh).pop(a);
-		verify(bubbleMesh).pop(eq(b), anySetOf(Bubble.class));
-		verify(bubbleMesh).pop(eq(c), anySetOf(Bubble.class));
 		
 		verify(bubbleMesh).replaceBubble(eq(a), any(BubblePlaceholder.class));
 		verify(bubbleMesh).replaceBubble(eq(b), any(BubblePlaceholder.class));
@@ -96,8 +89,6 @@ public class BubbleMeshTest {
 		
 		assertTrue(bubbleMesh.pop(b));
 		verify(bubbleMesh).pop(b);
-		verify(bubbleMesh).pop(eq(a), anySetOf(Bubble.class));
-		verify(bubbleMesh).pop(eq(c), anySetOf(Bubble.class));
 		
 		verify(bubbleMesh).replaceBubble(eq(a), any(BubblePlaceholder.class));
 		verify(bubbleMesh).replaceBubble(eq(b), any(BubblePlaceholder.class));
@@ -121,7 +112,7 @@ public class BubbleMeshTest {
 		a.bind(Direction.RIGHT, b);
 		a.bind(Direction.BOTTOMRIGHT, c);
 		b.bind(Direction.BOTTOMLEFT, c);
-		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c);
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c,2);
 		
 		Iterator<Bubble> iterator = bubbleMesh.iterator();
 		assertEquals(ImmutableList.of(a, b, c), ImmutableList.copyOf(iterator));
@@ -136,7 +127,7 @@ public class BubbleMeshTest {
 		a.bind(Direction.RIGHT, b);
 		a.bind(Direction.BOTTOMRIGHT, c);
 		b.bind(Direction.BOTTOMLEFT, c);
-		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c);
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c,2);
 		
 		bubbleMesh.calculatePositions();
 		verify(a, never()).calculatePosition();
@@ -207,7 +198,7 @@ public class BubbleMeshTest {
 		a.bind(Direction.BOTTOMRIGHT, c);
 		b.bind(Direction.BOTTOMLEFT, c);
 
-		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c);
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c,2);
 		bubbleMesh.replaceBubble(c, new AbstractBubble());
 	}
 	

@@ -1,6 +1,11 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.snap;
 
 import java.io.Serializable;
+
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.bubbles.MovingBubble;
 
 /**
  * The {@code SnapBehaviour} defines the way a {@link MovingBubble} should snap

@@ -16,7 +16,7 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class IntersectTest {
 
-	private final static int RADIUS = 14, DIAMETER = RADIUS * 2;
+	private final static int RADIUS = 10, DIAMETER = RADIUS * 2;
 	
 	@Parameters
 	public static Collection<Object[]> data() {

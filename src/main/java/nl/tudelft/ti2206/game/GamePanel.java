@@ -1,19 +1,25 @@
 package nl.tudelft.ti2206.game;
 
+import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.Observer;
 
+
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -28,7 +34,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	private static final long serialVersionUID = 2416543550015136242L;
 	protected final int BUBBLE_QUEUE_SPACING = 60;
 	
-	protected final static int WIDTH = 340;
+	protected final static int WIDTH = 325;
 	protected final static int HEIGHT = 400;
 	
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -64,21 +70,39 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 			setScore(getScore() + amount);
 		});
 		
+		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
+			Applet.newAudioClip(GamePanel.class.getResource("/bubble_pop.wav")).play();
+		});
+		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
 	}
 
 	protected void positionAmmoBubbles() {
 		GameModel gameModel = gameController.getModel();
-		ColouredBubble loadedBubble = gameModel.getLoadedBubble();
-		ColouredBubble nextBubble = gameModel.getNextBubble();
+		Bubble loadedBubble = gameModel.getLoadedBubble();
+		Bubble nextBubble = gameModel.getNextBubble();
 		loadedBubble.setCenter(new Point(cannonPosition.x, cannonPosition.y));
 		nextBubble.setCenter(new Point(cannonPosition.x + BUBBLE_QUEUE_SPACING, cannonPosition.y));
+	}
+	
+	private final static Image BACKGROUND = getBackgroundImage();
+	
+	private static Image getBackgroundImage() {
+		try {
+			return ImageIO.read(GamePanel.class.getResourceAsStream("/sb_bubbles.jpg"));
+		} catch (IOException e) {
+			log.warn(e.getMessage(), e);
+			return null;
+		}
 	}
 	
 	@Override
 	public void paintComponent(final Graphics graphics) {
 		super.paintComponent(graphics);
+		
+		if(BACKGROUND != null)
+			graphics.drawImage(BACKGROUND, 0, 0, WIDTH, HEIGHT, null);
 		
 		GameModel model = gameController.getModel();
 		

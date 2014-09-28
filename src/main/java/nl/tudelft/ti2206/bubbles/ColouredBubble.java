@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 
+import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
+
 import com.google.common.annotations.VisibleForTesting;
 
 /**
@@ -18,9 +20,9 @@ public class ColouredBubble extends AbstractBubble implements Coloured {
 
 	private static final long serialVersionUID = -5892206967489729767L;
 
-	private Color color;
+	protected Color color;
 	
-	private Point paintStart = new Point(center.x, center.y);
+	protected Point paintStart = new Point(center.x, center.y);
 
 	/**
 	 * Construct a new {@code ColouredBubble}
@@ -81,16 +83,6 @@ public class ColouredBubble extends AbstractBubble implements Coloured {
 	}
 	
 	@Override
-	public String toString() {
-		return super.toString() + "(" + color.toString() + ")";
-	}
-	
-	@VisibleForTesting
-	Point getPaintStart() {
-		return paintStart;
-	}
-
-	@Override
 	public boolean popsWith(Bubble target) {
 		if(Coloured.class.isInstance(target)) {
 			Coloured other = Coloured.class.cast(target);
@@ -98,6 +90,16 @@ public class ColouredBubble extends AbstractBubble implements Coloured {
 			return color.equals(otherColor);
 		}
 		return false;
+	}
+
+	@VisibleForTesting
+	Point getPaintStart() {
+		return paintStart;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "(" + color.toString() + ")";
 	}
 
 }
