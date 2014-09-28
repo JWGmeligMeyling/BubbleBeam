@@ -18,7 +18,7 @@ public class EffectsLayer extends LayerUI<JComponent> {
 
 	
 
-	private boolean mActive;
+	private boolean mActive, enabled = false;
 	  private int mX, mY;
 
 	  @Override
@@ -44,6 +44,7 @@ public class EffectsLayer extends LayerUI<JComponent> {
 
 	    // Paint the view.
 	    super.paint (g2, c);
+	    if(!enabled) return;
 
 	    float radius = 1;		//no extra light when mouse is not in screen. Value of 0 causes exceptions
 	    if (mActive) {
@@ -82,5 +83,13 @@ public class EffectsLayer extends LayerUI<JComponent> {
 	    mX = p.x;
 	    mY = p.y;
 	    l.repaint();
+	  }
+	  
+	  public boolean getEnabled() {
+		  return enabled;
+	  }
+	  
+	  public void setEnabled(boolean enabled) {
+		  this.enabled = enabled;
 	  }
 }

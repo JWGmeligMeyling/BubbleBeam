@@ -14,6 +14,9 @@ public class Launcher {
 	public static void main(String[] args) throws IOException {
 		// This main method is called when starting your game.
 		log.info("Starting game...");
+		
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		
 		JFrame frame = new SinglePlayerFrame();
 		frame.pack();
 		frame.setVisible(true);

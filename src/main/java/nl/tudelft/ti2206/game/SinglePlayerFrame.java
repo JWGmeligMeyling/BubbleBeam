@@ -5,18 +5,25 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.plaf.LayerUI;
@@ -61,6 +68,7 @@ public class SinglePlayerFrame extends JFrame implements
 
 	protected final MasterGameController gameController;
 	protected final GamePanel gamePanel;
+	protected EffectsLayer layerUI;
 	protected final JLabel scoreLabel;
 	protected JTextField ipField;
 
@@ -84,7 +92,7 @@ public class SinglePlayerFrame extends JFrame implements
 		this.gameController = gameController;
 		this.executorService = executorService;
 		this.gameTick = gameTick;
-
+		
 		gamePanel = new GamePanel(gameController);
 		
 
@@ -110,9 +118,27 @@ public class SinglePlayerFrame extends JFrame implements
 		});
 
 		Container contentPane = this.getContentPane();
+		fillMenubar();
 		contentPane.setComponentOrientation(ORIENTATION);
 		contentPane.setLayout(new GridBagLayout());
 		fillFrame(contentPane);
+	}
+
+	protected void fillMenubar() {
+		JMenuBar menubar = new JMenuBar();
+		JMenu menu = new JMenu("Settings");
+		JMenuItem item = new JCheckBoxMenuItem(new AbstractAction("Searchlight") {
+			
+			private static final long serialVersionUID = -8925014850605930693L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				layerUI.setEnabled(!layerUI.getEnabled());
+			}
+		});
+		menu.add(item);
+		menubar.add(menu);
+		this.setJMenuBar(menubar);
 	}
 
 	protected void fillFrame(Container contentPane) {
@@ -130,9 +156,9 @@ public class SinglePlayerFrame extends JFrame implements
 		fillIpAddressField(contentPane);
 		fillVersionLabel(contentPane);
 	}
-
+	
 	protected void fillGamePanel(Container contentPane) {
-		LayerUI<JComponent> layerUI = new EffectsLayer();
+		layerUI = new EffectsLayer();
 		JLayer<JComponent> jlayer = new JLayer<JComponent>(gamePanel, layerUI);
 		contentPane.add(jlayer, new GridBagConstraints(0, 0, 1, 4, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.NONE, PADDED, 0,
