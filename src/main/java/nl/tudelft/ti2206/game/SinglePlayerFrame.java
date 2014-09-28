@@ -17,7 +17,6 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.plaf.LayerUI;
@@ -109,7 +108,7 @@ public class SinglePlayerFrame extends JFrame implements
 				new RestartSinglePlayerAction(this).actionPerformed(null);
 			}
 		});
-
+		
 		Container contentPane = this.getContentPane();
 		contentPane.setComponentOrientation(ORIENTATION);
 		contentPane.setLayout(new GridBagLayout());

@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.game;
 
+import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -67,10 +68,16 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 			setScore(getScore() + amount);
 		});
 		
+		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
+			Applet.newAudioClip(GamePanel.class.getResource("/bubble_pop.wav")).play();
+		});
+		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
+		
+		
 	}
-
+	
 	protected void positionAmmoBubbles() {
 		GameModel gameModel = gameController.getModel();
 		ColouredBubble loadedBubble = gameModel.getLoadedBubble();
