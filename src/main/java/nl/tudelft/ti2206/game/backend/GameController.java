@@ -98,7 +98,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 
 		MovingBubble shotBubble = new MovingBubble(new Point(loadedBubblePosition.x, loadedBubblePosition.y),
 				new Vector2f(direction.multiply(MOVING_BUBBLE_SPEED)),
-				model.getScreenSize(), loadedBubble.getColor());
+				model.getScreenSize(), new ColouredBubble(loadedBubble.getColor()));
 
 		updateBubbles();
 		model.setShotBubble(shotBubble);
@@ -121,8 +121,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * @throws GameOver
 	 */
 	protected void collide(final BubbleMesh bubbleMesh,
-			final MovingBubble shotBubble, final Bubble hitTarget) {
+			final MovingBubble movingBubble, final Bubble hitTarget) {
 		
+		Bubble shotBubble = movingBubble.getBubble();
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
 		
 		try {
