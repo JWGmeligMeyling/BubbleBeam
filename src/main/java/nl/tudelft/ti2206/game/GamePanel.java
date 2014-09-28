@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.game;
 
+import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,13 +9,16 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.Observer;
 
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
@@ -65,6 +69,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
+		});
+		
+		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
+			Applet.newAudioClip(GamePanel.class.getResource("/bubble_pop.wav")).play();
 		});
 		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
