@@ -94,6 +94,17 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @return the connections as map
 	 */
 	Map<Direction, Bubble> getConnections();
+	
+	/**
+	 * Checks if this {@code Bubble} pops with another {@code Bubble}. For
+	 * example, two {@link ColouredBubble ColouredBubbles} with the same
+	 * {@link Color} are allowed to pop together.
+	 * 
+	 * @param target
+	 *            the target bubble
+	 * @return True if this bubble pops with the target
+	 */
+	boolean popsWith(Bubble target);
 
 	/**
 	 * Traverse the {@link BubbleMesh} in a given {@link Direction}, with this

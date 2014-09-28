@@ -1,6 +1,5 @@
 package nl.tudelft.ti2206.bubbles;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
@@ -15,11 +14,12 @@ import nl.tudelft.util.Vector2f;
  * @author Luka Bavdaz
  *
  */
-public class MovingBubble extends ColouredBubble implements Tickable {
+public class MovingBubble implements Tickable, DecoratedBubble {
 	
 	private static final long serialVersionUID = 6874942662206137844L;
 	
 	transient protected Vector2f truePosition;
+	transient protected final Bubble bubble;
 	transient protected final Vector2f velocity;
 	transient protected final Dimension screenSize;
 	
@@ -36,8 +36,8 @@ public class MovingBubble extends ColouredBubble implements Tickable {
 	 *            {@code Color} for this {@code Bubble}
 	 */
 	public MovingBubble(final Point position, final Vector2f velocity, final Dimension screenSize,
-			final Color color) {
-		super(color);
+			final Bubble bubble) {
+		this.bubble = bubble;
 		this.screenSize = screenSize;
 		this.truePosition = new Vector2f(position.x, position.y);
 		setPosition(position);
@@ -81,5 +81,8 @@ public class MovingBubble extends ColouredBubble implements Tickable {
 		return screenSize;
 	}
 	
-
+	public Bubble getBubble() {
+		return bubble;
+	}
+	
 }

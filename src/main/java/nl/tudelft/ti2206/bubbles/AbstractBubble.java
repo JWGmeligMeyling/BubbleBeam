@@ -202,5 +202,10 @@ public class AbstractBubble implements Bubble {
 	public Map<Direction, Bubble> getConnections() {
 		return connections;
 	}
+
+	@Override
+	public boolean popsWith(Bubble target) {
+		return false;
+	}
 	
 }
