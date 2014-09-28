@@ -50,7 +50,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 *            {@code Bubble} to start popping at
 	 * @return true iff bubbles popped
 	 */
-	boolean pop(ColouredBubble target);
+	boolean pop(Bubble target);
 	
 	/**
 	 * Calculate the positions for the bubbles relative to the origin (top left
@@ -359,8 +359,8 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		}
 		
 		@Override
-		public boolean pop(final ColouredBubble target) {
-			final Set<ColouredBubble> bubblesToPop = Sets.newHashSet(target);
+		public boolean pop(final Bubble target) {
+			final Set<Bubble> bubblesToPop = Sets.newHashSet(target);
 			
 			if(this.pop(target, bubblesToPop)) {
 				findIsolatedBubbles(bubblesToPop);
@@ -371,17 +371,19 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				});
 				
 				calculateScore(bubblesToPop);
+				target.popHook();
 				return true;
 			}
-						
+			
+			target.snapHook();
 			return false;
 		}
 		
-		protected void findIsolatedBubbles(final Set<ColouredBubble> bubblesToPop) {
+		protected void findIsolatedBubbles(final Set<Bubble> bubblesToPop) {
 			
 			final Set<Bubble> connectedToTop = Sets.newHashSet();
-			final Set<ColouredBubble> allBubbles = Sets.newHashSet(Iterables
-					.filter(this, ColouredBubble.class));
+			final Set<Bubble> allBubbles = Sets.newHashSet(Iterables
+					.filter(this, Bubble::isHittable));
 			
 			allBubbles.removeAll(bubblesToPop);
 			allBubbles.stream()
@@ -395,20 +397,18 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 * @param bubblesToPop
 		 *            {@link Set} of {@code ColouredBubbles} to be popped
 		 */
-		protected boolean pop(final ColouredBubble target,
-				final Set<ColouredBubble> bubblesToPop) {
-			
-			final List<ColouredBubble> colouredBubbles = target
-					.getNeighboursOfType(ColouredBubble.class);
-			Color targetColor = target.getColor();
-			
+		protected boolean pop(final Bubble target,
+				final Set<Bubble> bubblesToPop) {
+
 			/*
 			 * Find neighboring bubbles of the same colour, and pop them
 			 * recursively. Add them to a set in order to check if we have not
 			 * already popped this bubble in the current call.
 			 */
-			colouredBubbles.stream()
-				.filter(bubble -> bubble.getColor().equals(targetColor) && bubblesToPop.add(bubble))
+			target.getNeighbours().stream()
+				.filter(bubble -> bubble.isHittable() &&
+						(bubble.popsWith(target) || target.popsWith(bubble)) &&
+						bubblesToPop.add(bubble))
 				.forEach(bubble -> this.pop(bubble, bubblesToPop));
 			
 			return bubblesToPop.size() > 2;
@@ -439,7 +439,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 */
 		protected boolean connectedToTop(final Bubble target,
 				final Set<Bubble> bubblesConnectedToTop,
-				final Set<ColouredBubble> bubblesToPop) {
+				final Set<Bubble> bubblesToPop) {
 			
 			return connectedToTop(target, bubblesConnectedToTop, bubblesToPop,
 					Sets.newHashSet());
@@ -467,7 +467,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 */
 		protected boolean connectedToTop(final Bubble target,
 				final Set<Bubble> bubblesConnectedToTop,
-				final Set<ColouredBubble> bubblesToPop,
+				final Set<Bubble> bubblesToPop,
 				final Set<Bubble> walked) {
 
 			boolean connectedToTop = false;
@@ -491,7 +491,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 					bubblesConnectedToTop.add(target);
 				}
 				else {
-					bubblesToPop.add((ColouredBubble) target);
+					bubblesToPop.add(target);
 				}
 			}
 			
@@ -503,7 +503,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 * 
 		 * @param bubbles
 		 */
-		protected void calculateScore(final Set<ColouredBubble> bubbles) {
+		protected void calculateScore(final Set<Bubble> bubbles) {
 			int amount = bubbles.size() * bubbles.size() * 25;
 			scoreListeners.forEach(scoreListener -> scoreListener.incrementScore(amount));
 		}

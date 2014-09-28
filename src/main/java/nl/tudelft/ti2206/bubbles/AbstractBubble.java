@@ -116,14 +116,6 @@ public class AbstractBubble implements Bubble {
 	}
 
 	@Override
-	public void bind(final Direction direction, final Bubble other) {
-		this.setBubbleAt(direction, other);
-		if(other != null) {
-			other.setBubbleAt(direction.opposite(), this);
-		}
-	}
-	
-	@Override
 	public Bubble getBubbleAt(final Direction direction) {
 		return connections.get(direction);
 	}
@@ -200,6 +192,11 @@ public class AbstractBubble implements Bubble {
 	@VisibleForTesting
 	public Map<Direction, Bubble> getConnections() {
 		return connections;
+	}
+
+	@Override
+	public boolean popsWith(Bubble target) {
+		return false;
 	}
 	
 }

@@ -6,19 +6,21 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 
+import com.google.common.annotations.VisibleForTesting;
+
 /**
  * The Bubbles on the mesh with various colours
  * 
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class ColouredBubble extends AbstractBubble {
+public class ColouredBubble extends AbstractBubble implements Coloured {
 
 	private static final long serialVersionUID = -5892206967489729767L;
 
-	private Color color;
+	protected Color color;
 	
-	private Point paintStart = new Point(center.x, center.y);
+	protected Point paintStart = new Point(center.x, center.y);
 
 	/**
 	 * Construct a new {@code ColouredBubble}
@@ -68,6 +70,7 @@ public class ColouredBubble extends AbstractBubble {
 		this.color = color;
 	}
 	
+	@Override
 	public Color getColor() {
 		return color;
 	}
@@ -78,13 +81,23 @@ public class ColouredBubble extends AbstractBubble {
 	}
 	
 	@Override
-	public String toString() {
-		return super.toString() + "(" + color.toString() + ")";
+	public boolean popsWith(Bubble target) {
+		if(Coloured.class.isInstance(target)) {
+			Coloured other = Coloured.class.cast(target);
+			Color otherColor = other.getColor();
+			return color.equals(otherColor);
+		}
+		return false;
 	}
-	
-	public Point getPaintStart() {
+
+	@VisibleForTesting
+	Point getPaintStart() {
 		return paintStart;
 	}
 
-	
+	@Override
+	public String toString() {
+		return super.toString() + "(" + color.toString() + ")";
+	}
+
 }

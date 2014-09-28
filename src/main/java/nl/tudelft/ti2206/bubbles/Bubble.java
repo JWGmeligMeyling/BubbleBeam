@@ -27,7 +27,12 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @param other
 	 *            The other {@code Bubble}
 	 */
-	void bind(Direction direction, Bubble other);
+	default void bind(Direction direction, Bubble other) {
+		setBubbleAt(direction, other);
+		if(other != null) {
+			other.setBubbleAt(direction.opposite(), this);
+		}
+	}
 	
 	/**
 	 * Get the {@code Bubble} to which this {@code Bubble} is bound in a given
@@ -94,6 +99,37 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @return the connections as map
 	 */
 	Map<Direction, Bubble> getConnections();
+	
+	/**
+	 * Checks if this {@code Bubble} pops with another {@code Bubble}. For
+	 * example, two {@link ColouredBubble ColouredBubbles} with the same
+	 * {@link Color} are allowed to pop together.
+	 * 
+	 * @param target
+	 *            the target bubble
+	 * @return True if this bubble pops with the target
+	 */
+	boolean popsWith(Bubble target);
+	
+	/**
+	 * The collideHook is called on the shot {@code Bubble} when it collides
+	 * with another Bubble
+	 * 
+	 * @param target
+	 *            The bubble this {@code Bubble} collided with;
+	 */
+	default void collideHook(Bubble target) {};
+	
+	/**
+	 * The pop hook is called on the shot {@code Bubble} when it pops
+	 */
+	default void popHook() {};
+	
+	/**
+	 * The snap hook is called on the shot {@code Bubble} when it doesn't
+	 * collide with another bubble
+	 */
+	default void snapHook() {};
 
 	/**
 	 * Traverse the {@link BubbleMesh} in a given {@link Direction}, with this
