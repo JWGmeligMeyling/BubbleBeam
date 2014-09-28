@@ -153,4 +153,12 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		return gameController;
 	}
 	
+	@Override
+	  public void addNotify() { 
+	   super.addNotify();
+	  //  this.getParent().addMouseListener((event) -> {
+	  // code
+	  //});
+	  }
+	
 }

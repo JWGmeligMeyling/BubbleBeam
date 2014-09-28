@@ -42,7 +42,7 @@ public class SinglePlayerFrame extends JFrame implements
 	private static final long serialVersionUID = 5501239542707746229L;
 	protected final static ComponentOrientation ORIENTATION = ComponentOrientation.LEFT_TO_RIGHT;
 	protected static final String FRAME_TITLE = "Bubble Shooter";
-	protected static final String VERSION_STRING = "Version: 0.1 Alpha";
+	protected static final String VERSION_STRING = "Version: 0.3 Alpha";
 	protected static final String DEFAULT_BOARD_PATH = "/board.txt";
 	protected static final int FPS = 30;
 	protected static final int FRAME_PERIOD = 1000 / FPS;

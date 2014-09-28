@@ -45,22 +45,33 @@ public class EffectsLayer extends LayerUI<JComponent> {
 	    // Paint the view.
 	    super.paint (g2, c);
 
+	    float radius = 1;		//no extra light when mouse is not in screen. Value of 0 causes exceptions
 	    if (mActive) {
-	      // Create a radial gradient, transparent in the middle.
-	      java.awt.geom.Point2D center = new java.awt.geom.Point2D.Float(mX, mY);
-	      float radius = 72;
-	      float[] dist = {0.0f, 1.0f};
-	      Color[] colors = {new Color(0.0f, 0.0f, 0.0f, 0.0f), Color.BLACK};
-	      RadialGradientPaint p =
-	          new RadialGradientPaint(center, radius, dist, colors);
-	      g2.setPaint(p);
-	      g2.setComposite(AlphaComposite.getInstance(
-	          AlphaComposite.SRC_OVER, .6f));
-	      g2.fillRect(0, 0, c.getWidth(), c.getHeight());
+	      
+	      radius = 72;
+	      
 	    }
-
+	    // Create a radial gradient, transparent in the middle.
+	    java.awt.geom.Point2D center = new java.awt.geom.Point2D.Float(mX, mY);
+	    float[] dist = {0.0f, 1.0f};
+	    Color[] colors = {new Color(0.0f, 0.0f, 0.0f, 0.0f), Color.BLACK};
+	    RadialGradientPaint p =
+	    		new RadialGradientPaint(center, radius, dist, colors);
+	    g2.setPaint(p);
+	    
+	    float darkness = 1.0f;
+	    if(mActive){
+	    	darkness = 0.9f;
+	    }
+	    g2.setComposite(AlphaComposite.getInstance(
+	    		AlphaComposite.SRC_OVER, darkness));
+	    g2.fillRect(0, 0, c.getWidth(), c.getHeight());
+	    
+	    
 	    g2.dispose();
 	  }
+	  
+	  
 
 	  @Override
 	  protected void processMouseEvent(MouseEvent e, JLayer l) {
