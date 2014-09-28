@@ -24,7 +24,7 @@ public class EffectsLayer extends LayerUI<JComponent> {
 	  @Override
 	  public void installUI(JComponent c) {
 	    super.installUI(c);
-	    JLayer jlayer = (JLayer)c;
+	    JLayer<JComponent> jlayer = (JLayer<JComponent>)c;
 	    jlayer.setLayerEventMask(
 	      AWTEvent.MOUSE_EVENT_MASK |
 	      AWTEvent.MOUSE_MOTION_EVENT_MASK
@@ -33,7 +33,7 @@ public class EffectsLayer extends LayerUI<JComponent> {
 
 	  @Override
 	  public void uninstallUI(JComponent c) {
-	    JLayer jlayer = (JLayer)c;
+	    JLayer<JComponent> jlayer = (JLayer<JComponent>)c;
 	    jlayer.setLayerEventMask(0);
 	    super.uninstallUI(c);
 	  }
@@ -59,12 +59,8 @@ public class EffectsLayer extends LayerUI<JComponent> {
 	    		new RadialGradientPaint(center, radius, dist, colors);
 	    g2.setPaint(p);
 	    
-	    float darkness = 1.0f;
-	    if(mActive){
-	    	darkness = 0.9f;
-	    }
 	    g2.setComposite(AlphaComposite.getInstance(
-	    		AlphaComposite.SRC_OVER, darkness));
+	    		AlphaComposite.SRC_OVER, 0.6f));
 	    g2.fillRect(0, 0, c.getWidth(), c.getHeight());
 	    
 	    
