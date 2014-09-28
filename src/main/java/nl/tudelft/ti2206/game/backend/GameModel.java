@@ -11,6 +11,7 @@ import com.google.common.collect.Sets;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.Coloured;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 
 public class GameModel extends Observable {
@@ -38,10 +39,10 @@ public class GameModel extends Observable {
 	
 	public void retainRemainingColors(final Collection<Color> colours) {
 		this.remainingColors.retainAll(colours);
-		if(Coloured.class.isInstance(loadedBubble))
-			this.remainingColors.add(Coloured.class.cast(loadedBubble).getColor());
-		if(Coloured.class.isInstance(nextBubble))
-			this.remainingColors.add(Coloured.class.cast(nextBubble).getColor());
+		if(ColouredBubble.class.isInstance(loadedBubble))
+			this.remainingColors.add(ColouredBubble.class.cast(loadedBubble).getColor());
+		if(ColouredBubble.class.isInstance(nextBubble))
+			this.remainingColors.add(ColouredBubble.class.cast(nextBubble).getColor());
 	}
 	
 	public BubbleMesh getBubbleMesh() {
