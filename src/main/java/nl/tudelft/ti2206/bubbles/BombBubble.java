@@ -7,12 +7,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class BombBubble implements DecoratedBubble {
+public class BombBubble implements DecoratedBubble, PopRadius {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5406623504377849151L;
+	private static final int POP_RADIUS = 2;
 	protected final AbstractBubble bubble;
 	protected static BufferedImage BOMB_IMAGE = _getBubbleImage();
 	
@@ -41,11 +42,16 @@ public class BombBubble implements DecoratedBubble {
 	@Override
 	public void render(Graphics graphics) {
 		graphics.drawImage(BOMB_IMAGE, (int)bubble.getX(), (int)bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
-		}
+	}
 	
 	@Override
 	public Bubble getBubble() {
 		return bubble;
+	}
+	
+	@Override
+	public int popRadius() {
+		return POP_RADIUS;
 	}
 
 }
