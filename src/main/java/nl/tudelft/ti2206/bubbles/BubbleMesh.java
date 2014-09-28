@@ -639,8 +639,8 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		@Override
 		public List<Color> getRemainingColours() {
 			return Lists.newArrayList(Lists
-				.newArrayList(Iterables.filter(this, ColouredBubble.class))
-				.stream().map(ColouredBubble::getColor).distinct()
+				.newArrayList(Iterables.filter(this, Coloured.class))
+				.stream().map(Coloured::getColor).distinct()
 				.iterator());
 		}
 

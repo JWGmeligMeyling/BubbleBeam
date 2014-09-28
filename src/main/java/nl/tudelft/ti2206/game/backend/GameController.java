@@ -8,7 +8,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.ti2206.bubbles.BombBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
@@ -202,7 +201,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			return new JokerBubble();
 		}
 		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			return new BombBubble();
+//			return new BombBubble();
 		}
 		return new ColouredBubble(getRandomRemainingColor());
 	}
