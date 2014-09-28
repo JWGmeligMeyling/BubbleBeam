@@ -1,21 +1,18 @@
 package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import nl.tudelft.ti2206.cannon.Cannon;
-
 public class BombBubble implements DecoratedBubble {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5406623504377849151L;
 	protected final AbstractBubble bubble;
 	protected static BufferedImage BOMB_IMAGE = _getBubbleImage();
 	
@@ -43,7 +40,6 @@ public class BombBubble implements DecoratedBubble {
 
 	@Override
 	public void render(Graphics graphics) {
-		Graphics2D g = (Graphics2D) graphics;
 		graphics.drawImage(BOMB_IMAGE, (int)bubble.getX(), (int)bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
 		}
 	
