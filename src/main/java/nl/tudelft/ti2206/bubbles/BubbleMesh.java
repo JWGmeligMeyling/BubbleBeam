@@ -369,9 +369,11 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				});
 				
 				calculateScore(bubblesToPop);
+				target.popHook();
 				return true;
 			}
-						
+			
+			target.snapHook();
 			return false;
 		}
 		

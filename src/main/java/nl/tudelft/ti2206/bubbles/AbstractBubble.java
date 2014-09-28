@@ -117,14 +117,6 @@ public class AbstractBubble implements Bubble {
 	}
 
 	@Override
-	public void bind(final Direction direction, final Bubble other) {
-		this.setBubbleAt(direction, other);
-		if(other != null) {
-			other.setBubbleAt(direction.opposite(), this);
-		}
-	}
-	
-	@Override
 	public Bubble getBubbleAt(final Direction direction) {
 		return connections.get(direction);
 	}

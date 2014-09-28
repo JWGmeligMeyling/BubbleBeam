@@ -27,7 +27,12 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @param other
 	 *            The other {@code Bubble}
 	 */
-	void bind(Direction direction, Bubble other);
+	default void bind(Direction direction, Bubble other) {
+		setBubbleAt(direction, other);
+		if(other != null) {
+			other.setBubbleAt(direction.opposite(), this);
+		}
+	}
 	
 	/**
 	 * Get the {@code Bubble} to which this {@code Bubble} is bound in a given
@@ -114,6 +119,17 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 *            The bubble this {@code Bubble} collided with;
 	 */
 	default void collideHook(Bubble target) {};
+	
+	/**
+	 * The pop hook is called on the shot {@code Bubble} when it pops
+	 */
+	default void popHook() {};
+	
+	/**
+	 * The snap hook is called on the shot {@code Bubble} when it doesn't
+	 * collide with another bubble
+	 */
+	default void snapHook() {};
 
 	/**
 	 * Traverse the {@link BubbleMesh} in a given {@link Direction}, with this
