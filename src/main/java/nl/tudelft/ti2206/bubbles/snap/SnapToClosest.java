@@ -1,4 +1,7 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.snap;
+
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 
 /**
  * The {@code SnapToClosest} {@link SnapBehaviour} snaps to the closest

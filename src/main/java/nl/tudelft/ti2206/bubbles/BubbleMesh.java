@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -361,9 +360,10 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 		@Override
 		public boolean pop(final Bubble target) {
-			final Set<Bubble> bubblesToPop = Sets.newHashSet(target);
+			final Set<Bubble> bubblesToPop = target.getPopBehaviour()
+					.getBubblesToPop(target);
 			
-			if(this.pop(target, bubblesToPop)) {
+			if(bubblesToPop.size() > 2) {
 				findIsolatedBubbles(bubblesToPop);
 				
 				bubblesToPop.forEach(bubble -> {
@@ -390,50 +390,6 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			allBubbles.stream()
 				.filter(bubble -> !connectedToTop(bubble, connectedToTop, bubblesToPop))
 				.forEach(bubble -> log.info("Found isolated bubble {}", bubble));
-		}
-		
-		/**
-		 * Recursively search for neighboring bubbles of the same color
-		 * 
-		 * @param bubblesToPop
-		 *            {@link Set} of {@code ColouredBubbles} to be popped
-		 */
-		protected boolean pop(final Bubble target,
-				final Set<Bubble> bubblesToPop) {
-
-			Collection<Bubble> targets;
-			
-			if(PopRadius.class.isInstance(target)) {
-				targets = Sets.newHashSet(target);
-				Set<Bubble> neighboursInRadius = Sets.newHashSet(target);
-				
-				int popRadius = PopRadius.class.cast(target).popRadius();
-
-				for(int i = 0; i < popRadius; i++) {
-					targets.forEach(t ->
-					neighboursInRadius.addAll(t.getNeighbours()));
-					Set<Bubble> newTargets = Sets.newHashSet(neighboursInRadius);
-					newTargets.removeAll(targets);
-					targets = newTargets;
-				}
-			}
-			else {
-				targets = target.getNeighbours();
-			}
-			
-			
-			/*
-			 * Find neighboring bubbles of the same colour, and pop them
-			 * recursively. Add them to a set in order to check if we have not
-			 * already popped this bubble in the current call.
-			 */
-			targets.stream()
-				.filter(bubble -> bubble.isHittable() &&
-						(bubble.popsWith(target) || target.popsWith(bubble)) &&
-						bubblesToPop.add(bubble))
-				.forEach(bubble -> this.pop(bubble, bubblesToPop));
-			
-			return bubblesToPop.size() > 2;
 		}
 		
 		@Override

@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
+import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
+import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
+
 import com.google.common.collect.Lists;
 
 /**
@@ -101,17 +105,6 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	Map<Direction, Bubble> getConnections();
 	
 	/**
-	 * Checks if this {@code Bubble} pops with another {@code Bubble}. For
-	 * example, two {@link ColouredBubble ColouredBubbles} with the same
-	 * {@link Color} are allowed to pop together.
-	 * 
-	 * @param target
-	 *            the target bubble
-	 * @return True if this bubble pops with the target
-	 */
-	boolean popsWith(Bubble target);
-	
-	/**
 	 * The collideHook is called on the shot {@code Bubble} when it collides
 	 * with another Bubble
 	 * 
@@ -167,6 +160,27 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 		this.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
 		this.setPosition(original.getPosition());
 	}
+
+	public final static PopBehaviour RECURSIVE_POP = new RecursivePopBehaviour();
+
+	/**
+	 * Get the {@link PopBehaviour} for this {@code Bubble}
+	 * @return the {@link PopBehaviour} for this {@code Bubble}
+	 */
+	default PopBehaviour getPopBehaviour() {
+		return RECURSIVE_POP;
+	}
+
+	/**
+	 * Checks if this {@code Bubble} pops with another {@code Bubble}. For
+	 * example, two {@link ColouredBubble ColouredBubbles} with the same
+	 * {@link Color} are allowed to pop together.
+	 * 
+	 * @param target
+	 *            the target bubble
+	 * @return True if this bubble pops with the target
+	 */
+	boolean popsWith(Bubble target);
 
 	/**
 	 * Direction

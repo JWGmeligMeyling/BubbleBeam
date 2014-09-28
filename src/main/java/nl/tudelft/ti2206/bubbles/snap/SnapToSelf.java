@@ -1,4 +1,7 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.snap;
+
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

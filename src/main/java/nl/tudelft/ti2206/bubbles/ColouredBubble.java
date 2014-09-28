@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 
+import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
+
 import com.google.common.annotations.VisibleForTesting;
 
 /**

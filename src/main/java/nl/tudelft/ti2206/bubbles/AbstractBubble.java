@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
+import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -186,6 +189,16 @@ public class AbstractBubble implements Bubble {
 			bubbles.add(current);
 		}
 		return bubbles.stream();
+	}
+	
+	@Override
+	@VisibleForTesting
+	public void bind(Direction direction, Bubble other) {
+		// Mockito doesn't have support for spying default methods yet
+		setBubbleAt(direction, other);
+		if(other != null) {
+			other.setBubbleAt(direction.opposite(), this);
+		}
 	}
 	
 	@Override

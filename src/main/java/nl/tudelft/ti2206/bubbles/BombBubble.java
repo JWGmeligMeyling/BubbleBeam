@@ -7,21 +7,22 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class BombBubble implements DecoratedBubble, PopRadius {
+import nl.tudelft.ti2206.bubbles.pop.RadialPopBehaviour;
 
-	/**
-	 * 
-	 */
+public class BombBubble implements DecoratedBubble {
+
 	private static final long serialVersionUID = -5406623504377849151L;
 	private static final int POP_RADIUS = 2;
+	
 	protected final AbstractBubble bubble;
+	protected final RadialPopBehaviour popBehaviour;
 	protected static BufferedImage BOMB_IMAGE = _getBubbleImage();
 	
 	protected boolean collided = false;
 		
-
 	public BombBubble(){
 		bubble = new AbstractBubble();
+		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
 	}
 
 	@Override
@@ -50,8 +51,13 @@ public class BombBubble implements DecoratedBubble, PopRadius {
 	}
 	
 	@Override
-	public int popRadius() {
-		return POP_RADIUS;
+	public boolean isHittable() {
+		return true;
+	}
+	
+	@Override
+	public RadialPopBehaviour getPopBehaviour() {
+		return popBehaviour;
 	}
 
 }
