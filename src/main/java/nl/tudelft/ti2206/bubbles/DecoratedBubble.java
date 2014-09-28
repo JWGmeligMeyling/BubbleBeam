@@ -9,10 +9,10 @@ import java.util.Map;
 
 /**
  * This interface is used to use the decorator pattern with {@link Bubble} sub
- * classes
+ * classes.
  * 
+ * @author Leon Hoek
  * @author Jan-Willem Gmelig Meyling
- *
  */
 public interface DecoratedBubble extends Bubble {
 	
@@ -75,11 +75,6 @@ public interface DecoratedBubble extends Bubble {
 	@Override
 	default BubblePlaceholder getSnapPosition(Bubble bubble) {
 		return getBubble().getSnapPosition(bubble);
-	}
-
-	@Override
-	default void bind(Direction direction, Bubble other) {
-		getBubble().bind(direction, other);
 	}
 
 	@Override

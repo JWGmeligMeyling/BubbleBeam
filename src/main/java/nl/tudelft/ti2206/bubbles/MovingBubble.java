@@ -12,7 +12,8 @@ import nl.tudelft.util.Vector2f;
  * 
  * @author Sam Smulders
  * @author Luka Bavdaz
- *
+ * @author Jan-Willem Gmelig Meyling
+ * @author Liam Clark
  */
 public class MovingBubble implements Tickable, DecoratedBubble {
 	
@@ -65,22 +66,39 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 		
 	}
 	
+	/**
+	 * Set the true position for this {@code MovingBubble}
+	 * @param truePosition
+	 */
 	public void setTruePosition(Vector2f truePosition) {
 		this.truePosition = truePosition;
 	}
 	
+	/**
+	 * Get the true position for this {@code MovingBubble}
+	 * @return
+	 */
 	public Vector2f getTruePosition() {
 		return truePosition;
 	}
 
+	/**
+	 * Get the velocity for this {@code MovingBubble}
+	 * @return the velocity for this {@code MovingBubble}
+	 */
 	public Vector2f getVelocity() {
 		return velocity;
 	}
-
+	
+	/**
+	 * Get the screen size for this {@code MovingBubble}
+	 * @return the screen size for this {@code MovingBubble}
+	 */
 	public Dimension getScreenSize() {
 		return screenSize;
 	}
 	
+	@Override
 	public Bubble getBubble() {
 		return bubble;
 	}
