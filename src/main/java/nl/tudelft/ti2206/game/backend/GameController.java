@@ -201,7 +201,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			return new JokerBubble();
 		}
 		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-//			return new BombBubble();
+			return new BombBubble();
 		}
 		return new ColouredBubble(getRandomRemainingColor());
 	}
