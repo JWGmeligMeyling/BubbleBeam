@@ -24,7 +24,10 @@ public class MovingBubbleTest {
 		origin = mock(Point.class);
 		velocity = new Vector2f(.5f, .5f);
 		screenSize = new Dimension(300,300);
-		movingBubble = new MovingBubble(origin, velocity, screenSize, new ColouredBubble(Color.RED));
+		
+		Bubble shootBubble = new ColouredBubble(Color.RED);
+		shootBubble.setPosition(origin);
+		movingBubble = new MovingBubble(velocity, screenSize, shootBubble);
 		assertEquals(origin, movingBubble.getPosition());
 	}
 

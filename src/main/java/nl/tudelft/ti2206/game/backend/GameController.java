@@ -1,7 +1,6 @@
 package nl.tudelft.ti2206.game.backend;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
@@ -13,6 +12,7 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.bubbles.JokerBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
@@ -52,9 +52,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected void prepareAmmo() {
-		model.setLoadedBubble(new ColouredBubble(this.getRandomRemainingColor()));
-		model.setNextBubble(new ColouredBubble(this.getRandomRemainingColor()));
-		
+		model.setLoadedBubble(createAmmoBubble());
+		model.setNextBubble(createAmmoBubble());
 	}
 
 	public CannonController getCannonController() {
@@ -93,12 +92,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 			throw new IllegalStateException("Wait for another shoot");
 		}
 		
-		ColouredBubble loadedBubble = model.getLoadedBubble();
-		Point loadedBubblePosition = loadedBubble.getPosition();
+		Bubble loadedBubble = model.getLoadedBubble();
 
-		MovingBubble shotBubble = new MovingBubble(new Point(loadedBubblePosition.x, loadedBubblePosition.y),
-				new Vector2f(direction.multiply(MOVING_BUBBLE_SPEED)),
-				model.getScreenSize(), new ColouredBubble(loadedBubble.getColor()));
+		MovingBubble shotBubble = new MovingBubble(new Vector2f(direction.multiply(MOVING_BUBBLE_SPEED)),
+				model.getScreenSize(), loadedBubble);
 
 		updateBubbles();
 		model.setShotBubble(shotBubble);
@@ -106,11 +103,12 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected void updateBubbles() {
-		ColouredBubble nextBubble = model.getNextBubble();
-		Color nextColor = getRandomRemainingColor();
-		log.info("New bubble created with color {}", nextColor);
-		model.setLoadedBubbleColor(nextBubble.getColor());
-		model.setNextBubbleColor(nextColor);
+		Bubble nextBubble = createAmmoBubble();
+		Bubble previousNextBubble = model.getNextBubble();
+		nextBubble.setPosition(previousNextBubble.getPosition());
+		model.setNextBubble(nextBubble);
+		previousNextBubble.setPosition(model.getLoadedBubble().getPosition());
+		model.setLoadedBubble(previousNextBubble);
 	}
 	
 	/**
@@ -127,8 +125,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
 		
 		try {
+			log.info("Bullet collided with {}", hitTarget);
+			shotBubble.collideHook(hitTarget);
+			
+			log.info("Bullet snapped to {}", snapPosition);
 			bubbleMesh.replaceBubble(snapPosition, shotBubble);
-			log.info("Bullet collided with {}", snapPosition);
 
 			if (!bubbleMesh.pop(shotBubble)) {
 				incrementMisses();
@@ -193,6 +194,13 @@ public class GameController implements Controller<GameModel>, Tickable {
 				iterator.next();
 			}
 		throw new IndexOutOfBoundsException();
+	}
+
+	protected Bubble createAmmoBubble() {
+		if(RANDOM_GENERATOR.nextInt(5) == 1) {
+			return new JokerBubble();
+		}
+		return new ColouredBubble(getRandomRemainingColor());
 	}
 
 }

@@ -105,6 +105,15 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @return True if this bubble pops with the target
 	 */
 	boolean popsWith(Bubble target);
+	
+	/**
+	 * The collideHook is called on the shot {@code Bubble} when it collides
+	 * with another Bubble
+	 * 
+	 * @param target
+	 *            The bubble this {@code Bubble} collided with;
+	 */
+	default void collideHook(Bubble target) {};
 
 	/**
 	 * Traverse the {@link BubbleMesh} in a given {@link Direction}, with this

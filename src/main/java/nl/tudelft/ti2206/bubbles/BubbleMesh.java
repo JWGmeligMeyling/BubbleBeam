@@ -402,7 +402,9 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			 * already popped this bubble in the current call.
 			 */
 			target.getNeighbours().stream()
-				.filter(bubble -> bubble.isHittable() && bubble.popsWith(target) && bubblesToPop.add(bubble))
+				.filter(bubble -> bubble.isHittable() &&
+						(bubble.popsWith(target) || target.popsWith(bubble)) &&
+						bubblesToPop.add(bubble))
 				.forEach(bubble -> this.pop(bubble, bubblesToPop));
 			
 			return bubblesToPop.size() > 2;

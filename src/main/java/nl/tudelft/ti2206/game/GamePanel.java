@@ -13,7 +13,7 @@ import javax.swing.border.BevelBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -70,8 +70,8 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 
 	protected void positionAmmoBubbles() {
 		GameModel gameModel = gameController.getModel();
-		ColouredBubble loadedBubble = gameModel.getLoadedBubble();
-		ColouredBubble nextBubble = gameModel.getNextBubble();
+		Bubble loadedBubble = gameModel.getLoadedBubble();
+		Bubble nextBubble = gameModel.getNextBubble();
 		loadedBubble.setCenter(new Point(cannonPosition.x, cannonPosition.y));
 		nextBubble.setCenter(new Point(cannonPosition.x + BUBBLE_QUEUE_SPACING, cannonPosition.y));
 	}

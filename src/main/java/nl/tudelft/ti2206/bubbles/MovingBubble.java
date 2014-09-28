@@ -35,12 +35,12 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 	 * @param color
 	 *            {@code Color} for this {@code Bubble}
 	 */
-	public MovingBubble(final Point position, final Vector2f velocity, final Dimension screenSize,
+	public MovingBubble(final Vector2f velocity, final Dimension screenSize,
 			final Bubble bubble) {
 		this.bubble = bubble;
 		this.screenSize = screenSize;
+		Point position = bubble.getPosition();
 		this.truePosition = new Vector2f(position.x, position.y);
-		setPosition(position);
 		this.velocity = velocity;
 	}
 	

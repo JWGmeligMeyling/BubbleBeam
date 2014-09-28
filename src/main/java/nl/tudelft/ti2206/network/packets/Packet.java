@@ -1,6 +1,5 @@
 package nl.tudelft.ti2206.network.packets;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +8,7 @@ import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.util.Vector2f;
 
@@ -128,9 +128,9 @@ public interface Packet extends Serializable {
 
 		private static final long serialVersionUID = -7036909370582903656L;
 
-		public final Color loadedBubble, nextBubble;
+		public final Bubble loadedBubble, nextBubble;
 		
-		public AmmoPacket(Color loadedBubble, Color nextBubble) {
+		public AmmoPacket(Bubble loadedBubble, Bubble nextBubble) {
 			this.loadedBubble = loadedBubble;
 			this.nextBubble = nextBubble;
 		}

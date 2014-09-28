@@ -1,14 +1,9 @@
 package nl.tudelft.ti2206.game.backend;
 
-import java.awt.Color;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
-
-
+import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.network.Connector;
@@ -68,8 +63,8 @@ public class MasterGameController extends GameController {
 		log.info("Sending initial data to {}", connector);
 		connector.sendPacket(new Packet.BubbleMeshSync(model.getBubbleMesh()));
 		connector.sendPacket(new Packet.AmmoPacket(
-				model.getLoadedBubble().getColor(),
-				model.getNextBubble().getColor()));
+				model.getLoadedBubble(),
+				model.getNextBubble()));
 	}
 	
 	@Override
@@ -80,8 +75,8 @@ public class MasterGameController extends GameController {
 		log.info("Sending shoot packet");
 		connector.sendPacket(new Packet.CannonShoot(direction));
 		
-		Color loadedBubble = model.getLoadedBubble().getColor();
-		Color nextBubble = model.getNextBubble().getColor();
+		Bubble loadedBubble = model.getLoadedBubble();
+		Bubble nextBubble = model.getNextBubble();
 		log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
 		connector.sendPacket(new Packet.AmmoPacket(loadedBubble, nextBubble));
 	}

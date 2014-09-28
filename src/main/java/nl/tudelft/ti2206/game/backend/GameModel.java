@@ -8,8 +8,9 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
-import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.bubbles.Coloured;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 
 public class GameModel extends Observable {
@@ -20,7 +21,7 @@ public class GameModel extends Observable {
 	
 	private MovingBubble shotBubble;
 	
-	private ColouredBubble loadedBubble, nextBubble;
+	private Bubble loadedBubble, nextBubble;
 	
 	private long score = 0;
 	
@@ -37,8 +38,10 @@ public class GameModel extends Observable {
 	
 	public void retainRemainingColors(final Collection<Color> colours) {
 		this.remainingColors.retainAll(colours);
-		this.remainingColors.add(loadedBubble.getColor());
-		this.remainingColors.add(nextBubble.getColor());
+		if(Coloured.class.isInstance(loadedBubble))
+			this.remainingColors.add(Coloured.class.cast(loadedBubble).getColor());
+		if(Coloured.class.isInstance(nextBubble))
+			this.remainingColors.add(Coloured.class.cast(nextBubble).getColor());
 	}
 	
 	public BubbleMesh getBubbleMesh() {
@@ -58,20 +61,20 @@ public class GameModel extends Observable {
 		this.setChanged();
 	}
 
-	public ColouredBubble getLoadedBubble() {
+	public Bubble getLoadedBubble() {
 		return loadedBubble;
 	}
 
-	public void setLoadedBubble(ColouredBubble loadedBubble) {
+	public void setLoadedBubble(Bubble loadedBubble) {
 		this.loadedBubble = loadedBubble;
 		this.setChanged();
 	}
 
-	public ColouredBubble getNextBubble() {
+	public Bubble getNextBubble() {
 		return nextBubble;
 	}
 
-	public void setNextBubble(ColouredBubble nextBubble) {
+	public void setNextBubble(Bubble nextBubble) {
 		this.nextBubble = nextBubble;
 		this.setChanged();
 	}
@@ -118,16 +121,6 @@ public class GameModel extends Observable {
 	
 	public void setScreenSize(final Dimension dimension) {
 		this.screenSize = dimension;
-		this.setChanged();
-	}
-
-	public void setLoadedBubbleColor(Color color) {
-		this.loadedBubble.setColor(color);
-		this.setChanged();
-	}
-
-	public void setNextBubbleColor(Color nextColor) {
-		this.nextBubble.setColor(nextColor);
 		this.setChanged();
 	}
 
