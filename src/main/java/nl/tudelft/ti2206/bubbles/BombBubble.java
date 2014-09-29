@@ -14,7 +14,7 @@ public class BombBubble implements DecoratedBubble {
 	private static final long serialVersionUID = -5406623504377849151L;
 	private static final int POP_RADIUS = 2;
 	
-	protected final AbstractBubble bubble;
+	protected final Bubble bubble;
 	protected final RadialPopBehaviour popBehaviour;
 	protected static BufferedImage BOMB_IMAGE = _getBubbleImage();
 	
@@ -27,6 +27,8 @@ public class BombBubble implements DecoratedBubble {
 
 	@Override
 	public boolean popsWith(Bubble target) {
+		// Returns true, it immidiately pops itself and it's closest neighbours
+		// and isn't expected to remain in the game
 		return true;
 	}
 

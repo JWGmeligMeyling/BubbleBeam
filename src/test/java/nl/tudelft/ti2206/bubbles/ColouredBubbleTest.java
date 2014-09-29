@@ -10,35 +10,57 @@ import java.awt.Point;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ColouredBubbleTest {
+/**
+ * The {@code ColouredBubbleTest} tests the {@link ColouredBubble} class. The
+ * test case extends the {@link AbstractBubbleTest} because most of the tests
+ * for the {@link AbstractBubble} should pass for the {@code ColouredBubble}.
+ * The very few test cases that - should - behave differently, are overridden.
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
+public class ColouredBubbleTest extends AbstractBubbleTest {
 
-	private ColouredBubble bubble;
+	private ColouredBubble colouredBubble;
 	
 	@Before
 	public void setUp() throws Exception {
-		bubble = new ColouredBubble(Color.RED);
+		super.setUp();
+		bubble = colouredBubble = new ColouredBubble(Color.RED);
 	}
 	
 	@Test
 	public void testRender() {
-		Point paintStart = bubble.getPaintStart();
-		int diameter = bubble.getDiameter();
+		Point paintStart = colouredBubble.getPaintStart();
+		int diameter = colouredBubble.getDiameter();
 		
 		Graphics2D graphics = mock(Graphics2D.class);
-		bubble.render(graphics);
+		colouredBubble.render(graphics);
 		verify(graphics).setColor(Color.RED);
 		verify(graphics).fillOval(paintStart.x, paintStart.y, diameter, diameter);
 	}
 
 	@Test
 	public void testGetColor() {
-		bubble.setColor(Color.GREEN);
-		assertEquals(Color.GREEN, bubble.getColor());
+		colouredBubble.setColor(Color.GREEN);
+		assertEquals(Color.GREEN, colouredBubble.getColor());
 	}
 	
 	@Test
+	@Override
 	public void testIsHittable() {
-		assertTrue(bubble.isHittable());
+		assertTrue(colouredBubble.isHittable());
+	}
+	
+	@Test
+	@Override
+	public void testPopsWith() {
+		ColouredBubble sameColouredBubble = new ColouredBubble(Color.RED);
+		colouredBubble.collideHook(sameColouredBubble);
+		assertTrue(colouredBubble.popsWith(sameColouredBubble));
+		
+		ColouredBubble anotherColouredBubble = new ColouredBubble(Color.GREEN);
+		assertFalse(colouredBubble.popsWith(anotherColouredBubble));
 	}
 
 }

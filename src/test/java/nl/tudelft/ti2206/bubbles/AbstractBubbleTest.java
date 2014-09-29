@@ -6,12 +6,10 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Iterator;
@@ -24,9 +22,9 @@ import org.junit.Test;
 
 public class AbstractBubbleTest {
 
-	private AbstractBubble bubble;
+	protected Bubble bubble;
 	
-	private Bubble mock;
+	protected Bubble mock;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -109,8 +107,6 @@ public class AbstractBubbleTest {
 	public void testGetSnapPosition() {
 		Bubble placeholder = new BubblePlaceholder();
 		bubble.bind(BOTTOMRIGHT, placeholder);
-		System.out.println(mock);
-		System.out.println(bubble.snapBehaviour);
 		assertEquals(placeholder, bubble.getSnapPosition(mock));
 	}
 	
@@ -131,15 +127,11 @@ public class AbstractBubbleTest {
 		right.calculatePosition();
 		
 		bubble.render(graphics);
-		bubble.renderDebugLines(graphics);
-		verify(graphics).setColor(Color.BLACK);
-		
-		verify(graphics, atLeastOnce()).drawLine(bubble.getCenter().x, bubble.getCenter().y,
-				bottomLeft.getCenter().x, bottomLeft.getCenter().y);
-		verify(graphics, atLeastOnce()).drawLine(bubble.getCenter().x, bubble.getCenter().y,
-				bottomRight.getCenter().x, bottomRight.getCenter().y);
-		verify(graphics, atLeastOnce()).drawLine(bubble.getCenter().x, bubble.getCenter().y,
-				right.getCenter().x, right.getCenter().y);
+	}
+	
+	@Test
+	public void testPopsWith() {
+		assertFalse(bubble.popsWith(mock));
 	}
 	
 }
