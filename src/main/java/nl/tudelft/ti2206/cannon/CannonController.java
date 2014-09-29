@@ -25,17 +25,6 @@ public interface CannonController extends Controller<CannonModel> {
 	 * @param direction
 	 * 		Direction {@link Vector2f} of the {@link Cannon}
 	 */
-	default void setAngle(final Vector2f direction) {
-		final CannonModel model = this.getModel();
-		
-		if (direction.y > -MIN_DIRECTION_Y) {
-			direction.x = (float) (MIN_DIRECTION_X * Math.signum(direction.x));
-			direction.y = (float) -MIN_DIRECTION_Y;
-		}
-		
-		model.setDirection(direction);
-		model.setAngle(Math.atan(direction.x / direction.y) + Math.PI / 2);
-		model.notifyObservers();
-	}
+	void setAngle(final Vector2f direction);
 
 }

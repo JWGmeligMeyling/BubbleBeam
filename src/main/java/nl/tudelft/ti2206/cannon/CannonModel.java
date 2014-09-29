@@ -18,11 +18,10 @@ public class CannonModel extends Observable implements EventTarget<CannonShootLi
 	
 	private AbstractEventTarget<CannonShootListener> eventTarget = new AbstractEventTarget<>();
 	
-	private CannonState cannonState;
+	private CannonState cannonState = new CannonShootState();
 	private double angle = Math.PI / 2;
 	private Vector2f direction = new Vector2f(0f, 0f);
-	private boolean loaded = true; // TODO make this false till game starts?
-
+	
 	public Vector2f getDirection() {
 		return direction;
 	}
@@ -43,14 +42,6 @@ public class CannonModel extends Observable implements EventTarget<CannonShootLi
 			this.angle = angle;
 			this.setChanged();
 		}
-	}
-
-	public boolean isLoaded() {
-		return loaded;
-	}
-
-	public void setLoaded(boolean loaded) {
-		this.loaded = loaded;
 	}
 
 	public CannonState getCannonState() {

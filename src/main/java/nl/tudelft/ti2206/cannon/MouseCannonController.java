@@ -42,9 +42,8 @@ public class MouseCannonController extends AbstractCannonController {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1
-					&& MouseCannonController.this.getModel().isLoaded()) {
-						MouseCannonController.this.shoot();
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					MouseCannonController.this.shoot();
 				}
 			}
 			
