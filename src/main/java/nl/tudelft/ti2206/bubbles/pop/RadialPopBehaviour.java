@@ -29,20 +29,25 @@ public class RadialPopBehaviour implements PopBehaviour {
 	}
 
 	@Override
-	public Set<Bubble> getBubblesToPop(Bubble target) {
-		Set<Bubble> targets = Sets.newHashSet(target);
-		Set<Bubble> neighboursInRadius = Sets.newHashSet(target);
+	public Set<Bubble> getBubblesToPop(final Bubble target) {
+		return getBubblesToPop(target, Sets.newHashSet(), 0);
+	}
+
+	protected Set<Bubble> getBubblesToPop(final Bubble target,
+			final Set<Bubble> targets, final int depth) {
 		
-		for(int i = 0; i < popRadius; i++) {
-			targets.stream()
+		if(depth <= popRadius && targets.add(target)) {
+			target.getNeighbours().stream()
 				.filter(Bubble::isHittable)
-				.forEach(t -> neighboursInRadius.addAll(t.getNeighbours()));
-			Set<Bubble> newTargets = Sets.newHashSet(neighboursInRadius);
-			newTargets.removeAll(targets);
-			targets = newTargets;
+				.forEach(bubble -> getBubblesToPop(bubble, targets, depth + 1));
 		}
 		
 		return targets;
+	}
+
+	@Override
+	public boolean isValidPop(Set<Bubble> targets) {
+		return true;
 	}
 
 }

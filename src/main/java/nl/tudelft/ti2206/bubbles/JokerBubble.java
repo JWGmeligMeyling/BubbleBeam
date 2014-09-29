@@ -18,6 +18,7 @@ public class JokerBubble implements DecoratedBubble, Coloured {
 	
 	protected final ColouredBubble bubble;
 	
+	protected boolean hasColor = false;
 	protected boolean snapped = false;
 
 	/**
@@ -37,12 +38,15 @@ public class JokerBubble implements DecoratedBubble, Coloured {
 		if(Coloured.class.isInstance(other)) {
 			Coloured coloured = Coloured.class.cast(other);
 			bubble.setColor(coloured.getColor());
+			hasColor = true;
 		}
 	}
 	
 	@Override
 	public void snapHook() {
-		snapped = true;
+		// Switch to ColouredBubble behaviour once this joker snapped to the
+		// grid and collided with a colouredbubble
+		snapped = hasColor;
 	}
 
 	@Override

@@ -17,6 +17,8 @@ import com.google.common.collect.Sets;
 public class RecursivePopBehaviour implements PopBehaviour {
 
 	private static final long serialVersionUID = 279908381407272175L;
+	
+	public final static int MINIMAL_POP_SIZE = 3;
 
 	@Override
 	public Set<Bubble> getBubblesToPop(final Bubble target) {
@@ -30,6 +32,11 @@ public class RecursivePopBehaviour implements PopBehaviour {
 					bubblesToPop.add(bubble))
 			.forEach(bubble -> getBubblesToPop(bubble, bubblesToPop));
 		return bubblesToPop;
+	}
+
+	@Override
+	public boolean isValidPop(final Set<Bubble> targets) {
+		return targets.size() >= MINIMAL_POP_SIZE;
 	}
 	
 }

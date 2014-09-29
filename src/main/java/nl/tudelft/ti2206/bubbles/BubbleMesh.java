@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
+import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -360,10 +361,11 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 		@Override
 		public boolean pop(final Bubble target) {
-			final Set<Bubble> bubblesToPop = target.getPopBehaviour()
-					.getBubblesToPop(target);
 			
-			if(bubblesToPop.size() > 2) {
+			final PopBehaviour popBehaviour = target.getPopBehaviour();
+			final Set<Bubble> bubblesToPop = popBehaviour.getBubblesToPop(target);
+			
+			if(popBehaviour.isValidPop(bubblesToPop)) {
 				findIsolatedBubbles(bubblesToPop);
 				
 				bubblesToPop.forEach(bubble -> {

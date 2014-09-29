@@ -25,4 +25,13 @@ public interface PopBehaviour extends Serializable {
 	 */
 	Set<Bubble> getBubblesToPop(Bubble target);
 	
+	/**
+	 * Determine if a {@code Set} of {@link Bubble Bubbles} to be popped is valid
+	 * @param targets
+	 * 		{@code Bubbles} to be popped
+	 * @return
+	 * 		true if the {@code Bubbles} should pop
+	 */
+	boolean isValidPop(Set<Bubble> targets);
+	
 }
