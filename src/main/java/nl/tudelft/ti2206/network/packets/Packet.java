@@ -72,6 +72,11 @@ public interface Packet extends Serializable {
 		public void notify(PacketHandlerCollection packetHandlerCollection) {
 			packetHandlerCollection.notify(this);
 		}
+		
+		public double getRotation() {
+			return rotation;
+		}
+		
 	}
 	
 	/**
@@ -93,6 +98,10 @@ public interface Packet extends Serializable {
 		@Override
 		public void notify(PacketHandlerCollection packetHandlerCollection) {
 			packetHandlerCollection.notify(this);
+		}
+
+		public Vector2f getDirection() {
+			return direction;
 		}
 	}
 	

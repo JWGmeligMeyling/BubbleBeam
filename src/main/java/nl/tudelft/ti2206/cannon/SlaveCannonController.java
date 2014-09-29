@@ -14,16 +14,24 @@ import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
  */
 public class SlaveCannonController extends AbstractCannonController {
 	
+	public SlaveCannonController() {
+		super();
+	}
+
+	public SlaveCannonController(CannonModel cannonModel) {
+		super(cannonModel);
+	}
+
 	public void bindConnector(final Connector connector) {
 		final PacketHandlerCollection packetHandlerCollection = connector.getPacketHandlerCollection();
 		
 		packetHandlerCollection.registerCannonShootHandler((packet) -> {
-			SlaveCannonController.this.setAngle(packet.direction);
+			SlaveCannonController.this.setAngle(packet.getDirection());
 			SlaveCannonController.this.shoot();
 		});
 		
 		packetHandlerCollection.registerCannonRotateHandler((packet) -> {
-			SlaveCannonController.this.getModel().setAngle(packet.rotation);
+			SlaveCannonController.this.getModel().setAngle(packet.getRotation());
 			SlaveCannonController.this.getModel().notifyObservers();
 		});
 	}
