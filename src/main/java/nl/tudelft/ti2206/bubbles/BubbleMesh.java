@@ -342,7 +342,9 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		}
 		
 		@Override
-		public void replaceBubble(final Bubble original, final Bubble replacement) {
+		public void replaceBubble(final Bubble original,
+				final Bubble replacement) throws GameOver {
+			
 			if(isBottomRowBubble(original)) {
 				throw new GameOver();
 			}
@@ -351,6 +353,9 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			
 			if (topLeftBubble.equals(original)) {
 				topLeftBubble = replacement;
+			}
+			else if(bottomLeftBubble.equals(original)) {
+				bottomLeftBubble = replacement;
 			}
 		}
 		
