@@ -15,6 +15,7 @@ import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.JokerBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
+import nl.tudelft.ti2206.bubbles.StoneBubble;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.util.mvc.Controller;
@@ -198,11 +199,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 
 	protected Bubble createAmmoBubble() {
-		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			return new JokerBubble();
-		}
-		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			return new BombBubble();
+//		if(RANDOM_GENERATOR.nextInt(10) == 1) {
+//			return new JokerBubble();
+//		}
+//		if(RANDOM_GENERATOR.nextInt(10) == 1) {
+//			return new BombBubble();
+//		}
+		if(RANDOM_GENERATOR.nextInt(10)==1){
+			return new StoneBubble();
 		}
 		return new ColouredBubble(getRandomRemainingColor());
 	}
