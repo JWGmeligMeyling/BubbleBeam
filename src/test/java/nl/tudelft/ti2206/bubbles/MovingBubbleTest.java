@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
+import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.util.Vector2f;
 
 import org.junit.Before;

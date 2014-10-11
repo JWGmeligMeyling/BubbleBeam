@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.decorators;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import nl.tudelft.ti2206.bubbles.AbstractBubble;
+import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.pop.RadialPopBehaviour;
 
 public class BombBubble implements DecoratedBubble {

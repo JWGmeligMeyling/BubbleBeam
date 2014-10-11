@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.decorators;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import nl.tudelft.ti2206.bubbles.AbstractBubble;
+import nl.tudelft.ti2206.bubbles.Bubble;
 
 /**
  * Stone bubble implementation

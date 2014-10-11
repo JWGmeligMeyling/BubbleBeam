@@ -1,6 +1,8 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.decorators;
 
 import java.applet.Applet;
+
+import nl.tudelft.ti2206.bubbles.Bubble;
 
 /**
  * 

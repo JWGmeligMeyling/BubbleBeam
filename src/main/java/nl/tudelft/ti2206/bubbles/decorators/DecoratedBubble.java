@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.decorators;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.util.Vector2f;
 

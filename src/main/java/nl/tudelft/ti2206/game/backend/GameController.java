@@ -9,7 +9,7 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
-import nl.tudelft.ti2206.bubbles.MovingBubble;
+import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.util.mvc.Controller;

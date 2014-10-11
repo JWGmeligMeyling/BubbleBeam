@@ -2,14 +2,14 @@ package nl.tudelft.ti2206.game.backend;
 
 import java.util.Random;
 
-import nl.tudelft.ti2206.bubbles.BombBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.DecoratedBubble;
-import nl.tudelft.ti2206.bubbles.DrunkBubbleLeft;
-import nl.tudelft.ti2206.bubbles.DrunkBubbleRight;
-import nl.tudelft.ti2206.bubbles.JokerBubble;
-import nl.tudelft.ti2206.bubbles.SoundBubble;
-import nl.tudelft.ti2206.bubbles.StoneBubble;
+import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
+import nl.tudelft.ti2206.bubbles.decorators.DecoratedBubble;
+import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
+import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
+import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
+import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
+import nl.tudelft.ti2206.bubbles.decorators.StoneBubble;
 
 public class BubbleFactory {
 	

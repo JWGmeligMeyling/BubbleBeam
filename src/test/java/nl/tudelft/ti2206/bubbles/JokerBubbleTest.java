@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.awt.Color;
 
+import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
+
 import org.junit.Before;
 import org.junit.Test;
 

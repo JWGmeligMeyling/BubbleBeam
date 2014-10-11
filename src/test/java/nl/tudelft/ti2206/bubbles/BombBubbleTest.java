@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.bubbles;
 
 import static org.junit.Assert.*;
+import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
 import nl.tudelft.ti2206.bubbles.pop.RadialPopBehaviour;
 
 import org.hamcrest.Matchers;

@@ -1,6 +1,10 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.decorators;
 
 import java.awt.Color;
+
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.Coloured;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 
 /**
  * The {@code JokerBubble} is a special type of {@code Bubble} which determines

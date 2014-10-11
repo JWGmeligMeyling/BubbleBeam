@@ -1,8 +1,10 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.decorators;
 
 import java.awt.Dimension;
 import java.awt.Point;
 
+import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.game.backend.Tickable;
 import nl.tudelft.util.Vector2f;
 
