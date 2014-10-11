@@ -23,7 +23,15 @@ public class StoneBubble implements DecoratedBubble {
 	private static BufferedImage STONE_IMAGE = _getBubbleImage();
 	
 	public StoneBubble() {
-		bubble = new AbstractBubble();
+		this(null);
+	}
+
+	public StoneBubble(DecoratedBubble bubble2) {
+		if(bubble2 != null){
+			bubble = bubble2;
+		} else{
+			bubble = new AbstractBubble();
+		}
 	}
 	
 	protected static BufferedImage _getBubbleImage() {
@@ -55,6 +63,7 @@ public class StoneBubble implements DecoratedBubble {
 	public void render(Graphics graphics) {
 		graphics.drawImage(STONE_IMAGE, (int) bubble.getX(), (int) bubble.getY(),
 				bubble.getWidth(), bubble.getHeight(), null);
+		bubble.render(graphics);
 	}
 	
 	@Override

@@ -13,6 +13,10 @@ public class DrunkBubbleLeft extends DrunkBubble {
 		acceleration = -DrunkBubble.ACCELERATION;
 	}
 	
+	public DrunkBubbleLeft() {
+		this(new AbstractBubble());
+	}
+	
 	@Override
 	public void render(Graphics graphics) {
 		graphics.drawImage(ARROW_IMAGE,

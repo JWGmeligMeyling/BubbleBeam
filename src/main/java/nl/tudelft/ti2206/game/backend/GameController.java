@@ -5,14 +5,10 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import nl.tudelft.ti2206.bubbles.BombBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
-import nl.tudelft.ti2206.bubbles.DrunkBubbleLeft;
-import nl.tudelft.ti2206.bubbles.DrunkBubbleRight;
-import nl.tudelft.ti2206.bubbles.JokerBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
@@ -26,17 +22,20 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
 	
-	private static final float MOVING_BUBBLE_SPEED = 5f;
+	private static final float MOVING_BUBBLE_SPEED = 15f;
 	private final static int MAX_MISSES = 5;
 	
 	protected final GameModel model;
 	protected final CannonController cannonController;
 	
+	protected final BubbleFactory factory;
+	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick) {
+			final GameTick gameTick, final BubbleFactory factory) {
 		
 		this.model = model;
 		this.cannonController = cannonController;
+		this.factory = factory;
 		
 		model.getBubbleMesh().calculatePositions();
 		prepareAmmo();
@@ -199,26 +198,15 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected Bubble createAmmoBubble() {
-		Bubble ammo;
-		
-		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			ammo = new JokerBubble();
-		} else
-		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			ammo = new BombBubble();
+		Bubble bubble;
+		// 1/10 chance for a special bubble
+		if (RANDOM_GENERATOR.nextInt(2) == 1) {
+			bubble = factory.createSpecialBubble();
 		} else {
-			ammo = new ColouredBubble(getRandomRemainingColor());
+			bubble = new ColouredBubble(getRandomRemainingColor());
 		}
-		
-		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			if(RANDOM_GENERATOR.nextInt(2) == 1) {
-				ammo = new DrunkBubbleLeft(ammo);
-			} else {
-				ammo = new DrunkBubbleRight(ammo);
-			}
-		}
-			
-		return ammo;
+		log.info("Created new ammo: " + bubble.toString());
+		return bubble;
 	}
 	
 }

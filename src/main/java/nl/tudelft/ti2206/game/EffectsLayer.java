@@ -14,6 +14,13 @@ import javax.swing.JLayer;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.LayerUI;
 
+/**
+ * Do not consider this part of the project. This was not written by us, and was
+ * added as suggestion for the game.
+ * 
+ * TODO: Add author
+ */
+@SuppressWarnings("unchecked")
 public class EffectsLayer extends LayerUI<JComponent> {
 	private static final long serialVersionUID = -3945974703178210267L;
 	private boolean mActive, enabled = false;
@@ -62,6 +69,7 @@ public class EffectsLayer extends LayerUI<JComponent> {
 		g2.dispose();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void processMouseEvent(MouseEvent e, JLayer l) {
 		if (e.getID() == MouseEvent.MOUSE_ENTERED)
@@ -71,6 +79,7 @@ public class EffectsLayer extends LayerUI<JComponent> {
 		l.repaint();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void processMouseMotionEvent(MouseEvent e, JLayer l) {
 		Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), l);
