@@ -16,14 +16,14 @@ import nl.tudelft.util.Vector2f;
  * @author Liam Clark
  */
 public class MovingBubble implements Tickable, DecoratedBubble {
-	
+
 	private static final long serialVersionUID = 6874942662206137844L;
-	
+
 	transient protected Vector2f truePosition;
-	transient protected final Bubble bubble;
-	transient protected final Vector2f velocity;
+	transient protected Vector2f velocity;
+	transient protected Bubble bubble;
 	transient protected final Dimension screenSize;
-	
+
 	/**
 	 * Construct a new {@code MovingBubble}
 	 * 
@@ -44,38 +44,42 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 		this.truePosition = new Vector2f(position.x, position.y);
 		this.velocity = velocity;
 	}
-	
+
 	@Override
 	public void gameTick() {
 		truePosition = truePosition.add(velocity);
 		bounceOnWallCollision();
 		this.setPosition(truePosition.toPoint());
 	}
-	
+
 	protected void bounceOnWallCollision() {
 		int width = this.getWidth();
 		if (truePosition.x + width > screenSize.width) {
 			float xError = truePosition.x + width - (screenSize.width);
-			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
+			truePosition = truePosition.add(velocity.multiply(-xError
+					/ velocity.x));
 			velocity.x = -velocity.x;
 		} else if (truePosition.x < 0) {
 			float xError = truePosition.x;
-			truePosition = truePosition.add(velocity.multiply(-xError / velocity.x));
+			truePosition = truePosition.add(velocity.multiply(-xError
+					/ velocity.x));
 			velocity.x = -velocity.x;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Set the true position for this {@code MovingBubble}
+	 * 
 	 * @param truePosition
 	 */
 	public void setTruePosition(Vector2f truePosition) {
 		this.truePosition = truePosition;
 	}
-	
+
 	/**
 	 * Get the true position for this {@code MovingBubble}
+	 * 
 	 * @return
 	 */
 	public Vector2f getTruePosition() {
@@ -84,23 +88,38 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 
 	/**
 	 * Get the velocity for this {@code MovingBubble}
+	 * 
 	 * @return the velocity for this {@code MovingBubble}
 	 */
 	public Vector2f getVelocity() {
 		return velocity;
 	}
-	
+
+	public void setVelocity(Vector2f velocity) {
+		this.velocity = velocity;
+	}
+
 	/**
 	 * Get the screen size for this {@code MovingBubble}
+	 * 
 	 * @return the screen size for this {@code MovingBubble}
 	 */
 	public Dimension getScreenSize() {
 		return screenSize;
 	}
-	
+
 	@Override
 	public Bubble getBubble() {
 		return bubble;
 	}
-	
+
+	@Override
+	public Bubble getSnappedBubble() {
+		return this.getBubble().getSnappedBubble();
+	}
+
+	@Override
+	public void setBubble(Bubble bubble) {
+		this.bubble = bubble;
+	}
 }

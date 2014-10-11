@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
 import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
+import nl.tudelft.util.Vector2f;
 
 import com.google.common.collect.Lists;
 
@@ -19,7 +21,7 @@ import com.google.common.collect.Lists;
  * @author Jan-Willem Gmelig Meyling
  */
 public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
-	
+
 	/**
 	 * Lay a two way binding to another bubble in a certain {@link Direction}
 	 * This calls {@link #setBubbleAt(Direction, Bubble) setBubbleAt} for both
@@ -33,11 +35,11 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 */
 	default void bind(Direction direction, Bubble other) {
 		setBubbleAt(direction, other);
-		if(other != null) {
+		if (other != null) {
 			other.setBubbleAt(direction.opposite(), this);
 		}
 	}
-	
+
 	/**
 	 * Get the {@code Bubble} to which this {@code Bubble} is bound in a given
 	 * direction
@@ -48,7 +50,7 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 *         this {@code Bubble}
 	 */
 	Bubble getBubbleAt(Direction direction);
-	
+
 	/**
 	 * Set the {@code Bubble} in a given {@link Direction}. Used by
 	 * {@link #bind(Direction, Bubble) bind}.
@@ -59,7 +61,7 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 *            {@code Bubble} to bind
 	 */
 	void setBubbleAt(Direction direction, Bubble bubble);
-	
+
 	/**
 	 * Check if this Bubble has a binding in a certain {@link Direction}
 	 * 
@@ -69,7 +71,7 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 *         {@code Direction}
 	 */
 	boolean hasBubbleAt(Direction direction);
-	
+
 	/**
 	 * @return true if this is a hittable bubble. A hittable bubble for example
 	 *         a {@link ColouredBubble}, whereas the {@link BubblePlaceholder}
@@ -78,13 +80,13 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 *         just go through it until they hit an hittable {@code Bubble}.
 	 */
 	boolean isHittable();
-	
+
 	/**
 	 * @return A {@link Collection} containing the surrounding {@code Bubbles}.
 	 *         This can be non-hittable bubbles as well.
 	 */
 	Collection<Bubble> getNeighbours();
-	
+
 	/**
 	 * @param type
 	 * @return A {@link Collection} containing the surrounding {@code Bubbles}
@@ -92,18 +94,18 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @see #getNeighbours()
 	 */
 	<T extends Bubble> List<T> getNeighboursOfType(Class<T> type);
-	
+
 	/**
 	 * @return Calculate this {@code Bubbles} position relative to it's
 	 *         neighbouring {@code Bubbles}
 	 */
 	Point calculatePosition();
-	
+
 	/**
 	 * @return the connections as map
 	 */
 	Map<Direction, Bubble> getConnections();
-	
+
 	/**
 	 * The collideHook is called on the shot {@code Bubble} when it collides
 	 * with another Bubble
@@ -111,18 +113,21 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @param target
 	 *            The bubble this {@code Bubble} collided with;
 	 */
-	default void collideHook(Bubble target) {};
-	
+	default void collideHook(Bubble target) {
+	};
+
 	/**
 	 * The pop hook is called on the shot {@code Bubble} when it pops
 	 */
-	default void popHook() {};
-	
+	default void popHook() {
+	};
+
 	/**
 	 * The snap hook is called on the shot {@code Bubble} when it doesn't
 	 * collide with another bubble
 	 */
-	default void snapHook() {};
+	default void snapHook() {
+	};
 
 	/**
 	 * Traverse the {@link BubbleMesh} in a given {@link Direction}, with this
@@ -135,13 +140,13 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	default Stream<Bubble> traverse(final Direction direction) {
 		final List<Bubble> bubbles = Lists.newArrayList(this);
 		Bubble current = this;
-		while(current.hasBubbleAt(direction)) {
+		while (current.hasBubbleAt(direction)) {
 			current = current.getBubbleAt(direction);
 			bubbles.add(current);
 		}
 		return bubbles.stream();
 	}
-	
+
 	/**
 	 * Replace this bubble by binding to all of its neighbours in the same
 	 * {@code Direction}. This function is called from the {@link BubbleMesh}
@@ -156,8 +161,10 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 		this.bind(Direction.TOPRIGHT, original.getBubbleAt(Direction.TOPRIGHT));
 		this.bind(Direction.LEFT, original.getBubbleAt(Direction.LEFT));
 		this.bind(Direction.RIGHT, original.getBubbleAt(Direction.RIGHT));
-		this.bind(Direction.BOTTOMLEFT, original.getBubbleAt(Direction.BOTTOMLEFT));
-		this.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
+		this.bind(Direction.BOTTOMLEFT,
+				original.getBubbleAt(Direction.BOTTOMLEFT));
+		this.bind(Direction.BOTTOMRIGHT,
+				original.getBubbleAt(Direction.BOTTOMRIGHT));
 		this.setPosition(original.getPosition());
 	}
 
@@ -165,6 +172,7 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 
 	/**
 	 * Get the {@link PopBehaviour} for this {@code Bubble}
+	 * 
 	 * @return the {@link PopBehaviour} for this {@code Bubble}
 	 */
 	default PopBehaviour getPopBehaviour() {
@@ -189,14 +197,14 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 */
 	enum Direction {
 		TOPLEFT, TOPRIGHT, LEFT, RIGHT, BOTTOMLEFT, BOTTOMRIGHT;
-		
+
 		/**
 		 * @return the opposite {@code Direction}
 		 */
 		public Direction opposite() {
 			return oppositeFor(this);
 		}
-		
+
 		/**
 		 * @param direction
 		 *            direction for which to return the opposite direction
@@ -204,17 +212,34 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 		 *         {@code Direction}
 		 */
 		public static Direction oppositeFor(final Direction direction) {
-			switch(direction) {
-			case BOTTOMLEFT: return TOPRIGHT;
-			case BOTTOMRIGHT: return TOPLEFT;
-			case LEFT: return RIGHT;
-			case RIGHT: return LEFT;
-			case TOPLEFT: return BOTTOMRIGHT;
-			case TOPRIGHT: return BOTTOMLEFT;
+			switch (direction) {
+			case BOTTOMLEFT:
+				return TOPRIGHT;
+			case BOTTOMRIGHT:
+				return TOPLEFT;
+			case LEFT:
+				return RIGHT;
+			case RIGHT:
+				return LEFT;
+			case TOPLEFT:
+				return BOTTOMRIGHT;
+			case TOPRIGHT:
+				return BOTTOMLEFT;
 			}
 			throw new IllegalArgumentException();
 		}
-		
+
 	}
+
+	default Vector2f velocityChange() {
+		return new Vector2f(0f, 0f);
+	}
+
+	/**
+	 * Returns the bubble without the concrete decorators that should never be
+	 * used after snapping into the BubbleMesh
+	 * @return the bubble with only the relevant decorators
+	 */
+	Bubble getSnappedBubble();
 
 }

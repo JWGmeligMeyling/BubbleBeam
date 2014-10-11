@@ -13,6 +13,9 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.bubbles.DrunkBubble;
+import nl.tudelft.ti2206.bubbles.DrunkBubbleLeft;
+import nl.tudelft.ti2206.bubbles.DrunkBubbleRight;
 import nl.tudelft.ti2206.bubbles.JokerBubble;
 import nl.tudelft.ti2206.bubbles.MovingBubble;
 import nl.tudelft.ti2206.cannon.CannonController;
@@ -67,6 +70,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			MovingBubble shotBubble = model.getShotBubble();
 			BubbleMesh bubbleMesh = model.getBubbleMesh();
 			
+			shotBubble.setVelocity(shotBubble.getVelocity().add(shotBubble.velocityChange()));
 			shotBubble.gameTick();
 			
 			bubbleMesh
@@ -122,7 +126,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected void collide(final BubbleMesh bubbleMesh,
 			final MovingBubble movingBubble, final Bubble hitTarget) {
 		
-		Bubble shotBubble = movingBubble.getBubble();
+		Bubble shotBubble = movingBubble.getSnappedBubble();
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
 		
 		try {
@@ -198,13 +202,26 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 
 	protected Bubble createAmmoBubble() {
+		Bubble ammo;
+		
 		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			return new JokerBubble();
-		}
+			ammo = new JokerBubble();
+		} else
 		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			return new BombBubble();
+			ammo = new BombBubble();
+		} else {
+			ammo = new ColouredBubble(getRandomRemainingColor());
 		}
-		return new ColouredBubble(getRandomRemainingColor());
+		
+		if(RANDOM_GENERATOR.nextInt(2) == 1) {
+			if(RANDOM_GENERATOR.nextInt(2) == 1) {
+				ammo = new DrunkBubbleLeft(ammo);
+			} else {
+				ammo = new DrunkBubbleRight(ammo);
+			}
+		}
+			
+		return ammo;
 	}
 
 }

@@ -211,5 +211,10 @@ public class AbstractBubble implements Bubble {
 	public boolean popsWith(Bubble target) {
 		return false;
 	}
+
+	@Override
+	public Bubble getSnappedBubble() {
+		return this;
+	}
 	
 }

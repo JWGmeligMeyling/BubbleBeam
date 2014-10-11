@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import nl.tudelft.util.Vector2f;
+
 
 /**
  * This interface is used to use the decorator pattern with {@link Bubble} sub
@@ -21,6 +23,11 @@ public interface DecoratedBubble extends Bubble {
 	 * @return the Bubble attribute
 	 */
 	Bubble getBubble();
+	
+	@Override
+	default Vector2f velocityChange() {
+		return getBubble().velocityChange();
+	}
 	
 	@Override
 	default void render(Graphics graphics) {
@@ -122,4 +129,11 @@ public interface DecoratedBubble extends Bubble {
 		return getBubble().popsWith(target);
 	}
 	
+	@Override
+	default Bubble getSnappedBubble() {
+		this.setBubble(this.getBubble().getSnappedBubble());
+		return this;
+	}
+
+	void setBubble(Bubble bubble);
 }
