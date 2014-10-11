@@ -213,7 +213,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			ammo = new ColouredBubble(getRandomRemainingColor());
 		}
 		
-		if(RANDOM_GENERATOR.nextInt(2) == 1) {
+		if(RANDOM_GENERATOR.nextInt(10) == 1) {
 			if(RANDOM_GENERATOR.nextInt(2) == 1) {
 				ammo = new DrunkBubbleLeft(ammo);
 			} else {
