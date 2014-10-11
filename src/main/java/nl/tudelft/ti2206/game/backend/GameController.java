@@ -5,15 +5,11 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nl.tudelft.ti2206.bubbles.BombBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
-import nl.tudelft.ti2206.bubbles.DrunkBubble;
 import nl.tudelft.ti2206.bubbles.DrunkBubbleLeft;
 import nl.tudelft.ti2206.bubbles.DrunkBubbleRight;
 import nl.tudelft.ti2206.bubbles.JokerBubble;
@@ -22,6 +18,9 @@ import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GameController implements Controller<GameModel>, Tickable {
 	
