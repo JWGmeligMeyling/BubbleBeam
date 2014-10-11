@@ -30,11 +30,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final GameModel model;
 	protected final CannonController cannonController;
 	
+	protected final BubbleFactory factory;
+	
 	public GameController(final GameModel model,
-			final CannonController cannonController, final GameTick gameTick) {
+			final CannonController cannonController, final GameTick gameTick, final BubbleFactory factory) {
 
 		this.model = model;
 		this.cannonController = cannonController;
+		this.factory = factory;
 		
 		model.getBubbleMesh().calculatePositions();
 		prepareAmmo();
@@ -198,13 +201,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 
 	protected Bubble createAmmoBubble() {
-		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			return new JokerBubble();
+		Bubble bubble;
+		if(RANDOM_GENERATOR.nextInt(10) == 1) {			//1/10 chance for a special bubble
+			bubble = factory.createSpecialBubble();
+		} else {
+			bubble = new ColouredBubble(getRandomRemainingColor());
 		}
-		if(RANDOM_GENERATOR.nextInt(10) == 1) {
-			return new BombBubble();
-		}
-		return new ColouredBubble(getRandomRemainingColor());
+		log.info("Created new ammo: " + bubble.toString());
+		return bubble;
 	}
 
 }

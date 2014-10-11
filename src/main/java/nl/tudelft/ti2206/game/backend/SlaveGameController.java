@@ -25,7 +25,16 @@ public class SlaveGameController extends GameController {
 			final SlaveCannonController cannonController,
 			final GameTick gameTick) {
 		
-		super(model, cannonController, gameTick);
+		this(model, connector, cannonController, gameTick, new BubbleFactory());
+	}
+	
+	private SlaveGameController(final GameModel model,
+			final Connector connector,
+			final SlaveCannonController cannonController,
+			final GameTick gameTick,
+			final BubbleFactory factory) {
+		
+		super(model, cannonController, gameTick, factory);
 		this.cannonController = cannonController;
 		
 		bindListeners(connector.getPacketHandlerCollection());

@@ -21,8 +21,17 @@ public class BombBubble implements DecoratedBubble {
 	protected boolean collided = false;
 		
 	public BombBubble(){
-		bubble = new AbstractBubble();
+		this(null);
+	}
+
+	public BombBubble(DecoratedBubble bubble2) {
+		
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
+		if(bubble2 != null){
+			bubble = bubble2;
+		} else {
+			bubble = new AbstractBubble();
+		}
 	}
 
 	@Override
