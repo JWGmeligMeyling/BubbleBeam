@@ -8,6 +8,7 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 import nl.tudelft.ti2206.bubbles.JokerBubble;
+import nl.tudelft.ti2206.bubbles.StoneBubble;
 
 public class BubbleFactory {
 
@@ -38,8 +39,8 @@ public class BubbleFactory {
 			break;
 		//case "reversebomb": //wrapperBubble = new ReverseBombBubble(bubble);
 		//	break;
-		//case "stone": //wrapperBubble = new StoneBubble(bubble);
-		//	break;
+		case "stone": wrapperBubble = new StoneBubble(bubble);
+			break;
 		//case "drunk": //wrapperBubble = new DrunkBubble(bubble);
 		//	break;
 		//case "sound": wrapperBubble = new SoundBubble(bubble);
@@ -59,8 +60,8 @@ public class BubbleFactory {
 			break;
 		//case "reversebomb": wrapperBubble = new ReverseBombBubble();
 		//	break;
-		//case "stone": wrapperBubble = new StoneBubble();
-		//	break;
+		case "stone": wrapperBubble = new StoneBubble();
+			break;
 		//case "drunk": wrapperBubble = new DrunkBubble();
 		//	break;
 		//case "sound": wrapperBubble = new SoundBubble();
