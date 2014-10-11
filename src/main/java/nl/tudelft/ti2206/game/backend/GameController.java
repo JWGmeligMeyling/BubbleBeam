@@ -26,7 +26,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
 	
-	private static final float MOVING_BUBBLE_SPEED = 5f;
+	private static final float MOVING_BUBBLE_SPEED = 15f;
 	private final static int MAX_MISSES = 5;
 	
 	protected final GameModel model;
