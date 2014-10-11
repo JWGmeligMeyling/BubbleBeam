@@ -8,6 +8,9 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.util.Vector2f;
 
+/**
+ * @author Luka Bavdaz
+ */
 public abstract class DrunkBubble implements DecoratedBubble {
 	/**
 	 * 

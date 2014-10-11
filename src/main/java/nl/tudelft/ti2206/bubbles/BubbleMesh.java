@@ -374,6 +374,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 				findIsolatedBubbles(bubblesToPop);
 				
 				bubblesToPop.forEach(bubble -> {
+					bubble.popHook();
 					this.replaceBubble(bubble, new BubblePlaceholder());
 					log.info("Bubble popped: {}", bubble);
 				});

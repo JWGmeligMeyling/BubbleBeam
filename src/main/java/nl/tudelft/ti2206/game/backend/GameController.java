@@ -25,16 +25,16 @@ import org.slf4j.LoggerFactory;
 public class GameController implements Controller<GameModel>, Tickable {
 	
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
-
+	
 	private static final float MOVING_BUBBLE_SPEED = 5f;
 	private final static int MAX_MISSES = 5;
 	
 	protected final GameModel model;
 	protected final CannonController cannonController;
 	
-	public GameController(final GameModel model,
-			final CannonController cannonController, final GameTick gameTick) {
-
+	public GameController(final GameModel model, final CannonController cannonController,
+			final GameTick gameTick) {
+		
 		this.model = model;
 		this.cannonController = cannonController;
 		
@@ -42,7 +42,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		prepareAmmo();
 		
 		cannonController.getModel().addEventListener((direction) -> {
-			GameController.this.shoot(direction);	
+			GameController.this.shoot(direction);
 		});
 		
 		model.getBubbleMesh().addScoreListener((amount) -> {
@@ -58,14 +58,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.setLoadedBubble(createAmmoBubble());
 		model.setNextBubble(createAmmoBubble());
 	}
-
+	
 	public CannonController getCannonController() {
 		return cannonController;
 	}
-
+	
 	@Override
 	public void gameTick() {
-		if(model.isShooting()) {
+		if (model.isShooting()) {
 			MovingBubble shotBubble = model.getShotBubble();
 			BubbleMesh bubbleMesh = model.getBubbleMesh();
 			
@@ -73,14 +73,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 			shotBubble.gameTick();
 			
 			bubbleMesh
-				.stream()
-				.filter(bubble -> bubble.intersect(shotBubble)
-						&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble)))
-				.findAny().ifPresent(bubble -> this.collide(bubbleMesh, shotBubble, bubble));
+					.stream()
+					.filter(bubble -> bubble.intersect(shotBubble)
+							&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble))).findAny()
+					.ifPresent(bubble -> this.collide(bubbleMesh, shotBubble, bubble));
 			
 		}
 	}
-
+	
 	/**
 	 * Shoot a bubble
 	 * 
@@ -91,16 +91,16 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 */
 	protected void shoot(final Vector2f direction) {
 		direction.normalise();
-
-		if(model.isShooting()) {
+		
+		if (model.isShooting()) {
 			throw new IllegalStateException("Wait for another shoot");
 		}
 		
 		Bubble loadedBubble = model.getLoadedBubble();
-
-		MovingBubble shotBubble = new MovingBubble(new Vector2f(direction.multiply(MOVING_BUBBLE_SPEED)),
-				model.getScreenSize(), loadedBubble);
-
+		
+		MovingBubble shotBubble = new MovingBubble(new Vector2f(
+				direction.multiply(MOVING_BUBBLE_SPEED)), model.getScreenSize(), loadedBubble);
+		
 		updateBubbles();
 		model.setShotBubble(shotBubble);
 		model.notifyObservers();
@@ -122,8 +122,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * @param hitTarget
 	 * @throws GameOver
 	 */
-	protected void collide(final BubbleMesh bubbleMesh,
-			final MovingBubble movingBubble, final Bubble hitTarget) {
+	protected void collide(final BubbleMesh bubbleMesh, final MovingBubble movingBubble,
+			final Bubble hitTarget) {
 		
 		Bubble shotBubble = movingBubble.getSnappedBubble();
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
@@ -134,17 +134,15 @@ public class GameController implements Controller<GameModel>, Tickable {
 			
 			log.info("Bullet snapped to {}", snapPosition);
 			bubbleMesh.replaceBubble(snapPosition, shotBubble);
-
+			
 			if (!bubbleMesh.pop(shotBubble)) {
 				incrementMisses();
 			}
-
+			
 			cannonController.load();
-		}
-		catch (GameOver e) {
+		} catch (GameOver e) {
 			gameOver();
-		}
-		finally {
+		} finally {
 			model.setShotBubble(null);
 		}
 		
@@ -155,7 +153,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.setGameOver(true);
 		model.notifyObservers();
 	}
-
+	
 	/**
 	 * No bubbles popped, increment misses
 	 * 
@@ -163,20 +161,20 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 */
 	protected void incrementMisses() throws GameOver {
 		int misses = model.getMisses();
-		if(++misses == MAX_MISSES) {
+		if (++misses == MAX_MISSES) {
 			misses = 0;
 			insertRow();
 		}
 		model.setMisses(misses);
 	}
-
+	
 	/**
 	 * Insert a new row after several misses
 	 */
 	protected void insertRow() {
 		model.getBubbleMesh().insertRow(this);
 	}
-
+	
 	@Override
 	public GameModel getModel() {
 		return model;
@@ -188,18 +186,18 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * @return a random remaining Color
 	 */
 	public Color getRandomRemainingColor() {
-		Set<Color> remainingColors = model.getRemainingColors(); 
+		Set<Color> remainingColors = model.getRemainingColors();
 		final int index = RANDOM_GENERATOR.nextInt(remainingColors.size());
 		final Iterator<Color> iterator = remainingColors.iterator();
-		for(int i = 0; i <= index; i++)
-			if(i == index) {
+		for (int i = 0; i <= index; i++)
+			if (i == index) {
 				return iterator.next();
 			} else {
 				iterator.next();
 			}
 		throw new IndexOutOfBoundsException();
 	}
-
+	
 	protected Bubble createAmmoBubble() {
 		Bubble ammo;
 		
@@ -222,5 +220,5 @@ public class GameController implements Controller<GameModel>, Tickable {
 			
 		return ammo;
 	}
-
+	
 }
