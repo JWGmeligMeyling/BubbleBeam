@@ -1,8 +1,12 @@
 package nl.tudelft.ti2206.game.backend;
 
+import java.awt.Color;
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
 import nl.tudelft.ti2206.bubbles.decorators.DecoratedBubble;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
@@ -11,18 +15,39 @@ import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
 import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
 import nl.tudelft.ti2206.bubbles.decorators.StoneBubble;
 
-public class BubbleFactory {
+public class DefaultBubbleFactory extends BubbleFactory{
 	
 	protected final Random RANDOM_GENERATOR = new Random();
+	
+	private int chanceOfPowerup = 1;	// 1-10. 1 is one in ten chance, 10 is all bubbles are powerups
 	
 	protected final String effects[] = { "joker", "bomb", "reversebomb", "stone", "drunkR",
 			"drunkL" };
 	
 	// protected final String secondaryEffect[] = {};
 	
+	@Override
+	public Bubble createBubble(Set<Color> remainingColors) {
+		//determine if the next bubble is going to be a powerup
+		int number = RANDOM_GENERATOR.nextInt(10);
+		if(number < chanceOfPowerup){
+			return createSpecialBubble();
+		}
+		// create new colouredBubble
+		final int index = RANDOM_GENERATOR.nextInt(remainingColors.size());
+		final Iterator<Color> iterator = remainingColors.iterator();
+		for (int i = 0; i <= index; i++)
+			if (i == index) {
+				return new ColouredBubble(iterator.next());
+			} else {
+				iterator.next();
+			}
+		throw new IndexOutOfBoundsException();
+	}
+	
 	protected Bubble createSpecialBubble() {
 		int number = RANDOM_GENERATOR.nextInt(effects.length);
-		DecoratedBubble bubble = addInnerEffect(number);
+		DecoratedBubble bubble = addInnerEffect(number);		//adds the first effect to a bubble
 		
 		// add a second different effect
 		number = (number + RANDOM_GENERATOR.nextInt(effects.length - 1)) % effects.length;
