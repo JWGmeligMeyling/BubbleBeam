@@ -10,12 +10,15 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.util.Vector2f;
 
 /**
+ * The {@code DrunkBubble} is a {@link Bubble} that veers off his normal course
+ * while it moves and instead goes slightly to either left or right.
+ * {@code DrunkBubble} is a {@link Decorator} class and is considered a
+ * 'powerup' bubble.
+ * 
  * @author Luka Bavdaz
  */
 public abstract class DrunkBubble implements DecoratedBubble {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -1107340833975779377L;
 	protected float acceleration;
 	protected static final int IMAGE_TRANSLATION = 20;
@@ -24,7 +27,7 @@ public abstract class DrunkBubble implements DecoratedBubble {
 	protected static final float ACCELERATION = 0.4f;
 	protected static BufferedImage ARROW_IMAGE = _getArrowImage();
 	protected Bubble bubble;
-	
+
 	public DrunkBubble(Bubble bubble) {
 		this.bubble = bubble;
 	}
