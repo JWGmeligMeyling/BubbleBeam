@@ -38,11 +38,11 @@ public class MasterGameController extends GameController {
 	public MasterGameController(final GameModel model,
 			final MouseCannonController cannonController, final GameTick gameTick) {
 		
-		this(model, cannonController, gameTick, new BubbleFactory());
+		this(model, cannonController, gameTick, new DefaultBubbleFactory());
 	}
 	
 	public MasterGameController(final GameModel model,
-			final MouseCannonController cannonController, final GameTick gameTick, final BubbleFactory factory) {
+			final MouseCannonController cannonController, final GameTick gameTick, final DefaultBubbleFactory factory) {
 		
 		super(model, cannonController, gameTick,factory);
 		this.cannonController = cannonController;

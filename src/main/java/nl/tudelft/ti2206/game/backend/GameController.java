@@ -8,7 +8,6 @@ import java.util.Set;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
-import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
@@ -31,7 +30,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final BubbleFactory factory;
 	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick, final BubbleFactory factory) {
+			final GameTick gameTick, final DefaultBubbleFactory factory) {
 		
 		this.model = model;
 		this.cannonController = cannonController;
@@ -198,13 +197,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected Bubble createAmmoBubble() {
-		Bubble bubble;
-		// 1/10 chance for a special bubble
-		if (RANDOM_GENERATOR.nextInt(2) == 1) {
-			bubble = factory.createSpecialBubble();
-		} else {
-			bubble = new ColouredBubble(getRandomRemainingColor());
-		}
+		Bubble bubble = factory.createBubble(model.getRemainingColors());
 		log.info("Created new ammo: " + bubble.toString());
 		return bubble;
 	}
