@@ -13,6 +13,7 @@ import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.GamePanel;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
 
@@ -109,10 +110,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected void updateBubbles() {
 		Bubble nextBubble = createAmmoBubble();
 		Bubble previousNextBubble = model.getNextBubble();
-		nextBubble.setPosition(previousNextBubble.getPosition());
+		nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
 		model.setNextBubble(nextBubble);
-		previousNextBubble.setPosition(model.getLoadedBubble().getPosition());
+		previousNextBubble.setCenter(GamePanel.AMMO_POSITION);
 		model.setLoadedBubble(previousNextBubble);
+		
 	}
 	
 	/**
