@@ -2,6 +2,7 @@ package nl.tudelft.ti2206.game.backend;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;

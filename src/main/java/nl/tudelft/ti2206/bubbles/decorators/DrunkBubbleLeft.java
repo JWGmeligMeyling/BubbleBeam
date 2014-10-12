@@ -2,7 +2,6 @@ package nl.tudelft.ti2206.bubbles.decorators;
 
 import java.awt.Graphics;
 
-import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 
 /**
