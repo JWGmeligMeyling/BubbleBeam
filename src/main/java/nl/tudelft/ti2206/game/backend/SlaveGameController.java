@@ -1,9 +1,9 @@
 package nl.tudelft.ti2206.game.backend;
 
-import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
+import nl.tudelft.ti2206.game.GamePanel;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
 
@@ -48,11 +48,9 @@ public class SlaveGameController extends GameController {
 		});
 
 		packetHandlerCollection.registerLoadNewBubbleListener((packet) -> {
-			Bubble oldLoadedBubble = model.getLoadedBubble();
-			Bubble oldNextBubble = model.getNextBubble();
 			
-			packet.loadedBubble.setPosition(oldLoadedBubble.getPosition());
-			packet.nextBubble.setPosition(oldNextBubble.getPosition());
+			packet.loadedBubble.setCenter(GamePanel.AMMO_POSITION);
+			packet.nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
 			
 			model.setLoadedBubble(packet.loadedBubble);
 			model.setNextBubble(packet.nextBubble);
