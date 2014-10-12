@@ -20,73 +20,71 @@ public class DefaultBubbleFactory extends BubbleFactory{
 	protected final Random RANDOM_GENERATOR = new Random();
 	
 	private int chanceOfPowerup = 1;	// 1-10. 1 is one in ten chance, 10 is all bubbles are powerups
+	private int chanceOfExtraEffect = 2;	// 1-10. 1 is one in ten chance, 10 is all bubbles have extra effects
 	
-	protected final String effects[] = { "joker", "bomb", "reversebomb", "stone", "drunkR",
-			"drunkL" };
 	
-	// protected final String secondaryEffect[] = {};
+	protected final String primaryEffects[] = {"joker", "bomb", "stone"};
+	protected final String extraEffects[] = {"drunkR","drunkL"};
+	
 	
 	@Override
 	public Bubble createBubble(Set<Color> remainingColors) {
-		//determine if the next bubble is going to be a powerup
+		Bubble out;
+		//determine if the next bubble is going to be a Decorated or Coloured Bubble
 		int number = RANDOM_GENERATOR.nextInt(10);
+		int effectIndex = RANDOM_GENERATOR.nextInt(primaryEffects.length);
 		if(number < chanceOfPowerup){
-			return createSpecialBubble();
+			out = addPrimaryEffect(effectIndex);
+		} else {
+			out = createColouredBubble(remainingColors);
 		}
+		
+		//add a secondary extra effect
+		int extraIndex = RANDOM_GENERATOR.nextInt(extraEffects.length);  
+		number = RANDOM_GENERATOR.nextInt(10);
+		if(number < chanceOfExtraEffect){
+			out = addExtraEffect(extraIndex,out);
+		}
+		return out;
+		
+		
+	}
+	
+	protected Bubble createColouredBubble(Set<Color> remainingColors) {
 		// create new colouredBubble
 		final int index = RANDOM_GENERATOR.nextInt(remainingColors.size());
 		final Iterator<Color> iterator = remainingColors.iterator();
 		for (int i = 0; i <= index; i++)
+		{
 			if (i == index) {
 				return new ColouredBubble(iterator.next());
 			} else {
 				iterator.next();
 			}
+		}
 		throw new IndexOutOfBoundsException();
 	}
 	
-	protected Bubble createSpecialBubble() {
-		int number = RANDOM_GENERATOR.nextInt(effects.length);
-		DecoratedBubble bubble = addInnerEffect(number);		//adds the first effect to a bubble
-		
-		// add a second different effect
-		number = (number + RANDOM_GENERATOR.nextInt(effects.length - 1)) % effects.length;
-		bubble = addOuterEffect(number, bubble);
-		
-		return bubble;
-	}
 	
-	protected DecoratedBubble addOuterEffect(int index, DecoratedBubble bubble) {
-		String toAdd = effects[index];
-		DecoratedBubble wrapperBubble;
+	
+	protected Bubble addExtraEffect(int index, Bubble bubble) {
+		String toAdd = extraEffects[index];
+		Bubble wrapperBubble;
 		switch (toAdd) {
-		case "joker": // Do nothing, don't add the joker
-			wrapperBubble = bubble;
-		break;
-		case "bomb":
-			wrapperBubble = new SoundBubble("bomb.wav", new BombBubble(bubble));
-		break;
-		// case "reversebomb": //wrapperBubble = new ReverseBombBubble(bubble);
-		// break;
-		case "stone":
-			wrapperBubble = new StoneBubble(bubble);
-		break;
 		case "drunkL":
 			wrapperBubble = new DrunkBubbleLeft(bubble);
 		break;
 		case "drunkR":
 			wrapperBubble = new DrunkBubbleRight(bubble);
 		break;
-		// case "sound": wrapperBubble = new SoundBubble(bubble);
-		// break;
 		default:
-			wrapperBubble = new SoundBubble("horn.wav", new JokerBubble());
+			wrapperBubble = bubble;	//Add no extra effect
 		}
 		return wrapperBubble;
 	}
 	
-	protected DecoratedBubble addInnerEffect(int index) {
-		String toAdd = effects[index];
+	protected DecoratedBubble addPrimaryEffect(int index) {
+		String toAdd = primaryEffects[index];
 		DecoratedBubble wrapperBubble;
 		switch (toAdd) {
 		case "joker":
@@ -95,19 +93,9 @@ public class DefaultBubbleFactory extends BubbleFactory{
 		case "bomb":
 			wrapperBubble = new SoundBubble("bomb.wav", new BombBubble());
 		break;
-		// case "reversebomb": wrapperBubble = new ReverseBombBubble();
-		// break;
 		case "stone":
 			wrapperBubble = new StoneBubble();
 		break;
-		case "drunkL":
-			wrapperBubble = new DrunkBubbleLeft();
-		break;
-		case "drunkR":
-			wrapperBubble = new DrunkBubbleRight();
-		break;
-		// case "sound": wrapperBubble = new SoundBubble();
-		// break;
 		default:
 			wrapperBubble = new SoundBubble("horn.wav", new JokerBubble());
 		}
