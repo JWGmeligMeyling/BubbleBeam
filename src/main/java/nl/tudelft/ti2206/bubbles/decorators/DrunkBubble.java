@@ -23,7 +23,7 @@ public abstract class DrunkBubble implements DecoratedBubble {
 	protected static final int ARROW_HEIGHT = 19;
 	protected static final float ACCELERATION = 0.4f;
 	protected static BufferedImage ARROW_IMAGE = _getArrowImage();
-	transient protected Bubble bubble;
+	protected Bubble bubble;
 	
 	public DrunkBubble(Bubble bubble) {
 		this.bubble = bubble;

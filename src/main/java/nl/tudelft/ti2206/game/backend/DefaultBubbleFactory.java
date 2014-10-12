@@ -8,7 +8,6 @@ import java.util.Set;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
-import nl.tudelft.ti2206.bubbles.decorators.DecoratedBubble;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
 import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
@@ -83,9 +82,9 @@ public class DefaultBubbleFactory extends BubbleFactory{
 		return wrapperBubble;
 	}
 	
-	protected DecoratedBubble addPrimaryEffect(int index) {
+	protected Bubble addPrimaryEffect(int index) {
 		String toAdd = primaryEffects[index];
-		DecoratedBubble wrapperBubble;
+		Bubble wrapperBubble;
 		switch (toAdd) {
 		case "joker":
 			wrapperBubble = new JokerBubble();
