@@ -18,7 +18,7 @@ import javax.swing.plaf.LayerUI;
  * Do not consider this part of the project. This was not written by us, and was
  * added as suggestion for the game.
  * 
- * TODO: Add author
+ * Source: http://docs.oracle.com/javase/tutorial/uiswing/misc/jlayer.html
  */
 @SuppressWarnings("unchecked")
 public class EffectsLayer extends LayerUI<JComponent> {
