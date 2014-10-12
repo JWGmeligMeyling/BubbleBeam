@@ -5,6 +5,7 @@ import java.applet.Applet;
 import nl.tudelft.ti2206.bubbles.Bubble;
 
 /**
+ * The {@code}SoundBubble plays a sound once it is popped.
  * 
  * @author Sam Smulders
  */
@@ -14,6 +15,12 @@ public class SoundBubble implements DecoratedBubble {
 	private Bubble bubble;
 	private String sound;
 	
+	/**
+	 * @param sound
+	 *            to be played
+	 * @param bubble
+	 *            the wrapped bubble
+	 */
 	public SoundBubble(String sound, Bubble bubble) {
 		this.sound = sound;
 		this.bubble = bubble;
@@ -21,7 +28,6 @@ public class SoundBubble implements DecoratedBubble {
 	
 	@Override
 	public void popHook() {
-		System.out.println("popsWith");
 		Applet.newAudioClip(SoundBubble.class.getResource("/" + sound)).play();
 		getBubble().popHook();
 	}
