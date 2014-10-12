@@ -32,7 +32,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 
 	private static final Logger log = LoggerFactory.getLogger(GamePanel.class);
 	private static final long serialVersionUID = 2416543550015136242L;
-	protected final int BUBBLE_QUEUE_SPACING = 60;
+	protected final static int BUBBLE_QUEUE_SPACING = 60;
 	
 	protected final static int WIDTH = 325;
 	protected final static int HEIGHT = 400;
@@ -40,7 +40,9 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
 	private final GameController gameController;
-	private final Point cannonPosition;
+	protected final static Point CANNONPOSITION = new Point(WIDTH / 2, HEIGHT);
+	public final static Point AMMO_POSITION = CANNONPOSITION;
+	public final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING,CANNONPOSITION.y);
 	private final Cannon cannon;
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
@@ -60,8 +62,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		gameModel.setScreenSize(this.getPreferredSize());
 		
 		this.gameController = gameController;
-		this.cannonPosition = new Point(getWidth() / 2, getHeight());
-		this.cannon = new Cannon(gameController.getCannonController(), cannonPosition);
+		this.cannon = new Cannon(gameController.getCannonController(), CANNONPOSITION);
 		
 		positionAmmoBubbles();
 		
@@ -82,8 +83,8 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		GameModel gameModel = gameController.getModel();
 		Bubble loadedBubble = gameModel.getLoadedBubble();
 		Bubble nextBubble = gameModel.getNextBubble();
-		loadedBubble.setCenter(new Point(cannonPosition.x, cannonPosition.y));
-		nextBubble.setCenter(new Point(cannonPosition.x + BUBBLE_QUEUE_SPACING, cannonPosition.y));
+		loadedBubble.setCenter(new Point(CANNONPOSITION.x, CANNONPOSITION.y));
+		nextBubble.setCenter(new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING, CANNONPOSITION.y));
 	}
 	
 	private final static Image BACKGROUND = getBackgroundImage();
