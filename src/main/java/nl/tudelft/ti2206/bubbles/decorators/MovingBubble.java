@@ -23,8 +23,8 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 
 	transient protected Vector2f truePosition;
 	transient protected Vector2f velocity;
-	transient protected Bubble bubble;
 	transient protected final Dimension screenSize;
+	protected Bubble bubble;
 
 	/**
 	 * Construct a new {@code MovingBubble}
