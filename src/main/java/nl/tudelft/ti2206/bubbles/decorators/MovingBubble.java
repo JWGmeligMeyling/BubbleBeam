@@ -67,47 +67,13 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 					/ velocity.x));
 			velocity.x = -velocity.x;
 		}
-
 	}
 
 	/**
-	 * Set the true position for this {@code MovingBubble}
-	 * 
-	 * @param truePosition
+	 * Add velocity to this {@code MovingBubble}
 	 */
-	public void setTruePosition(Vector2f truePosition) {
-		this.truePosition = truePosition;
-	}
-
-	/**
-	 * Get the true position for this {@code MovingBubble}
-	 * 
-	 * @return
-	 */
-	public Vector2f getTruePosition() {
-		return truePosition;
-	}
-
-	/**
-	 * Get the velocity for this {@code MovingBubble}
-	 * 
-	 * @return the velocity for this {@code MovingBubble}
-	 */
-	public Vector2f getVelocity() {
-		return velocity;
-	}
-
-	public void setVelocity(Vector2f velocity) {
-		this.velocity = velocity;
-	}
-
-	/**
-	 * Get the screen size for this {@code MovingBubble}
-	 * 
-	 * @return the screen size for this {@code MovingBubble}
-	 */
-	public Dimension getScreenSize() {
-		return screenSize;
+	public void addVelocity(Vector2f velocity) {
+		this.velocity = this.velocity.add(velocity);
 	}
 
 	@Override
