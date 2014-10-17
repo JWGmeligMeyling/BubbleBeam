@@ -35,12 +35,12 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final BubbleFactory factory;
 	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick, final DefaultBubbleFactory factory) {
+			final GameTick gameTick, final BubbleFactory factory) {
 		this(model, cannonController, gameTick, factory, false);
 	}
 	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick, final DefaultBubbleFactory factory, boolean kill) {
+			final GameTick gameTick, final BubbleFactory factory, boolean kill) {
 		
 		this.kill = kill;
 		this.model = model;
@@ -79,7 +79,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			MovingBubble shotBubble = model.getShotBubble();
 			BubbleMesh bubbleMesh = model.getBubbleMesh();
 			
-			shotBubble.addVelocity(shotBubble.velocityChange());
+			shotBubble.addVelocity();
 			shotBubble.gameTick();
 			
 			bubbleMesh

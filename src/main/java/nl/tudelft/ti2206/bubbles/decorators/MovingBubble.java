@@ -72,8 +72,8 @@ public class MovingBubble extends DecoratedBubble implements Tickable {
 	/**
 	 * Add velocity to this {@code MovingBubble}
 	 */
-	public void addVelocity(Vector2f velocity) {
-		this.velocity = this.velocity.add(velocity);
+	public void addVelocity() {
+		this.velocity = this.velocity.add(bubble.velocityChange());
 	}
 
 }
