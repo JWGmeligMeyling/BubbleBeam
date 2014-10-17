@@ -50,7 +50,7 @@ public class MouseCannonController extends AbstractCannonController {
 		});
 	}
 	
-	public void bindController(final Connector connector) {
+	public void bindConnectorAsMaster(final Connector connector) {
 		model.addObserver((a,b) -> {
 			Packet packet = new Packet.CannonRotate(model.getAngle());
 			connector.sendPacket(packet);

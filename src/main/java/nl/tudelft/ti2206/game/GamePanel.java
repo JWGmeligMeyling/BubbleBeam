@@ -1,7 +1,6 @@
 package nl.tudelft.ti2206.game;
 
 import java.applet.Applet;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -23,8 +22,6 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.game.backend.MasterGameController;
-import nl.tudelft.ti2206.game.backend.SlaveGameController;
 import nl.tudelft.ti2206.util.mvc.View;
 import nl.tudelft.util.ObservableObject;
 
@@ -47,15 +44,15 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
-	public GamePanel(final MasterGameController gameController) {
-		this((GameController) gameController);
-		gameController.getCannonController().bindListenersTo(this, cannon);
-	}
-	
-	public GamePanel(final SlaveGameController gameController) {
-		this((GameController) gameController);
-		this.setBackground(new Color(225,225,225));
-	}
+//	public GamePanel(final MasterGameController gameController) {
+//		this((GameController) gameController);
+//		gameController.getCannonController().bindListenersTo(this, cannon); <--
+//	}
+//	
+//	public GamePanel(final SlaveGameController gameController) {
+//		this((GameController) gameController);
+//		this.setBackground(new Color(225,225,225)); <--
+//	}
 	
 	public GamePanel(final GameController gameController) {
 		GameModel gameModel = gameController.getModel();
@@ -66,12 +63,9 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		positionAmmoBubbles();
 		
-		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
+		gameController.getModel().getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
-		});
-		
-		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
 			Applet.newAudioClip(GamePanel.class.getResource("/bubble_pop.wav")).play();
 		});
 		
@@ -159,6 +153,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	@Override
 	public GameController getController() {
 		return gameController;
+	}
+
+	public Cannon getCannon() {
+		return cannon;
 	}
 	
 }

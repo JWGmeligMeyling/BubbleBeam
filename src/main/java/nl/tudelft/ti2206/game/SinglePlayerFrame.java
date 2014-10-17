@@ -8,8 +8,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,6 +28,8 @@ import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
 import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
+import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.actions.ExitAction;
 import nl.tudelft.ti2206.game.actions.FindMultiplayerAction;
@@ -37,7 +39,6 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.GameTick;
 import nl.tudelft.ti2206.game.backend.GameTickImpl;
-import nl.tudelft.ti2206.game.backend.MasterGameController;
 import nl.tudelft.ti2206.util.mvc.View;
 
 public class SinglePlayerFrame extends JFrame implements
@@ -61,38 +62,29 @@ public class SinglePlayerFrame extends JFrame implements
 	
 	protected boolean started = false;
 
-	private final ScheduledExecutorService executorService;
+	protected final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
 	protected final Timer timer;
-
-	protected final MasterGameController gameController;
+	protected final GameController gameController;
 	protected final GamePanel gamePanel;
+	protected final MouseCannonController cannonController;
 	protected EffectsLayer layerUI;
 	protected final JLabel scoreLabel;
 	protected JTextField ipField;
 
-	private final GameTick gameTick;
+	protected final GameTick gameTick;
 	
 	public SinglePlayerFrame() throws IOException {
-		this(Executors.newScheduledThreadPool(2));
-	}
-
-	private SinglePlayerFrame(ScheduledExecutorService executorService) throws IOException {
-		this(new GameTickImpl(FRAME_PERIOD, executorService), executorService);
-	}
-
-	private SinglePlayerFrame(final GameTick gameTick, ScheduledExecutorService executorService) throws IOException {
-		this(new MasterGameController(BubbleMesh.parse(SinglePlayerFrame.class
-				.getResourceAsStream(DEFAULT_BOARD_PATH)), gameTick), gameTick, executorService);
-	}
-
-	SinglePlayerFrame(final MasterGameController gameController, final GameTick gameTick, ScheduledExecutorService executorService) {
+		
 		super(FRAME_TITLE);
-		this.gameController = gameController;
-		this.executorService = executorService;
-		this.gameTick = gameTick;
 		
+		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
+		GameModel gameModel = new GameModel(bubbleMesh);
+		cannonController = new MouseCannonController();
+		this.gameTick = new GameTickImpl(FRAME_PERIOD, executor);
+		DefaultBubbleFactory bubbleFactory = new DefaultBubbleFactory();
+		this.gameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory);		
 		gamePanel = new GamePanel(gameController);
-		
+		cannonController.bindListenersTo(gamePanel, gamePanel.getCannon());
 
 		scoreLabel = new JLabel("Score: 0");
 		getModel().addObserver((a, b) ->
@@ -235,7 +227,7 @@ public class SinglePlayerFrame extends JFrame implements
 		if (started) {
 			timer.stop();
 		}
-		executorService.shutdown();
+		executor.shutdownNow();
 	}
 
 	@Override
@@ -290,9 +282,9 @@ public class SinglePlayerFrame extends JFrame implements
 	public GameController getController() {
 		return gameController;
 	}
-
-	public ScheduledExecutorService getExecutorService() {
-		return executorService;
+	
+	public ScheduledExecutorService getScheduledExecutorService() {
+		return executor;
 	}
 
 }

@@ -126,6 +126,7 @@ public class GameModel extends Observable {
 
 	public void setBubbleMesh(BubbleMesh bubbleMesh) {
 		this.bubbleMesh.replace(bubbleMesh);
+		this.setChanged();
 	}
 	
 }

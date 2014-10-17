@@ -17,10 +17,15 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
+import nl.tudelft.ti2206.bubbles.listeners.BubbleMeshListener.PopListener;
+import nl.tudelft.ti2206.bubbles.listeners.BubbleMeshListener.RowInstertedListener;
+import nl.tudelft.ti2206.bubbles.listeners.BubbleMeshListener.ScoreListener;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.util.mvc.AbstractEventTarget;
+import nl.tudelft.ti2206.util.mvc.EventTarget;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,14 +86,9 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 */
 	void replaceBubble(Bubble original, Bubble replacement);
 	
-	/**
-	 * Add a score listener
-	 * 
-	 * @param listener
-	 *            {@link ScoreListener} to listen to this {@code BubbleMesh}
-	 */
-	void addScoreListener(ScoreListener listener);
+	BubbleMeshEventTarget getEventTarget();
 	
+
 	/**
 	 * Check if a {@code Bubble} is at the top row
 	 * 
@@ -164,25 +164,6 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 */
 	public static BubbleMesh parse(final List<String> rows) {
 		return new BubbleMeshParser(rows).parse();
-	}
-	
-	/**
-	 * A {@code ScoreListner} can be bound to an {@link BubbleMesh} to listen
-	 * for assigned points.
-	 * 
-	 * @author Jan-Willem Gmelig Meyling
-	 * @see BubbleMesh#pop(ColouredBubble)
-	 */
-	interface ScoreListener {
-		
-		/**
-		 * Increment the score
-		 * 
-		 * @param amount
-		 *            Amount of points that are assigned in this pop
-		 * @see BubbleMesh#pop(ColouredBubble)
-		 */
-		void incrementScore(int amount);
 	}
 	
 	/**
@@ -302,6 +283,46 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		
 	}
 	
+	public class BubbleMeshEventTarget {
+		
+		protected EventTarget<RowInstertedListener> rowInsertedListeners = new AbstractEventTarget<RowInstertedListener>();
+	
+		protected EventTarget<ScoreListener> scoreListeners = new AbstractEventTarget<ScoreListener>();
+	
+		protected EventTarget<PopListener> popListeners = new AbstractEventTarget<PopListener>();
+		
+		public void addRowInsertedListener(RowInstertedListener listener) {
+			rowInsertedListeners.addEventListener(listener);
+		}
+		
+		public void addScoreListener(ScoreListener listener) {
+			scoreListeners.addEventListener(listener);
+		}
+		
+		public void addPopListener(PopListener listener) {
+			popListeners.addEventListener(listener);
+		}
+		
+		public void rowInsert(final BubbleMesh bubbleMesh) {
+			rowInsertedListeners.getListeners().forEach(listener -> {
+				listener.rowInserted(bubbleMesh);
+			});
+		}
+		
+		public void addScore(final BubbleMesh bubbleMesh, final int amount) {
+			scoreListeners.getListeners().forEach(listener -> {
+				listener.points(bubbleMesh, amount);
+			});
+		}
+		
+		public void pop(final BubbleMesh bubbleMesh, Set<Bubble> bubblesPopped) {
+			popListeners.getListeners().forEach(listener -> {
+				listener.pop(bubbleMesh, bubblesPopped);
+			});
+		}
+		
+	}
+
 	/**
 	 * Default implementation for {@link BubbleMesh}
 	 * 
@@ -316,7 +337,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		protected final int rowWidth;
 		protected Bubble topLeftBubble;
 		protected Bubble bottomLeftBubble;
-		protected transient List<ScoreListener> scoreListeners;
+		protected final transient BubbleMeshEventTarget eventTarget = new BubbleMeshEventTarget();
 		
 		/**
 		 * Construct a new BubbleMesh
@@ -327,7 +348,6 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			super();
 			this.topLeftBubble = topLeftBubble;
 			this.bottomLeftBubble = bottomLeftBubble;
-			this.scoreListeners = Lists.newArrayList();
 			this.rowWidth = rowWidth;
 		}
 
@@ -385,6 +405,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			}
 			
 			target.snapHook();
+			eventTarget.pop(this, bubblesToPop);
 			return false;
 		}
 		
@@ -491,7 +512,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		 */
 		protected void calculateScore(final Set<Bubble> bubbles) {
 			int amount = bubbles.size() * bubbles.size() * 25;
-			scoreListeners.forEach(scoreListener -> scoreListener.incrementScore(amount));
+			eventTarget.addScore(this, amount);
 		}
 		
 		@Override
@@ -537,6 +558,8 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			
 			updateBottomRow();
 			calculatePositions();
+			eventTarget.rowInsert(this);
+			
 			log.info("Finished inserting row");
 		}
 		
@@ -616,13 +639,6 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 		}
 		
 		@Override
-		public void addScoreListener(final ScoreListener listener) {
-			if(scoreListeners == null ) 
-				scoreListeners = Lists.newArrayList();
-			scoreListeners.add(listener);
-		}
-
-		@Override
 		public List<Color> getRemainingColours() {
 			return Lists.newArrayList(Lists
 				.newArrayList(Iterables.filter(this, Coloured.class))
@@ -636,6 +652,11 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			this.bottomLeftBubble = bubbleMesh.getBottomLeftBubble();
 		}
 		
+		@Override
+		public BubbleMeshEventTarget getEventTarget() {
+			return eventTarget;
+		}
+
 		@Override
 		@VisibleForTesting
 		public Bubble getTopLeftBubble() {
