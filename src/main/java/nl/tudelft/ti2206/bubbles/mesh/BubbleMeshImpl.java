@@ -103,11 +103,11 @@ public class BubbleMeshImpl implements BubbleMesh {
 			
 			calculateScore(bubblesToPop);
 			target.popHook();
+			eventTarget.pop(this, bubblesToPop);
 			return true;
 		}
 		
 		target.snapHook();
-		eventTarget.pop(this, bubblesToPop);
 		return false;
 	}
 	
