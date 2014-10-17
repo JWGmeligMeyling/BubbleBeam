@@ -22,7 +22,7 @@ public class Highscore {
 	
 	protected String highscoreTitle = "Top 10 Single-Player";
 	
-	protected String scoreFile = "./highscores";
+	protected String scoreFile = "highscores";
 	
 	public Highscore(final int length) {
 		LIST_LENGTH = length;
@@ -36,8 +36,9 @@ public class Highscore {
 	
 	public void deleteHighscores(){
 		scores.removeAll(scores);
-		File scoresOnDisk = new File(scoreFile);
-		scoresOnDisk.delete();
+		File folder = new File(System.getProperty("user.home"), "BubbleBeam");
+		File highscores = new File(folder, "scoreFile");
+		highscores.delete();
 	}
 	
 	public void addScore(final ScoreItem item){
@@ -65,9 +66,10 @@ public class Highscore {
 	}
 	public void writeScoreFile(){
 		try{
-			File file = new File(scoreFile);
-			file.createNewFile();
-			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(scoreFile));
+			File folder = new File(System.getProperty("user.home"), "BubbleBeam");
+			folder.mkdirs();
+			File highscores = new File(folder, "scoreFile");
+			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(highscores));
 			output.writeObject(scores);
 			
 			output.close();
@@ -92,7 +94,9 @@ public class Highscore {
 	
 	public void readScoreFile() {
 		try{
-			ObjectInputStream input = new ObjectInputStream(new FileInputStream(scoreFile));
+			File folder = new File(System.getProperty("user.home"), "BubbleBeam");
+			File highscores = new File(folder, "scoreFile");
+			ObjectInputStream input = new ObjectInputStream(new FileInputStream(highscores));
 			@SuppressWarnings("unchecked")
 			ArrayList<ScoreItem> temp = (ArrayList<ScoreItem>) input.readObject();
 			for(ScoreItem item: temp){
