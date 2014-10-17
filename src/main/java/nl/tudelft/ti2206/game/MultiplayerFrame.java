@@ -7,15 +7,16 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.network.Connector;
+import nl.tudelft.ti2206.network.packets.Packet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MultiplayerFrame extends SinglePlayerFrame {
 	
@@ -37,10 +38,21 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		final SlaveCannonController cannonController = new SlaveCannonController();
 		DefaultBubbleFactory bubbleFactory = new DefaultBubbleFactory();
 		
+
+		
 		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory, true);
 		this.slaveGamePanel = new GamePanel(slaveGameController);
-		this.slaveGamePanel.setBackground(new Color(225,225,225));
+this.slaveGamePanel.setBackground(new Color(225,225,225));
 		this.connector = connector;
+		
+		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
+			log.info(b.size()+" bubbles popped");
+			connector.sendPacket(new Packet.PoppedPacket(b.size()));
+		});;
+		
+		connector.getPacketHandlerCollection().registerPopHandler((a)->{
+				gameController.insertRow();
+		});
 		
 		slaveScoreLabel = new JLabel("Score: 0");
 		slaveGameController.getModel().addObserver((a, b) ->
