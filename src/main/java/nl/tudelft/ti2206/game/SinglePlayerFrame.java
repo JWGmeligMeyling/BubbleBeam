@@ -106,6 +106,9 @@ public class SinglePlayerFrame extends JFrame implements
 				new RestartSinglePlayerAction(this).actionPerformed(null);
 			}
 		});
+		gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
+			System.out.println((b.size()+"bubbles popped"));
+		});;
 
 		Container contentPane = this.getContentPane();
 		fillMenubar();

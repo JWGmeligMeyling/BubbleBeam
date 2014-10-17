@@ -2,6 +2,7 @@ package nl.tudelft.ti2206.network.packets;
 
 import nl.tudelft.ti2206.network.packets.Packet.CannonRotate;
 import nl.tudelft.ti2206.network.packets.Packet.CannonShoot;
+import nl.tudelft.ti2206.network.packets.Packet.PoppedPacket;
 
 
 /**
@@ -18,12 +19,14 @@ public class PacketHandlerCollection {
 		this.cannonShootHandler = new PacketHandler.CannonShoot();
 		this.bubbleMeshSyncHandler = new PacketHandler.BubbleMeshSync();
 		this.loadNewBubbleHandler = new PacketHandler.LoadNewBubble();
+		this.popHandler= new PacketHandler.PoppedHandler();
 	}
 	
 	public final PacketHandler.CannonRotate cannonRotateHandler;
 	public final PacketHandler.CannonShoot cannonShootHandler;
 	public final PacketHandler.BubbleMeshSync bubbleMeshSyncHandler;
 	public final PacketHandler.LoadNewBubble loadNewBubbleHandler;
+	public final PacketHandler.PoppedHandler popHandler;
 	
 	public void registerCannonShootHandler(final PacketListener<CannonShoot> packetListener) {
 		cannonShootHandler.registerObserver(packetListener);
@@ -41,6 +44,11 @@ public class PacketHandlerCollection {
 	public void registerLoadNewBubbleListener(final PacketListener<Packet.AmmoPacket> packetListener) {
 		loadNewBubbleHandler.registerObserver(packetListener);
 	}
+	
+	public void registerPopHandler(final PacketListener<Packet.PoppedPacket> packetListener){
+		popHandler.registerObserver(packetListener);
+	}
+	
 	
 	/**
 	 * Notify the desired {@link PacketHandler}
@@ -76,6 +84,10 @@ public class PacketHandlerCollection {
 	 */
 	public void notify(Packet.AmmoPacket packet) {
 		loadNewBubbleHandler.notifyObservers(packet);
+	}
+
+	public void notify(PoppedPacket poppedPacket) {
+			popHandler.notifyObservers(poppedPacket);
 	}
 
 }

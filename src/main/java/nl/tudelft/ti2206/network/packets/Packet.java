@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,4 +150,29 @@ public interface Packet extends Serializable {
 			packetHandlerCollection.notify(this);
 		}
 	}
+	
+	/**
+	 * This is one of four classes needed to send an interger over the network
+	 * @author Liam Clark
+	 *
+	 */
+	public class PoppedPacket implements Packet {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -9118488904921915831L;
+		protected final int amount;
+		
+		public PoppedPacket(int a) {
+			amount=a;
+		}
+
+		@Override
+		public void notify(PacketHandlerCollection packetHandlerCollection) {
+				packetHandlerCollection.notify(this);
+		}
+		
+	}
+	
 }

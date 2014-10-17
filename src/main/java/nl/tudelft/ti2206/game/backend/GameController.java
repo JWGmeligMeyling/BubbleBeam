@@ -178,7 +178,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	/**
 	 * Insert a new row after several misses
 	 */
-	protected void insertRow() {
+	public void insertRow() {
 		model.getBubbleMesh().insertRow(this);
 	}
 	
