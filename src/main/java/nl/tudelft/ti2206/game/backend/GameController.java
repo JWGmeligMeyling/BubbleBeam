@@ -32,12 +32,18 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	protected final GameModel model;
 	protected final CannonController cannonController;
-	
+	protected final boolean kill;
 	protected final BubbleFactory factory;
 	
 	public GameController(final GameModel model, final CannonController cannonController,
 			final GameTick gameTick, final DefaultBubbleFactory factory) {
+		this(model, cannonController, gameTick, factory, false);
+	}
+	
+	public GameController(final GameModel model, final CannonController cannonController,
+			final GameTick gameTick, final DefaultBubbleFactory factory, boolean kill) {
 		
+		this.kill = kill;
 		this.model = model;
 		this.cannonController = cannonController;
 		this.factory = factory;
@@ -113,13 +119,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected void updateBubbles() {
-		Bubble nextBubble = createAmmoBubble();
-		Bubble previousNextBubble = model.getNextBubble();
-		nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
-		model.setNextBubble(nextBubble);
-		previousNextBubble.setCenter(GamePanel.AMMO_POSITION);
-		model.setLoadedBubble(previousNextBubble);
-		
+		if(!kill) {
+			Bubble nextBubble = createAmmoBubble();
+			Bubble previousNextBubble = model.getNextBubble();
+			nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
+			model.setNextBubble(nextBubble);
+			previousNextBubble.setCenter(GamePanel.AMMO_POSITION);
+			model.setLoadedBubble(previousNextBubble);
+		}
 	}
 	
 	/**
@@ -179,7 +186,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * Insert a new row after several misses
 	 */
 	protected void insertRow() {
-		model.getBubbleMesh().insertRow(this);
+		if(!kill) {
+			model.getBubbleMesh().insertRow(this);
+		}
 	}
 	
 	@Override
