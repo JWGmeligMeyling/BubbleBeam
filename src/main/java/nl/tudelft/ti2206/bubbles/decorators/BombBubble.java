@@ -34,7 +34,7 @@ public class BombBubble extends DecoratedBubble {
 	}
 	
 	public BombBubble(Bubble bubble) {
-		super(bubble);
+		super(new SoundBubble("bomb.wav", bubble));
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
 	}
 

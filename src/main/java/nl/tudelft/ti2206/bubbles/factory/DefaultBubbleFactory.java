@@ -11,7 +11,6 @@ import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
 import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
-import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
 import nl.tudelft.ti2206.bubbles.decorators.StoneBubble;
 
 public class DefaultBubbleFactory extends BubbleFactory{
@@ -22,8 +21,10 @@ public class DefaultBubbleFactory extends BubbleFactory{
 	private int chanceOfExtraEffect = 2;	// 1-10. 1 is one in ten chance, 10 is all bubbles have extra effects
 	
 	
-	protected final String primaryEffects[] = {"joker", "bomb", "stone"};
-	protected final String extraEffects[] = {"drunkR","drunkL"};
+	protected final Class<?> primaryEffects[] = {
+			JokerBubble.class, BombBubble.class, StoneBubble.class };
+	protected final Class<?> extraEffects[] = { DrunkBubbleRight.class,
+			DrunkBubbleLeft.class };
 	
 	
 	@Override
@@ -64,40 +65,21 @@ public class DefaultBubbleFactory extends BubbleFactory{
 		throw new IndexOutOfBoundsException();
 	}
 	
-	
-	
 	protected Bubble addExtraEffect(int index, Bubble bubble) {
-		String toAdd = extraEffects[index];
-		Bubble wrapperBubble;
-		switch (toAdd) {
-		case "drunkL":
-			wrapperBubble = new DrunkBubbleLeft(bubble);
-		break;
-		case "drunkR":
-			wrapperBubble = new DrunkBubbleRight(bubble);
-		break;
-		default:
-			wrapperBubble = bubble;	//Add no extra effect
+		try {
+			Class<?> clasz = extraEffects[index];
+			return Bubble.class.cast(clasz.getConstructor(Bubble.class).newInstance(bubble));
+		} catch (Throwable t) {
+			return bubble;
 		}
-		return wrapperBubble;
 	}
 	
 	protected Bubble addPrimaryEffect(int index) {
-		String toAdd = primaryEffects[index];
-		Bubble wrapperBubble;
-		switch (toAdd) {
-		case "joker":
-			wrapperBubble = new JokerBubble();
-		break;
-		case "bomb":
-			wrapperBubble = new SoundBubble("bomb.wav", new BombBubble());
-		break;
-		case "stone":
-			wrapperBubble = new StoneBubble();
-		break;
-		default:
-			wrapperBubble = new SoundBubble("horn.wav", new JokerBubble());
+		Class<?> clasz = primaryEffects[index];
+		try {
+			return Bubble.class.cast(clasz.newInstance());
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
 		}
-		return wrapperBubble;
 	}
 }

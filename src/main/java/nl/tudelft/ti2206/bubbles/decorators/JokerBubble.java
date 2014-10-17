@@ -26,12 +26,16 @@ public class JokerBubble extends DecoratedBubble implements Coloured {
 	protected boolean hasColor = false;
 	protected boolean snapped = false;
 
+	public JokerBubble() {
+		this(new ColouredBubble(Color.WHITE));
+	}
+	
 	/**
 	 * Construct a new {@code JokerBubble}
 	 */
-	public JokerBubble() {
-		super(new ColouredBubble(Color.WHITE));
-		bubble = (ColouredBubble) super.bubble;
+	public JokerBubble(ColouredBubble bubble) {
+		super(new SoundBubble("horn.wav", bubble));
+		this.bubble = bubble;
 	}
 
 	@Override
