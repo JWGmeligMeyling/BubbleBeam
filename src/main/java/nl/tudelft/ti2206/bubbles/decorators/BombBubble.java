@@ -25,7 +25,7 @@ public class BombBubble extends DecoratedBubble {
 	private static final int POP_RADIUS = 2;
 
 	protected final RadialPopBehaviour popBehaviour;
-	protected static BufferedImage BOMB_IMAGE = _getBubbleImage();
+	protected final BufferedImage bombImage;
 
 	protected boolean collided = false;
 
@@ -36,6 +36,7 @@ public class BombBubble extends DecoratedBubble {
 	public BombBubble(Bubble bubble) {
 		super(new SoundBubble("bomb.wav", bubble));
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
+		bombImage = getBubbleImage();
 	}
 
 	@Override
@@ -45,13 +46,11 @@ public class BombBubble extends DecoratedBubble {
 		return true;
 	}
 
-	protected static BufferedImage _getBubbleImage() {
+	protected BufferedImage getBubbleImage() {
 		try {
-			BufferedImage scale = ImageIO.read(BombBubble.class
-					.getResourceAsStream("/bomb.png"));
-			scale.getScaledInstance(AbstractBubble.WIDTH,
-					AbstractBubble.HEIGHT, Image.SCALE_SMOOTH);
-			return scale;
+			BufferedImage scaledImage = ImageIO.read(BombBubble.class.getResourceAsStream("/bomb.png"));
+			scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(), Image.SCALE_SMOOTH);
+			return scaledImage;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -59,9 +58,7 @@ public class BombBubble extends DecoratedBubble {
 
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(BOMB_IMAGE, (int) bubble.getX(),
-				(int) bubble.getY(), bubble.getWidth(), bubble.getHeight(),
-				null);
+		graphics.drawImage(bombImage, bubble.getX(), bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
 		bubble.render(graphics);
 	}
 

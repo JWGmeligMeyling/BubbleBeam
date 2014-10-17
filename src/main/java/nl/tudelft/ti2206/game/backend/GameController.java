@@ -13,7 +13,6 @@ import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.GamePanel;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
@@ -122,9 +121,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		if(!kill) {
 			Bubble nextBubble = createAmmoBubble();
 			Bubble previousNextBubble = model.getNextBubble();
-			nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
 			model.setNextBubble(nextBubble);
-			previousNextBubble.setCenter(GamePanel.AMMO_POSITION);
 			model.setLoadedBubble(previousNextBubble);
 		}
 	}
@@ -256,10 +253,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 
 		packetHandlerCollection.registerLoadNewBubbleListener((packet) -> {
 			log.info("Processing packet {}", packet);
-			
-			packet.loadedBubble.setCenter(GamePanel.AMMO_POSITION);
-			packet.nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
-			
 			model.setLoadedBubble(packet.loadedBubble);
 			model.setNextBubble(packet.nextBubble);
 			model.notifyObservers();

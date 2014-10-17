@@ -21,7 +21,7 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 public class StoneBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -8390605724378971542L;
-	private static BufferedImage STONE_IMAGE = _getBubbleImage();
+	private final BufferedImage stoneImage;
 	
 	public StoneBubble() {
 		this(new AbstractBubble());
@@ -29,13 +29,14 @@ public class StoneBubble extends DecoratedBubble {
 	
 	public StoneBubble(Bubble bubble) {
 		super(bubble);
+		stoneImage = getBubbleImage();
 	}
 	
-	protected static BufferedImage _getBubbleImage() {
+	protected BufferedImage getBubbleImage() {
 		try {
-			BufferedImage scale = ImageIO.read(StoneBubble.class.getResourceAsStream("/stone.png"));
-			scale.getScaledInstance(AbstractBubble.WIDTH, AbstractBubble.HEIGHT, Image.SCALE_SMOOTH);
-			return scale;
+			BufferedImage scaledImage = ImageIO.read(StoneBubble.class.getResourceAsStream("/stone.png"));
+			scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(), Image.SCALE_SMOOTH);
+			return scaledImage;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -53,8 +54,7 @@ public class StoneBubble extends DecoratedBubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(STONE_IMAGE, (int) bubble.getX(), (int) bubble.getY(),
-				bubble.getWidth(), bubble.getHeight(), null);
+		graphics.drawImage(stoneImage, bubble.getX(), bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
 		bubble.render(graphics);
 	}
 	

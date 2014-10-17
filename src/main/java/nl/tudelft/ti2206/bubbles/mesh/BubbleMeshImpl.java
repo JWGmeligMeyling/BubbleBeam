@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.Coloured;
@@ -249,7 +248,7 @@ public class BubbleMeshImpl implements BubbleMesh {
 			
 			if (i == 0) {
 				if (shift)
-					bubble.setPosition(new Point(topLeftBubble.getX() + AbstractBubble.WIDTH / 2,
+					bubble.setPosition(new Point(topLeftBubble.getX() + topLeftBubble.getWidth() / 2,
 							topLeftBubble.getY()));
 				topLeftBubble = bubble;
 			}

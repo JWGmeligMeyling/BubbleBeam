@@ -10,5 +10,4 @@
  * @author Jan-Willem Gmelig Meyling
  */
 package nl.tudelft.ti2206.bubbles;
-import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 
