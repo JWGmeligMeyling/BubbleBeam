@@ -15,7 +15,7 @@ import java.util.Iterator;
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshParser;
 import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshImpl;
-import nl.tudelft.ti2206.bubbles.BubbleMesh.ScoreListener;
+import nl.tudelft.ti2206.bubbles.listeners.BubbleMeshListener.ScoreListener;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 
@@ -31,7 +31,7 @@ public class BubbleMeshTest {
 	public void testNoPop() {
 		BubbleMeshImpl bubbleMesh = spy(new BubbleMeshParser(Lists.newArrayList("rrbgggbbb ", "          ")).parse());
 		ScoreListener scoreListener = mock(ScoreListener.class);
-		bubbleMesh.addScoreListener(scoreListener);
+		bubbleMesh.getEventTarget().addScoreListener(scoreListener);
 
 		Iterator<Bubble> iterator = bubbleMesh.getTopLeftBubble()
 				.traverse(Direction.RIGHT).iterator();
@@ -42,14 +42,14 @@ public class BubbleMeshTest {
 		verify(bubbleMesh).pop(a);
 		verify(bubbleMesh, never()).replaceBubble(any(), any());
 		
-		verify(scoreListener, never()).incrementScore(anyInt());
+		verify(scoreListener, never()).points(any(), anyInt());
 	}
 
 	@Test
 	public void testBasicPop() {
 		BubbleMeshImpl bubbleMesh = spy(new BubbleMeshParser(Lists.newArrayList("rrrgggbbb ", "          ")).parse());
 		ScoreListener scoreListener = mock(ScoreListener.class);
-		bubbleMesh.addScoreListener(scoreListener);
+		bubbleMesh.getEventTarget().addScoreListener(scoreListener);
 		
 		Iterator<Bubble> iterator = bubbleMesh.getTopLeftBubble()
 				.traverse(Direction.RIGHT).iterator();
@@ -70,14 +70,14 @@ public class BubbleMeshTest {
 				allOf(hasItems(Color.GREEN, Color.BLUE),
 						not(hasItem(Color.RED))));
 		
-		verify(scoreListener).incrementScore(anyInt());
+		verify(scoreListener).points(any(), anyInt());
 	}
 	
 	@Test
 	public void testPopIsolatedBubbles() {
 		BubbleMeshImpl bubbleMesh = spy(new BubbleMeshParser(Lists.newArrayList("rrrcccbbb ", "g         ", "          ")).parse());
 		ScoreListener scoreListener = mock(ScoreListener.class);
-		bubbleMesh.addScoreListener(scoreListener);
+		bubbleMesh.getEventTarget().addScoreListener(scoreListener);
 		
 		Iterator<Bubble> iterator = bubbleMesh.getTopLeftBubble()
 				.traverse(Direction.RIGHT).iterator();
@@ -100,7 +100,7 @@ public class BubbleMeshTest {
 				allOf(hasItems(Color.BLUE, Color.CYAN),
 						not(hasItems(Color.RED, Color.GREEN))));
 		
-		verify(scoreListener).incrementScore(anyInt());
+		verify(scoreListener).points(any(), anyInt());
 	}
 	
 	@Test

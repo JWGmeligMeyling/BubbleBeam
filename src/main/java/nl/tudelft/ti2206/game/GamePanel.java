@@ -66,12 +66,9 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		positionAmmoBubbles();
 		
-		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
+		gameController.getModel().getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
-		});
-		
-		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
 			Applet.newAudioClip(GamePanel.class.getResource("/bubble_pop.wav")).play();
 		});
 		

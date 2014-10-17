@@ -46,9 +46,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 			GameController.this.shoot(direction);
 		});
 		
-		model.getBubbleMesh().addScoreListener((amount) -> {
+		model.getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
 			model.incrementScore(amount);
-			model.retainRemainingColors(model.getBubbleMesh().getRemainingColours());
+			model.retainRemainingColors(bubbleMesh.getRemainingColours());
 			model.notifyObservers();
 		});
 		
