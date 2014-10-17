@@ -10,6 +10,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,6 @@ public class FindMultiplayerAction extends AbstractAction {
 		executor.submit(() -> {
 			try {
 				Socket socket = new Socket();
-//				socket.setSoTimeout(5000);
 
 				cancelButton.addActionListener((event2) -> {
 					try {
@@ -64,7 +64,9 @@ public class FindMultiplayerAction extends AbstractAction {
 				frame.pack();
 				frame.setLocationRelativeTo(this.singlePlayerFrame);
 				
-				this.singlePlayerFrame.dispose();
+				SwingUtilities.invokeLater(() -> {
+					this.singlePlayerFrame.dispose();
+				});
 				
 				frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

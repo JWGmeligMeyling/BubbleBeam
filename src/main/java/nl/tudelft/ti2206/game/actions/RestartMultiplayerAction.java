@@ -6,13 +6,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ScheduledExecutorService;
 
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import javax.swing.SwingUtilities;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import nl.tudelft.ti2206.game.MultiplayerFrame;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
@@ -44,7 +48,6 @@ public class RestartMultiplayerAction extends AbstractAction {
 		
 		executor.submit(() -> {
 			try(ServerSocket server = new ServerSocket(PORT)) {
-//				server.setSoTimeout(5000);
 
 				cancelButton.addActionListener((event2) -> {
 					try {
@@ -64,7 +67,9 @@ public class RestartMultiplayerAction extends AbstractAction {
 				frame.pack();
 				frame.setLocationRelativeTo(this.singlePlayerFrame);
 				
-				this.singlePlayerFrame.dispose();
+				SwingUtilities.invokeLater(() -> {
+					this.singlePlayerFrame.dispose();
+				});
 				
 				frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -44,16 +44,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
-//	public GamePanel(final MasterGameController gameController) {
-//		this((GameController) gameController);
-//		gameController.getCannonController().bindListenersTo(this, cannon); <--
-//	}
-//	
-//	public GamePanel(final SlaveGameController gameController) {
-//		this((GameController) gameController);
-//		this.setBackground(new Color(225,225,225)); <--
-//	}
-	
 	public GamePanel(final GameController gameController) {
 		GameModel gameModel = gameController.getModel();
 		gameModel.setScreenSize(this.getPreferredSize());
