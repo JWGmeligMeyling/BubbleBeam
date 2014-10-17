@@ -27,8 +27,8 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.actions.ExitAction;

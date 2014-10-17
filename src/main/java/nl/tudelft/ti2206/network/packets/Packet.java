@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.util.Vector2f;
 
 /**

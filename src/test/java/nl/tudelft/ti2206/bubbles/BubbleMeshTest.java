@@ -13,9 +13,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
-import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshParser;
-import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshImpl;
-import nl.tudelft.ti2206.bubbles.listeners.BubbleMeshListener.ScoreListener;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshParser;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshListener.ScoreListener;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 
@@ -160,7 +161,6 @@ public class BubbleMeshTest {
 				Color.CYAN, Color.CYAN, Color.BLUE, Color.BLUE, Color.BLUE,
 				Color.GREEN), ImmutableList.copyOf(colors));
 		
-		verify(bubbleMesh).updateBottomRow();
 		verify(bubbleMesh).calculatePositions();
 	}
 	

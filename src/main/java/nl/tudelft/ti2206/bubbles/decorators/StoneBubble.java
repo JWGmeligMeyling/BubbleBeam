@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 
 /**
  * Stone bubble implementation

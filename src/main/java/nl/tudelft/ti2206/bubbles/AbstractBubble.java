@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
 import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
@@ -175,29 +174,6 @@ public class AbstractBubble implements Bubble {
 		
 		if(this.hasBubbleAt(Direction.BOTTOMLEFT) && this.getBubbleAt(Direction.BOTTOMLEFT).getBubbleAt(Direction.TOPRIGHT).equals(this)){
 			g2.drawLine(this.getCenter().x, this.getCenter().y,this.getBubbleAt(Direction.BOTTOMLEFT).getCenter().x ,this.getBubbleAt(Direction.BOTTOMLEFT).getCenter().y);
-		}
-	}
-	
-	@Override
-	@VisibleForTesting
-	public Stream<Bubble> traverse(Direction direction) {
-		// Mockito doesn't have support for spying default methods yet
-		final List<Bubble> bubbles = Lists.newArrayList(this);
-		Bubble current = this;
-		while(current.hasBubbleAt(direction)) {
-			current = current.getBubbleAt(direction);
-			bubbles.add(current);
-		}
-		return bubbles.stream();
-	}
-	
-	@Override
-	@VisibleForTesting
-	public void bind(Direction direction, Bubble other) {
-		// Mockito doesn't have support for spying default methods yet
-		setBubbleAt(direction, other);
-		if(other != null) {
-			other.setBubbleAt(direction.opposite(), this);
 		}
 	}
 	

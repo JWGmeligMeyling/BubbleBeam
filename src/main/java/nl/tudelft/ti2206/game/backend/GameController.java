@@ -6,11 +6,11 @@ import java.util.Random;
 import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.GamePanel;

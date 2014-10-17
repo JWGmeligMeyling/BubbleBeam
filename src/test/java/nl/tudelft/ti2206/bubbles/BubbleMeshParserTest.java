@@ -7,8 +7,8 @@ import java.awt.Color;
 import java.util.List;
 
 import nl.tudelft.ti2206.bubbles.Bubble.Direction;
-import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshImpl;
-import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshParser;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshParser;
 
 import org.junit.Test;
 

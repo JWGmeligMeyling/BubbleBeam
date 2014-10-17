@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
 import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
@@ -161,10 +162,8 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 		this.bind(Direction.TOPRIGHT, original.getBubbleAt(Direction.TOPRIGHT));
 		this.bind(Direction.LEFT, original.getBubbleAt(Direction.LEFT));
 		this.bind(Direction.RIGHT, original.getBubbleAt(Direction.RIGHT));
-		this.bind(Direction.BOTTOMLEFT,
-				original.getBubbleAt(Direction.BOTTOMLEFT));
-		this.bind(Direction.BOTTOMRIGHT,
-				original.getBubbleAt(Direction.BOTTOMRIGHT));
+		this.bind(Direction.BOTTOMLEFT, original.getBubbleAt(Direction.BOTTOMLEFT));
+		this.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
 		this.setPosition(original.getPosition());
 	}
 

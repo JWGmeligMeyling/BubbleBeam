@@ -5,6 +5,7 @@ import java.awt.Color;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.Coloured;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 
 /**
  * The {@code JokerBubble} is a special type of {@code Bubble} which determines

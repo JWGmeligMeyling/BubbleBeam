@@ -9,9 +9,9 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 
 public class GameModel extends Observable {
 	

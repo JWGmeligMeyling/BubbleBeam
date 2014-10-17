@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.bubbles.decorators;
+package nl.tudelft.ti2206.bubbles;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.util.Vector2f;
 
@@ -140,8 +138,11 @@ public interface DecoratedBubble extends Bubble {
 		return this;
 	}
 
-	void setBubble(Bubble bubble);
+	@Override
 	default PopBehaviour getPopBehaviour() {
 		return getBubble().getPopBehaviour();
 	}
+
+	void setBubble(Bubble bubble);
+	
 }

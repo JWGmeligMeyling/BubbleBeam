@@ -3,6 +3,7 @@ package nl.tudelft.ti2206.bubbles.decorators;
 import java.applet.Applet;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 
 /**
  * The {@code}SoundBubble plays a sound once it is popped.
