@@ -36,7 +36,7 @@ public class RestartMultiplayerAction extends AbstractAction {
 	public void actionPerformed(ActionEvent event) {
 		log.info("Setting up host");
 		
-		ScheduledExecutorService executor = singlePlayerFrame.getExecutorService();
+		ScheduledExecutorService executor = singlePlayerFrame.getScheduledExecutorService();
 		
 		final JDialog dialog = new JDialog();
 		JButton cancelButton = new JButton("Cancel");

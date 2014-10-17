@@ -14,6 +14,9 @@ import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.GamePanel;
+import nl.tudelft.ti2206.network.Connector;
+import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
 
@@ -56,6 +59,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected void prepareAmmo() {
+		log.info("Prepare initial ammo for {}", this);
 		model.setLoadedBubble(createAmmoBubble());
 		model.setNextBubble(createAmmoBubble());
 	}
@@ -204,6 +208,59 @@ public class GameController implements Controller<GameModel>, Tickable {
 		Bubble bubble = factory.createBubble(model.getRemainingColors());
 		log.info("Created new ammo: " + bubble.toString());
 		return bubble;
+	}
+	
+	/**
+	 * Bind a connector for multiplayer
+	 * @param connector
+	 */
+	public void bindConnectorAsMaster(final Connector connector) {
+		log.info("Binding {} to connector {}", this, connector);
+		sendInitialData(connector);
+		
+		getModel().getBubbleMesh().getEventTarget().addRowInsertedListener((bubbleMesh) -> {
+			log.info("Sending insert row");
+			connector.sendPacket(new Packet.BubbleMeshSync(bubbleMesh));
+		});
+		
+		getCannonController().getModel().addEventListener((direction) -> {
+			log.info("Sending shoot packet");
+			connector.sendPacket(new Packet.CannonShoot(direction));
+			
+			Bubble loadedBubble = model.getLoadedBubble();
+			Bubble nextBubble = model.getNextBubble();
+			log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
+			connector.sendPacket(new Packet.AmmoPacket(loadedBubble, nextBubble));
+		});
+	}
+	
+	public void bindConnectorAsSlave(final Connector connector) {
+		PacketHandlerCollection packetHandlerCollection = connector.getPacketHandlerCollection();
+		
+		packetHandlerCollection.registerBubbleMeshSyncListener((packet) -> {
+			log.info("Processing packet {}", packet);
+			model.setBubbleMesh(packet.bubbleMesh);
+			model.notifyObservers();
+		});
+
+		packetHandlerCollection.registerLoadNewBubbleListener((packet) -> {
+			log.info("Processing packet {}", packet);
+			
+			packet.loadedBubble.setCenter(GamePanel.AMMO_POSITION);
+			packet.nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
+			
+			model.setLoadedBubble(packet.loadedBubble);
+			model.setNextBubble(packet.nextBubble);
+			model.notifyObservers();
+		});
+	}
+	
+	protected void sendInitialData(final Connector connector) {
+		log.info("Sending initial data to {}", connector);
+		connector.sendPacket(new Packet.BubbleMeshSync(model.getBubbleMesh()));
+		connector.sendPacket(new Packet.AmmoPacket(
+				model.getLoadedBubble(),
+				model.getNextBubble()));
 	}
 	
 }

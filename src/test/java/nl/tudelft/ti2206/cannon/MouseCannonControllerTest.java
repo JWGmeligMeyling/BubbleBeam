@@ -106,7 +106,7 @@ public class MouseCannonControllerTest extends AbstractCannonControllerTest {
 	@Test
 	public void testConnectorBinding() {
 		Connector connector = mock(Connector.class);
-		mouseCannonController.bindController(connector);
+		mouseCannonController.bindConnectorAsMaster(connector);
 		verify(cannonModel, times(1)).addObserver(any(Observer.class));
 		
 		mouseCannonController.setAngle( new Vector2f(0, 1));

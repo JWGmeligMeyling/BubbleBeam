@@ -405,6 +405,7 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			}
 			
 			target.snapHook();
+			eventTarget.pop(this, bubblesToPop);
 			return false;
 		}
 		
@@ -557,6 +558,8 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 			
 			updateBottomRow();
 			calculatePositions();
+			eventTarget.rowInsert(this);
+			
 			log.info("Finished inserting row");
 		}
 		

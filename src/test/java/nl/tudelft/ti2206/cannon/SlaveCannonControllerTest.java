@@ -51,7 +51,7 @@ public class SlaveCannonControllerTest extends AbstractCannonControllerTest {
 		PacketHandlerCollection collection = spy(new PacketHandlerCollection());
 		when(connector.getPacketHandlerCollection()).thenReturn(collection);
 		
-		slaveCannonController.bindConnector(connector);
+		slaveCannonController.bindConnectorAsSlave(connector);
 		verify(collection, times(1)).registerCannonShootHandler(
 				cannonShootCaptor.capture());
 		verify(collection, times(1)).registerCannonRotateHandler(
