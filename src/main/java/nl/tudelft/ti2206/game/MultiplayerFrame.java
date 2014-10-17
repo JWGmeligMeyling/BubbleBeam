@@ -45,7 +45,6 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 			
 			@Override
 			protected void updateBubbles() {}
-
 		};
 		
 		this.slaveGamePanel = new GamePanel(slaveGameController);
@@ -53,7 +52,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		this.connector = connector;
 		
 		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
-			log.info(b.size()+"bubbles popped");
+			log.info(b.size()+" bubbles popped");
 			connector.sendPacket(new Packet.PoppedPacket(b.size()));
 		});;
 		
