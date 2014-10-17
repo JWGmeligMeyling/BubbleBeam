@@ -38,17 +38,11 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		final SlaveCannonController cannonController = new SlaveCannonController();
 		DefaultBubbleFactory bubbleFactory = new DefaultBubbleFactory();
 		
-		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory) {
+
 		
-			@Override
-			public void insertRow() {}
-			
-			@Override
-			protected void updateBubbles() {}
-		};
-		
+		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory, true);
 		this.slaveGamePanel = new GamePanel(slaveGameController);
-		this.slaveGamePanel.setBackground(new Color(225,225,225));
+this.slaveGamePanel.setBackground(new Color(225,225,225));
 		this.connector = connector;
 		
 		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
