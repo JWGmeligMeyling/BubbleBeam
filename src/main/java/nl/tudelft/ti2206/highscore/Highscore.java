@@ -10,21 +10,19 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import nl.tudelft.ti2206.game.GamePanel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Highscore {
 	
-	private static final Logger log = LoggerFactory.getLogger(GamePanel.class);
+	private static final Logger log = LoggerFactory.getLogger(Highscore.class);
 	
 	protected ArrayList<ScoreItem> scores;
 	private final int LIST_LENGTH;
 	
 	protected String highscoreTitle = "Top 10 Single-Player";
 	
-	protected String scoreFile = "resources/.highscores";
+	protected String scoreFile = "./highscores";
 	
 	public Highscore(final int length) {
 		LIST_LENGTH = length;
@@ -34,6 +32,12 @@ public class Highscore {
 	
 	public String getTitle(){
 		return highscoreTitle;
+	}
+	
+	public void deleteHighscores(){
+		scores.removeAll(scores);
+		File scoresOnDisk = new File(scoreFile);
+		scoresOnDisk.delete();
 	}
 	
 	public void addScore(final ScoreItem item){
@@ -63,14 +67,15 @@ public class Highscore {
 		try{
 			File file = new File(scoreFile);
 			file.createNewFile();
-			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file,false));
+			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(scoreFile));
 			output.writeObject(scores);
 			
 			output.close();
 		} catch (FileNotFoundException e) {
 			log.error("Highscore-file could not be made.");
 		} catch (IOException e) {
-			log.error("IOexception while reading high-scores. Continuing without previous highscores.");
+			log.error("IOexception while writing high-scores.");
+			e.printStackTrace();
 		} finally{
 			//do nothing
 		}
