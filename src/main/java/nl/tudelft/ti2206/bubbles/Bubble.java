@@ -114,21 +114,18 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @param target
 	 *            The bubble this {@code Bubble} collided with;
 	 */
-	default void collideHook(Bubble target) {
-	};
+	default void collideHook(Bubble target) {}
 
 	/**
 	 * The pop hook is called on the shot {@code Bubble} when it pops
 	 */
-	default void popHook() {
-	};
+	default void popHook() {}
 
 	/**
 	 * The snap hook is called on the shot {@code Bubble} when it doesn't
 	 * collide with another bubble
 	 */
-	default void snapHook() {
-	};
+	default void snapHook() {}
 
 	/**
 	 * Traverse the {@link BubbleMesh} in a given {@link Direction}, with this
@@ -189,56 +186,8 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 */
 	boolean popsWith(Bubble target);
 
-	/**
-	 * Direction
-	 * 
-	 * @author Jan-Willem Gmelig Meyling
-	 */
-	enum Direction {
-		TOPLEFT, TOPRIGHT, LEFT, RIGHT, BOTTOMLEFT, BOTTOMRIGHT;
-
-		/**
-		 * @return the opposite {@code Direction}
-		 */
-		public Direction opposite() {
-			return oppositeFor(this);
-		}
-
-		/**
-		 * @param direction
-		 *            direction for which to return the opposite direction
-		 * @return the opposite {@code Direction} for the given
-		 *         {@code Direction}
-		 */
-		public static Direction oppositeFor(final Direction direction) {
-			switch (direction) {
-			case BOTTOMLEFT:
-				return TOPRIGHT;
-			case BOTTOMRIGHT:
-				return TOPLEFT;
-			case LEFT:
-				return RIGHT;
-			case RIGHT:
-				return LEFT;
-			case TOPLEFT:
-				return BOTTOMRIGHT;
-			case TOPRIGHT:
-				return BOTTOMLEFT;
-			}
-			throw new IllegalArgumentException();
-		}
-
-	}
-
 	default Vector2f velocityChange() {
 		return new Vector2f(0f, 0f);
 	}
-
-	/**
-	 * Returns the bubble without the concrete decorators that should never be
-	 * used after snapping into the BubbleMesh
-	 * @return the bubble with only the relevant decorators
-	 */
-	Bubble getSnappedBubble();
 
 }

@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshParser;

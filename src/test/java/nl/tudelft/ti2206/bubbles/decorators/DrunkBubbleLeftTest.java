@@ -18,6 +18,10 @@ public class DrunkBubbleLeftTest extends AbstractBubbleTest {
 		bubble = drunkBubble = new DrunkBubbleLeft(new AbstractBubble());
 	}
 	
+	@Override
+	@Test
+	public void testGraphics() {}
+	
 	@Test
 	public void testVelocityChange() {
 		

@@ -188,9 +188,4 @@ public class AbstractBubble implements Bubble {
 		return false;
 	}
 
-	@Override
-	public Bubble getSnappedBubble() {
-		return this;
-	}
-	
 }

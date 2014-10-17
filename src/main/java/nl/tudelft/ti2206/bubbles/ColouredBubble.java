@@ -84,11 +84,17 @@ public class ColouredBubble extends AbstractBubble implements Coloured {
 	
 	@Override
 	public boolean popsWith(Bubble target) {
+		
+		while(!Coloured.class.isInstance(target) && DecoratedBubble.class.isInstance(target)) {
+			target = DecoratedBubble.class.cast(target).getParent();
+		}
+		
 		if(Coloured.class.isInstance(target)) {
 			Coloured other = Coloured.class.cast(target);
 			Color otherColor = other.getColor();
 			return color.equals(otherColor);
 		}
+		
 		return false;
 	}
 

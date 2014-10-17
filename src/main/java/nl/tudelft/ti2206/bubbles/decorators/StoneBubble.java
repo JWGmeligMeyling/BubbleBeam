@@ -14,28 +14,21 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 /**
  * Stone bubble implementation
  * 
- * @author LC
+ * @author Liam Clark
  *
  */
 
-public class StoneBubble implements DecoratedBubble {
-	/**
-	 * 
-	 */
+public class StoneBubble extends DecoratedBubble {
+
 	private static final long serialVersionUID = -8390605724378971542L;
-	private Bubble bubble;
 	private static BufferedImage STONE_IMAGE = _getBubbleImage();
 	
 	public StoneBubble() {
-		this(null);
+		this(new AbstractBubble());
 	}
-
-	public StoneBubble(DecoratedBubble bubble2) {
-		if(bubble2 != null){
-			bubble = bubble2;
-		} else{
-			bubble = new AbstractBubble();
-		}
+	
+	public StoneBubble(Bubble bubble) {
+		super(bubble);
 	}
 	
 	protected static BufferedImage _getBubbleImage() {
@@ -59,19 +52,10 @@ public class StoneBubble implements DecoratedBubble {
 	}
 	
 	@Override
-	public Bubble getBubble() {
-		return bubble;
-	}
-	
-	@Override
 	public void render(Graphics graphics) {
 		graphics.drawImage(STONE_IMAGE, (int) bubble.getX(), (int) bubble.getY(),
 				bubble.getWidth(), bubble.getHeight(), null);
 		bubble.render(graphics);
 	}
 	
-	@Override
-	public void setBubble(Bubble bubble) {
-		this.bubble = bubble;
-	}
 }

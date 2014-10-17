@@ -9,7 +9,7 @@ import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
-import nl.tudelft.ti2206.bubbles.Bubble.Direction;
+import nl.tudelft.ti2206.bubbles.Direction;
 
 import com.google.common.collect.Lists;
 

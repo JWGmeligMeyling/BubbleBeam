@@ -18,7 +18,7 @@ import nl.tudelft.util.Vector2f;
  * 
  * @author Luka Bavdaz
  */
-public abstract class DrunkBubble implements DecoratedBubble {
+public abstract class DrunkBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -1107340833975779377L;
 	protected float acceleration;
@@ -27,10 +27,10 @@ public abstract class DrunkBubble implements DecoratedBubble {
 	protected static final int ARROW_HEIGHT = 19;
 	protected static final float ACCELERATION = 0.4f;
 	protected static BufferedImage ARROW_IMAGE = _getArrowImage();
-	protected Bubble bubble;
+	protected boolean snapped = false;
 
 	public DrunkBubble(Bubble bubble) {
-		this.bubble = bubble;
+		super(bubble);
 	}
 
 	@Override
@@ -49,20 +49,11 @@ public abstract class DrunkBubble implements DecoratedBubble {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	@Override
-	public Bubble getBubble() {
-		return bubble;
-	}
-
-	@Override
-	public void setBubble(Bubble bubble) {
-		this.bubble = bubble;
-	}
-
-	@Override
-	public Bubble getSnappedBubble() {
-		return this.getBubble().getSnappedBubble();
+	public void snapHook() {
+		snapped = true;
+		bubble.snapHook();
 	}
 
 }

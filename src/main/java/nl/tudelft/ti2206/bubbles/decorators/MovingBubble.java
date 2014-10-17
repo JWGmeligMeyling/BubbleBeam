@@ -18,14 +18,13 @@ import nl.tudelft.util.Vector2f;
  * @author Jan-Willem Gmelig Meyling
  * @author Liam Clark
  */
-public class MovingBubble implements Tickable, DecoratedBubble {
+public class MovingBubble extends DecoratedBubble implements Tickable {
 
 	private static final long serialVersionUID = 6874942662206137844L;
 
 	transient protected Vector2f truePosition;
 	transient protected Vector2f velocity;
 	transient protected final Dimension screenSize;
-	protected Bubble bubble;
 
 	/**
 	 * Construct a new {@code MovingBubble}
@@ -41,7 +40,7 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 	 */
 	public MovingBubble(final Vector2f velocity, final Dimension screenSize,
 			final Bubble bubble) {
-		this.bubble = bubble;
+		super(bubble);
 		this.screenSize = screenSize;
 		Point position = bubble.getPosition();
 		this.truePosition = new Vector2f(position.x, position.y);
@@ -77,18 +76,4 @@ public class MovingBubble implements Tickable, DecoratedBubble {
 		this.velocity = this.velocity.add(velocity);
 	}
 
-	@Override
-	public Bubble getBubble() {
-		return bubble;
-	}
-
-	@Override
-	public Bubble getSnappedBubble() {
-		return this.getBubble().getSnappedBubble();
-	}
-
-	@Override
-	public void setBubble(Bubble bubble) {
-		this.bubble = bubble;
-	}
 }

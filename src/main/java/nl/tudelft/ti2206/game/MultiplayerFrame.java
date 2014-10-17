@@ -38,9 +38,13 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		DefaultBubbleFactory bubbleFactory = new DefaultBubbleFactory();
 		
 		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory) {
+		
 			@Override
-			protected void insertRow() {
-			}
+			protected void insertRow() {}
+			
+			@Override
+			protected void updateBubbles() {}
+
 		};
 		
 		this.slaveGamePanel = new GamePanel(slaveGameController);

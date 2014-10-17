@@ -18,131 +18,147 @@ import nl.tudelft.util.Vector2f;
  * @author Sam Smulders
  * @author Luka Bavdaz
  */
-public interface DecoratedBubble extends Bubble {
+public class DecoratedBubble implements Bubble {
 	
-	/**
-	 * Return the current Bubble
-	 * 
-	 * @return the Bubble attribute
-	 */
-	Bubble getBubble();
+	private static final long serialVersionUID = -2018291227603535293L;
+
+	protected final Bubble bubble;
 	
-	@Override
-	default Vector2f velocityChange() {
-		return getBubble().velocityChange();
+	public DecoratedBubble() {
+		this(new AbstractBubble());
+	}
+	
+	public DecoratedBubble(Bubble bubble) {
+		this.bubble = bubble;
 	}
 	
 	@Override
-	default void render(Graphics graphics) {
-		getBubble().render(graphics);
+	public Vector2f velocityChange() {
+		return bubble.velocityChange();
 	}
 	
 	@Override
-	default void setPosition(Point position) {
-		getBubble().setPosition(position);
+	public void render(Graphics graphics) {
+		bubble.render(graphics);
 	}
 	
 	@Override
-	default Point getPosition() {
-		return getBubble().getPosition();
+	public void setPosition(Point position) {
+		bubble.setPosition(position);
 	}
 	
 	@Override
-	default int getX() {
-		return getBubble().getX();
+	public Point getPosition() {
+		return bubble.getPosition();
 	}
 	
 	@Override
-	default int getY() {
-		return getBubble().getY();
+	public int getX() {
+		return bubble.getX();
 	}
 	
 	@Override
-	default int getWidth() {
-		return getBubble().getWidth();
+	public int getY() {
+		return bubble.getY();
 	}
 	
 	@Override
-	default int getHeight() {
-		return getBubble().getHeight();
+	public int getWidth() {
+		return bubble.getWidth();
 	}
 	
 	@Override
-	default int getRadius() {
-		return getBubble().getRadius();
+	public int getHeight() {
+		return bubble.getHeight();
 	}
 	
 	@Override
-	default Point getCenter() {
-		return getBubble().getCenter();
+	public int getRadius() {
+		return bubble.getRadius();
 	}
 	
 	@Override
-	default void setCenter(Point center) {
-		getBubble().setCenter(center);
+	public Point getCenter() {
+		return bubble.getCenter();
 	}
 	
 	@Override
-	default BubblePlaceholder getSnapPosition(Bubble bubble) {
-		return getBubble().getSnapPosition(bubble);
+	public void setCenter(Point center) {
+		bubble.setCenter(center);
 	}
 	
 	@Override
-	default Bubble getBubbleAt(Direction direction) {
-		return getBubble().getBubbleAt(direction);
+	public BubblePlaceholder getSnapPosition(Bubble bubble) {
+		return this.bubble.getSnapPosition(bubble);
 	}
 	
 	@Override
-	default void setBubbleAt(Direction direction, Bubble bubble) {
-		getBubble().setBubbleAt(direction, bubble);
+	public Bubble getBubbleAt(Direction direction) {
+		return bubble.getBubbleAt(direction);
 	}
 	
 	@Override
-	default boolean hasBubbleAt(Direction direction) {
-		return getBubble().hasBubbleAt(direction);
+	public void setBubbleAt(Direction direction, Bubble bubble) {
+		this.bubble.setBubbleAt(direction, bubble);
 	}
 	
 	@Override
-	default boolean isHittable() {
-		return getBubble().isHittable();
+	public boolean hasBubbleAt(Direction direction) {
+		return bubble.hasBubbleAt(direction);
 	}
 	
 	@Override
-	default Collection<Bubble> getNeighbours() {
-		return getBubble().getNeighbours();
+	public boolean isHittable() {
+		return bubble.isHittable();
 	}
 	
 	@Override
-	default <T extends Bubble> List<T> getNeighboursOfType(Class<T> type) {
-		return getBubble().getNeighboursOfType(type);
+	public Collection<Bubble> getNeighbours() {
+		return bubble.getNeighbours();
 	}
 	
 	@Override
-	default Point calculatePosition() {
-		return getBubble().calculatePosition();
+	public <T extends Bubble> List<T> getNeighboursOfType(Class<T> type) {
+		return bubble.getNeighboursOfType(type);
 	}
 	
 	@Override
-	default Map<Direction, Bubble> getConnections() {
-		return getBubble().getConnections();
+	public Point calculatePosition() {
+		return bubble.calculatePosition();
 	}
 	
 	@Override
-	default boolean popsWith(Bubble target) {
-		return getBubble().popsWith(target);
+	public Map<Direction, Bubble> getConnections() {
+		return bubble.getConnections();
 	}
 	
 	@Override
-	default Bubble getSnappedBubble() {
-		this.setBubble(this.getBubble().getSnappedBubble());
-		return this;
+	public boolean popsWith(Bubble target) {
+		return bubble.popsWith(target);
+	}
+	
+	@Override
+	public PopBehaviour getPopBehaviour() {
+		return bubble.getPopBehaviour();
+	}
+	
+	@Override
+	public void collideHook(Bubble target) {
+		bubble.collideHook(target);
 	}
 
 	@Override
-	default PopBehaviour getPopBehaviour() {
-		return getBubble().getPopBehaviour();
+	public void popHook() {
+		bubble.popHook();
 	}
 
-	void setBubble(Bubble bubble);
+	@Override
+	public void snapHook() {
+		bubble.snapHook();
+	}
 	
+	public Bubble getParent() {
+		return bubble;
+	}
+
 }

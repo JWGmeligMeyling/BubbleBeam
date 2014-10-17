@@ -17,7 +17,7 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class JokerBubble implements DecoratedBubble, Coloured {
+public class JokerBubble extends DecoratedBubble implements Coloured {
 
 	private static final long serialVersionUID = -1415122920739845104L;
 
@@ -30,7 +30,8 @@ public class JokerBubble implements DecoratedBubble, Coloured {
 	 * Construct a new {@code JokerBubble}
 	 */
 	public JokerBubble() {
-		bubble = new ColouredBubble(Color.WHITE);
+		super(new ColouredBubble(Color.WHITE));
+		bubble = (ColouredBubble) super.bubble;
 	}
 
 	@Override
@@ -45,6 +46,7 @@ public class JokerBubble implements DecoratedBubble, Coloured {
 			bubble.setColor(coloured.getColor());
 			hasColor = true;
 		}
+		bubble.snapHook();
 	}
 
 	@Override
@@ -52,11 +54,7 @@ public class JokerBubble implements DecoratedBubble, Coloured {
 		// Switch to ColouredBubble behaviour once this joker snapped to the
 		// grid and collided with a colouredbubble
 		snapped = hasColor;
-	}
-
-	@Override
-	public Bubble getBubble() {
-		return bubble;
+		bubble.snapHook();
 	}
 
 	@Override
@@ -64,7 +62,4 @@ public class JokerBubble implements DecoratedBubble, Coloured {
 		return bubble.getColor();
 	}
 	
-	@Override
-	public void setBubble(Bubble bubble) {
-	}
 }

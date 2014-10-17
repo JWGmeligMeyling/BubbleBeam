@@ -109,6 +109,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		updateBubbles();
 		model.setShotBubble(shotBubble);
 		model.notifyObservers();
+		model.triggerShootEvent(direction);
 	}
 	
 	protected void updateBubbles() {
@@ -131,7 +132,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected void collide(final BubbleMesh bubbleMesh, final MovingBubble movingBubble,
 			final Bubble hitTarget) {
 		
-		Bubble shotBubble = movingBubble.getSnappedBubble();
+		Bubble shotBubble = movingBubble;
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
 		
 		try {
@@ -218,12 +219,12 @@ public class GameController implements Controller<GameModel>, Tickable {
 		log.info("Binding {} to connector {}", this, connector);
 		sendInitialData(connector);
 		
-		getModel().getBubbleMesh().getEventTarget().addRowInsertedListener((bubbleMesh) -> {
+		model.getBubbleMesh().getEventTarget().addRowInsertedListener((bubbleMesh) -> {
 			log.info("Sending insert row");
 			connector.sendPacket(new Packet.BubbleMeshSync(bubbleMesh));
 		});
 		
-		getCannonController().getModel().addEventListener((direction) -> {
+		model.addEventListener((direction) -> {
 			log.info("Sending shoot packet");
 			connector.sendPacket(new Packet.CannonShoot(direction));
 			
@@ -232,6 +233,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
 			connector.sendPacket(new Packet.AmmoPacket(loadedBubble, nextBubble));
 		});
+		
 	}
 	
 	public void bindConnectorAsSlave(final Connector connector) {

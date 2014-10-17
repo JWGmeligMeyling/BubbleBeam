@@ -12,10 +12,16 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.cannon.CannonShootListener;
+import nl.tudelft.ti2206.util.mvc.AbstractEventTarget;
+import nl.tudelft.ti2206.util.mvc.EventTarget;
+import nl.tudelft.util.Vector2f;
 
-public class GameModel extends Observable {
+public class GameModel extends Observable implements EventTarget<CannonShootListener> {
 	
 	private final Set<Color> remainingColors;
+	
+	private final AbstractEventTarget<CannonShootListener> eventTarget = new AbstractEventTarget<CannonShootListener>();
 	
 	private BubbleMesh bubbleMesh;
 	
@@ -127,6 +133,25 @@ public class GameModel extends Observable {
 	public void setBubbleMesh(BubbleMesh bubbleMesh) {
 		this.bubbleMesh.replace(bubbleMesh);
 		this.setChanged();
+	}
+
+	@Override
+	public void addEventListener(CannonShootListener listener) {
+		eventTarget.addEventListener(listener);
+	}
+
+	@Override
+	public void removeEventListener(CannonShootListener listener) {
+		eventTarget.removeEventListener(listener);
+	}
+
+	@Override
+	public Set<CannonShootListener> getListeners() {
+		return eventTarget.getListeners();
+	}
+	
+	public void triggerShootEvent(final Vector2f direction) {
+		eventTarget.getListeners().forEach(listener -> listener.shoot(direction));
 	}
 	
 }
