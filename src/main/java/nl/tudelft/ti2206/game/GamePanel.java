@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.game;
 
 import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -8,17 +9,16 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.Observer;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -36,12 +36,13 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected final static Point CANNONPOSITION = new Point(WIDTH / 2, HEIGHT);
 	protected final static Point AMMO_POSITION = CANNONPOSITION;
 	protected final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING,CANNONPOSITION.y);
+	protected final static AudioClip POPSOUND =  Applet.newAudioClip(SoundBubble.class.getResource("/bubble_pop.wav"));
 	
 	protected final GameController gameController;
 	protected final Cannon cannon;
-	private final Dimension size = new Dimension(WIDTH, HEIGHT);
-	
+	protected final Dimension size = new Dimension(WIDTH, HEIGHT);
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
+	
 	
 	public GamePanel(final GameController gameController) {
 		GameModel gameModel = gameController.getModel();
@@ -55,7 +56,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		gameController.getModel().getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
-			Applet.newAudioClip(GamePanel.class.getResource("/bubble_pop.wav")).play();
+			if(POPSOUND != null) POPSOUND.play();
 		});
 		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));

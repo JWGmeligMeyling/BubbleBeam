@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.bubbles.decorators;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -22,19 +24,22 @@ import nl.tudelft.ti2206.bubbles.pop.RadialPopBehaviour;
 public class BombBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -5406623504377849151L;
-	private static final int POP_RADIUS = 2;
+
+	protected static final AudioClip BOMB_SOUND = Applet.newAudioClip(SoundBubble.class.getResource("/bomb.wav"));
+	protected static final int POP_RADIUS = 2;
 
 	protected final RadialPopBehaviour popBehaviour;
 	protected transient BufferedImage bombImage;
 
 	protected boolean collided = false;
+	
 
 	public BombBubble() {
 		this(new AbstractBubble());
 	}
 	
 	public BombBubble(Bubble bubble) {
-		super(new SoundBubble("bomb.wav", bubble));
+		super(new SoundBubble(BOMB_SOUND, bubble));
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
 	}
 
