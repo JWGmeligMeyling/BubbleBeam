@@ -19,7 +19,8 @@ public class ShrinkAnimation extends FiniteAnimation {
 	public ShrinkAnimation(Bubble bubble) {
 		super(bubble.getRadius());
 		this.bubble = bubble;
-		this.position = this.bubble.getPosition();
+		Point pos = bubble.getPosition();
+		this.position = new Point(pos.x, pos.y);
 		this.position.translate(this.bubble.getRadius(), this.bubble.getRadius());
 		this.bubble.setPosition(new Point(0, 0));
 	}
