@@ -18,8 +18,8 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.graphics.animations.Animation;
-import nl.tudelft.ti2206.graphics.animations.ShrinkAnimation;
+import nl.tudelft.ti2206.graphics.animations.FallAnimation;
+import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.util.mvc.View;
 import nl.tudelft.util.ObservableObject;
 
@@ -45,7 +45,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected final Cannon cannon;
 	private final Dimension size = new Dimension(WIDTH, HEIGHT);
 	
-	protected ArrayList<Animation> animationList = new ArrayList<Animation>();
+	protected ArrayList<FiniteAnimation> animationList = new ArrayList<FiniteAnimation>();
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
@@ -71,7 +71,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.gameController.getModel().getBubbleMesh().getEventTarget()
 				.addPopListener((bubbleMesh, bubblesPopped) -> {
 					bubblesPopped.forEach(bubble -> {
-						animationList.add(new ShrinkAnimation(bubble));
+						animationList.add(new FallAnimation(bubble));
 					});
 				});
 	}
