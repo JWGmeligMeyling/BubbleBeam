@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
-import nl.tudelft.ti2206.util.mvc.AbstractEventTarget;
+import nl.tudelft.util.AbstractEventTarget;
 
 /**
  * The task of a Connector is to communicate with an other instance of the game.

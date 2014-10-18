@@ -1,8 +1,10 @@
-package nl.tudelft.ti2206.util.mvc;
+package nl.tudelft.util;
 
 import java.util.EventListener;
 import java.util.Set;
+import java.util.function.Consumer;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 public class AbstractEventTarget<T extends EventListener> implements EventTarget<T> {
@@ -20,8 +22,13 @@ public class AbstractEventTarget<T extends EventListener> implements EventTarget
 	}
 
 	@Override
-	public Set<T> getListeners() {
-		return listeners;
+	public void trigger(Consumer<T> action) {
+		listeners.forEach(action);
 	}
-	
+
+	@Override
+	public <A extends T> void trigger(Class<A> clasz, Consumer<A> action) {
+		Iterables.filter(listeners, clasz).forEach(action);
+	}
+
 }

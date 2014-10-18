@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.util.Collection;
 import java.util.Observable;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import com.google.common.collect.Sets;
 
@@ -13,8 +14,8 @@ import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonShootListener;
-import nl.tudelft.ti2206.util.mvc.AbstractEventTarget;
-import nl.tudelft.ti2206.util.mvc.EventTarget;
+import nl.tudelft.util.AbstractEventTarget;
+import nl.tudelft.util.EventTarget;
 import nl.tudelft.util.Vector2f;
 
 public class GameModel extends Observable implements EventTarget<CannonShootListener> {
@@ -145,13 +146,19 @@ public class GameModel extends Observable implements EventTarget<CannonShootList
 		eventTarget.removeEventListener(listener);
 	}
 
-	@Override
-	public Set<CannonShootListener> getListeners() {
-		return eventTarget.getListeners();
-	}
-	
 	public void triggerShootEvent(final Vector2f direction) {
-		eventTarget.getListeners().forEach(listener -> listener.shoot(direction));
+		eventTarget.trigger(listener -> listener.shoot(direction));
+	}
+
+	@Override
+	public void trigger(Consumer<CannonShootListener> action) {
+		eventTarget.trigger(action);
+	}
+
+	@Override
+	public <A extends CannonShootListener> void trigger(Class<A> clasz,
+			Consumer<A> action) {
+		eventTarget.trigger(clasz, action);
 	}
 	
 }

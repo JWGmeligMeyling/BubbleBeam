@@ -1,7 +1,7 @@
-package nl.tudelft.ti2206.util.mvc;
+package nl.tudelft.util;
 
 import java.util.EventListener;
-import java.util.Set;
+import java.util.function.Consumer;
 
 public interface EventTarget<T extends EventListener> {
 
@@ -9,6 +9,8 @@ public interface EventTarget<T extends EventListener> {
 	
 	void removeEventListener(T listener);
 	
-	Set<T> getListeners();
+	void trigger(Consumer<T> action);
+	
+	<A extends T> void trigger(Class<A> clasz, Consumer<A> action);
 	
 }
