@@ -1,9 +1,9 @@
 package nl.tudelft.ti2206.bubbles.mesh;
 
-import java.util.EventListener;
 import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.game.GameEventListener;
 
 /**
  * Listen to events on the {@link BubbleMesh}
@@ -12,7 +12,7 @@ import nl.tudelft.ti2206.bubbles.Bubble;
  * @author Liam Clark
  *
  */
-public interface BubbleMeshListener extends EventListener {
+public interface BubbleMeshListener extends GameEventListener {
 
 	/**
 	 * Row inserted handler
