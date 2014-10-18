@@ -7,17 +7,13 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observer;
-
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.cannon.Cannon;
@@ -25,8 +21,14 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.MasterGameController;
 import nl.tudelft.ti2206.game.backend.SlaveGameController;
+import nl.tudelft.ti2206.graphics.Animation;
 import nl.tudelft.ti2206.util.mvc.View;
 import nl.tudelft.util.ObservableObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 
 public final class GamePanel extends JPanel implements View<GameController, GameModel> {
 
@@ -44,6 +46,8 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	public final static Point AMMO_POSITION = CANNONPOSITION;
 	public final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING,CANNONPOSITION.y);
 	private final Cannon cannon;
+	
+	protected ArrayList<Animation> animationList = new ArrayList<Animation>();
 	
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
@@ -77,6 +81,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
+		
+		/*this.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((bubbleMesh, bubblesPopped)->{
+		    animationlist.add(bubblesPopped);
+		});*/
 	}
 
 	protected void positionAmmoBubbles() {
@@ -117,6 +125,13 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		model.getLoadedBubble().render(graphics);
 		model.getNextBubble().render(graphics);
+
+		Lists.newArrayList(animationList).forEach(animation -> {
+			animation.render(graphics);
+			if (animation.isDone()) {
+				animationList.remove(animation);
+			}
+		});
 	}
 
 	@Override

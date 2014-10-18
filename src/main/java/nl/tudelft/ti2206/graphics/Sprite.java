@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.graphics;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

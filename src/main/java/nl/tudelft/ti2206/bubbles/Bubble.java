@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
 import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
+import nl.tudelft.ti2206.graphics.Sprite;
 import nl.tudelft.util.Vector2f;
 
 import com.google.common.collect.Lists;

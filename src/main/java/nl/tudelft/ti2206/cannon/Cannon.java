@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import nl.tudelft.ti2206.bubbles.Sprite;
+import nl.tudelft.ti2206.graphics.Sprite;
 import nl.tudelft.ti2206.util.mvc.View;
 
 /**
