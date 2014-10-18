@@ -3,17 +3,18 @@ package nl.tudelft.ti2206.bubbles.decorators;
 import java.applet.Applet;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 
 /**
  * The {@code}SoundBubble plays a sound once it is popped.
  * 
  * @author Sam Smulders
  */
-public class SoundBubble implements DecoratedBubble {
+public class SoundBubble extends DecoratedBubble {
 	
 	private static final long serialVersionUID = 3958509424351912735L;
-	private Bubble bubble;
-	private String sound;
+	
+	private final String sound;
 	
 	/**
 	 * @param sound
@@ -22,23 +23,14 @@ public class SoundBubble implements DecoratedBubble {
 	 *            the wrapped bubble
 	 */
 	public SoundBubble(String sound, Bubble bubble) {
+		super(bubble);
 		this.sound = sound;
-		this.bubble = bubble;
 	}
 	
 	@Override
 	public void popHook() {
 		Applet.newAudioClip(SoundBubble.class.getResource("/" + sound)).play();
-		getBubble().popHook();
+		bubble.popHook();
 	}
 	
-	@Override
-	public Bubble getBubble() {
-		return bubble;
-	}
-	
-	@Override
-	public void setBubble(Bubble bubble) {
-		this.bubble = bubble;
-	}
 }

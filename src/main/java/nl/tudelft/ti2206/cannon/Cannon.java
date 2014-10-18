@@ -20,9 +20,9 @@ import nl.tudelft.ti2206.util.mvc.View;
  */
 public class Cannon implements Sprite, View<CannonController, CannonModel> {
 	
-	private static final int WIDTH = 48;
-	private static final int HEIGHT = 48;
-	private static final int ROTATE_TRANSLATION = 32;
+	protected static final int WIDTH = 48;
+	protected static final int HEIGHT = 48;
+	protected static final int ROTATE_TRANSLATION = 32;
 
 	protected Point position;
 	protected final CannonController controller;

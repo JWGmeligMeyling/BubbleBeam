@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.bubbles;
 
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.snap.SnapToSelf;
 
 /**

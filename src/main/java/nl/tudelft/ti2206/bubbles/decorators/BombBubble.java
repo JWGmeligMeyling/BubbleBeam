@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 import nl.tudelft.ti2206.bubbles.pop.RadialPopBehaviour;
 
 /**
@@ -18,27 +19,24 @@ import nl.tudelft.ti2206.bubbles.pop.RadialPopBehaviour;
  * 
  * @author leon
  */
-public class BombBubble implements DecoratedBubble {
+public class BombBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -5406623504377849151L;
 	private static final int POP_RADIUS = 2;
 
-	protected Bubble bubble;
 	protected final RadialPopBehaviour popBehaviour;
-	protected static BufferedImage BOMB_IMAGE = _getBubbleImage();
+	protected final BufferedImage bombImage;
 
 	protected boolean collided = false;
 
-	/**
-	 * 
-	 */
 	public BombBubble() {
 		this(new AbstractBubble());
 	}
-
+	
 	public BombBubble(Bubble bubble) {
+		super(new SoundBubble("bomb.wav", bubble));
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
-		this.bubble = bubble;
+		bombImage = getBubbleImage();
 	}
 
 	@Override
@@ -48,13 +46,11 @@ public class BombBubble implements DecoratedBubble {
 		return true;
 	}
 
-	protected static BufferedImage _getBubbleImage() {
+	protected BufferedImage getBubbleImage() {
 		try {
-			BufferedImage scale = ImageIO.read(BombBubble.class
-					.getResourceAsStream("/bomb.png"));
-			scale.getScaledInstance(AbstractBubble.WIDTH,
-					AbstractBubble.HEIGHT, Image.SCALE_SMOOTH);
-			return scale;
+			BufferedImage scaledImage = ImageIO.read(BombBubble.class.getResourceAsStream("/bomb.png"));
+			scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(), Image.SCALE_SMOOTH);
+			return scaledImage;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -62,15 +58,8 @@ public class BombBubble implements DecoratedBubble {
 
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(BOMB_IMAGE, (int) bubble.getX(),
-				(int) bubble.getY(), bubble.getWidth(), bubble.getHeight(),
-				null);
+		graphics.drawImage(bombImage, bubble.getX(), bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
 		bubble.render(graphics);
-	}
-
-	@Override
-	public Bubble getBubble() {
-		return bubble;
 	}
 
 	@Override
@@ -81,11 +70,6 @@ public class BombBubble implements DecoratedBubble {
 	@Override
 	public RadialPopBehaviour getPopBehaviour() {
 		return popBehaviour;
-	}
-
-	@Override
-	public void setBubble(Bubble bubble) {
-		this.bubble = bubble;
 	}
 
 }

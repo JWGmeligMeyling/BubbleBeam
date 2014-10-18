@@ -1,10 +1,10 @@
 package nl.tudelft.ti2206.cannon;
 
 import java.util.Observable;
-import java.util.Set;
+import java.util.function.Consumer;
 
-import nl.tudelft.ti2206.util.mvc.AbstractEventTarget;
-import nl.tudelft.ti2206.util.mvc.EventTarget;
+import nl.tudelft.util.AbstractEventTarget;
+import nl.tudelft.util.EventTarget;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -62,13 +62,15 @@ public class CannonModel extends Observable implements EventTarget<CannonShootLi
 		eventTarget.removeEventListener(listener);
 	}
 	
-	public EventTarget<CannonShootListener> getEventTarget() {
-		return eventTarget;
+	@Override
+	public void trigger(Consumer<CannonShootListener> action) {
+		eventTarget.trigger(action);
 	}
 
 	@Override
-	public Set<CannonShootListener> getListeners() {
-		return eventTarget.getListeners();
+	public <A extends CannonShootListener> void trigger(Class<A> clasz,
+			Consumer<A> action) {
+		eventTarget.trigger(clasz, action);
 	}
 	
 }

@@ -1,6 +1,5 @@
 package nl.tudelft.ti2206.bubbles;
 
-import static nl.tudelft.ti2206.bubbles.Bubble.Direction.BOTTOMRIGHT;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
@@ -14,8 +13,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.Map;
-
-import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -106,7 +103,7 @@ public class AbstractBubbleTest {
 	@Test
 	public void testGetSnapPosition() {
 		Bubble placeholder = new BubblePlaceholder();
-		bubble.bind(BOTTOMRIGHT, placeholder);
+		bubble.bind(Direction.BOTTOMRIGHT, placeholder);
 		assertEquals(placeholder, bubble.getSnapPosition(mock));
 	}
 	

@@ -22,7 +22,7 @@ public class SlaveCannonController extends AbstractCannonController {
 		super(cannonModel);
 	}
 
-	public void bindConnector(final Connector connector) {
+	public void bindConnectorAsSlave(final Connector connector) {
 		final PacketHandlerCollection packetHandlerCollection = connector.getPacketHandlerCollection();
 		
 		packetHandlerCollection.registerCannonShootHandler((packet) -> {

@@ -46,4 +46,8 @@ public class BombBubbleTest extends AbstractBubbleTest {
 		assertTrue(bubble.popsWith(mock));
 	}
 	
+	@Override
+	@Test
+	public void testGraphics() {}
+	
 }
