@@ -14,7 +14,7 @@ public class SoundBubble extends DecoratedBubble {
 	
 	private static final long serialVersionUID = 3958509424351912735L;
 	
-	private final AudioClip sound;
+	private final transient AudioClip sound;
 	
 	/**
 	 * @param sound
