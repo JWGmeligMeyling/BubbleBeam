@@ -28,8 +28,6 @@ import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
@@ -110,7 +108,6 @@ public class SinglePlayerFrame extends JFrame implements
 			}
 		});
 		gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
-			System.out.println((b.size()+"bubbles popped"));
 		});;
 
 		Container contentPane = this.getContentPane();

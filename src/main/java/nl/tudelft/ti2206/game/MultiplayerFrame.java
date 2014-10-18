@@ -8,8 +8,6 @@ import java.io.IOException;
 import javax.swing.JLabel;
 
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
