@@ -25,7 +25,7 @@ public class BombBubble extends DecoratedBubble {
 	private static final int POP_RADIUS = 2;
 
 	protected final RadialPopBehaviour popBehaviour;
-	protected final BufferedImage bombImage;
+	protected transient BufferedImage bombImage;
 
 	protected boolean collided = false;
 
@@ -36,7 +36,6 @@ public class BombBubble extends DecoratedBubble {
 	public BombBubble(Bubble bubble) {
 		super(new SoundBubble("bomb.wav", bubble));
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
-		bombImage = getBubbleImage();
 	}
 
 	@Override
@@ -58,6 +57,7 @@ public class BombBubble extends DecoratedBubble {
 
 	@Override
 	public void render(Graphics graphics) {
+		if(bombImage == null) bombImage = getBubbleImage();
 		graphics.drawImage(bombImage, bubble.getX(), bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
 		bubble.render(graphics);
 	}

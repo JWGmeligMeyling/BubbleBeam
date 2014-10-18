@@ -47,9 +47,7 @@ public class BubbleMeshEventTarget extends AbstractEventTarget<BubbleMeshListene
 	 * @param bubbleMesh
 	 */
 	public void rowInsert(final BubbleMesh bubbleMesh) {
-		trigger(ScoreListener.class, listener -> {
-			listener.rowInserted(bubbleMesh);
-		});
+		listeners.forEach(listener -> listener.rowInserted(bubbleMesh));
 	}
 	
 	/**
@@ -58,9 +56,7 @@ public class BubbleMeshEventTarget extends AbstractEventTarget<BubbleMeshListene
 	 * @param amount
 	 */
 	public void addScore(final BubbleMesh bubbleMesh, final int amount) {
-		trigger(ScoreListener.class, listener -> {
-			listener.points(bubbleMesh, amount);
-		});
+		listeners.forEach(listener -> listener.points(bubbleMesh, amount));
 	}
 	
 	/**
@@ -69,9 +65,7 @@ public class BubbleMeshEventTarget extends AbstractEventTarget<BubbleMeshListene
 	 * @param bubblesPopped
 	 */
 	public void pop(final BubbleMesh bubbleMesh, Set<Bubble> bubblesPopped) {
-		trigger(PopListener.class, listener -> {
-			listener.pop(bubbleMesh, bubblesPopped);
-		});
+		listeners.forEach(listener -> listener.pop(bubbleMesh, bubblesPopped));
 	}
 
 }

@@ -165,7 +165,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		log.info("Sorry dawg, the game is over");
 		model.setGameOver(true);
 		model.notifyObservers();
-		model.trigger(GameOverEventListener.class, null);
+		model.trigger(GameOverEventListener.class, GameOverEventListener::gameOver);
 	}
 	
 	/**
