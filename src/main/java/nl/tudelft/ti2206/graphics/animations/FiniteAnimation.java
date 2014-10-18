@@ -5,7 +5,7 @@ package nl.tudelft.ti2206.graphics.animations;
  * 
  * @author Sam Smulders
  */
-public abstract class FiniteAnimation extends Animation {
+public abstract class FiniteAnimation implements Animation {
 	protected int time = 0;
 	protected final int maxTime;
 	

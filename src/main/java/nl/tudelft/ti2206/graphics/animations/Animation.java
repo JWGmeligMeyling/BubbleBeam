@@ -5,6 +5,6 @@ import java.awt.Graphics;
 /**
  * @author Sam Smulders
  */
-public abstract class Animation {
-	public abstract void render(Graphics graphics);
+public interface Animation {
+	public void render(Graphics graphics);
 }
