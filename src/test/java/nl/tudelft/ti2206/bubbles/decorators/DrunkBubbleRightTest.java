@@ -3,7 +3,7 @@ package nl.tudelft.ti2206.bubbles.decorators;
 import static org.junit.Assert.*;
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.AbstractBubbleTest;
-import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
+import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
 import nl.tudelft.util.Vector2f;
 
 import org.junit.Before;
