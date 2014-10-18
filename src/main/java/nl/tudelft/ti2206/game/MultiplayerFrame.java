@@ -7,7 +7,10 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 
-import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
@@ -36,13 +39,11 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
 		GameModel gameModel = new GameModel(bubbleMesh);
 		final SlaveCannonController cannonController = new SlaveCannonController();
-		DefaultBubbleFactory bubbleFactory = new DefaultBubbleFactory();
-		
-
+		BubbleFactory bubbleFactory = new PowerUpBubbleFactory();
 		
 		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory, true);
 		this.slaveGamePanel = new GamePanel(slaveGameController);
-this.slaveGamePanel.setBackground(new Color(225,225,225));
+		this.slaveGamePanel.setBackground(new Color(225,225,225));
 		this.connector = connector;
 		
 		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{

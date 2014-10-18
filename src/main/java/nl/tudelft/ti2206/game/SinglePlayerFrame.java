@@ -27,7 +27,10 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
-import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.exception.GameOver;
@@ -81,7 +84,7 @@ public class SinglePlayerFrame extends JFrame implements
 		GameModel gameModel = new GameModel(bubbleMesh);
 		cannonController = new MouseCannonController();
 		this.gameTick = new GameTickImpl(FRAME_PERIOD, executor);
-		DefaultBubbleFactory bubbleFactory = new DefaultBubbleFactory();
+		BubbleFactory bubbleFactory = new PowerUpBubbleFactory();
 		this.gameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory);		
 		gamePanel = new GamePanel(gameController);
 		cannonController.bindListenersTo(gamePanel, gamePanel.getCannon());

@@ -13,13 +13,12 @@ import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
 import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
 import nl.tudelft.ti2206.bubbles.decorators.StoneBubble;
 
-public class DefaultBubbleFactory extends BubbleFactory{
+public class PowerUpBubbleFactory extends BubbleFactory{
 	
 	protected final Random RANDOM_GENERATOR = new Random();
 	
 	private int chanceOfPowerup = 1;	// 1-10. 1 is one in ten chance, 10 is all bubbles are powerups
 	private int chanceOfExtraEffect = 2;	// 1-10. 1 is one in ten chance, 10 is all bubbles have extra effects
-	
 	
 	protected final Class<?> primaryEffects[] = {
 			JokerBubble.class, BombBubble.class, StoneBubble.class };
