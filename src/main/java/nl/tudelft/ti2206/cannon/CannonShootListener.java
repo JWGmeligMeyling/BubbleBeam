@@ -1,7 +1,6 @@
 package nl.tudelft.ti2206.cannon;
 
-import java.util.EventListener;
-
+import nl.tudelft.ti2206.game.GameEventListener;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -9,7 +8,7 @@ import nl.tudelft.util.Vector2f;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public interface CannonShootListener extends EventListener {
+public interface CannonShootListener extends GameEventListener {
 
 	/**
 	 * Function called when the {@link Cannon} shoots
