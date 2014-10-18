@@ -2,6 +2,8 @@ package nl.tudelft.ti2206.network.packets;
 
 import java.util.Set;
 
+import nl.tudelft.ti2206.network.packets.Packet.PoppedPacket;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,4 +106,14 @@ public abstract class PacketHandler<P extends Packet> {
 		}
 		
 	}
+	public static class PoppedHandler extends PacketHandler<Packet.PoppedPacket>{
+
+		@Override
+		public void notifyObservers(PoppedPacket packet) {
+			log.info("Recieved packet {}, dispatching to {} listeners",packet,packetListeners.size());
+			packetListeners.forEach(listener -> listener.update(packet));
+		}
+		
+	}
+	
 }

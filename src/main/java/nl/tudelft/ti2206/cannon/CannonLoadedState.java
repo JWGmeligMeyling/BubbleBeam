@@ -25,8 +25,8 @@ public class CannonLoadedState implements CannonState {
 		cannonController.setState(new CannonShootState());
 		Vector2f direction = cannonController.getModel().getDirection();
 		log.info("Shooting in direction {}", direction);
-		cannonController.getModel().getListeners()
-				.forEach(listener -> listener.shoot(direction));
+		cannonController.getModel().trigger(
+				listener -> listener.shoot(direction));
 	}
 	
 }

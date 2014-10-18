@@ -1,7 +1,7 @@
 package nl.tudelft.ti2206.game;
 
 import java.applet.Applet;
-import java.awt.Color;
+import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,22 +9,19 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.Observer;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.game.backend.MasterGameController;
-import nl.tudelft.ti2206.game.backend.SlaveGameController;
 import nl.tudelft.ti2206.util.mvc.View;
 import nl.tudelft.util.ObservableObject;
 
@@ -32,30 +29,20 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 
 	private static final Logger log = LoggerFactory.getLogger(GamePanel.class);
 	private static final long serialVersionUID = 2416543550015136242L;
-	protected final static int BUBBLE_QUEUE_SPACING = 60;
 	
 	protected final static int WIDTH = 325;
 	protected final static int HEIGHT = 400;
-	
-	private final Dimension size = new Dimension(WIDTH, HEIGHT);
-	
-	private final GameController gameController;
+	protected final static int BUBBLE_QUEUE_SPACING = 60;
 	protected final static Point CANNONPOSITION = new Point(WIDTH / 2, HEIGHT);
-	public final static Point AMMO_POSITION = CANNONPOSITION;
-	public final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING,CANNONPOSITION.y);
-	private final Cannon cannon;
+	protected final static Point AMMO_POSITION = CANNONPOSITION;
+	protected final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING,CANNONPOSITION.y);
+	protected final static AudioClip POPSOUND =  Applet.newAudioClip(SoundBubble.class.getResource("/bubble_pop.wav"));
 	
+	protected final GameController gameController;
+	protected final Cannon cannon;
+	protected final Dimension size = new Dimension(WIDTH, HEIGHT);
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
-	public GamePanel(final MasterGameController gameController) {
-		this((GameController) gameController);
-		gameController.getCannonController().bindListenersTo(this, cannon);
-	}
-	
-	public GamePanel(final SlaveGameController gameController) {
-		this((GameController) gameController);
-		this.setBackground(new Color(225,225,225));
-	}
 	
 	public GamePanel(final GameController gameController) {
 		GameModel gameModel = gameController.getModel();
@@ -66,13 +53,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		positionAmmoBubbles();
 		
-		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
+		gameController.getModel().getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
-		});
-		
-		gameController.getModel().getBubbleMesh().addScoreListener((amount) -> {
-			Applet.newAudioClip(GamePanel.class.getResource("/bubble_pop.wav")).play();
+			if(POPSOUND != null) POPSOUND.play();
 		});
 		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -115,7 +99,9 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 			model.getShotBubble().render(graphics);
 		}
 		
+		model.getLoadedBubble().setCenter(AMMO_POSITION);
 		model.getLoadedBubble().render(graphics);
+		model.getNextBubble().setCenter(AMMO_NEXT_POSITION);
 		model.getNextBubble().render(graphics);
 	}
 
@@ -159,6 +145,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	@Override
 	public GameController getController() {
 		return gameController;
+	}
+
+	public Cannon getCannon() {
+		return cannon;
 	}
 	
 }

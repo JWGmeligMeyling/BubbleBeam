@@ -6,14 +6,16 @@ import java.util.Random;
 import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.DefaultBubbleFactory;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.GamePanel;
+import nl.tudelft.ti2206.game.GameOverEventListener;
+import nl.tudelft.ti2206.network.Connector;
+import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
 
@@ -29,12 +31,20 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	protected final GameModel model;
 	protected final CannonController cannonController;
-	
+	protected final boolean kill;
 	protected final BubbleFactory factory;
 	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick, final DefaultBubbleFactory factory) {
+			final GameTick gameTick, final BubbleFactory factory) {
+		this(model, cannonController, gameTick, factory, false);
+	}
+	
+	public GameController(final GameModel model, final CannonController cannonController,
+			final GameTick gameTick, final BubbleFactory factory, boolean kill) {
 		
+		log.info("Constructing GameController using BubbleFactory {}", factory);
+		
+		this.kill = kill;
 		this.model = model;
 		this.cannonController = cannonController;
 		this.factory = factory;
@@ -46,9 +56,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 			GameController.this.shoot(direction);
 		});
 		
-		model.getBubbleMesh().addScoreListener((amount) -> {
+		model.getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
 			model.incrementScore(amount);
-			model.retainRemainingColors(model.getBubbleMesh().getRemainingColours());
+			model.retainRemainingColors(bubbleMesh.getRemainingColours());
 			model.notifyObservers();
 		});
 		
@@ -56,6 +66,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected void prepareAmmo() {
+		log.info("Prepare initial ammo for {}", this);
 		model.setLoadedBubble(createAmmoBubble());
 		model.setNextBubble(createAmmoBubble());
 	}
@@ -70,7 +81,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			MovingBubble shotBubble = model.getShotBubble();
 			BubbleMesh bubbleMesh = model.getBubbleMesh();
 			
-			shotBubble.setVelocity(shotBubble.getVelocity().add(shotBubble.velocityChange()));
+			shotBubble.addVelocity();
 			shotBubble.gameTick();
 			
 			bubbleMesh
@@ -105,16 +116,16 @@ public class GameController implements Controller<GameModel>, Tickable {
 		updateBubbles();
 		model.setShotBubble(shotBubble);
 		model.notifyObservers();
+		model.triggerShootEvent(direction);
 	}
 	
 	protected void updateBubbles() {
-		Bubble nextBubble = createAmmoBubble();
-		Bubble previousNextBubble = model.getNextBubble();
-		nextBubble.setCenter(GamePanel.AMMO_NEXT_POSITION);
-		model.setNextBubble(nextBubble);
-		previousNextBubble.setCenter(GamePanel.AMMO_POSITION);
-		model.setLoadedBubble(previousNextBubble);
-		
+		if(!kill) {
+			Bubble nextBubble = createAmmoBubble();
+			Bubble previousNextBubble = model.getNextBubble();
+			model.setNextBubble(nextBubble);
+			model.setLoadedBubble(previousNextBubble);
+		}
 	}
 	
 	/**
@@ -127,7 +138,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected void collide(final BubbleMesh bubbleMesh, final MovingBubble movingBubble,
 			final Bubble hitTarget) {
 		
-		Bubble shotBubble = movingBubble.getSnappedBubble();
+		Bubble shotBubble = movingBubble;
 		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
 		
 		try {
@@ -154,6 +165,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		log.info("Sorry dawg, the game is over");
 		model.setGameOver(true);
 		model.notifyObservers();
+		model.trigger(GameOverEventListener.class, GameOverEventListener::gameOver);
 	}
 	
 	/**
@@ -173,8 +185,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 	/**
 	 * Insert a new row after several misses
 	 */
-	protected void insertRow() {
-		model.getBubbleMesh().insertRow(this);
+
+	public void insertRow() {
+		if(!kill) {
+			model.getBubbleMesh().insertRow(this);
+		}
 	}
 	
 	@Override
@@ -204,6 +219,56 @@ public class GameController implements Controller<GameModel>, Tickable {
 		Bubble bubble = factory.createBubble(model.getRemainingColors());
 		log.info("Created new ammo: " + bubble.toString());
 		return bubble;
+	}
+	
+	/**
+	 * Bind a connector for multiplayer
+	 * @param connector
+	 */
+	public void bindConnectorAsMaster(final Connector connector) {
+		log.info("Binding {} to connector {}", this, connector);
+		sendInitialData(connector);
+		
+		model.getBubbleMesh().getEventTarget().addRowInsertedListener((bubbleMesh) -> {
+			log.info("Sending insert row");
+			connector.sendPacket(new Packet.BubbleMeshSync(bubbleMesh));
+		});
+		
+		model.addShootEventListener((direction) -> {
+			log.info("Sending shoot packet");
+			connector.sendPacket(new Packet.CannonShoot(direction));
+			
+			Bubble loadedBubble = model.getLoadedBubble();
+			Bubble nextBubble = model.getNextBubble();
+			log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
+			connector.sendPacket(new Packet.AmmoPacket(loadedBubble, nextBubble));
+		});
+		
+	}
+	
+	public void bindConnectorAsSlave(final Connector connector) {
+		PacketHandlerCollection packetHandlerCollection = connector.getPacketHandlerCollection();
+		
+		packetHandlerCollection.registerBubbleMeshSyncListener((packet) -> {
+			log.info("Processing packet {}", packet);
+			model.setBubbleMesh(packet.bubbleMesh);
+			model.notifyObservers();
+		});
+
+		packetHandlerCollection.registerLoadNewBubbleListener((packet) -> {
+			log.info("Processing packet {}", packet);
+			model.setLoadedBubble(packet.loadedBubble);
+			model.setNextBubble(packet.nextBubble);
+			model.notifyObservers();
+		});
+	}
+	
+	protected void sendInitialData(final Connector connector) {
+		log.info("Sending initial data to {}", connector);
+		connector.sendPacket(new Packet.BubbleMeshSync(model.getBubbleMesh()));
+		connector.sendPacket(new Packet.AmmoPacket(
+				model.getLoadedBubble(),
+				model.getNextBubble()));
 	}
 	
 }

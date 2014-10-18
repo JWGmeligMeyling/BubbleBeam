@@ -9,39 +9,33 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 
 /**
  * Stone bubble implementation
  * 
- * @author LC
+ * @author Liam Clark
  *
  */
 
-public class StoneBubble implements DecoratedBubble {
-	/**
-	 * 
-	 */
+public class StoneBubble extends DecoratedBubble {
+
 	private static final long serialVersionUID = -8390605724378971542L;
-	private Bubble bubble;
-	private static BufferedImage STONE_IMAGE = _getBubbleImage();
+	private transient BufferedImage stoneImage;
 	
 	public StoneBubble() {
-		this(null);
-	}
-
-	public StoneBubble(DecoratedBubble bubble2) {
-		if(bubble2 != null){
-			bubble = bubble2;
-		} else{
-			bubble = new AbstractBubble();
-		}
+		this(new AbstractBubble());
 	}
 	
-	protected static BufferedImage _getBubbleImage() {
+	public StoneBubble(Bubble bubble) {
+		super(bubble);
+	}
+	
+	protected BufferedImage getBubbleImage() {
 		try {
-			BufferedImage scale = ImageIO.read(StoneBubble.class.getResourceAsStream("/stone.png"));
-			scale.getScaledInstance(AbstractBubble.WIDTH, AbstractBubble.HEIGHT, Image.SCALE_SMOOTH);
-			return scale;
+			BufferedImage scaledImage = ImageIO.read(StoneBubble.class.getResourceAsStream("/stone.png"));
+			scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(), Image.SCALE_SMOOTH);
+			return scaledImage;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -58,19 +52,10 @@ public class StoneBubble implements DecoratedBubble {
 	}
 	
 	@Override
-	public Bubble getBubble() {
-		return bubble;
-	}
-	
-	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(STONE_IMAGE, (int) bubble.getX(), (int) bubble.getY(),
-				bubble.getWidth(), bubble.getHeight(), null);
+		if(stoneImage == null) stoneImage = getBubbleImage();
+		graphics.drawImage(stoneImage, bubble.getX(), bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
 		bubble.render(graphics);
 	}
 	
-	@Override
-	public void setBubble(Bubble bubble) {
-		this.bubble = bubble;
-	}
 }

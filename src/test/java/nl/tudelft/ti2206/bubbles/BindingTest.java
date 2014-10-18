@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.Bubble.Direction;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

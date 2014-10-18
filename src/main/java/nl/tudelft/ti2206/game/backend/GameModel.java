@@ -5,17 +5,25 @@ import java.awt.Dimension;
 import java.util.Collection;
 import java.util.Observable;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import com.google.common.collect.Sets;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.cannon.CannonShootListener;
+import nl.tudelft.ti2206.game.GameEventListener;
+import nl.tudelft.util.AbstractEventTarget;
+import nl.tudelft.util.EventTarget;
+import nl.tudelft.util.Vector2f;
 
-public class GameModel extends Observable {
+public class GameModel extends Observable implements EventTarget<GameEventListener> {
 	
 	private final Set<Color> remainingColors;
+	
+	private final AbstractEventTarget<GameEventListener> eventTarget = new AbstractEventTarget<GameEventListener>();
 	
 	private BubbleMesh bubbleMesh;
 	
@@ -126,6 +134,36 @@ public class GameModel extends Observable {
 
 	public void setBubbleMesh(BubbleMesh bubbleMesh) {
 		this.bubbleMesh.replace(bubbleMesh);
+		this.setChanged();
+	}
+
+	public void addShootEventListener(CannonShootListener listener) {
+		eventTarget.addEventListener(listener);
+	}
+	
+	@Override
+	public void addEventListener(GameEventListener listener) {
+		eventTarget.addEventListener(listener);
+	}
+
+	@Override
+	public void removeEventListener(GameEventListener listener) {
+		eventTarget.removeEventListener(listener);
+	}
+
+	public void triggerShootEvent(final Vector2f direction) {
+		eventTarget.trigger(CannonShootListener.class, listener -> listener.shoot(direction));
+	}
+
+	@Override
+	public void trigger(Consumer<GameEventListener> action) {
+		eventTarget.trigger(action);
+	}
+
+	@Override
+	public <A extends GameEventListener> void trigger(Class<A> clasz,
+			Consumer<A> action) {
+		eventTarget.trigger(clasz, action);
 	}
 	
 }

@@ -6,9 +6,8 @@ import static org.hamcrest.Matchers.*;
 import java.awt.Color;
 import java.util.List;
 
-import nl.tudelft.ti2206.bubbles.Bubble.Direction;
-import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshImpl;
-import nl.tudelft.ti2206.bubbles.BubbleMesh.BubbleMeshParser;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshParser;
 
 import org.junit.Test;
 
@@ -44,7 +43,7 @@ public class BubbleMeshParserTest {
 			.map(bubble -> ((ColouredBubble) bubble).getColor())
 			.distinct().count();
 		
-		assertThat(amount, greaterThan(3));
+		assertThat(amount, greaterThan(2));
 	}
 	
 	@Test

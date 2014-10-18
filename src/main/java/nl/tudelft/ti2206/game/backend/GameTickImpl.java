@@ -1,11 +1,10 @@
 package nl.tudelft.ti2206.game.backend;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import nl.tudelft.ti2206.exception.GameOver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,30 +13,41 @@ import org.slf4j.LoggerFactory;
  * GameTick notifies its observers every {@link framePeriod} milliseconds.
  * 
  * @author Sam Smulders
+ * @author Jan-Willem Gmelig Meyling
+ * @author Liam Clark
  */
 public class GameTickImpl implements GameTick {
 
 	private static final Logger log = LoggerFactory.getLogger(GameTickImpl.class);
 	
+	private final ScheduledExecutorService scheduler;
+	
 	private ArrayList<Tickable> gameTickObservers = new ArrayList<Tickable>();
 
 	private final ScheduledFuture<?> feature;
 	
-	public GameTickImpl(final int framePeriod, final ScheduledExecutorService scheduler) {
-		this.feature = scheduler.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				gameTickObservers.forEach(listener -> {
-					try {
-						listener.gameTick();
-					} catch (GameOver e) {
-						log.error(e.getMessage(), e);
-					} catch (Throwable e) {
-						log.error(e.getMessage(), e);
-					}
-				});
-			}
-		}, 0l, framePeriod, TimeUnit.MILLISECONDS);
+	private boolean shutdownExecutor = false;
+	
+	public GameTickImpl(final int framePeriod) {
+		this(framePeriod, Executors.newScheduledThreadPool(2));
+		shutdownExecutor = true;
 	}
+	
+	public GameTickImpl(final int framePeriod, final ScheduledExecutorService scheduler) {
+		this.scheduler = scheduler;
+		this.feature = scheduler.scheduleAtFixedRate(() -> {
+			gameTickObservers.forEach(listener -> {
+				try {
+					listener.gameTick();
+				}
+				catch (Throwable e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}, 0l, framePeriod, TimeUnit.MILLISECONDS);
+		
+	}
+	
 
 	@Override
 	public void registerObserver(Tickable observer) {
@@ -52,5 +62,8 @@ public class GameTickImpl implements GameTick {
 	@Override
 	public void shutdown() {
 		feature.cancel(true);
+		if(shutdownExecutor)
+			scheduler.shutdownNow();
 	}
+	
 }

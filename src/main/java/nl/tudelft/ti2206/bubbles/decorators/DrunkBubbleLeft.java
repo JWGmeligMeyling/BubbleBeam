@@ -17,9 +17,11 @@ public class DrunkBubbleLeft extends DrunkBubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(ARROW_IMAGE,
-				(int) bubble.getX() + bubble.getWidth() - IMAGE_TRANSLATION, (int) bubble.getY(),
-				-ARROW_WIDTH, ARROW_HEIGHT, null);
+		if(!snapped) {
+			int x = bubble.getX() + bubble.getWidth() - IMAGE_TRANSLATION;
+			int y = bubble.getY();
+			graphics.drawImage(ARROW_IMAGE, x, y,-ARROW_WIDTH, ARROW_HEIGHT, null);
+		}
 		bubble.render(graphics);
 	}
 }

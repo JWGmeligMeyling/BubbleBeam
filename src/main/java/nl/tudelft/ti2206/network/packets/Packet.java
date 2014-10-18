@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.BubbleMesh;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -149,4 +149,29 @@ public interface Packet extends Serializable {
 			packetHandlerCollection.notify(this);
 		}
 	}
+	
+	/**
+	 * This is one of four classes needed to send an interger over the network
+	 * @author Liam Clark
+	 *
+	 */
+	public class PoppedPacket implements Packet {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -9118488904921915831L;
+		protected final int amount;
+		
+		public PoppedPacket(int a) {
+			amount=a;
+		}
+
+		@Override
+		public void notify(PacketHandlerCollection packetHandlerCollection) {
+				packetHandlerCollection.notify(this);
+		}
+		
+	}
+	
 }
