@@ -7,6 +7,11 @@ import java.awt.image.BufferedImage;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 
+/**
+ * ShrinkAnimation animates a bubble shrinking to nothing.
+ * 
+ * @author Sam Smulders
+ */
 public class ShrinkAnimation extends FiniteAnimation {
 	public Bubble bubble;
 	private Point position;

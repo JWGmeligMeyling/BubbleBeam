@@ -1,6 +1,10 @@
 package nl.tudelft.ti2206.graphics.animations;
 
-
+/**
+ * A FiniteAnimation has a finite duration. 
+ * 
+ * @author Sam Smulders
+ */
 public abstract class FiniteAnimation extends Animation {
 	protected int time = 0;
 	protected final int maxTime;

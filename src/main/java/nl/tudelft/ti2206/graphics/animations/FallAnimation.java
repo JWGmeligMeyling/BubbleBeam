@@ -8,6 +8,11 @@ import java.awt.image.BufferedImage;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 
+/**
+ * FallAnimation animates a bubble falling down.
+ * 
+ * @author Sam Smulders
+ */
 public class FallAnimation extends FiniteAnimation {
 	private static final int FALL_SPEED = 4;
 	public Bubble bubble;
