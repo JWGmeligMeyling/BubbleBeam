@@ -53,6 +53,17 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 				gameController.insertRow();
 		});
 		
+		slaveGameController.getModel().addEventListener(new GameOverEventListener(){
+
+			@Override
+			public void gameOver() {
+				log.info("you win");
+				gameController.getModel().setGameOver(true);
+			}
+			
+		});
+		
+		
 		slaveScoreLabel = new JLabel("Score: 0");
 		slaveGameController.getModel().addObserver((a, b) ->
 			slaveScoreLabel.setText("Score: " + slaveGameController.getModel().getScore()));
