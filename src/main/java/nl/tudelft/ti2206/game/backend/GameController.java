@@ -70,7 +70,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			MovingBubble shotBubble = model.getShotBubble();
 			BubbleMesh bubbleMesh = model.getBubbleMesh();
 			
-			shotBubble.setVelocity(shotBubble.getVelocity().add(shotBubble.velocityChange()));
+			shotBubble.addVelocity(shotBubble.velocityChange());
 			shotBubble.gameTick();
 			
 			bubbleMesh

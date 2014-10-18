@@ -1,9 +1,12 @@
-package nl.tudelft.ti2206.bubbles;
+package nl.tudelft.ti2206.bubbles.decorators;
 
 import static org.junit.Assert.*;
 
 import java.awt.Color;
 
+import nl.tudelft.ti2206.bubbles.AbstractBubble;
+import nl.tudelft.ti2206.bubbles.AbstractBubbleTest;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
 
 import org.junit.Before;
