@@ -12,6 +12,7 @@ import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.GameOverEventListener;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
@@ -164,6 +165,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		log.info("Sorry dawg, the game is over");
 		model.setGameOver(true);
 		model.notifyObservers();
+		model.trigger(GameOverEventListener.class, GameOverEventListener::gameOver);
 	}
 	
 	/**
@@ -232,7 +234,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			connector.sendPacket(new Packet.BubbleMeshSync(bubbleMesh));
 		});
 		
-		model.addEventListener((direction) -> {
+		model.addShootEventListener((direction) -> {
 			log.info("Sending shoot packet");
 			connector.sendPacket(new Packet.CannonShoot(direction));
 			

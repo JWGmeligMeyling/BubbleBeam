@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.bubbles.decorators;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
@@ -20,11 +22,12 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 public class JokerBubble extends DecoratedBubble implements Coloured {
 
 	private static final long serialVersionUID = -1415122920739845104L;
+	protected final static AudioClip HORN_SOUND = Applet.newAudioClip(SoundBubble.class.getResource("/horn.wav"));
 
 	protected ColouredBubble bubble;
-
 	protected boolean hasColor = false;
 	protected boolean snapped = false;
+	
 
 	public JokerBubble() {
 		this(new ColouredBubble(Color.WHITE));
@@ -34,7 +37,7 @@ public class JokerBubble extends DecoratedBubble implements Coloured {
 	 * Construct a new {@code JokerBubble}
 	 */
 	public JokerBubble(ColouredBubble bubble) {
-		super(new SoundBubble("horn.wav", bubble));
+		super(new SoundBubble(HORN_SOUND, bubble));
 		this.bubble = bubble;
 	}
 

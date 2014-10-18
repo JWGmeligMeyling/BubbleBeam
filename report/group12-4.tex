@@ -1,0 +1,112 @@
+\documentclass[a4paper]{article}
+\usepackage[margin=1in]{geometry}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{float}
+
+\title{Bubble Beam - Assignment 4}
+
+\author{
+    Bavdaz, Luka\\
+    \texttt{4228561}
+    \and
+    Clark, Liam\\
+    \texttt{4303423}
+    \and
+    Gmelig Meyling, Jan-Willem\\
+    \texttt{4305167}
+    \and
+    Hoek, Leon\\
+    \texttt{4021606}
+    \and
+    Smulders, Sam\\
+    \texttt{4225007}
+}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{20-Time, reloaded}
+
+% ==========================
+% IMPLEMENTATION
+% ==========================
+\subsection{Implementation}
+
+% ==========================
+% ANALYSIS AND DESIGN PHASES
+% ==========================
+\subsection{Analysis and design phases}
+
+\section{Software Metrics}
+
+% ==========================
+% ANALYSIS FILE
+% ==========================
+\subsection{Analysis file}
+
+
+% ==========================
+% THREE DESIGN FLAWS
+% ==========================
+\subsection{Three design flaws}
+
+
+% ==========================
+% MOVING BUBBLE DATACLASS
+% ==========================
+\subsubsection{MovingBubble Dataclass}\label{MovingBubble}
+\paragraph{Design choices or errors leading to the detected design flaw}\mbox{}\\
+The MovingBubble is recognised as a Dataclass by inCode. This was mostly because one attribute, "velocity" was changed outside of the class by using a getter and a setter method. Too much of this small class was exposed in its public interface because of its public accessor methods.
+
+\paragraph{Fix the design flaw}\mbox{}\\
+To solve this problem, we removed the unnecessary accessor methods. We will explain why the methods where unnecessary, and how we changed the class to be able to remove each method.
+
+\texttt{setTruePosition(Vector2f)}
+
+Firstly the method was unused. Secondly there is no reason for an other class to set the position of the bubble while it is already moving. The truePosition should only be set by an other class in the constructor, where the start location is set. For changing the position from within the class, the attribute itself can be directly accessed.
+
+\texttt{getTruePosition():Vector2f}
+
+Firstly the method was only used by tests, even though the tests should have been able to access the protected truePosition directly. The test should be in the same packages as the class to be tested to facilitate this direct accessing.
+Secondly, this method returns a pointer, and not a copy. This means that changing the received object of this method affects the truePosition of the moving bubble.
+
+\texttt{getVelocity():Vector2f} and \texttt{setVelocity(Vector2f)}
+
+The methods getVelocity and setVelocity made the velocity variable too accessable to other classes outside of the movingBubble.
+Both methods where used in the gameTick method of GameController, to get the velocity of the moving bubble, adding some velocity to it and setting the velocity of the moving bubble to the new calculated velocity. Because of this, we replaced these methods with the method \texttt{addVelocity(Vector2f)}.
+
+\texttt{getScreenSize():Dimension}
+
+This method was only used in tests, but since the test itself gave the screenSize to the movingBubble class in the constructor, the original variable can be used.
+
+
+% ==========================
+% SLAVE GAME CONTROLLER
+% ==========================
+\subsubsection{SlaveGameController}\label{SlaveGameController}
+\paragraph{Design choices or errors leading to the detected design flaw}\mbox{}\\
+We made a distinction between \texttt{MasterGameController} and \texttt{SlaveGameController} for the multiplayer game mode. These game controllers extended the \texttt{AbstractGameController}, in which shared logic - and basically the game level logic - was stored. The distincition between master and slave was made to bind the correct event handlers to the controllers: the \texttt{MasterGameController} should be controlled by user input, and thus be bound to \textit{MouseListeners}. The \texttt{SlaveGameController} is controlled over the network, by the other players \texttt{MasterGameController} which transmits it's events over the network. That said, the \texttt{MasterGameController} and \texttt{SlaveGameController} actually did not add any logic to the \texttt{AbstractGameController}, it only added some event listeners.
+
+
+\paragraph{Fix the design flaw}\mbox{}\\
+To solve this problem, we decided to completely remove the \texttt{SlaveGameController} and \texttt{MasterGameController} classes. The methods that are used to bind network adapters and event handlers are moved to the \texttt{GameController} - which is not abstract anymore. These are now methods which gets called from the place where the \texttt{GameController} is instantiated.
+
+% ==========================
+% ANOTHER DESIGN FLAW
+% ==========================
+\subsubsection{Another design flaw}\label{Statics}
+\paragraph{Design choices or errors leading to the detected design flaw}\mbox{}\\
+Luckily, \textit{InCode} only found above two issues (\ref{MovingBubble} and  \ref{SlaveGameController}). Therefore, we had to look in the code for further design flaws. One thing we've found, was that classes were quite dependent on each others static constants. This was an issue, because when for example you resize your screen, and want painted elements resized as well, these constants are not correct. It also made it difficult to change this values, if you wanted to change the game to have fewer but bigger bubbles, constant values in various classes had to be adjusted.
+
+\paragraph{Fix the design flaw}\mbox{}\\
+We have fixed this issue by making all static constants either private or protected. Obviously, quite a few errors appeared. Then we changed the code accessing the old constants to use the attribute accessors instead.
+
+
+\end{document}

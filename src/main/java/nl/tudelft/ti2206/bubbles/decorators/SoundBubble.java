@@ -1,6 +1,6 @@
 package nl.tudelft.ti2206.bubbles.decorators;
 
-import java.applet.Applet;
+import java.applet.AudioClip;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.DecoratedBubble;
@@ -14,7 +14,7 @@ public class SoundBubble extends DecoratedBubble {
 	
 	private static final long serialVersionUID = 3958509424351912735L;
 	
-	private final String sound;
+	private final transient AudioClip sound;
 	
 	/**
 	 * @param sound
@@ -22,14 +22,15 @@ public class SoundBubble extends DecoratedBubble {
 	 * @param bubble
 	 *            the wrapped bubble
 	 */
-	public SoundBubble(String sound, Bubble bubble) {
+	public SoundBubble(AudioClip sound, Bubble bubble) {
 		super(bubble);
 		this.sound = sound;
 	}
 	
 	@Override
 	public void popHook() {
-		Applet.newAudioClip(SoundBubble.class.getResource("/" + sound)).play();
+		if(sound != null)
+			sound.play();
 		bubble.popHook();
 	}
 	
