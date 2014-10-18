@@ -1,4 +1,5 @@
 \documentclass[a4paper]{article}
+\usepackage[margin=1in]{geometry}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -99,8 +100,8 @@ Figure 6
 
 In figure 6 we use both generalisation and realisation. On the top of the heirarchy, we got the Bubble interface extending the Sprite interface. The Bubble should behave like a Sprite, since every Bubble should be able to be drawn. So here we use polymorphism.
 The ColouredBubble and AbstractBubble should both beheave like a Bubble, so here we use polymorphism again.
-For the MovingBubble we use ìis ñ aî, because the MovingBubble is a ColouredBubble with an extra behaviour.
-For the BubblePlaceholder we use ìis ñ aî and polymorphism, we use polymorphism because we expect to add more AbstractBubble classes, and we want to tread them in the same way as the AbstractBubble. ìis ñ aî because BubblePlaceHolder shares responsibilities with AbstractBubble.
+For the MovingBubble we use ‚Äúis ‚Äì a‚Äù, because the MovingBubble is a ColouredBubble with an extra behaviour.
+For the BubblePlaceholder we use ‚Äúis ‚Äì a‚Äù and polymorphism, we use polymorphism because we expect to add more AbstractBubble classes, and we want to tread them in the same way as the AbstractBubble. ‚Äúis ‚Äì a‚Äù because BubblePlaceHolder shares responsibilities with AbstractBubble.
 
 
 

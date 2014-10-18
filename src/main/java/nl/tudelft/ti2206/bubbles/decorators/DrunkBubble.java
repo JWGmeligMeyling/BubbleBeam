@@ -22,7 +22,7 @@ public abstract class DrunkBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -1107340833975779377L;
 	protected float acceleration;
-	protected static final int IMAGE_TRANSLATION = 20;
+	protected static final int IMAGE_TRANSLATION = -2;
 	protected static final int ARROW_WIDTH = 23;
 	protected static final int ARROW_HEIGHT = 19;
 	protected static final float ACCELERATION = 0.4f;
