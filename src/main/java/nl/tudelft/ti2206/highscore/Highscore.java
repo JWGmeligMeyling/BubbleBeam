@@ -18,16 +18,23 @@ public class Highscore {
 	private static final Logger log = LoggerFactory.getLogger(Highscore.class);
 	
 	protected ArrayList<ScoreItem> scores;
-	private final int LIST_LENGTH;
+	protected final int LIST_LENGTH = 10;
 	
-	protected String highscoreTitle = "Top 10 Single-Player";
+	protected static final String highscoreTitle = "Top 10 Single-Player";
 	
-	protected String scoreFile = "highscores";
+	protected static final String scoreFile = "highscores";
 	
-	public Highscore(final int length) {
-		LIST_LENGTH = length;
+	public Highscore() {
 		scores = new ArrayList<ScoreItem>(LIST_LENGTH + 1);
 		updateScores();
+	}
+	
+	public int getSize(){
+		return this.LIST_LENGTH;
+	}
+	
+	protected String getScoreFile(){
+		return scoreFile;
 	}
 	
 	public String getTitle(){
@@ -36,12 +43,16 @@ public class Highscore {
 	
 	public void deleteHighscores(){
 		scores.removeAll(scores);
+		deleteHighscoresOnDisk();
+	}
+	
+	private void deleteHighscoresOnDisk(){
 		File folder = new File(System.getProperty("user.home"), "BubbleBeam");
-		File highscores = new File(folder, "scoreFile");
+		File highscores = new File(folder, getScoreFile());
 		highscores.delete();
 	}
 	
-	public void addScore(final ScoreItem item){
+	private void addScore(final ScoreItem item){
 		if(!scores.contains(item)){
 			scores.add(item);
 		}
@@ -52,8 +63,17 @@ public class Highscore {
 		
 	}
 	
+	public void addNewScore(final long score, final String name){
+		this.addNewScore(new ScoreItem(score,name));
+	}
+	public void addNewScore(final ScoreItem item){
+		this.addScore(item);
+		this.deleteHighscoresOnDisk();
+		this.writeScoreFile();
+	}
+	
 	/**
-	 * 
+	 * usage: getPlace(1) to return the highest score
 	 * @param index is from 1 to the size of the leaderboard (probably 10)
 	 * @return the score at this position, and null if there is no score at this position
 	 */
@@ -68,7 +88,7 @@ public class Highscore {
 		try{
 			File folder = new File(System.getProperty("user.home"), "BubbleBeam");
 			folder.mkdirs();
-			File highscores = new File(folder, "scoreFile");
+			File highscores = new File(folder, getScoreFile());
 			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(highscores));
 			output.writeObject(scores);
 			
@@ -95,7 +115,8 @@ public class Highscore {
 	public void readScoreFile() {
 		try{
 			File folder = new File(System.getProperty("user.home"), "BubbleBeam");
-			File highscores = new File(folder, "scoreFile");
+			System.out.println(getScoreFile());
+			File highscores = new File(folder, getScoreFile());
 			ObjectInputStream input = new ObjectInputStream(new FileInputStream(highscores));
 			@SuppressWarnings("unchecked")
 			ArrayList<ScoreItem> temp = (ArrayList<ScoreItem>) input.readObject();

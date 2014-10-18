@@ -31,6 +31,7 @@ import nl.tudelft.ti2206.bubbles.BubbleMesh;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.actions.ExitAction;
 import nl.tudelft.ti2206.game.actions.FindMultiplayerAction;
+import nl.tudelft.ti2206.game.actions.HighscoreAction;
 import nl.tudelft.ti2206.game.actions.RestartMultiplayerAction;
 import nl.tudelft.ti2206.game.actions.RestartSinglePlayerAction;
 import nl.tudelft.ti2206.game.backend.GameController;
@@ -57,7 +58,8 @@ public class SinglePlayerFrame extends JFrame implements
 		exitAction = new ExitAction(this),
 		restartSinglePlayer = new RestartSinglePlayerAction(this),
 		restartMultiplayerAction = new RestartMultiplayerAction(this),
-		findMultiplayerAction = new FindMultiplayerAction(this);
+		findMultiplayerAction = new FindMultiplayerAction(this),
+		highscoreAction = new HighscoreAction(this);
 	
 	protected boolean started = false;
 
@@ -145,14 +147,21 @@ public class SinglePlayerFrame extends JFrame implements
 	}
 
 	protected void fillMenu(Container contentPane) {
+		fillHighscoreButton(contentPane);
 		fillScoreLabel(contentPane);
-		fillLogo(contentPane);
 		fillExitButton(contentPane);
 		fillRestartButton(contentPane);
 		fillRestartMultiplayer(contentPane);
 		fillFindMultiplayerRestart(contentPane);
 		fillIpAddressField(contentPane);
 		fillVersionLabel(contentPane);
+	}
+	
+	protected void fillHighscoreButton(Container contentPane){
+		JButton highscoreButton = new JButton(highscoreAction);
+		contentPane.add(highscoreButton, new GridBagConstraints(2, 0, 1, 1, 1d, 0d,
+				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+				PADDED, 30, 30));
 	}
 	
 	protected void fillGamePanel(Container contentPane) {
@@ -167,13 +176,6 @@ public class SinglePlayerFrame extends JFrame implements
 		contentPane.add(scoreLabel, new GridBagConstraints(0, 4, 1, 1, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
 				PADDED, 40, 30));
-	}
-
-	protected void fillLogo(Container contentPane) {
-		JLabel logo = new JLabel("");
-		contentPane.add(logo, new GridBagConstraints(2, 0, 1, 1, 1d, 0d,
-				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-				NO_PADDING, 30, 30));
 	}
 
 	protected void fillExitButton(Container contentPane) {
