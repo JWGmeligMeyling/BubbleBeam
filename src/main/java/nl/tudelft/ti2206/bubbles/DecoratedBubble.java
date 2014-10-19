@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
@@ -89,8 +88,8 @@ public class DecoratedBubble implements Bubble {
 	}
 	
 	@Override
-	public BubblePlaceholder getSnapPosition(Bubble bubble) {
-		return this.bubble.getSnapPosition(bubble);
+	public Bubble getSnapPosition(Bubble other) {
+		return this.bubble.getSnapPosition(other);
 	}
 	
 	@Override
@@ -116,11 +115,6 @@ public class DecoratedBubble implements Bubble {
 	@Override
 	public Collection<Bubble> getNeighbours() {
 		return bubble.getNeighbours();
-	}
-	
-	@Override
-	public <T extends Bubble> List<T> getNeighboursOfType(Class<T> type) {
-		return bubble.getNeighboursOfType(type);
 	}
 	
 	@Override

@@ -22,11 +22,13 @@ public class SnapToClosest implements SnapBehaviour {
 	}
 
 	@Override
-	public BubblePlaceholder getSnapPosition(Bubble bubble) {
-		return that.getNeighboursOfType(BubblePlaceholder.class)
-			.stream().min((BubblePlaceholder a, BubblePlaceholder b) ->
-				a.getDistance(bubble) < b.getDistance(bubble) ? -1 : 1)
-			.get();
+	public Bubble getSnapPosition(Bubble bubble) {
+		return that
+			.getNeighbours()
+			.stream()
+			.filter(a -> !a.isHittable())
+			.min((Bubble a, Bubble b) -> a.getDistance(bubble) < b
+					.getDistance(bubble) ? -1 : 1).get();
 	}
 
 }

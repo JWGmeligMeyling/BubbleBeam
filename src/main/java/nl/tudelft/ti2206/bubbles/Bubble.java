@@ -100,14 +100,6 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	Collection<Bubble> getNeighbours();
 
 	/**
-	 * @param type
-	 * @return A {@link Collection} containing the surrounding {@code Bubbles}
-	 *         of a given subtype
-	 * @see #getNeighbours()
-	 */
-	<T extends Bubble> List<T> getNeighboursOfType(Class<T> type);
-
-	/**
 	 * @return Calculate this {@code Bubbles} position relative to it's
 	 *         neighbouring {@code Bubbles}
 	 */

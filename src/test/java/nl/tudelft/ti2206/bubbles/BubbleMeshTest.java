@@ -201,6 +201,38 @@ public class BubbleMeshTest {
 		bubbleMesh.replaceBubble(c, new AbstractBubble());
 	}
 	
+	@Test
+	public void testIsEmptyFalse() {
+		BubbleMeshImpl bubbleMesh = new BubbleMeshParser(Lists.newArrayList(
+				"rrbgggbbb ", "          ")).parse();
+		assertFalse(bubbleMesh.isEmpty());
+	}
+	
+	@Test
+	public void testIsEmptyTrue() {
+		BubbleMeshImpl bubbleMesh = new BubbleMeshParser(Lists.newArrayList(
+				"          ", "          ")).parse();
+		assertTrue(bubbleMesh.isEmpty());
+	}
+	
+	@Test
+	public void testReplace() {
+		BubbleMeshImpl bubbleMesh = new BubbleMeshParser(Lists.newArrayList(
+				"          ", "          ")).parse();
+		BubbleMeshImpl other = spy(new BubbleMeshParser(
+				Lists.newArrayList("rrbgggbbb ", "          ")).parse());
+		bubbleMesh.replace(other);
+		verify(other).getBottomLeftBubble();
+		verify(other).getTopLeftBubble();
+	}
+	
+	@Test(expected=UnsupportedOperationException.class)
+	public void testDeleteIterator() {
+		BubbleMeshImpl bubbleMesh = new BubbleMeshParser(
+				Lists.newArrayList("rrbgggbbb ", "          ")).parse();
+		bubbleMesh.iterator().remove();
+	}
+	
 	public static void assertStronglyConnected(BubbleMesh bubbleMesh) {
 		for(Bubble bubble : bubbleMesh)
 			bubble.getConnections().entrySet().forEach(connection -> {

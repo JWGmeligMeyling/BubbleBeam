@@ -139,7 +139,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			final Bubble hitTarget) {
 		
 		Bubble shotBubble = movingBubble;
-		BubblePlaceholder snapPosition = hitTarget.getSnapPosition(shotBubble);
+		Bubble snapPosition = hitTarget.getSnapPosition(shotBubble);
 		
 		try {
 			log.info("Bullet collided with {}", hitTarget);

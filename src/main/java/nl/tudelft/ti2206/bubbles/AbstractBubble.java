@@ -13,8 +13,6 @@ import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -148,12 +146,7 @@ public class AbstractBubble implements Bubble {
 	}
 	
 	@Override
-	public <T extends Bubble> List<T> getNeighboursOfType(Class<T> type) {
-		return Lists.newArrayList(Iterables.filter(getNeighbours(), type));
-	}
-	
-	@Override
-	public BubblePlaceholder getSnapPosition(final Bubble bubble) {
+	public Bubble getSnapPosition(final Bubble bubble) {
 		return snapBehaviour.getSnapPosition(bubble);
 	}
 	

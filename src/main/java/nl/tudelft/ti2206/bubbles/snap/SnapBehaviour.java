@@ -28,6 +28,6 @@ public interface SnapBehaviour extends Serializable {
 	 * @return The {@code BubblePlaceHolder} at which the {@code MovingBubble}
 	 *         should snap
 	 */
-	BubblePlaceholder getSnapPosition(Bubble bubble);
+	Bubble getSnapPosition(Bubble bubble);
 	
 }
