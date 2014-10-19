@@ -75,6 +75,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 		return cannonController;
 	}
 	
+	public BubbleFactory getFactory(){
+		return factory;
+	}
+	
 	@Override
 	public void gameTick() {
 		if (model.isShooting()) {

@@ -125,50 +125,7 @@ public class SinglePlayerFrame extends JFrame implements
 		gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
 		});
 		
-		gameController.getModel().addEventListener(new GameOverEventListener(){
-			@Override
-			public void gameOver() {
-				gameController.getModel().setGameOver(true);
-				
-				long score = getController().getModel().getScore();
-				ScoreItem scoreEntry = new ScoreItem(score,"");
-				Highscore hs = new Highscore();
-				ScoreItem lastPlace = hs.getPlace(hs.getSize());
-			
-				//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered
-				if(lastPlace == null || (lastPlace != null && new ScoreCompare().compare(lastPlace,scoreEntry) > 0)){
-					final JDialog dialog = new JDialog(SinglePlayerFrame.this, false);
-					dialog.setTitle("Enter your name");
-					JTextField nameField = new JTextField("",30);
-					dialog.add(nameField);
-					dialog.setVisible(true);
-					dialog.pack();
-					dialog.setLocationRelativeTo(null);
-					//add that when on the textfield 'enter' is clicked or the dialogbox is closed to add to the highscore
-					dialog.addWindowListener(new WindowAdapter() {
-						
-						@Override
-						public void windowClosing(WindowEvent e) {
-							String name = nameField.getText();
-							scoreEntry.setName(name);
-							hs.addNewScore(scoreEntry);
-							dialog.dispose();
-							new HighscorePopup(hs);
-						}
-					});
-					nameField.addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent e){
-							String name = nameField.getText();
-							scoreEntry.setName(name);
-							hs.addNewScore(scoreEntry);
-							dialog.dispose();
-							new HighscorePopup(hs);
-						}});
-				} else{
-					new HighscorePopup(hs);
-				}
-			}
-		});
+		gameController.getModel().addEventListener(new GameOverHighscore(this));
 
 		Container contentPane = this.getContentPane();
 		fillMenubar();
