@@ -1,12 +1,10 @@
 package nl.tudelft.ti2206.game.actions;
 
 import java.awt.event.ActionEvent;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.AbstractAction;
 
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
-import nl.tudelft.ti2206.highscore.DrunkHighscore;
 import nl.tudelft.ti2206.highscore.Highscore;
 import nl.tudelft.ti2206.highscore.HighscorePopup;
 

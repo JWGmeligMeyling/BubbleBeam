@@ -3,7 +3,7 @@ package nl.tudelft.ti2206.highscore;
 import java.io.Serializable;
 import java.util.Date;
 
-public class ScoreItem implements Serializable {
+public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 
 	/**
 	 * make it serializable for easy file storage
@@ -57,5 +57,18 @@ public class ScoreItem implements Serializable {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public int compareTo(ScoreItem o) {
+		if(this.getScore() > o.getScore()){
+			return -1;
+		}
+		else if(this.getScore() < o.getScore()) {
+			return 1;
+		}
+		else {
+			return this.getDate().compareTo(o.getDate());
+		}
 	}
 }

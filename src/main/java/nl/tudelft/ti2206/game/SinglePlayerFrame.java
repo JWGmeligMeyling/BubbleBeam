@@ -47,7 +47,6 @@ import nl.tudelft.ti2206.game.backend.GameTick;
 import nl.tudelft.ti2206.game.backend.GameTickImpl;
 import nl.tudelft.ti2206.highscore.Highscore;
 import nl.tudelft.ti2206.highscore.HighscorePopup;
-import nl.tudelft.ti2206.highscore.ScoreCompare;
 import nl.tudelft.ti2206.highscore.ScoreItem;
 import nl.tudelft.ti2206.util.mvc.View;
 
@@ -135,7 +134,7 @@ public class SinglePlayerFrame extends JFrame implements
 				ScoreItem lastPlace = hs.getPlace(hs.getSize());
 			
 				//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered
-				if(lastPlace == null || (lastPlace != null && new ScoreCompare().compare(lastPlace,scoreEntry) > 0)){
+				if(lastPlace == null || (lastPlace != null && lastPlace.compareTo(scoreEntry) > 0)) {
 					final JDialog dialog = new JDialog(SinglePlayerFrame.this, false);
 					dialog.setTitle("Enter your name");
 					JTextField nameField = new JTextField("",30);

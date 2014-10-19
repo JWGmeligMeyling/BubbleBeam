@@ -63,9 +63,6 @@ public class Highscore {
 		
 	}
 	
-	public void addNewScore(final long score, final String name){
-		this.addNewScore(new ScoreItem(score,name));
-	}
 	public void addNewScore(final ScoreItem item){
 		this.addScore(item);
 		this.deleteHighscoresOnDisk();
@@ -74,32 +71,32 @@ public class Highscore {
 	
 	/**
 	 * usage: getPlace(1) to return the highest score
-	 * @param index is from 1 to the size of the leaderboard (probably 10)
-	 * @return the score at this position, and null if there is no score at this position
+	 * 
+	 * @param index
+	 *            is from 1 to the size of the leaderboard (probably 10)
+	 * @return the score at this position, and null if there is no score at this
+	 *         position
 	 */
 	public ScoreItem getPlace(final int index){
 		try{
 			return scores.get(index-1);
 		} catch(IndexOutOfBoundsException e){
 			return null;
-		}finally{}
+		}
 	}
+	
 	public void writeScoreFile(){
-		try{
-			File folder = new File(System.getProperty("user.home"), "BubbleBeam");
-			folder.mkdirs();
-			File highscores = new File(folder, getScoreFile());
-			ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(highscores));
+		File folder = new File(System.getProperty("user.home"), "BubbleBeam");
+		folder.mkdirs();
+		File highscores = new File(folder, getScoreFile());
+
+		try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(highscores))) {
 			output.writeObject(scores);
-			
-			output.close();
-		} catch (FileNotFoundException e) {
-			log.error("Highscore-file could not be made.");
+		}
+		catch (FileNotFoundException e) {
+			log.error("Highscore-file could not be made.", e);
 		} catch (IOException e) {
-			log.error("IOexception while writing high-scores.");
-			e.printStackTrace();
-		} finally{
-			//do nothing
+			log.error("IOexception while writing high-scores.", e);
 		}
 	}
 	
@@ -108,31 +105,32 @@ public class Highscore {
 	}
 	
 	protected void sort(){
-		ScoreCompare comparator = new ScoreCompare();
-		Collections.sort(scores,comparator);
+		Collections.sort(scores);
 	}
 	
 	public void readScoreFile() {
-		try{
-			File folder = new File(System.getProperty("user.home"), "BubbleBeam");
-			log.info("The file that is now loaded with the highscores is called: " + getScoreFile());
-			File highscores = new File(folder, getScoreFile());
-			ObjectInputStream input = new ObjectInputStream(new FileInputStream(highscores));
+		File folder = new File(System.getProperty("user.home"), "BubbleBeam");
+		File highscores = new File(folder, getScoreFile());
+		log.info("The file that is now loaded with the highscores is called: {}", getScoreFile());
+		
+		try(ObjectInputStream input = new ObjectInputStream(new FileInputStream(highscores))) {
+			
 			@SuppressWarnings("unchecked")
 			ArrayList<ScoreItem> temp = (ArrayList<ScoreItem>) input.readObject();
+			
 			for(ScoreItem item: temp){
 				addScore(item);
 			}
-			input.close();
-		} catch(FileNotFoundException e){
-			log.info("No highscore-file found.");
-		} catch (IOException e) {
-			log.error("IOexception while reading high-scores. Continuing without previous highscores.");
-		} catch (ClassNotFoundException e) {
-			log.error("Class ScoreItem is not found. Continuing without previous highscores");
-		} finally
-		{
-			//Do nothing i guess
+			
+		}
+		catch(FileNotFoundException e) {
+			log.error("No highscore-file found.", e);
+		}
+		catch (IOException e) {
+			log.error("IOexception while reading high-scores. Continuing without previous highscores.", e);
+		}
+		catch (ClassNotFoundException e) {
+			log.error("Class ScoreItem is not found. Continuing without previous highscores", e);
 		}
 	}
 }
