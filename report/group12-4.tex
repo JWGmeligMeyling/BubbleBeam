@@ -38,11 +38,13 @@
 % IMPLEMENTATION
 % ==========================
 \subsection{Implementation}
-
+Our requirements for the 20-time assignment is implemented, and can be found on our repository on the master branch.
 % ==========================
 % ANALYSIS AND DESIGN PHASES
 % ==========================
 \subsection{Analysis and design phases}
+
+The analysis and design phase document is located on our devhub repository on the master branch, under ”report/Assignment4 - Analysis and design phase document.pdf”
 
 \section{Software Metrics}
 
@@ -50,7 +52,7 @@
 % ANALYSIS FILE
 % ==========================
 \subsection{Analysis file}
-
+Our inCode analysis file can be found on our repository on the master branch, under "inCode/shoot\textemdash1413576881531.result".
 
 % ==========================
 % THREE DESIGN FLAWS
@@ -79,12 +81,12 @@ Secondly, this method returns a pointer, and not a copy. This means that changin
 
 \texttt{getVelocity():Vector2f} and \texttt{setVelocity(Vector2f)}
 
-The methods getVelocity and setVelocity made the velocity variable too accessable to other classes outside of the movingBubble.
-Both methods where used in the gameTick method of GameController, to get the velocity of the moving bubble, adding some velocity to it and setting the velocity of the moving bubble to the new calculated velocity. Because of this, we replaced these methods with the method \texttt{addVelocity(Vector2f)}.
+The methods getVelocity and setVelocity made the velocity variable too accessible to other classes outside of the movingBubble.
+Both methods where used in the gameTick method of GameController to get the velocity of the moving bubble, adding some velocity to it and setting the velocity of the moving bubble to the new calculated velocity. Because of this we replaced these methods with the method \texttt{addVelocity(Vector2f)}.
 
 \texttt{getScreenSize():Dimension}
 
-This method was only used in tests, but since the test itself gave the screenSize to the movingBubble class in the constructor, the original variable can be used.
+This method was only used in tests, but since the test itself gave the screenSize to the MovingBubble class in the constructor, the original variable can be used.
 
 
 % ==========================
@@ -92,7 +94,7 @@ This method was only used in tests, but since the test itself gave the screenSiz
 % ==========================
 \subsubsection{SlaveGameController}\label{SlaveGameController}
 \paragraph{Design choices or errors leading to the detected design flaw}\mbox{}\\
-We made a distinction between \texttt{MasterGameController} and \texttt{SlaveGameController} for the multiplayer game mode. These game controllers extended the \texttt{AbstractGameController}, in which shared logic - and basically the game level logic - was stored. The distincition between master and slave was made to bind the correct event handlers to the controllers: the \texttt{MasterGameController} should be controlled by user input, and thus be bound to \textit{MouseListeners}. The \texttt{SlaveGameController} is controlled over the network, by the other players \texttt{MasterGameController} which transmits it's events over the network. That said, the \texttt{MasterGameController} and \texttt{SlaveGameController} actually did not add any logic to the \texttt{AbstractGameController}, it only added some event listeners.
+We made a distinction between \texttt{MasterGameController} and \texttt{SlaveGameController} for the multiplayer game mode. These game controllers extended the \texttt{AbstractGameController}, in which shared logic - and basically the game level logic - was stored. The distincition between master and slave was made to bind the correct event handlers to the controllers: the \texttt{MasterGameController} should be controlled by user input, and thus be bound to \textit{MouseListeners}. The \texttt{SlaveGameController} is controlled over the network, by the other players \texttt{MasterGameController} which transmits its events over the network. That said, the \texttt{MasterGameController} and \texttt{SlaveGameController} actually did not add any logic to the \texttt{AbstractGameController}, it only added some event listeners.
 
 
 \paragraph{Fix the design flaw}\mbox{}\\
