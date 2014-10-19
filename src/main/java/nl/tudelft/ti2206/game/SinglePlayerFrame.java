@@ -250,15 +250,15 @@ public class SinglePlayerFrame extends JFrame implements
 		return ipField.getText();
 	}
 
-	public void setScore(String score) {
-		this.scoreLabel.setText(score);
-	}
-
 	/**
 	 * @return the exitAction
 	 */
 	public Action getExitAction() {
 		return exitAction;
+	}
+
+	public void setScore(String score) {
+		this.scoreLabel.setText(score);
 	}
 
 	/**

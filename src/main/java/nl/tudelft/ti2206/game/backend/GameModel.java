@@ -35,6 +35,8 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	
 	private boolean gameOver = false;
 	
+	private boolean won=false;
+	
 	private int misses = 0;
 	
 	private Dimension screenSize;
@@ -164,6 +166,13 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	public <A extends GameEventListener> void trigger(Class<A> clasz,
 			Consumer<A> action) {
 		eventTarget.trigger(clasz, action);
+	}
+
+	public void setWon(boolean b) {
+		won=b;
+	}
+	public boolean isWon(){
+		return won;
 	}
 	
 }

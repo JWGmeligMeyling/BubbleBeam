@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observer;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
 import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
@@ -51,6 +53,8 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected final Dimension size = new Dimension(WIDTH, HEIGHT);
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
+	protected transient static BufferedImage gameOver =	getGameOverImage();
+	protected transient static Image gameWon =	getGameWonImage();
 	
 	public GamePanel(final GameController gameController) {
 		GameModel gameModel = gameController.getModel();
@@ -113,6 +117,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 			model.getShotBubble().render(graphics);
 		}
 		
+		
 		model.getLoadedBubble().setCenter(AMMO_POSITION);
 		model.getLoadedBubble().render(graphics);
 		model.getNextBubble().setCenter(AMMO_NEXT_POSITION);
@@ -124,7 +129,36 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 				animationList.remove(animation);
 			}
 		});
+		
+		if(model.isGameOver()){
+			graphics.drawImage(gameOver,0,HEIGHT/2-100,null);
+		}
+		
+		if(model.isWon()){
+			graphics.drawImage(gameWon, WIDTH/2-100, HEIGHT/2-100, null);
+		}
 	}
+	
+	protected static BufferedImage getGameOverImage() {
+		try {
+			BufferedImage scaledImage = ImageIO.read(BombBubble.class.getResourceAsStream("/gameover.jpg"));
+			scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+			return scaledImage;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	protected static Image getGameWonImage() {
+		try {
+			BufferedImage scaledImage = ImageIO.read(BombBubble.class.getResourceAsStream("/gamewon.jpg"));
+			return scaledImage.getScaledInstance(WIDTH/2, HEIGHT/2, Image.SCALE_SMOOTH);
+			
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	
 	@Override
 	public Dimension getPreferredSize() {

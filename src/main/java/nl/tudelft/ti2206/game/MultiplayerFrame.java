@@ -58,9 +58,19 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 			@Override
 			public void gameOver() {
 				log.info("you win");
-				gameController.getModel().setGameOver(true);
+				gameController.getModel().setWon(true);
 			}
 			
+		});
+		
+		gameController.getModel().addEventListener(new GameOverEventListener(){
+
+			@Override
+			public void gameOver() {
+			log.info("you lose");
+				slaveGameController.getModel().setWon(true);
+			}
+		
 		});
 		
 		
