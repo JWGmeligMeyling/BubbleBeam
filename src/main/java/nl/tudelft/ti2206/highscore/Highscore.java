@@ -13,7 +13,7 @@ import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Highscore {
+abstract public class Highscore {
 	
 	private static final Logger log = LoggerFactory.getLogger(Highscore.class);
 	
@@ -33,13 +33,9 @@ public class Highscore {
 		return this.LIST_LENGTH;
 	}
 	
-	protected String getScoreFile(){
-		return scoreFile;
-	}
+	abstract protected String getScoreFile();
 	
-	public String getTitle(){
-		return highscoreTitle;
-	}
+	abstract public String getTitle();
 	
 	public void deleteHighscores(){
 		scores.removeAll(scores);
