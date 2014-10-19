@@ -10,6 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
+import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 
 import org.slf4j.Logger;
@@ -36,15 +40,12 @@ public class RestartSinglePlayerAction extends AbstractAction {
 			
 			
 			//adding buttons for all gamemodes to the dialog
-			dialog.setLayout(new GridLayout(1,4));
+			dialog.setLayout(new GridLayout(1,3));
 			JButton classicButton = new JButton("Classic");
 			dialog.add(classicButton);
 			
 			JButton drunkButton = new JButton("Drunk mode");
 			dialog.add(drunkButton);
-			
-			JButton timedButton = new JButton("Timed mode");
-			dialog.add(timedButton);
 			
 			JButton powerupButton = new JButton("Power-up mode");
 			dialog.add(powerupButton);
@@ -54,14 +55,12 @@ public class RestartSinglePlayerAction extends AbstractAction {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					dialog.dispose();
-					if(e.getSource().equals(timedButton)){
-						startTimed();
-					} else if(e.getSource().equals(drunkButton)){
-						startDrunk();
+					if(e.getSource().equals(drunkButton)){
+						start(new DrunkBubbleFactory());
 					} else if(e.getSource().equals(classicButton)){
-						startClassic();
+						start(new ClassicBubbleFactory());
 					} else if(e.getSource().equals(powerupButton)){
-						startPowerup();
+						start(new PowerUpBubbleFactory());
 					}
 				}
 			};
@@ -70,7 +69,6 @@ public class RestartSinglePlayerAction extends AbstractAction {
 			classicButton.addActionListener(al);
 			drunkButton.addActionListener(al);
 			powerupButton.addActionListener(al);
-			timedButton.addActionListener(al);
 			
 			//make it so that the dialog is displayed as it should be
 			dialog.setVisible(true);
@@ -80,9 +78,9 @@ public class RestartSinglePlayerAction extends AbstractAction {
 			
 	}
 	
-	public void startClassic(){
+	public void start(BubbleFactory bf){
 		try {
-			SinglePlayerFrame frame = new SinglePlayerFrame();
+			SinglePlayerFrame frame = new SinglePlayerFrame(bf);
 			frame.pack();
 			frame.setLocationRelativeTo(this.singlePlayerFrame);
 			this.singlePlayerFrame.dispose();
@@ -93,18 +91,6 @@ public class RestartSinglePlayerAction extends AbstractAction {
 		catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
-	}
-	
-	public void startPowerup(){
-		//do nothing for now
-	}
-	
-	public void startDrunk(){
-		//do nothing for now
-	}
-	
-	public void startTimed(){
-		//do nothing for now
 	}
 
 }

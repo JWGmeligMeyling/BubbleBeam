@@ -85,14 +85,18 @@ public class SinglePlayerFrame extends JFrame implements
 	protected final GameTick gameTick;
 	
 	public SinglePlayerFrame() throws IOException {
+		this(new PowerUpBubbleFactory());
+	}
+	
+	public SinglePlayerFrame(final BubbleFactory bf) throws IOException {
 		
 		super(FRAME_TITLE);
 		
+		BubbleFactory bubbleFactory = bf;
 		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
 		GameModel gameModel = new GameModel(bubbleMesh);
 		cannonController = new MouseCannonController();
 		this.gameTick = new GameTickImpl(FRAME_PERIOD, executor);
-		BubbleFactory bubbleFactory = new PowerUpBubbleFactory();
 		this.gameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory);		
 		gamePanel = new GamePanel(gameController);
 		cannonController.bindListenersTo(gamePanel, gamePanel.getCannon());
