@@ -132,7 +132,7 @@ public class SinglePlayerFrame extends JFrame implements
 			
 				//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered
 				if(lastPlace == null || (lastPlace != null && new ScoreCompare().compare(lastPlace,scoreEntry) > 0)){
-					final JDialog dialog = new JDialog();
+					final JDialog dialog = new JDialog(SinglePlayerFrame.this, false);
 					dialog.setTitle("Enter your name");
 					JTextField nameField = new JTextField("",30);
 					dialog.add(nameField);

@@ -50,7 +50,7 @@ public class HighscorePopup extends JDialog{
 			}
 		}
 		c.gridy = i;
-		c.gridx= 0;
+		c.gridx = 3;
 		JButton deleteHighscoresButton = new JButton("Delete Highscores");
 		deleteHighscoresButton.addActionListener(new ActionListener(){
 			@Override
