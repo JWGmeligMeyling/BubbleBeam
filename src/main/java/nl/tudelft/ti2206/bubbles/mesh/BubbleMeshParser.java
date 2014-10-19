@@ -5,11 +5,11 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
-import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Direction;
+import nl.tudelft.ti2206.bubbles.decorators.StoneBubble;
 
 import com.google.common.collect.Lists;
 
@@ -79,12 +79,15 @@ public class BubbleMeshParser {
 	protected final List<Color> remainingColors = Lists.newArrayList(Color.RED, Color.GREEN,
 			Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
 	
-	protected AbstractBubble parseBubble(final char character) {
+	protected Bubble parseBubble(final char character) {
 		final Color color;
 		
 		switch (character) {
 		case ' ':
 			return new BubblePlaceholder();
+		case 's':
+		case 'S':
+			return new StoneBubble();
 		case 'r':
 		case 'R':
 			color = Color.RED;
