@@ -126,11 +126,11 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		Lists.newArrayList(animationList).forEach(animation -> {
 			animation.render(graphics);
 			if (animation.isDone()) {
-				animationList.remove(animation);
+				animationList.remove(animation); 
 			}
 		});
 		
-		if(model.isGameOver()){
+		if(model.isGameOver()&& !model.isWon()){
 			graphics.drawImage(gameOver,0,HEIGHT/2-100,null);
 		}
 		

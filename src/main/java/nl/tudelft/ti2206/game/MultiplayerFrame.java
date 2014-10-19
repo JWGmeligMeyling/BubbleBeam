@@ -29,6 +29,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 	protected final GamePanel slaveGamePanel;
 	protected final JLabel slaveScoreLabel;
 	protected final Connector connector;
+	private int bubblesPopped;
 	
 	public MultiplayerFrame(Connector connector) throws IOException {
 		
@@ -50,7 +51,11 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		});;
 		
 		connector.getPacketHandlerCollection().registerPopHandler((a)->{
+			bubblesPopped+=a.getAmount();
+			if(bubblesPopped>=10){
 				gameController.insertRow();
+				bubblesPopped=0;
+			}
 		});
 		
 		slaveGameController.getModel().addEventListener(new GameOverEventListener(){
@@ -59,6 +64,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 			public void gameOver() {
 				log.info("you win");
 				gameController.getModel().setWon(true);
+				gameController.getModel().setGameOver(true);
 			}
 			
 		});

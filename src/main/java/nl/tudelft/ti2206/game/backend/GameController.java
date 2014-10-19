@@ -202,7 +202,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		return model;
 	}
 	
-	protected final Random RANDOM_GENERATOR = new Random();
+	protected final Random RANDOM_GENERATOR = new Random(); 
 	
 	/**
 	 * @return a random remaining Color
