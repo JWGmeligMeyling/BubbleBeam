@@ -8,10 +8,15 @@ import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.highscore.ClassicHighscore;
 import nl.tudelft.ti2206.highscore.DrunkHighscore;
 import nl.tudelft.ti2206.highscore.Highscore;
 import nl.tudelft.ti2206.highscore.HighscorePopup;
@@ -19,6 +24,9 @@ import nl.tudelft.ti2206.highscore.PowerupHighscore;
 import nl.tudelft.ti2206.highscore.ScoreItem;
 
 public class GameOverHighscore implements GameOverEventListener {
+	
+	private static final Logger log = LoggerFactory.getLogger(GameOverHighscore.class);
+	
 	
 	private final SinglePlayerFrame frame;
 
@@ -41,14 +49,14 @@ public class GameOverHighscore implements GameOverEventListener {
 		Highscore hs;
 		BubbleFactory bf = frame.getController().getFactory();
 		if(bf instanceof ClassicBubbleFactory){
-			hs = new Highscore();
+			hs = new ClassicHighscore();
 		} else if(bf instanceof DrunkBubbleFactory){
 			hs = new DrunkHighscore();
 		} else if(bf instanceof PowerUpBubbleFactory){
 			hs = new PowerupHighscore();
 		} else{
-			//should not happen, but whatever
-			hs = new Highscore();
+			log.error("Unknown BubbleFactory, so no highscores available. Showing classic highscores");
+			hs = new ClassicHighscore();
 		}
 		ScoreItem lastPlace = hs.getPlace(hs.getSize());
 	

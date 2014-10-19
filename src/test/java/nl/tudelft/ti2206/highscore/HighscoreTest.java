@@ -9,7 +9,7 @@ public class HighscoreTest {
 	
 	@Test
 	public void testAdd(){
-		Highscore highscore = new Highscore();
+		Highscore highscore = new ClassicHighscore();
 		highscore.deleteHighscores();
 		
 		ScoreItem item1 = new ScoreItem(1200,"Michael");
@@ -35,7 +35,7 @@ public class HighscoreTest {
 	
 	@Test
 	public void writeAndRead(){
-		Highscore highscore = new Highscore();
+		Highscore highscore = new ClassicHighscore();
 		highscore.deleteHighscores();
 		
 		ScoreItem item1 = new ScoreItem(1200,"Michael",new Date(30));
@@ -50,7 +50,7 @@ public class HighscoreTest {
 		
 		highscore.writeScoreFile();
 		
-		Highscore newHighscore = new Highscore();
+		Highscore newHighscore = new ClassicHighscore();
 		assert(newHighscore.getPlace(1).equals(item3));
 		assert(newHighscore.getPlace(2).equals(item1));
 		assert(newHighscore.getPlace(3).equals(item2));
