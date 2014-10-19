@@ -17,7 +17,7 @@ public class PowerUpBubbleFactory extends BubbleFactory{
 	
 	protected final Random RANDOM_GENERATOR = new Random();
 	
-	private int chanceOfPowerup = 1;	// 1-10. 1 is one in ten chance, 10 is all bubbles are powerups
+	private int chanceOfPowerup = 3;	// 1-10. 1 is one in ten chance, 10 is all bubbles are powerups
 	private int chanceOfExtraEffect = 2;	// 1-10. 1 is one in ten chance, 10 is all bubbles have extra effects
 	
 	protected final Class<?> primaryEffects[] = {

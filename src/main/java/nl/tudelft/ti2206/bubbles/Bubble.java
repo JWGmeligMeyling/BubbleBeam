@@ -12,6 +12,7 @@ import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
 import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
+import nl.tudelft.ti2206.graphics.Sprite;
 import nl.tudelft.util.Vector2f;
 
 import com.google.common.collect.Lists;
@@ -81,6 +82,16 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 *         just go through it until they hit an hittable {@code Bubble}.
 	 */
 	boolean isHittable();
+	
+	/**
+	 * @return true if this {@code Bubble} has a {@link Color}
+	 */
+	boolean hasColor();
+	
+	/**
+	 * @return the {@link Color} for this {@code Bubble}
+	 */
+	Color getColor();
 
 	/**
 	 * @return A {@link Collection} containing the surrounding {@code Bubbles}.

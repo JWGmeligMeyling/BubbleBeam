@@ -16,7 +16,7 @@ import com.google.common.annotations.VisibleForTesting;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class ColouredBubble extends AbstractBubble implements Coloured {
+public class ColouredBubble extends AbstractBubble {
 
 	private static final long serialVersionUID = -5892206967489729767L;
 
@@ -77,6 +77,12 @@ public class ColouredBubble extends AbstractBubble implements Coloured {
 		return color;
 	}
 
+
+	@Override
+	public boolean hasColor() {
+		return true;
+	}
+	
 	@Override
 	public boolean isHittable() {
 		return true;
@@ -84,18 +90,7 @@ public class ColouredBubble extends AbstractBubble implements Coloured {
 	
 	@Override
 	public boolean popsWith(Bubble target) {
-		
-		while(!Coloured.class.isInstance(target) && DecoratedBubble.class.isInstance(target)) {
-			target = DecoratedBubble.class.cast(target).getParent();
-		}
-		
-		if(Coloured.class.isInstance(target)) {
-			Coloured other = Coloured.class.cast(target);
-			Color otherColor = other.getColor();
-			return color.equals(otherColor);
-		}
-		
-		return false;
+		return target.hasColor() && target.getColor().equals(color);
 	}
 
 	@VisibleForTesting
