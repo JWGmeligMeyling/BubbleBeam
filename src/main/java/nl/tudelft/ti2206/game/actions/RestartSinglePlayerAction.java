@@ -96,48 +96,15 @@ public class RestartSinglePlayerAction extends AbstractAction {
 	}
 	
 	public void startPowerup(){
-		try {
-			SinglePlayerFrame frame = new SinglePlayerFrame();
-			frame.pack();
-			frame.setLocationRelativeTo(this.singlePlayerFrame);
-			this.singlePlayerFrame.dispose();
-			frame.setVisible(true);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			frame.getFindMultiplayerAction().setEnabled(true);
-		}
-		catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
+		//do nothing for now
 	}
 	
 	public void startDrunk(){
-		try {
-			SinglePlayerFrame frame = new SinglePlayerFrame();
-			frame.pack();
-			frame.setLocationRelativeTo(this.singlePlayerFrame);
-			this.singlePlayerFrame.dispose();
-			frame.setVisible(true);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			frame.getFindMultiplayerAction().setEnabled(true);
-		}
-		catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
+		//do nothing for now
 	}
 	
 	public void startTimed(){
-		try {
-			SinglePlayerFrame frame = new SinglePlayerFrame();
-			frame.pack();
-			frame.setLocationRelativeTo(this.singlePlayerFrame);
-			this.singlePlayerFrame.dispose();
-			frame.setVisible(true);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			frame.getFindMultiplayerAction().setEnabled(true);
-		}
-		catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
+		//do nothing for now
 	}
 
 }
