@@ -32,9 +32,9 @@ private static final Logger log = LoggerFactory.getLogger(ExitAction.class);
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		log.info("Opening Highscore-popup");
-		ScheduledExecutorService executor = singlePlayerFrame.getScheduledExecutorService();
+		//ScheduledExecutorService executor = singlePlayerFrame.getScheduledExecutorService();
 		//TODO open different type for different game-mode
-		new HighscorePopup(new DrunkHighscore());
+		new HighscorePopup(new Highscore());
 		
 		//executor.submit(() -> {	
 		//});

@@ -115,7 +115,7 @@ public class Highscore {
 	public void readScoreFile() {
 		try{
 			File folder = new File(System.getProperty("user.home"), "BubbleBeam");
-			System.out.println(getScoreFile());
+			log.info("The file that is now loaded with the highscores is called: " + getScoreFile());
 			File highscores = new File(folder, getScoreFile());
 			ObjectInputStream input = new ObjectInputStream(new FileInputStream(highscores));
 			@SuppressWarnings("unchecked")

@@ -6,6 +6,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,6 +19,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,6 +45,10 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.GameTick;
 import nl.tudelft.ti2206.game.backend.GameTickImpl;
+import nl.tudelft.ti2206.highscore.Highscore;
+import nl.tudelft.ti2206.highscore.HighscorePopup;
+import nl.tudelft.ti2206.highscore.ScoreCompare;
+import nl.tudelft.ti2206.highscore.ScoreItem;
 import nl.tudelft.ti2206.util.mvc.View;
 
 public class SinglePlayerFrame extends JFrame implements
@@ -110,7 +118,52 @@ public class SinglePlayerFrame extends JFrame implements
 			}
 		});
 		gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
-		});;
+		});
+		
+		gameController.getModel().addEventListener(new GameOverEventListener(){
+			@Override
+			public void gameOver() {
+				gameController.getModel().setGameOver(true);
+				
+				long score = getController().getModel().getScore();
+				ScoreItem scoreEntry = new ScoreItem(score,"");
+				Highscore hs = new Highscore();
+				ScoreItem lastPlace = hs.getPlace(hs.getSize());
+			
+				//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered
+				if(lastPlace == null || (lastPlace != null && new ScoreCompare().compare(lastPlace,scoreEntry) > 0)){
+					final JDialog dialog = new JDialog();
+					dialog.setTitle("Enter your name");
+					JTextField nameField = new JTextField("",30);
+					dialog.add(nameField);
+					dialog.setVisible(true);
+					dialog.pack();
+					dialog.setLocationRelativeTo(null);
+					//add that when on the textfield 'enter' is clicked or the dialogbox is closed to add to the highscore
+					dialog.addWindowListener(new WindowAdapter() {
+						
+						@Override
+						public void windowClosing(WindowEvent e) {
+							String name = nameField.getText();
+							scoreEntry.setName(name);
+							hs.addNewScore(scoreEntry);
+							dialog.dispose();
+							new HighscorePopup(hs);
+						}
+					});
+					nameField.addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){
+							String name = nameField.getText();
+							scoreEntry.setName(name);
+							hs.addNewScore(scoreEntry);
+							dialog.dispose();
+							new HighscorePopup(hs);
+						}});
+				} else{
+					new HighscorePopup(hs);
+				}
+			}
+		});
 
 		Container contentPane = this.getContentPane();
 		fillMenubar();
