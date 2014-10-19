@@ -41,7 +41,7 @@ public interface Circle {
 	 * @return the surface for this {@code Circle}
 	 */
 	default double getSurface() {
-		return Math.PI * 2 * getRadius();
+		return Math.PI * getRadius() * getRadius();
 	}
 	
 	/**

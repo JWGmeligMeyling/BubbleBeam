@@ -29,7 +29,7 @@ public class BombBubble extends DecoratedBubble {
 	protected static final int POP_RADIUS = 2;
 
 	protected final RadialPopBehaviour popBehaviour;
-	protected transient BufferedImage bombImage;
+	protected transient Image bombImage;
 
 	protected boolean collided = false;
 	
@@ -50,11 +50,10 @@ public class BombBubble extends DecoratedBubble {
 		return true;
 	}
 
-	protected BufferedImage getBubbleImage() {
+	protected Image getBubbleImage() {
 		try {
 			BufferedImage scaledImage = ImageIO.read(BombBubble.class.getResourceAsStream("/bomb.png"));
-			scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(), Image.SCALE_SMOOTH);
-			return scaledImage;
+			return scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(), Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

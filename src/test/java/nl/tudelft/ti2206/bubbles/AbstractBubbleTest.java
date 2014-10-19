@@ -65,7 +65,7 @@ public class AbstractBubbleTest {
 		int radius = bubble.getRadius();
 		assertEquals(AbstractBubble.RADIUS, radius);
 		assertEquals(radius * 2, bubble.getDiameter());
-		assertEquals(Math.PI * 2 * radius, bubble.getSurface(), 1e-4);
+		assertEquals(Math.PI * radius * radius, bubble.getSurface(), 1e-4);
 	}
 	
 	@Test
