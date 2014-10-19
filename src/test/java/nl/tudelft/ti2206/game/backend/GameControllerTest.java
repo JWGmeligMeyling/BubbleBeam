@@ -165,6 +165,7 @@ public class GameControllerTest {
 		Bubble hitTarget = mock(ColouredBubble.class);
 		Bubble snapPosition = mock(BubblePlaceholder.class);
 		
+		when(bubbleMesh.isEmpty()).thenReturn(false);
 		when(hitTarget.getSnapPosition(shotBubble)).thenReturn(snapPosition);
 		when(bubbleMesh.pop(shotBubble)).thenReturn(true);
 		

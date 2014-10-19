@@ -84,12 +84,12 @@ public class GameController implements Controller<GameModel>, Tickable {
 			shotBubble.addVelocity();
 			shotBubble.gameTick();
 			
+			
 			bubbleMesh
 					.stream()
 					.filter(bubble -> bubble.intersect(shotBubble)
 							&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble))).findAny()
 					.ifPresent(bubble -> this.collide(bubbleMesh, shotBubble, bubble));
-			
 		}
 	}
 	
@@ -147,17 +147,22 @@ public class GameController implements Controller<GameModel>, Tickable {
 			
 			log.info("Bullet snapped to {}", snapPosition);
 			bubbleMesh.replaceBubble(snapPosition, shotBubble);
+		
 			
 			if (!bubbleMesh.pop(shotBubble)) {
 				incrementMisses();
 			}
-			
+			else if(bubbleMesh.isEmpty()){
+				throw new GameOver();
+			}
+
 			cannonController.load();
 		} catch (GameOver e) {
 			gameOver();
 		} finally {
 			model.setShotBubble(null);
 		}
+		
 		
 	}
 	
@@ -197,7 +202,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		return model;
 	}
 	
-	protected final Random RANDOM_GENERATOR = new Random();
+	protected final Random RANDOM_GENERATOR = new Random(); 
 	
 	/**
 	 * @return a random remaining Color

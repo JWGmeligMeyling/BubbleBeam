@@ -166,6 +166,10 @@ public interface Packet extends Serializable {
 		public PoppedPacket(int a) {
 			amount=a;
 		}
+		
+		public int getAmount(){
+			return amount;
+		}
 
 		@Override
 		public void notify(PacketHandlerCollection packetHandlerCollection) {
