@@ -30,6 +30,10 @@ public class GameOverHighscore implements GameOverEventListener {
 	public void gameOver() {
 		frame.getController().getModel().setGameOver(true);
 		
+		if(frame instanceof MultiplayerFrame){		//don't add scores for multiplayer
+			return;
+		}
+		
 		long score = frame.getController().getModel().getScore();
 		ScoreItem scoreEntry = new ScoreItem(score,"");
 		
