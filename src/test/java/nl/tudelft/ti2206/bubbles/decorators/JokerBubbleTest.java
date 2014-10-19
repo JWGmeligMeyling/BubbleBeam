@@ -37,6 +37,12 @@ public class JokerBubbleTest extends AbstractBubbleTest {
 	}
 	
 	@Test
+	@Override
+	public void testGetColor() {
+		assertEquals(Color.WHITE, bubble.getColor());
+	}
+	
+	@Test
 	public void testPopsWith() {
 		ColouredBubble colouredBubble = new ColouredBubble(Color.RED);
 		assertTrue(bubble.popsWith(colouredBubble));

@@ -41,6 +41,7 @@ public class ColouredBubbleTest extends AbstractBubbleTest {
 	}
 
 	@Test
+	@Override
 	public void testGetColor() {
 		colouredBubble.setColor(Color.GREEN);
 		assertEquals(Color.GREEN, colouredBubble.getColor());
