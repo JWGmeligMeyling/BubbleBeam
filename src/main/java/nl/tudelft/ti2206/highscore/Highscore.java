@@ -124,7 +124,7 @@ public class Highscore {
 			
 		}
 		catch(FileNotFoundException e) {
-			log.error("No highscore-file found.", e);
+			log.info("No highscore-file found.");
 		}
 		catch (IOException e) {
 			log.error("IOexception while reading high-scores. Continuing without previous highscores.", e);
