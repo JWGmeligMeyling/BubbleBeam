@@ -8,7 +8,6 @@ import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
-import nl.tudelft.ti2206.bubbles.Coloured;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Direction;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
@@ -18,7 +17,6 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -342,8 +340,8 @@ public class BubbleMeshImpl implements BubbleMesh {
 	@Override
 	public List<Color> getRemainingColours() {
 		return Lists.newArrayList(Lists
-			.newArrayList(Iterables.filter(this, Coloured.class))
-			.stream().map(Coloured::getColor).distinct()
+			.newArrayList(Iterables.filter(this, Bubble::hasColor))
+			.stream().map(Bubble::getColor).distinct()
 			.iterator());
 	}
 
@@ -359,13 +357,11 @@ public class BubbleMeshImpl implements BubbleMesh {
 	}
 
 	@Override
-	@VisibleForTesting
 	public Bubble getTopLeftBubble() {
 		return topLeftBubble;
 	}
 	
 	@Override
-	@VisibleForTesting
 	public Bubble getBottomLeftBubble() {
 		return bottomLeftBubble;
 	}

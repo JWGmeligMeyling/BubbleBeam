@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Collection;
@@ -159,6 +160,16 @@ public class DecoratedBubble implements Bubble {
 	
 	public Bubble getParent() {
 		return bubble;
+	}
+
+	@Override
+	public boolean hasColor() {
+		return bubble.hasColor();
+	}
+
+	@Override
+	public Color getColor() {
+		return bubble.getColor();
 	}
 
 }

@@ -5,7 +5,6 @@ import java.applet.AudioClip;
 import java.awt.Color;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.Coloured;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 
@@ -19,7 +18,7 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class JokerBubble extends DecoratedBubble implements Coloured {
+public class JokerBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -1415122920739845104L;
 	protected final static AudioClip HORN_SOUND = Applet.newAudioClip(SoundBubble.class.getResource("/horn.wav"));
@@ -48,9 +47,8 @@ public class JokerBubble extends DecoratedBubble implements Coloured {
 
 	@Override
 	public void collideHook(Bubble other) {
-		if (Coloured.class.isInstance(other)) {
-			Coloured coloured = Coloured.class.cast(other);
-			bubble.setColor(coloured.getColor());
+		if (other.hasColor()) {
+			bubble.setColor(other.getColor());
 			hasColor = true;
 		}
 		bubble.snapHook();
@@ -67,6 +65,11 @@ public class JokerBubble extends DecoratedBubble implements Coloured {
 	@Override
 	public Color getColor() {
 		return bubble.getColor();
+	}
+
+	@Override
+	public boolean hasColor() {
+		return hasColor;
 	}
 	
 }
