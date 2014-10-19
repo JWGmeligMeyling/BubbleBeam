@@ -346,6 +346,14 @@ public class BubbleMeshImpl implements BubbleMesh {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		for(Bubble bubble : this)
+			if(bubble.isHittable())
+				return false;
+		return true;
+	}
+
+	@Override
 	public void replace(BubbleMesh bubbleMesh) {
 		this.topLeftBubble = bubbleMesh.getTopLeftBubble();
 		this.bottomLeftBubble = bubbleMesh.getBottomLeftBubble();

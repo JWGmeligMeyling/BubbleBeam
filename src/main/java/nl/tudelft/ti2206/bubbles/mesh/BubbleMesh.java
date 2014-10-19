@@ -85,6 +85,11 @@ public interface BubbleMesh extends Iterable<Bubble>, Serializable {
 	 * @return Get a List of colors that still exist in the mesh
 	 */
 	List<Color> getRemainingColours();
+	
+	/**
+	 * @return true if the {@code BubbleMesh} is empty
+	 */
+	boolean isEmpty();
 
 	/**
 	 * Replace the {@code BubbleMesh} with another one
