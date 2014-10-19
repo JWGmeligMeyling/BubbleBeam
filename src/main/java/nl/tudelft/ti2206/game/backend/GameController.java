@@ -156,7 +156,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			if (!bubbleMesh.pop(shotBubble)) {
 				incrementMisses();
 			}
-			else if(bubbleMesh.getRemainingColours().isEmpty()){
+			else if(bubbleMesh.isEmpty()){
 				throw new GameOver();
 			}
 

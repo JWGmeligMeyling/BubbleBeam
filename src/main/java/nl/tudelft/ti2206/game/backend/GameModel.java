@@ -125,7 +125,6 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	}
 
 	public Dimension getScreenSize() {
-		assert this.screenSize != null : "Screen size should not be null";
 		return screenSize;
 	}
 	

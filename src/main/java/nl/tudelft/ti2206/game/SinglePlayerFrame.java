@@ -32,7 +32,6 @@ import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
@@ -59,7 +58,7 @@ public class SinglePlayerFrame extends JFrame implements
 	protected final static ComponentOrientation ORIENTATION = ComponentOrientation.LEFT_TO_RIGHT;
 	protected static final String FRAME_TITLE = "BubbleBeam";
 	protected static final String VERSION_STRING = "Version: 0.3 Alpha";
-	protected static final String DEFAULT_BOARD_PATH = "/smallboard.txt";
+	protected static final String DEFAULT_BOARD_PATH = "/board.txt";
 	protected static final int FPS = 30;
 	protected static final int FRAME_PERIOD = 1000 / FPS;
 	protected static final Insets NO_PADDING = new Insets(0, 0, 0, 0);
