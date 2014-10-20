@@ -71,9 +71,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	@Override
 	public void gameTick() {
+		BubbleMesh bubbleMesh = model.getBubbleMesh();
+
 		if (model.isShooting()) {
 			MovingBubble shotBubble = model.getShotBubble();
-			BubbleMesh bubbleMesh = model.getBubbleMesh();
 			
 			shotBubble.addVelocity();
 			shotBubble.gameTick();
@@ -85,6 +86,16 @@ public class GameController implements Controller<GameModel>, Tickable {
 							&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble))).findAny()
 					.ifPresent(bubble -> this.collide(bubbleMesh, shotBubble, bubble));
 		}
+		
+		if(!model.isGameOver()) {
+			try {
+				model.getGameMode().gameTick(this, model);
+			}
+			catch (GameOver e) {
+				gameOver();
+			}
+		}
+		
 	}
 	
 	/**

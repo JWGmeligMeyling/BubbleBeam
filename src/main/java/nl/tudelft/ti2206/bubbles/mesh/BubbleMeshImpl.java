@@ -40,6 +40,9 @@ public class BubbleMeshImpl implements BubbleMesh {
 	protected final Point position = new Point(0,0);
 	protected final transient BubbleMeshEventTarget eventTarget = new BubbleMeshEventTarget();
 	
+	private Point lastUpdatePosition = new Point(0,0);
+	private int bubbleHeight = 22;
+
 	/**
 	 * Construct a new BubbleMesh
 	 * @param topLeftBubble
@@ -404,10 +407,15 @@ public class BubbleMeshImpl implements BubbleMesh {
 	}
 
 	@Override
-	public void translate(int dx, int dy) {
+	public void translate(int dx, int dy) throws GameOver {
 		position.translate(dx, dy);
 		topLeftBubble.translate(dx, dy);
 		calculatePositions();
+
+		while(position.y - lastUpdatePosition.y >= bubbleHeight) {
+			updateBottomRow();
+			lastUpdatePosition.translate(0, bubbleHeight);
+		}
 	}
 
 }

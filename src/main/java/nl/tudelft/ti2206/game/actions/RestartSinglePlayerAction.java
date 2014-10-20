@@ -2,7 +2,6 @@ package nl.tudelft.ti2206.game.actions;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
@@ -34,38 +33,21 @@ public class RestartSinglePlayerAction extends AbstractAction {
 			final JDialog dialog = new JDialog(singlePlayerFrame, false);	//this makes the dialog always stay on top of the singleplayerframe
 			dialog.setTitle("Choose singleplayer gamemode");
 			
-			
-			
 			//adding buttons for all gamemodes to the dialog
-			dialog.setLayout(new GridLayout(1,3));
-			JButton classicButton = new JButton("Classic");
-			dialog.add(classicButton);
 			
-			JButton drunkButton = new JButton("Drunk mode");
-			dialog.add(drunkButton);
+			GameMode[] gameModes = GameMode.values();
+			dialog.setLayout(new GridLayout(1, gameModes.length));
 			
-			JButton powerupButton = new JButton("Power-up mode");
-			dialog.add(powerupButton);
-			
-			//create the universal actionlistener
-			ActionListener al = new ActionListener(){
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					dialog.dispose();
-					if(e.getSource().equals(drunkButton)){
-						start(GameMode.DRUNK);
-					} else if(e.getSource().equals(classicButton)){
-						start(GameMode.CLASSIC);
-					} else if(e.getSource().equals(powerupButton)){
-						start(GameMode.POWERUP);
-					}
-				}
-			};
-			
-			//making the buttons functional
-			classicButton.addActionListener(al);
-			drunkButton.addActionListener(al);
-			powerupButton.addActionListener(al);
+			for(GameMode gameMode : gameModes) {
+				String label = gameMode.getName();
+				JButton button = new JButton(label);
+				
+				button.addActionListener((a) -> {
+					start(gameMode);
+				});
+				
+				dialog.add(button);
+			}
 			
 			//make it so that the dialog is displayed as it should be
 			dialog.setVisible(true);
