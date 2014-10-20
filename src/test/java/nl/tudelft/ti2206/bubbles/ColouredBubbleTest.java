@@ -31,7 +31,9 @@ public class ColouredBubbleTest extends AbstractBubbleTest {
 	
 	@Test
 	public void testRender() {
-		Point paintStart = colouredBubble.getPaintStart();
+		Point position = colouredBubble.getPosition();
+		int offset = colouredBubble.getWidth() / 2 - colouredBubble.getRadius();
+		Point paintStart = new Point(position.x + offset, position.y + offset);
 		int diameter = colouredBubble.getDiameter();
 		
 		Graphics2D graphics = mock(Graphics2D.class);

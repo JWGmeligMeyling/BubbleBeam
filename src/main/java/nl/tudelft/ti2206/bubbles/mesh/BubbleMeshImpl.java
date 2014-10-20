@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.bubbles.mesh;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,7 @@ public class BubbleMeshImpl implements BubbleMesh {
 	protected final int rowWidth;
 	protected Bubble topLeftBubble;
 	protected Bubble bottomLeftBubble;
+	protected final Point position = new Point(0,0);
 	protected final transient BubbleMeshEventTarget eventTarget = new BubbleMeshEventTarget();
 	
 	/**
@@ -246,8 +248,8 @@ public class BubbleMeshImpl implements BubbleMesh {
 			
 			if (i == 0) {
 				if (shift)
-					bubble.setPosition(new Point(topLeftBubble.getX() + topLeftBubble.getWidth() / 2,
-							topLeftBubble.getY()));
+					bubble.translate(bubble.getWidth() / 2, 0);
+				bubble.translate(position.x, position.y);
 				topLeftBubble = bubble;
 			}
 			
@@ -372,6 +374,40 @@ public class BubbleMeshImpl implements BubbleMesh {
 	@Override
 	public Bubble getBottomLeftBubble() {
 		return bottomLeftBubble;
+	}
+
+	@Override
+	public void render(Graphics graphics) {
+		forEach(bubble -> bubble.render(graphics));
+	}
+
+	@Override
+	public void setPosition(Point position) {
+		int dx = position.x - this.position.x;
+		int dy = position.y - this.position.y;
+		this.translate(dx, dy);
+	}
+
+	@Override
+	public Point getPosition() {
+		return position;
+	}
+
+	@Override
+	public int getWidth() {
+		return 0;
+	}
+
+	@Override
+	public int getHeight() {
+		return 0;
+	}
+
+	@Override
+	public void translate(int dx, int dy) {
+		position.translate(dx, dy);
+		topLeftBubble.translate(dx, dy);
+		calculatePositions();
 	}
 
 }

@@ -191,4 +191,10 @@ public class AbstractBubble implements Bubble {
 		return null;
 	}
 
+	@Override
+	public void translate(int dx, int dy) {
+		center.translate(dx, dy);
+		position.translate(dx, dy);
+	}
+
 }

@@ -89,4 +89,9 @@ public class Cannon implements Sprite, View<CannonController, CannonModel> {
 		return controller;
 	}
 
+	@Override
+	public void translate(int dx, int dy) {
+		position.translate(dx, dy);
+	}
+
 }

@@ -110,7 +110,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		GameModel model = gameController.getModel();
 		
-		gameController.getModel().getBubbleMesh().forEach(bubble -> bubble.render(graphics));
+		gameController.getModel().getBubbleMesh().render(graphics);
 		cannon.render(graphics);
 		
 		if (model.isShooting()) {

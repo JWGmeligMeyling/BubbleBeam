@@ -16,6 +16,7 @@ import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshListener.ScoreListener;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.graphics.Sprite;
 
 import com.google.common.collect.Lists;
 
@@ -24,7 +25,7 @@ import com.google.common.collect.Lists;
  *  
  * @author Jan-Willem Gmelig Meyling
  */
-public interface BubbleMesh extends Iterable<Bubble>, Serializable {
+public interface BubbleMesh extends Iterable<Bubble>, Sprite, Serializable {
 	
 	default Stream<Bubble> stream() {
 		return StreamSupport.stream(spliterator(), false);
