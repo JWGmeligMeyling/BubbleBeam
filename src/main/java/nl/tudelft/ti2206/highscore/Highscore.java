@@ -13,7 +13,7 @@ import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract public class Highscore {
+public abstract class Highscore {
 	
 	private static final Logger log = LoggerFactory.getLogger(Highscore.class);
 	

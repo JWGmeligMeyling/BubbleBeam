@@ -3,7 +3,7 @@ package nl.tudelft.ti2206.bubbles.mesh;
 import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.game.GameEventListener;
+import nl.tudelft.ti2206.game.backend.GameEventListener;
 
 /**
  * Listen to events on the {@link BubbleMesh}

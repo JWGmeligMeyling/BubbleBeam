@@ -51,7 +51,7 @@ public class GameControllerTest {
 				.getResourceAsStream(DEFAULT_BOARD_PATH)));
 		
 		cannonModel = spy(new CannonModel());
-		gameModel = spy(new GameModel(bubbleMesh));
+		gameModel = spy(new GameModel(GameMode.CLASSIC, bubbleMesh));
 		tick = spy(new MockedGameTick());
 		BubbleFactory factory = mock(BubbleFactory.class);
 		cannonController = mock(CannonController.class);
@@ -59,7 +59,7 @@ public class GameControllerTest {
 		when(cannonController.getModel()).thenReturn(cannonModel); 
 		when(factory.createBubble(any())).thenReturn(new AbstractBubble());
 
-		gameController = spy(new GameController(gameModel, cannonController, tick, factory));
+		gameController = spy(new GameController(gameModel, cannonController, tick));
 		
 		assertEquals(cannonController, gameController.getCannonController());
 		assertEquals(gameModel, gameController.getModel());
@@ -245,7 +245,8 @@ public class GameControllerTest {
 
 		Connector connector = mock(Connector.class);
 		gameController.bindConnectorAsMaster(connector);
-		reset(connector, gameModel);
+		reset(connector);
+		reset(gameModel);
 		
 		gameModel.triggerShootEvent(direction);
 		verify(connector, times(2)).sendPacket(any(Packet.class));

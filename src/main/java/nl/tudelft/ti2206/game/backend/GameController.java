@@ -8,11 +8,9 @@ import java.util.Set;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
-import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.GameOverEventListener;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
@@ -32,22 +30,18 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final GameModel model;
 	protected final CannonController cannonController;
 	protected final boolean kill;
-	protected final BubbleFactory factory;
 	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick, final BubbleFactory factory) {
-		this(model, cannonController, gameTick, factory, false);
+			final GameTick gameTick) {
+		this(model, cannonController, gameTick, false);
 	}
 	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick, final BubbleFactory factory, boolean kill) {
-		
-		log.info("Constructing GameController using BubbleFactory {}", factory);
-		
+			final GameTick gameTick, boolean kill) {
+
 		this.kill = kill;
 		this.model = model;
 		this.cannonController = cannonController;
-		this.factory = factory;
 		
 		model.getBubbleMesh().calculatePositions();
 		prepareAmmo();
@@ -73,10 +67,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	public CannonController getCannonController() {
 		return cannonController;
-	}
-	
-	public BubbleFactory getFactory(){
-		return factory;
 	}
 	
 	@Override
@@ -225,7 +215,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected Bubble createAmmoBubble() {
-		Bubble bubble = factory.createBubble(model.getRemainingColors());
+		Bubble bubble = model.getGameMode().getBubbleFactory()
+				.createBubble(model.getRemainingColors());
 		log.info("Created new ammo: " + bubble.toString());
 		return bubble;
 	}

@@ -7,12 +7,12 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 
-import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.backend.GameMode;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.backend.GameOverEventListener;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
 
@@ -36,11 +36,10 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		super();
 		
 		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
-		GameModel gameModel = new GameModel(bubbleMesh);
+		GameModel gameModel = new GameModel(GameMode.POWERUP, bubbleMesh);
 		final SlaveCannonController cannonController = new SlaveCannonController();
-		BubbleFactory bubbleFactory = new PowerUpBubbleFactory();
-		
-		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, bubbleFactory, true);
+
+		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, true);
 		this.slaveGamePanel = new GamePanel(slaveGameController);
 		this.slaveGamePanel.setBackground(new Color(225,225,225));
 		this.connector = connector;

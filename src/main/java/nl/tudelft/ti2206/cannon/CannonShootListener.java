@@ -1,6 +1,6 @@
 package nl.tudelft.ti2206.cannon;
 
-import nl.tudelft.ti2206.game.GameEventListener;
+import nl.tudelft.ti2206.game.backend.GameEventListener;
 import nl.tudelft.util.Vector2f;
 
 /**

@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.game;
+package nl.tudelft.ti2206.game.backend;
 
 public interface GameOverEventListener extends GameEventListener {
 	

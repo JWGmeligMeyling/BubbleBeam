@@ -13,7 +13,6 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonShootListener;
-import nl.tudelft.ti2206.game.GameEventListener;
 import nl.tudelft.util.AbstractEventTarget;
 import nl.tudelft.util.EventTarget;
 import nl.tudelft.util.Vector2f;
@@ -23,6 +22,8 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	private final Set<Color> remainingColors;
 	
 	private final AbstractEventTarget<GameEventListener> eventTarget = new AbstractEventTarget<GameEventListener>();
+	
+	private final GameMode gameMode;
 	
 	private BubbleMesh bubbleMesh;
 	
@@ -34,15 +35,16 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	
 	private boolean gameOver = false;
 	
-	private boolean won=false;
+	private boolean won = false;
 	
 	private int misses = 0;
 	
 	private Dimension screenSize;
 	
-	public GameModel(final BubbleMesh bubbleMesh) {
+	public GameModel(final GameMode gameMode, final BubbleMesh bubbleMesh) {
 		this.bubbleMesh = bubbleMesh;
 		this.remainingColors = Sets.newHashSet(bubbleMesh.getRemainingColours());
+		this.gameMode = gameMode;
 	}
 	
 	public void retainRemainingColors(final Collection<Color> colours) {
@@ -171,6 +173,10 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	}
 	public boolean isWon(){
 		return won;
+	}
+
+	public GameMode getGameMode() {
+		return gameMode;
 	}
 	
 }

@@ -10,11 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
-import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
+import nl.tudelft.ti2206.game.backend.GameMode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,11 +53,11 @@ public class RestartSinglePlayerAction extends AbstractAction {
 				public void actionPerformed(ActionEvent e) {
 					dialog.dispose();
 					if(e.getSource().equals(drunkButton)){
-						start(new DrunkBubbleFactory());
+						start(GameMode.DRUNK);
 					} else if(e.getSource().equals(classicButton)){
-						start(new ClassicBubbleFactory());
+						start(GameMode.CLASSIC);
 					} else if(e.getSource().equals(powerupButton)){
-						start(new PowerUpBubbleFactory());
+						start(GameMode.POWERUP);
 					}
 				}
 			};
@@ -78,9 +75,9 @@ public class RestartSinglePlayerAction extends AbstractAction {
 			
 	}
 	
-	public void start(BubbleFactory bf){
+	public void start(GameMode gameMode){
 		try {
-			SinglePlayerFrame frame = new SinglePlayerFrame(bf);
+			SinglePlayerFrame frame = new SinglePlayerFrame(gameMode);
 			frame.pack();
 			frame.setLocationRelativeTo(this.singlePlayerFrame);
 			this.singlePlayerFrame.dispose();
