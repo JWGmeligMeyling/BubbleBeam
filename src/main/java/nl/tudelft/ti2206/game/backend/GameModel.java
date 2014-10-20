@@ -48,10 +48,10 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	
 	public void retainRemainingColors(final Collection<Color> colours) {
 		this.remainingColors.retainAll(colours);
-		if(ColouredBubble.class.isInstance(loadedBubble))
-			this.remainingColors.add(ColouredBubble.class.cast(loadedBubble).getColor());
-		if(ColouredBubble.class.isInstance(nextBubble))
-			this.remainingColors.add(ColouredBubble.class.cast(nextBubble).getColor());
+		if(loadedBubble.hasColor())
+			this.remainingColors.add(loadedBubble.getColor());
+		if(nextBubble.hasColor())
+			this.remainingColors.add(nextBubble.getColor());
 	}
 	
 	public BubbleMesh getBubbleMesh() {
