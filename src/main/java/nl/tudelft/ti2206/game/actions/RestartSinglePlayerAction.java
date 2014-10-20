@@ -36,7 +36,7 @@ public class RestartSinglePlayerAction extends AbstractAction {
 			//adding buttons for all gamemodes to the dialog
 			
 			GameMode[] gameModes = GameMode.values();
-			dialog.setLayout(new GridLayout(1, gameModes.length));
+			dialog.setLayout(new GridLayout(2, gameModes.length));
 			
 			for(GameMode gameMode : gameModes) {
 				String label = gameMode.getName();
@@ -50,9 +50,10 @@ public class RestartSinglePlayerAction extends AbstractAction {
 			}
 			
 			//make it so that the dialog is displayed as it should be
-			dialog.setVisible(true);
+			dialog.setModal(true);
 			dialog.pack();
 			dialog.setLocationRelativeTo(null);
+			dialog.setVisible(true);
 			//add that when on the textfield 'enter' is clicked or the dialogbox is closed to add to the highscore
 			
 	}

@@ -10,6 +10,7 @@ import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
+import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
@@ -92,6 +93,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 				model.getGameMode().gameTick(this, model);
 			}
 			catch (GameOver e) {
+				cannonController.setState(new CannonShootState());
 				gameOver();
 			}
 		}
