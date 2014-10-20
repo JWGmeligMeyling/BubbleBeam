@@ -23,9 +23,11 @@ public enum GameMode {
 			// do nothing, it's hard enough already
 		}
 		
+		private final static  int TICK_AMOUNT = 30;
+		
 		@Override
 		public void gameTick(GameController gameController, GameModel gameModel) {
-			if((ticks = ++ticks % 10) == 0) {
+			if((ticks = ++ticks % TICK_AMOUNT) == 0) {
 				gameModel.getBubbleMesh().translate(0, 1);
 			}
 		}
