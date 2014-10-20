@@ -26,7 +26,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
 	
 	private static final float MOVING_BUBBLE_SPEED = 15f;
-	private final static int MAX_MISSES = 5;
 	
 	protected final GameModel model;
 	protected final CannonController cannonController;
@@ -157,7 +156,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 			
 			if (!bubbleMesh.pop(shotBubble)) {
-				incrementMisses();
+				model.getGameMode().missed(this, model);
 			}
 			else if(bubbleMesh.isEmpty()){
 				throw new GameOver();
@@ -178,20 +177,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.setGameOver(true);
 		model.notifyObservers();
 		model.trigger(GameOverEventListener.class, GameOverEventListener::gameOver);
-	}
-	
-	/**
-	 * No bubbles popped, increment misses
-	 * 
-	 * @throws GameOver
-	 */
-	protected void incrementMisses() throws GameOver {
-		int misses = model.getMisses();
-		if (++misses == MAX_MISSES) {
-			misses = 0;
-			insertRow();
-		}
-		model.setMisses(misses);
 	}
 	
 	/**

@@ -19,6 +19,11 @@ public enum GameMode {
 		private int ticks = 0;
 		
 		@Override
+		public void missed(GameController gameController, GameModel gameModel) {
+			// do nothing, it's hard enough already
+		}
+		
+		@Override
 		public void gameTick(GameController gameController, GameModel gameModel) {
 			if((ticks = ++ticks % 10) == 0) {
 				gameModel.getBubbleMesh().translate(0, 1);
@@ -26,6 +31,8 @@ public enum GameMode {
 		}
 		
 	};
+	
+	private final static int MAX_MISSES = 5;
 	
 	private final String name;
 	private final BubbleFactory bubbleFactory;
@@ -43,6 +50,15 @@ public enum GameMode {
 
 	public BubbleFactory getBubbleFactory() {
 		return bubbleFactory;
+	}
+	
+	public void missed(GameController gameController, GameModel gameModel) {
+		int misses = gameModel.getMisses();
+		if (++misses == MAX_MISSES) {
+			misses = 0;
+			gameController.insertRow();
+		}
+		gameModel.setMisses(misses);
 	}
 
 	public void gameTick(GameController gameController, GameModel gameModel) {
