@@ -7,6 +7,14 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.highscore.ClassicHighscore;
 
+/**
+ * In the {@code ClassicGameMode}, the {@link ClassicBubbleFactory} is used to
+ * create new {@code Bubbles}. It uses only {@link ColouredBubbles}, no power-up
+ * bubbles. After 5 misses, a new row is inserted on top.
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 @ModeName("Classic Mode")
 @ModeHighscore(ClassicHighscore.class)
 @ModeBubbleFactory(ClassicBubbleFactory.class)
@@ -20,7 +28,14 @@ public class ClassicGameMode implements GameMode {
 	
 	protected final GameController gameController;
 	protected final GameModel gameModel;
-
+	
+	/**
+	 * In the {@code ClassicGameMode}, the {@link ClassicBubbleFactory} is used to
+	 * create new {@code Bubbles}. It uses only {@link ColouredBubbles}, no power-up
+	 * bubbles. After 5 misses, a new row is inserted on top.
+	 * 
+	 * @param gameController {@link GameController} for this {@code GameMode}
+	 */
 	@Inject
 	public ClassicGameMode(GameController gameController) {
 		this.gameController = gameController;

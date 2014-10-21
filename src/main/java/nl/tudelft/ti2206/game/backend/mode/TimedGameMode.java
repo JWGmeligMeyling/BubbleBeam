@@ -7,6 +7,15 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.highscore.PowerupHighscore;
 
+/**
+ * In the {@code TimedGameMode}, the {@link PowerUpBubbleFactory} is used to
+ * create new {@code Bubbles}. It uses both {@link ColouredBubbles} and power-up
+ * bubbles, some with the Drunk Bubble effect. Every tick all bubbles move down
+ * a bit, and the goal is to pop all bubbles before they collide with the bottom.
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 @ModeName("Timed Mode")
 @ModeHighscore(PowerupHighscore.class)
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
@@ -21,6 +30,15 @@ public class TimedGameMode implements GameMode {
 
 	protected int ticks = 0;
 
+	/**
+	 * In the {@code TimedGameMode}, the {@link PowerUpBubbleFactory} is used to
+	 * create new {@code Bubbles}. It uses both {@link ColouredBubbles} and
+	 * power-up bubbles, some with the Drunk Bubble effect. Every tick all
+	 * bubbles move down a bit, and the goal is to pop all bubbles before they
+	 * collide with the bottom.
+	 * 
+	 * @param gameController {@link GameController} for this {@code GameMode}
+	 */
 	@Inject
 	public TimedGameMode(GameController gameController) {
 		this.gameController = gameController;
