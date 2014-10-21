@@ -23,7 +23,6 @@ import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.graphics.animations.FallAnimation;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.util.mvc.View;
 import nl.tudelft.util.ObservableObject;
@@ -132,7 +131,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		model.getLoadedBubble().render(graphics);
 		model.getNextBubble().setCenter(AMMO_NEXT_POSITION);
 		model.getNextBubble().render(graphics);
-
+		
 		Lists.newArrayList(animationList).forEach(animation -> {
 			animation.render(graphics);
 		});

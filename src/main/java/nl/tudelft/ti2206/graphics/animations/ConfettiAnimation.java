@@ -16,7 +16,7 @@ public class ConfettiAnimation extends FiniteAnimation {
 	protected static Random random = new Random();
 	protected final static BufferedImage CONFETTI_STRIP = _getCannonImage();
 	protected final static int STRIP_SIZE = 9;
-	protected static final float MIN_CONFETTI_SPEED = 0.5f;
+	protected static final float MIN_CONFETTI_SPEED = 2f;
 	protected static final float MAX_CONFETTI_SPEED = 5f;
 	protected static final int CONFETTI_RADIUS = 9;
 	protected static final int CONFETTI_HALF_WIDTH = 6;
@@ -51,14 +51,18 @@ public class ConfettiAnimation extends FiniteAnimation {
 		
 		int size = (int) (time * MAX_CONFETTI_SPEED) + CONFETTI_RADIUS;
 		BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-		Graphics imgGraphics = img.getGraphics();
+		Graphics2D imgGraphics = (Graphics2D) img.getGraphics();
 		imgGraphics.translate(size / 2, size / 2);
 		for (int i = 0; i < STRIP_SIZE; i++) {
 			int x = (int) (Math.cos(direction[i]) * speed[i] * time);
 			int y = (int) (Math.sin(direction[i]) * speed[i] * time);
-			imgGraphics.drawImage(CONFETTI_STRIP, -CONFETTI_HALF_WIDTH + x, -CONFETTI_HALF_WIDTH
-					+ y, CONFETTI_HALF_WIDTH + x, CONFETTI_HALF_WIDTH + y, CONFETTI_WIDTH * i, 0,
-					CONFETTI_WIDTH * i + CONFETTI_WIDTH, CONFETTI_WIDTH, null);
+			imgGraphics.translate(x, y);
+			imgGraphics.rotate(angle[i]);
+			imgGraphics.drawImage(CONFETTI_STRIP, -CONFETTI_HALF_WIDTH, -CONFETTI_HALF_WIDTH,
+					CONFETTI_HALF_WIDTH, CONFETTI_HALF_WIDTH, CONFETTI_WIDTH * i, 0, CONFETTI_WIDTH
+							* i + CONFETTI_WIDTH, CONFETTI_WIDTH, null);
+			imgGraphics.rotate(-angle[i]);
+			imgGraphics.translate(-x, -y);
 		}
 		
 		Graphics2D g2 = (Graphics2D) g;
