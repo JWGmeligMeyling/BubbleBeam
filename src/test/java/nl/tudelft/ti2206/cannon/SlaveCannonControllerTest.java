@@ -13,6 +13,7 @@ import nl.tudelft.ti2206.network.packets.CannonShoot;
 import nl.tudelft.ti2206.network.packets.MockedPacketHandler;
 import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.util.Vector2f;
+import nl.tudelft.ti2206.game.event.CannonListener.*;
 
 import org.junit.Before;
 import org.junit.Test;

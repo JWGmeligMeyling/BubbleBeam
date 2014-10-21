@@ -26,6 +26,11 @@ import nl.tudelft.util.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.tudelft.ti2206.game.event.BubbleMeshListener;
+import nl.tudelft.ti2206.game.event.GameListener;
+import nl.tudelft.ti2206.game.event.CannonListener.*;
+import nl.tudelft.ti2206.game.event.GameListener.*;
+
 public class GameController implements Controller<GameModel>, Tickable {
 	
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
@@ -55,6 +60,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 		try {
 			this.gameMode = model.getGameMode().getConstructor(GameController.class).newInstance(this);
+			this.model.addEventListener(gameMode);
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
@@ -64,15 +70,31 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.getBubbleMesh().calculatePositions();
 		prepareAmmo();
 		
-		cannonController.getModel().addEventListener((direction) -> {
-			GameController.this.shoot(direction);
+		cannonController.getModel().addEventListener(CannonShootListener.class, (event) -> {
+			GameController.this.shoot(event);
 		});
 		
-		model.getBubbleMesh().getEventTarget().addScoreListener((scoreEvent) -> {
-			int amount = scoreEvent.getAmountOfPoints();
-			model.incrementScore(amount);
-			model.retainRemainingColors(scoreEvent.getSource().getRemainingColours());
-			model.notifyObservers();
+		model.getBubbleMesh().getEventTarget().addEventListener(new BubbleMeshListener() {
+
+			@Override
+			public void rowInsert(RowInsertEvent event) {
+				model.trigger(listener -> listener.rowInsert(event));
+			}
+
+			@Override
+			public void pop(BubblePopEvent event) {
+				model.trigger(listener -> listener.pop(event));
+			}
+
+			@Override
+			public void score(ScoreEvent event) {
+				int amount = event.getAmountOfPoints();
+				model.incrementScore(amount);
+				model.retainRemainingColors(event.getSource().getRemainingColours());
+				model.notifyObservers();
+				model.trigger(listener -> listener.score(event));
+			}
+			
 		});
 		
 		gameTick.registerObserver(this);
@@ -128,7 +150,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * @throws IllegalStateException
 	 *             if there already is a bubble being shot
 	 */
-	protected void shoot(final Vector2f direction) {
+	protected void shoot(final CannonShootEvent event) {
+		
+		final Vector2f direction = event.getDirection();
+		
 		direction.normalise();
 		
 		if (model.isShooting()) {
@@ -143,7 +168,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		updateBubbles();
 		model.setShotBubble(shotBubble);
 		model.notifyObservers();
-		model.triggerShootEvent(direction);
+		model.trigger(listener -> listener.shoot(event));
 	}
 	
 	protected void updateBubbles() {
@@ -177,7 +202,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 			
 			if (!bubbleMesh.pop(shotBubble)) {
-				gameMode.missed();
+				ShotMissedEvent event = new ShotMissedEvent(this);
+				model.trigger(listener -> listener.shotMissed(event));
 			}
 			else if(bubbleMesh.isEmpty()){
 				throw new GameOver();
@@ -198,7 +224,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		cannonController.setState(new CannonShootState());
 		model.setGameOver(true);
 		model.notifyObservers();
-		model.trigger(GameOverEventListener.class, GameOverEventListener::gameOver);
+		model.trigger(listener -> listener.gameOver(new GameOverEvent(this)));
 		tick.removeObserver(this);
 	}
 	
@@ -254,19 +280,33 @@ public class GameController implements Controller<GameModel>, Tickable {
 		log.info("Binding {} to connector {}", this, connector);
 		sendInitialData(connector);
 		
-		model.getBubbleMesh().getEventTarget().addRowInsertedListener((event) -> {
-			log.info("Sending insert row");
-			connector.sendPacket(new BubbleMeshSync(event.getSource()));
-		});
-		
-		model.addShootEventListener((direction) -> {
-			log.info("Sending shoot packet");
-			connector.sendPacket(new CannonShoot(direction));
+		model.addEventListener(new GameListener() {
+
+			@Override
+			public void rowInsert(RowInsertEvent event) {
+				log.info("Sending insert row");
+				connector.sendPacket(new BubbleMeshSync(event.getSource()));
+			}
 			
-			Bubble loadedBubble = model.getLoadedBubble();
-			Bubble nextBubble = model.getNextBubble();
-			log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
-			connector.sendPacket(new AmmoPacket(loadedBubble, nextBubble));
+			@Override
+			public void shoot(CannonShootEvent event) {
+				log.info("Sending shoot packet");
+				connector.sendPacket(new CannonShoot(event.getDirection()));
+				
+				Bubble loadedBubble = model.getLoadedBubble();
+				Bubble nextBubble = model.getNextBubble();
+				log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
+				connector.sendPacket(new AmmoPacket(loadedBubble, nextBubble));
+			}
+
+			@Override
+			public void gameOver(GameOverEvent event) {
+			}
+
+			@Override
+			public void shotMissed(ShotMissedEvent event) {
+			}
+			
 		});
 		
 	}

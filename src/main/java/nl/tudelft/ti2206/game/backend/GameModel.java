@@ -18,19 +18,19 @@ import com.google.common.collect.Sets;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
-import nl.tudelft.ti2206.cannon.CannonShootListener;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.util.AbstractEventTarget;
 import nl.tudelft.util.EventTarget;
-import nl.tudelft.util.Vector2f;
 
-public class GameModel extends Observable implements EventTarget<GameEventListener>, Serializable {
+import nl.tudelft.ti2206.game.event.GameListener;
+
+public class GameModel extends Observable implements EventTarget<GameListener>, Serializable {
 	
 	private static final long serialVersionUID = 7372457527680874284L;
 
 	private static final Logger log = LoggerFactory.getLogger(GameModel.class);
 	
-	private transient AbstractEventTarget<GameEventListener> eventTarget = new AbstractEventTarget<GameEventListener>();
+	private transient AbstractEventTarget<GameListener> eventTarget = new AbstractEventTarget<GameListener>();
 	
 	private final Set<Color> remainingColors;
 	
@@ -141,33 +141,19 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 		this.setChanged();
 	}
 
-	public void addShootEventListener(CannonShootListener listener) {
-		eventTarget.addEventListener(listener);
-	}
-	
 	@Override
-	public void addEventListener(GameEventListener listener) {
+	public void addEventListener(GameListener listener) {
 		eventTarget.addEventListener(listener);
 	}
 
 	@Override
-	public void removeEventListener(GameEventListener listener) {
+	public void removeEventListener(GameListener listener) {
 		eventTarget.removeEventListener(listener);
 	}
 
-	public void triggerShootEvent(final Vector2f direction) {
-		eventTarget.trigger(CannonShootListener.class, listener -> listener.shoot(direction));
-	}
-
 	@Override
-	public void trigger(Consumer<GameEventListener> action) {
+	public void trigger(Consumer<GameListener> action) {
 		eventTarget.trigger(action);
-	}
-
-	@Override
-	public <A extends GameEventListener> void trigger(Class<A> clasz,
-			Consumer<A> action) {
-		eventTarget.trigger(clasz, action);
 	}
 
 	public void setWon(boolean b) {
@@ -184,7 +170,7 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        eventTarget = new AbstractEventTarget<GameEventListener>();
+        eventTarget = new AbstractEventTarget<GameListener>();
     }
 	
 }

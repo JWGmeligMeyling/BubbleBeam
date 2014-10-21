@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.game.backend.Tickable;
+import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.highscore.Highscore;
 
 /**
@@ -12,14 +13,15 @@ import nl.tudelft.ti2206.highscore.Highscore;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public interface GameMode extends Tickable, Serializable {
+public interface GameMode extends GameListener, Tickable, Serializable {
 	
-	/**
-	 * Triggered when the player misses a shot
-	 */
-	default void missed() {
-		// TODO Probably we want GameMode's to listen for GameEvents instead of hard coded hooking
-	};
+	@Override default void gameOver(GameOverEvent event) {
+		// No-op on default, but subtypes may rely on gameOver
+	}
+	
+	@Override default void shotMissed(ShotMissedEvent event) {
+		// No-op on default, but subtypes may rely on shotMissed, for example classic mode
+	}
 	
 	@Override default void gameTick() {
 		// No-op on default, but subtypes may rely on gametick, for example Timed mode

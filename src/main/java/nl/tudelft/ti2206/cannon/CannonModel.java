@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import nl.tudelft.util.AbstractEventTarget;
 import nl.tudelft.util.EventTarget;
 import nl.tudelft.util.Vector2f;
+import nl.tudelft.ti2206.game.event.CannonListener;
 
 /**
  * The {@code CannonModel} is the model for the {@link CannonController}
@@ -14,9 +15,9 @@ import nl.tudelft.util.Vector2f;
  * @author Leon Hoek
  *
  */
-public class CannonModel extends Observable implements EventTarget<CannonShootListener> {
+public class CannonModel extends Observable implements EventTarget<CannonListener> {
 	
-	private AbstractEventTarget<CannonShootListener> eventTarget = new AbstractEventTarget<>();
+	private AbstractEventTarget<CannonListener> eventTarget = new AbstractEventTarget<>();
 	
 	private CannonState cannonState = new CannonShootState();
 	private double angle = Math.PI / 2;
@@ -53,24 +54,18 @@ public class CannonModel extends Observable implements EventTarget<CannonShootLi
 	}
 	
 	@Override
-	public void addEventListener(CannonShootListener listener) {
+	public void addEventListener(CannonListener listener) {
 		eventTarget.addEventListener(listener);
 	}
 
 	@Override
-	public void removeEventListener(CannonShootListener listener) {
+	public void removeEventListener(CannonListener listener) {
 		eventTarget.removeEventListener(listener);
 	}
 	
 	@Override
-	public void trigger(Consumer<CannonShootListener> action) {
+	public void trigger(Consumer<CannonListener> action) {
 		eventTarget.trigger(action);
 	}
 
-	@Override
-	public <A extends CannonShootListener> void trigger(Class<A> clasz,
-			Consumer<A> action) {
-		eventTarget.trigger(clasz, action);
-	}
-	
 }

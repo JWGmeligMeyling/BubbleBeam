@@ -3,6 +3,7 @@ package nl.tudelft.ti2206.cannon;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import nl.tudelft.util.Vector2f;
+import nl.tudelft.ti2206.game.event.CannonListener.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class AbstractCannonControllerTest {
 		cannonController.shoot();
 		verify(cannonState, times(1)).shoot();
 		verify(cannonModel, times(1)).setCannonState(any(CannonShootState.class));
-		verify(shootListener, times(1)).shoot(direction);
+		verify(shootListener, times(1)).shoot(new CannonShootEvent(cannonController, direction));
 	}
 
 	@Test

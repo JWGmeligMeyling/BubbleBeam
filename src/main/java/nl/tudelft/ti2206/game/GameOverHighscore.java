@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.game.backend.GameOverEventListener;
+import nl.tudelft.ti2206.game.event.GameListener.*;
 import nl.tudelft.ti2206.highscore.Highscore;
 import nl.tudelft.ti2206.highscore.HighscorePopup;
 import nl.tudelft.ti2206.highscore.ScoreItem;
@@ -24,7 +24,7 @@ public class GameOverHighscore implements GameOverEventListener {
 	}
 	
 	@Override
-	public void gameOver() {
+	public void gameOver(GameOverEvent event) {
 		GameModel gameModel = gameController.getModel();
 		gameModel.setGameOver(true);
 		long score = gameModel.getScore();
@@ -63,7 +63,7 @@ public class GameOverHighscore implements GameOverEventListener {
 				}
 			});
 			
-			nameField.addActionListener((event) -> {
+			nameField.addActionListener((e) -> {
 				String name = nameField.getText();
 				scoreEntry.setName(name);
 				hs.addNewScore(scoreEntry);

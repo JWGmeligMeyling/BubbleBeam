@@ -43,7 +43,7 @@ public class ClassicGameMode implements GameMode {
 	}
 
 	@Override
-	public void missed() {
+	public void shotMissed(ShotMissedEvent event) {
 		if (++misses == MAX_MISSES) {
 			misses = 0;
 			gameController.insertRow();

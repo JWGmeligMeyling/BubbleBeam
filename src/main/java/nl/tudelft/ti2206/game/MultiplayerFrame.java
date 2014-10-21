@@ -10,10 +10,10 @@ import javax.swing.JLabel;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.game.backend.GameOverEventListener;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.ti2206.network.packets.PoppedPacket;
+import nl.tudelft.ti2206.game.event.GameListener.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 			.addEventListener(PacketListener.PoppedPacketListener.class, (a) -> {
 					bubblesPopped += a.getAmount();
 					if (bubblesPopped >= 5) {
-						gameController.getGameMode().missed();
+						gameController.getGameMode().shotMissed(null);
 						bubblesPopped = 0;
 					}
 				});
@@ -57,7 +57,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		slaveGameController.getModel().addEventListener(new GameOverEventListener(){
 
 			@Override
-			public void gameOver() {
+			public void gameOver(GameOverEvent event) {
 				log.info("you win");
 				gameController.getModel().setWon(true);
 				gameController.getModel().setGameOver(true);
@@ -68,7 +68,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		gameController.getModel().addEventListener(new GameOverEventListener(){
 
 			@Override
-			public void gameOver() {
+			public void gameOver(GameOverEvent event) {
 			log.info("you lose");
 				slaveGameController.getModel().setWon(true);
 			}

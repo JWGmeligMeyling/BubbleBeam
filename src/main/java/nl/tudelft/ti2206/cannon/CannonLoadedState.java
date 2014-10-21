@@ -5,6 +5,8 @@ import nl.tudelft.util.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.tudelft.ti2206.game.event.CannonListener.*;
+
 /**
  * Cannon loaded state is the state for the cannon when the cannon is loaded
  * @author Jan-Willem Gmelig Meyling
@@ -25,8 +27,9 @@ public class CannonLoadedState implements CannonState {
 		cannonController.setState(new CannonShootState());
 		Vector2f direction = cannonController.getModel().getDirection();
 		log.info("Shooting in direction {}", direction);
-		cannonController.getModel().trigger(
-				listener -> listener.shoot(direction));
+		
+		CannonShootEvent event = new CannonShootEvent(cannonController, direction);
+		cannonController.getModel().trigger(listener -> listener.shoot(event));
 	}
 	
 }

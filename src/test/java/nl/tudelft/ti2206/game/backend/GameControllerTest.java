@@ -13,7 +13,9 @@ import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
+import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
+import nl.tudelft.ti2206.game.event.CannonListener.*;
 import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
@@ -44,6 +46,7 @@ public class GameControllerTest {
 	protected CannonModel cannonModel;
 	protected CannonController cannonController;
 	protected GameController gameController;
+	protected GameListener gameListener;
 
 	@Before
 	public void setUp() throws Exception {
@@ -52,7 +55,11 @@ public class GameControllerTest {
 				.getResourceAsStream(DEFAULT_BOARD_PATH)));
 		
 		cannonModel = spy(new CannonModel());
+
 		gameModel = spy(new GameModel(ClassicGameMode.class, bubbleMesh));
+		gameListener = mock(GameListener.class);
+		gameModel.addEventListener(gameListener);
+		
 		tick = spy(new MockedGameTick());
 		BubbleFactory factory = mock(BubbleFactory.class);
 		cannonController = mock(CannonController.class);
@@ -64,6 +71,7 @@ public class GameControllerTest {
 		
 		assertEquals(cannonController, gameController.getCannonController());
 		assertEquals(gameModel, gameController.getModel());
+		
 
 		verify(bubbleMesh).calculatePositions();
 		verify(cannonModel).addEventListener(any());
@@ -72,7 +80,7 @@ public class GameControllerTest {
 	}
 
 	protected void resetMocks() {
-		reset(bubbleMesh, gameModel, cannonController, gameController, tick);
+		reset(bubbleMesh, gameModel, gameListener, cannonController, gameController, tick);
 	}
 	
 	@Test
@@ -93,27 +101,29 @@ public class GameControllerTest {
 	@Test
 	public void testShootListener() {
 		Vector2f direction = new Vector2f(-0.054464497f, -0.9985157f);
+		CannonShootEvent event = new CannonShootEvent(cannonController, direction);
 		
 		cannonModel.trigger(listener -> {
-			listener.shoot(direction);
+			listener.shoot(event);
 		});
 		
 		verifyUpdateBubbles(gameModel);
 		verify(gameModel).setShotBubble(any());
 		verify(gameModel).notifyObservers();
-		verify(gameModel).triggerShootEvent(direction);
+		verify(gameListener).shoot(event);
 	}
 	
 	@Test(expected=IllegalStateException.class)
 	public void testShootInvalidState() {
 		Vector2f direction = new Vector2f(-0.054464497f, -0.9985157f);
+		CannonShootEvent event = new CannonShootEvent(cannonController, direction);
 		
 		cannonModel.trigger(listener -> {
-			listener.shoot(direction);
+			listener.shoot(event);
 		});
 		
 		cannonModel.trigger(listener -> {
-			listener.shoot(direction);
+			listener.shoot(event);
 		});
 	}
 	
@@ -130,7 +140,7 @@ public class GameControllerTest {
 		int amount = 20;
 		
 		bubbleMesh.getEventTarget()
-			.trigger(ScoreListener.class, listener -> {
+			.trigger(listener -> {
 				listener.score(new ScoreEvent(bubbleMesh, amount));
 		});
 		
@@ -199,7 +209,7 @@ public class GameControllerTest {
 	protected static void verifyGameOver(GameModel gameModel) {
 		verify(gameModel).setGameOver(true);
 		verify(gameModel).notifyObservers();
-		verify(gameModel).trigger(any(), any());
+		verify(gameModel).trigger(any());
 	}
 	
 	@Test
@@ -237,13 +247,16 @@ public class GameControllerTest {
 	@Test
 	public void testCannonShootSend() {
 		Vector2f direction = new Vector2f(-0.054464497f, -0.9985157f);
+		CannonShootEvent event = new CannonShootEvent(cannonController, direction);
 
 		Connector connector = mock(Connector.class);
 		gameController.bindConnectorAsMaster(connector);
 		reset(connector);
 		reset(gameModel);
 		
-		gameModel.triggerShootEvent(direction);
+		gameModel.trigger(listener -> {
+			listener.shoot(event);
+		});
 		verify(connector, times(2)).sendPacket(any(Packet.class));
 		verify(gameModel).getLoadedBubble();
 		verify(gameModel).getNextBubble();

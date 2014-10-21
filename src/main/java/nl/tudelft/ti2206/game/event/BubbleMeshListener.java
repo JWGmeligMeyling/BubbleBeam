@@ -15,7 +15,7 @@ public interface BubbleMeshListener extends EventListener {
 		
 		protected final transient BubbleMesh bubbleMesh;
 
-		public BubbleMeshEvent(BubbleMesh bubbleMesh) {
+		protected BubbleMeshEvent(BubbleMesh bubbleMesh) {
 			super(bubbleMesh);
 			this.bubbleMesh = bubbleMesh;
 		}

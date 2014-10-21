@@ -15,6 +15,4 @@ public interface EventTarget<T extends EventListener> {
 	
 	void trigger(Consumer<T> action);
 	
-	<A extends T> void trigger(Class<A> clasz, Consumer<A> action);
-	
 }

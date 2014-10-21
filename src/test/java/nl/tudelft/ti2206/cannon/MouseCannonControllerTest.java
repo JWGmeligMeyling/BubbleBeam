@@ -13,6 +13,7 @@ import java.util.Observer;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.CannonRotate;
 import nl.tudelft.util.Vector2f;
+import nl.tudelft.ti2206.game.event.CannonListener.*;
 
 import org.junit.Before;
 import org.junit.Test;
