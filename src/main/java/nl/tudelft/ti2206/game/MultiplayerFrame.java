@@ -12,7 +12,8 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.GameOverEventListener;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.network.packets.PoppedPacket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,16 +42,17 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		
 		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
 			log.info(b.size()+" bubbles popped");
-			connector.sendPacket(new Packet.PoppedPacket(b.size()));
+			connector.sendPacket(new PoppedPacket(b.size()));
 		});;
 		
-		connector.getPacketHandlerCollection().registerPopHandler((a)->{
-			bubblesPopped+=a.getAmount();
-			if(bubblesPopped>=10){
-				gameController.insertRow();
-				bubblesPopped=0;
-			}
-		});
+		connector.getPacketHandlerCollection().addEventListener(
+				PacketListener.PoppedPacketListener.class, (a) -> {
+					bubblesPopped += a.getAmount();
+					if (bubblesPopped >= 10) {
+						gameController.insertRow();
+						bubblesPopped = 0;
+					}
+				});
 		
 		slaveGameController.getModel().addEventListener(new GameOverEventListener(){
 

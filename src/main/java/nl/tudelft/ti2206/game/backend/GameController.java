@@ -13,8 +13,11 @@ import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
+import nl.tudelft.ti2206.network.packets.AmmoPacket;
+import nl.tudelft.ti2206.network.packets.BubbleMeshSync;
+import nl.tudelft.ti2206.network.packets.CannonShoot;
+import nl.tudelft.ti2206.network.packets.PacketHandler;
+import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
 
@@ -229,42 +232,44 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 		model.getBubbleMesh().getEventTarget().addRowInsertedListener((bubbleMesh) -> {
 			log.info("Sending insert row");
-			connector.sendPacket(new Packet.BubbleMeshSync(bubbleMesh));
+			connector.sendPacket(new BubbleMeshSync(bubbleMesh));
 		});
 		
 		model.addShootEventListener((direction) -> {
 			log.info("Sending shoot packet");
-			connector.sendPacket(new Packet.CannonShoot(direction));
+			connector.sendPacket(new CannonShoot(direction));
 			
 			Bubble loadedBubble = model.getLoadedBubble();
 			Bubble nextBubble = model.getNextBubble();
 			log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
-			connector.sendPacket(new Packet.AmmoPacket(loadedBubble, nextBubble));
+			connector.sendPacket(new AmmoPacket(loadedBubble, nextBubble));
 		});
 		
 	}
 	
 	public void bindConnectorAsSlave(final Connector connector) {
-		PacketHandlerCollection packetHandlerCollection = connector.getPacketHandlerCollection();
+		PacketHandler packetHandlerCollection = connector.getPacketHandlerCollection();
 		
-		packetHandlerCollection.registerBubbleMeshSyncListener((packet) -> {
-			log.info("Processing packet {}", packet);
-			model.setBubbleMesh(packet.bubbleMesh);
-			model.notifyObservers();
-		});
+		packetHandlerCollection.addEventListener(
+				PacketListener.BubbleMeshSyncListener.class, (packet) -> {
+					log.info("Processing packet {}", packet);
+					model.setBubbleMesh(packet.bubbleMesh);
+					model.notifyObservers();
+				});
 
-		packetHandlerCollection.registerLoadNewBubbleListener((packet) -> {
-			log.info("Processing packet {}", packet);
-			model.setLoadedBubble(packet.loadedBubble);
-			model.setNextBubble(packet.nextBubble);
-			model.notifyObservers();
-		});
+		packetHandlerCollection.addEventListener(
+				PacketListener.AmmoPacketListener.class, (packet) -> {
+					log.info("Processing packet {}", packet);
+					model.setLoadedBubble(packet.loadedBubble);
+					model.setNextBubble(packet.nextBubble);
+					model.notifyObservers();
+				});
 	}
 	
 	protected void sendInitialData(final Connector connector) {
 		log.info("Sending initial data to {}", connector);
-		connector.sendPacket(new Packet.BubbleMeshSync(model.getBubbleMesh()));
-		connector.sendPacket(new Packet.AmmoPacket(
+		connector.sendPacket(new BubbleMeshSync(model.getBubbleMesh()));
+		connector.sendPacket(new AmmoPacket(
 				model.getLoadedBubble(),
 				model.getNextBubble()));
 	}

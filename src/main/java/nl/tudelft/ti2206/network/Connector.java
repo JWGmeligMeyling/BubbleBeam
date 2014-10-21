@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
+import nl.tudelft.ti2206.network.packets.PacketHandler;
 import nl.tudelft.util.AbstractEventTarget;
 
 /**
@@ -31,14 +31,14 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 	protected final Socket socket;
 	protected final ObjectInputStream in;
 	protected final ObjectOutputStream out;
-	protected final PacketHandlerCollection packetHandlerCollection;
+	protected final PacketHandler packetHandlerCollection;
 	protected final Thread thread;
 	
 	public Connector(final Socket socket) throws IOException {
-		this(socket, new PacketHandlerCollection());
+		this(socket, new PacketHandler());
 	}
 	
-	public Connector(final Socket socket, final PacketHandlerCollection packetHandlerCollection) throws IOException {
+	public Connector(final Socket socket, final PacketHandler packetHandlerCollection) throws IOException {
 		this.socket = socket;
 		this.out = new ObjectOutputStream(socket.getOutputStream());
 		this.out.flush();
@@ -111,7 +111,7 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 		readPacket(inputstream).notify(packetHandlerCollection);
 	}
 	
-	public PacketHandlerCollection getPacketHandlerCollection() {
+	public PacketHandler getPacketHandlerCollection() {
 		return packetHandlerCollection;
 	}
 	

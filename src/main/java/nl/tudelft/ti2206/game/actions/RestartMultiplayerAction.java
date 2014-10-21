@@ -20,7 +20,7 @@ import nl.tudelft.ti2206.game.MultiplayerFrame;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.ti2206.network.packets.GameModelPacket;
 
 public class RestartMultiplayerAction extends AbstractAction {
 	
@@ -75,7 +75,7 @@ public class RestartMultiplayerAction extends AbstractAction {
 									.getResourceAsStream(DEFAULT_BOARD_PATH)));
 					
 					log.info("Sending game model packet");
-					connector.sendPacket(new Packet.GameModelPacket(masterGameModel, slaveGameModel));
+					connector.sendPacket(new GameModelPacket(masterGameModel, slaveGameModel));
 					
 					MultiplayerFrame frame = new MultiplayerFrame(masterGameModel, slaveGameModel, connector);
 					frame.pack();

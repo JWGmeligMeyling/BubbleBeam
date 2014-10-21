@@ -20,9 +20,9 @@ import nl.tudelft.ti2206.game.MultiplayerFrame;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet.GameModelPacket;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
-import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.network.packets.GameModelPacket;
+import nl.tudelft.ti2206.network.packets.PacketHandler;
+import nl.tudelft.ti2206.network.packets.PacketListener.GameModelPacketListener;
 
 public class FindMultiplayerAction extends AbstractAction {
 
@@ -65,19 +65,19 @@ public class FindMultiplayerAction extends AbstractAction {
 				socket.connect(new InetSocketAddress(singlePlayerFrame.getIpValue(), PORT));
 				log.info("Connected to host");
 				
-				PacketHandlerCollection phc = new PacketHandlerCollection();
+				PacketHandler phc = new PacketHandler();
 				
 				final Object lock = new Object();
 				
 				AtomicReference<GameModel> masterGameModel = new AtomicReference<>();
 				AtomicReference<GameModel>  slaveGameModel = new AtomicReference<>();
 				
-				phc.registerGameModelPacketHandler(new PacketListener<GameModelPacket>() {
+				phc.addEventListener(new GameModelPacketListener() {
 
 					@Override
-					public void update(GameModelPacket gameModelPacket) {
-						masterGameModel.set(gameModelPacket.getMasterGameModel());
-						slaveGameModel.set(gameModelPacket.getSlaveGameModel());
+					public void receivedGameModelPacket(GameModelPacket packet) {
+						masterGameModel.set(packet.getMasterGameModel());
+						slaveGameModel.set(packet.getSlaveGameModel());
 						
 						synchronized(lock) {
 							log.info("Notifying lock");
@@ -85,6 +85,7 @@ public class FindMultiplayerAction extends AbstractAction {
 							log.info("Notified lock");
 						}
 					}
+
 				});
 				
 				Connector connector = new Connector(socket, phc);
