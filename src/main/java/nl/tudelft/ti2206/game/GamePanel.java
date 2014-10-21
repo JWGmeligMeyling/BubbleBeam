@@ -77,7 +77,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.gameController.getModel().getBubbleMesh().getEventTarget()
 				.addPopListener((bubbleMesh, bubblesPopped) -> {
 					bubblesPopped.forEach(bubble -> {
-						animationList.add(new FallAnimation(bubble));
+						animationList.add(bubble.getAnimation(bubble));
 					});
 				});
 	}

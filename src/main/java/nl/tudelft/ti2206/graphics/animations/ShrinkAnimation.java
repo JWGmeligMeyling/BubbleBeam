@@ -13,8 +13,8 @@ import nl.tudelft.ti2206.bubbles.Bubble;
  * @author Sam Smulders
  */
 public class ShrinkAnimation extends FiniteAnimation {
-	public Bubble bubble;
-	private Point position;
+	protected Bubble bubble;
+	protected Point position;
 	
 	public ShrinkAnimation(Bubble bubble) {
 		super(bubble.getRadius());
