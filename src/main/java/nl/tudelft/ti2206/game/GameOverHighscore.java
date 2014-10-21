@@ -36,7 +36,7 @@ public class GameOverHighscore implements GameOverEventListener {
 		ScoreItem scoreEntry = new ScoreItem(score,"");
 		
 		//choose which highscore to add to depending on the factory
-		Highscore hs = gameModel.getGameMode().getHighscore();
+		Highscore hs = gameController.getGameMode().getHighscore();
 		ScoreItem lastPlace = hs.getPlace(hs.getSize());
 	
 		//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered

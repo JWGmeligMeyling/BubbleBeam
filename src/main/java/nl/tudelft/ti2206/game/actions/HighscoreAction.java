@@ -30,7 +30,7 @@ private static final Logger log = LoggerFactory.getLogger(ExitAction.class);
 	public void actionPerformed(ActionEvent e) {
 		log.info("Opening Highscore-popup");
 
-		new HighscorePopup(singlePlayerFrame.getController().getModel()
+		new HighscorePopup(singlePlayerFrame.getController()
 				.getGameMode().getHighscore());
 		
 	}

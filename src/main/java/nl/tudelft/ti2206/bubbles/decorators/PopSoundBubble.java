@@ -10,7 +10,7 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
  * 
  * @author Sam Smulders
  */
-public class SoundBubble extends DecoratedBubble {
+public class PopSoundBubble extends DecoratedBubble {
 	
 	private static final long serialVersionUID = 3958509424351912735L;
 	
@@ -22,7 +22,7 @@ public class SoundBubble extends DecoratedBubble {
 	 * @param bubble
 	 *            the wrapped bubble
 	 */
-	public SoundBubble(AudioClip sound, Bubble bubble) {
+	public PopSoundBubble(AudioClip sound, Bubble bubble) {
 		super(bubble);
 		this.sound = sound;
 	}
@@ -32,13 +32,6 @@ public class SoundBubble extends DecoratedBubble {
 		if(sound != null)
 			sound.play();
 		bubble.popHook();
-	}
-	
-	@Override
-	public void snapHook(){
-		if(sound!= null)
-			sound.play();
-		bubble.snapHook();
 	}
 	
 }

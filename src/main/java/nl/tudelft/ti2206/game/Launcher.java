@@ -5,8 +5,9 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
-import nl.tudelft.ti2206.game.backend.GameMode;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.backend.mode.GameMode;
+import nl.tudelft.ti2206.game.backend.mode.PowerupGameMode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class Launcher {
 		
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		
-		GameMode gameMode = GameMode.POWERUP;
+		Class<? extends GameMode> gameMode = PowerupGameMode.class;
 		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
 		GameModel gameModel = new GameModel(gameMode, bubbleMesh);
 		

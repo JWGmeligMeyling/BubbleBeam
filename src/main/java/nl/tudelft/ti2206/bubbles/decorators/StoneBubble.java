@@ -25,14 +25,14 @@ public class StoneBubble extends DecoratedBubble {
 	private static final long serialVersionUID = -8390605724378971542L;
 	private transient Image stoneImage;
 	
-	protected final static AudioClip STONE_SOUND = Applet.newAudioClip(SoundBubble.class.getResource("/stone.wav"));
+	protected final static AudioClip STONE_SOUND = Applet.newAudioClip(PopSoundBubble.class.getResource("/stone.wav"));
 	
 	public StoneBubble() {
 		this(new AbstractBubble());
 	}
 	
 	public StoneBubble(Bubble bubble) {
-		super(new SoundBubble(STONE_SOUND,bubble));
+		super(new SnapSoundBubble(STONE_SOUND, bubble));
 	}
 	
 	protected Image getBubbleImage() {

@@ -25,7 +25,7 @@ public class BombBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -5406623504377849151L;
 
-	protected static final AudioClip BOMB_SOUND = Applet.newAudioClip(SoundBubble.class.getResource("/bomb.wav"));
+	protected static final AudioClip BOMB_SOUND = Applet.newAudioClip(PopSoundBubble.class.getResource("/bomb.wav"));
 	protected static final int POP_RADIUS = 2;
 
 	protected final RadialPopBehaviour popBehaviour;
@@ -39,7 +39,7 @@ public class BombBubble extends DecoratedBubble {
 	}
 	
 	public BombBubble(Bubble bubble) {
-		super(new SoundBubble(BOMB_SOUND, bubble));
+		super(new PopSoundBubble(BOMB_SOUND, bubble));
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);
 	}
 

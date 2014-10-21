@@ -18,7 +18,7 @@ import javax.swing.border.BevelBorder;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
-import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
+import nl.tudelft.ti2206.bubbles.decorators.PopSoundBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -46,7 +46,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected ArrayList<FiniteAnimation> animationList = new ArrayList<FiniteAnimation>();
 	
 	protected final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING,CANNONPOSITION.y);
-	protected final static AudioClip POPSOUND =  Applet.newAudioClip(SoundBubble.class.getResource("/bubble_pop.wav"));
+	protected final static AudioClip POPSOUND =  Applet.newAudioClip(PopSoundBubble.class.getResource("/bubble_pop.wav"));
 	
 	protected final GameController gameController;
 	protected final Cannon cannon;

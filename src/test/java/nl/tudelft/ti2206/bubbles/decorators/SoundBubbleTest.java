@@ -12,13 +12,13 @@ import org.mockito.Mockito;
 public class SoundBubbleTest extends AbstractBubbleTest {
 
 	protected AudioClip sound;
-	protected SoundBubble soundBubble;
+	protected PopSoundBubble soundBubble;
 
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		sound = Mockito.mock(AudioClip.class);
-		bubble = soundBubble = new SoundBubble(sound, new AbstractBubble());
+		bubble = soundBubble = new PopSoundBubble(sound, new AbstractBubble());
 	}
 	
 	@Test

@@ -19,6 +19,7 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonShootListener;
+import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.util.AbstractEventTarget;
 import nl.tudelft.util.EventTarget;
 import nl.tudelft.util.Vector2f;
@@ -33,7 +34,7 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	
 	private final Set<Color> remainingColors;
 	
-	private final GameMode gameMode;
+	private final Class<? extends GameMode> gameMode;
 	
 	private BubbleMesh bubbleMesh;
 	
@@ -47,11 +48,9 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	
 	private boolean won = false;
 	
-	private int misses = 0;
-	
 	private Dimension screenSize;
 	
-	public GameModel(final GameMode gameMode, final BubbleMesh bubbleMesh) {
+	public GameModel(final Class<? extends GameMode> gameMode, final BubbleMesh bubbleMesh) {
 		log.info("Constructed {} with {} and {}", this, gameMode, bubbleMesh);
 		
 		this.bubbleMesh = bubbleMesh;
@@ -128,15 +127,6 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 		this.setChanged();
 	}
 
-	public int getMisses() {
-		return misses;
-	}
-
-	public void setMisses(int misses) {
-		this.misses = misses;
-		this.setChanged();
-	}
-
 	public Dimension getScreenSize() {
 		return screenSize;
 	}
@@ -183,11 +173,12 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	public void setWon(boolean b) {
 		won=b;
 	}
+	
 	public boolean isWon(){
 		return won;
 	}
 
-	public GameMode getGameMode() {
+	public Class<? extends GameMode> getGameMode() {
 		return gameMode;
 	}
 	

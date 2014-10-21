@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.game.backend;
 
 import java.awt.Color;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
@@ -12,6 +13,7 @@ import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.AmmoPacket;
 import nl.tudelft.ti2206.network.packets.BubbleMeshSync;
@@ -31,8 +33,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 	private static final float MOVING_BUBBLE_SPEED = 15f;
 	
 	protected final GameModel model;
+	protected final GameMode gameMode;
 	protected final CannonController cannonController;
 	protected final boolean kill;
+	protected final GameTick tick;
 	
 	public GameController(final GameModel model, final CannonController cannonController,
 			final GameTick gameTick) {
@@ -46,7 +50,16 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 		this.kill = kill;
 		this.model = model;
+		this.tick = gameTick;
 		this.cannonController = cannonController;
+		
+		try {
+			this.gameMode = model.getGameMode().getConstructor(GameController.class).newInstance(this);
+		} catch (InstantiationException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			throw new RuntimeException("Failed to instantiate GameController", e);
+		}
 		
 		model.getBubbleMesh().calculatePositions();
 		prepareAmmo();
@@ -92,12 +105,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 					.ifPresent(bubble -> this.collide(bubbleMesh, shotBubble, bubble));
 		}
 		
-		if(!model.isGameOver()) {
+		if(model.isGameOver()) {
+			gameOver();
+		}
+		else {
 			try {
-				model.getGameMode().gameTick(this, model);
+				gameMode.gameTick();
 			}
 			catch (GameOver e) {
-				cannonController.setState(new CannonShootState());
 				gameOver();
 			}
 		}
@@ -161,7 +176,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 			
 			if (!bubbleMesh.pop(shotBubble)) {
-				model.getGameMode().missed(this, model);
+				gameMode.missed();
 			}
 			else if(bubbleMesh.isEmpty()){
 				throw new GameOver();
@@ -179,9 +194,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	protected void gameOver() {
 		log.info("Sorry dawg, the game is over");
+		cannonController.setState(new CannonShootState());
 		model.setGameOver(true);
 		model.notifyObservers();
 		model.trigger(GameOverEventListener.class, GameOverEventListener::gameOver);
+		tick.removeObserver(this);
 	}
 	
 	/**
@@ -190,7 +207,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 
 	public void insertRow() {
 		if(!kill) {
-			model.getBubbleMesh().insertRow(this);
+			try {
+				model.getBubbleMesh().insertRow(this);
+			} catch (GameOver e) {
+				gameOver();
+			}
 		}
 	}
 	
@@ -218,7 +239,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected Bubble createAmmoBubble() {
-		Bubble bubble = model.getGameMode().getBubbleFactory()
+		Bubble bubble = gameMode.getBubbleFactory()
 				.createBubble(model.getRemainingColors());
 		log.info("Created new ammo: " + bubble.toString());
 		return bubble;
@@ -274,6 +295,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 		connector.sendPacket(new AmmoPacket(
 				model.getLoadedBubble(),
 				model.getNextBubble()));
+	}
+	
+	public GameMode getGameMode() {
+		return gameMode;
 	}
 	
 }

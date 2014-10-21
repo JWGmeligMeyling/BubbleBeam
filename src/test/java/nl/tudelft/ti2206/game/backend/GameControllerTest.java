@@ -17,6 +17,7 @@ import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
+import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.AmmoPacket;
 import nl.tudelft.ti2206.network.packets.BubbleMeshSync;
@@ -51,7 +52,7 @@ public class GameControllerTest {
 				.getResourceAsStream(DEFAULT_BOARD_PATH)));
 		
 		cannonModel = spy(new CannonModel());
-		gameModel = spy(new GameModel(GameMode.CLASSIC, bubbleMesh));
+		gameModel = spy(new GameModel(ClassicGameMode.class, bubbleMesh));
 		tick = spy(new MockedGameTick());
 		BubbleFactory factory = mock(BubbleFactory.class);
 		cannonController = mock(CannonController.class);
@@ -153,7 +154,6 @@ public class GameControllerTest {
 		verify(shotBubble).collideHook(hitTarget);
 		verify(bubbleMesh).replaceBubble(snapPosition, shotBubble);
 		
-		verifyIncrementMisses(gameModel);
 		verify(cannonController).load();
 		verify(gameModel).setShotBubble(null);
 	}
@@ -194,11 +194,6 @@ public class GameControllerTest {
 		verify(bubbleMesh).replaceBubble(snapPosition, shotBubble);
 		verifyGameOver(gameModel);
 		verify(gameModel).setShotBubble(null);
-	}
-	
-	protected static void verifyIncrementMisses(GameModel gameModel) {
-		verify(gameModel).getMisses();
-		verify(gameModel).setMisses(anyInt());
 	}
 	
 	protected static void verifyGameOver(GameModel gameModel) {

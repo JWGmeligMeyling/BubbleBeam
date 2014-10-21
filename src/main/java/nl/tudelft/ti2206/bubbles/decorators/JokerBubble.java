@@ -21,7 +21,7 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 public class JokerBubble extends DecoratedBubble {
 
 	private static final long serialVersionUID = -1415122920739845104L;
-	protected final static AudioClip HORN_SOUND = Applet.newAudioClip(SoundBubble.class.getResource("/horn.wav"));
+	protected final static AudioClip HORN_SOUND = Applet.newAudioClip(PopSoundBubble.class.getResource("/horn.wav"));
 
 	protected ColouredBubble bubble;
 	protected boolean hasColor = false;
@@ -36,7 +36,7 @@ public class JokerBubble extends DecoratedBubble {
 	 * Construct a new {@code JokerBubble}
 	 */
 	public JokerBubble(ColouredBubble bubble) {
-		super(new SoundBubble(HORN_SOUND, bubble));
+		super(new PopSoundBubble(HORN_SOUND, bubble));
 		this.bubble = bubble;
 	}
 
