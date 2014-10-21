@@ -1,5 +1,8 @@
 package nl.tudelft.ti2206.game.backend;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
@@ -33,7 +36,7 @@ public enum GameMode {
 		}
 		
 	};
-	
+
 	private final static int MAX_MISSES = 5;
 	
 	private final String name;

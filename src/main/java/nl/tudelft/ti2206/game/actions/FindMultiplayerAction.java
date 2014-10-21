@@ -41,8 +41,6 @@ public class FindMultiplayerAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		log.info("Setting up host");
-		
 		ScheduledExecutorService executor = singlePlayerFrame.getScheduledExecutorService();
 		
 		final JDialog dialog = new JDialog();
@@ -61,28 +59,37 @@ public class FindMultiplayerAction extends AbstractAction {
 					}
 				});
 				
-				log.info("Trying to connect to host");
+				log.info("Trying to connect to host at port {}", PORT);
 				socket.connect(new InetSocketAddress(singlePlayerFrame.getIpValue(), PORT));
-				log.info("Connected to host");
+				log.info("Connected to host {}", socket);
 				
-				PacketHandler phc = new PacketHandler();
-				
+				final PacketHandler phc = new PacketHandler();
 				final Object lock = new Object();
 				
-				AtomicReference<GameModel> masterGameModel = new AtomicReference<>();
-				AtomicReference<GameModel>  slaveGameModel = new AtomicReference<>();
+				AtomicReference<GameModel> masterGameModelRef = new AtomicReference<>();
+				AtomicReference<GameModel>  slaveGameModelRef = new AtomicReference<>();
 				
 				phc.addEventListener(new GameModelPacketListener() {
 
 					@Override
 					public void receivedGameModelPacket(GameModelPacket packet) {
-						masterGameModel.set(packet.getMasterGameModel());
-						slaveGameModel.set(packet.getSlaveGameModel());
+						GameModel masterGameModel = packet.getMasterGameModel();
+						GameModel slaveGameModel = packet.getSlaveGameModel();
+
+						assert masterGameModel != null : "GameModel should not be null";
+						assert slaveGameModel != null : "GameModel should not be null";
+						assert masterGameModel.getGameMode().equals(slaveGameModel.getGameMode())
+							: "GameModels should have equal GameMode's";
+						
+						log.info("Received GameModels for multiplayer {} with mode {}",
+								masterGameModel, masterGameModel.getGameMode());
+
+						masterGameModelRef.set(masterGameModel);
+						slaveGameModelRef.set(slaveGameModel);
 						
 						synchronized(lock) {
 							log.info("Notifying lock");
 							lock.notifyAll();
-							log.info("Notified lock");
 						}
 					}
 
@@ -93,10 +100,10 @@ public class FindMultiplayerAction extends AbstractAction {
 				synchronized(lock) {
 					log.info("Waiting on lock");
 					lock.wait();
-					log.info("Done waiting for lock");
+					log.info("Lock was notified");
 				}
 				
-				MultiplayerFrame frame = new MultiplayerFrame(masterGameModel.get(), slaveGameModel.get(), connector);
+				MultiplayerFrame frame = new MultiplayerFrame(masterGameModelRef.get(), slaveGameModelRef.get(), connector);
 				frame.pack();
 				frame.setLocationRelativeTo(this.singlePlayerFrame);
 				

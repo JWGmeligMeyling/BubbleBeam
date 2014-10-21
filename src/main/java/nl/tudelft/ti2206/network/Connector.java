@@ -64,8 +64,7 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 			log.error(e.getMessage(), e);
 			try {
 				close();
-				thread.join();
-			} catch (IOException | InterruptedException e1) {
+			} catch (IOException e1) {
 				log.warn(e1.getMessage(), e1);
 			}
 		}

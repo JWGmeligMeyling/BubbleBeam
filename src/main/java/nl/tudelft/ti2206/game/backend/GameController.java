@@ -42,6 +42,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 	public GameController(final GameModel model, final CannonController cannonController,
 			final GameTick gameTick, boolean kill) {
 
+		log.info("Contructed {} with {} and {}", this, model, cannonController);
+		
 		this.kill = kill;
 		this.model = model;
 		this.cannonController = cannonController;

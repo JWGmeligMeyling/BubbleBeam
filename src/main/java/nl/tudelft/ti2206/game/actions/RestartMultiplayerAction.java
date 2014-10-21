@@ -41,7 +41,7 @@ public class RestartMultiplayerAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		new ChooseGameMode(singlePlayerFrame, gameMode -> {
-			log.info("Setting up host");
+			log.info("Setting up host at port {}", PORT);
 			
 			ScheduledExecutorService executor = singlePlayerFrame.getScheduledExecutorService();
 			
@@ -65,8 +65,7 @@ public class RestartMultiplayerAction extends AbstractAction {
 					log.debug("Found an incomming connection");
 					Connector connector = new Connector(socket);
 					
-					log.info("Found a connection, building {}", MultiplayerFrame.class);
-					
+					log.debug("Preparing GameModels");
 					GameModel masterGameModel = new GameModel(gameMode, BubbleMesh
 							.parse(SinglePlayerFrame.class
 									.getResourceAsStream(DEFAULT_BOARD_PATH)));
@@ -75,8 +74,9 @@ public class RestartMultiplayerAction extends AbstractAction {
 									.getResourceAsStream(DEFAULT_BOARD_PATH)));
 					
 					log.info("Sending game model packet");
-					connector.sendPacket(new GameModelPacket(masterGameModel, slaveGameModel));
+					connector.sendPacket(new GameModelPacket(slaveGameModel, masterGameModel));
 					
+					log.info("Found a connection, building {}", MultiplayerFrame.class);
 					MultiplayerFrame frame = new MultiplayerFrame(masterGameModel, slaveGameModel, connector);
 					frame.pack();
 					frame.setLocationRelativeTo(this.singlePlayerFrame);

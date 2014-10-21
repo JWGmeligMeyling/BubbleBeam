@@ -10,6 +10,9 @@ import java.util.Observable;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Sets;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
@@ -24,9 +27,11 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	
 	private static final long serialVersionUID = 7372457527680874284L;
 
-	private final Set<Color> remainingColors;
+	private static final Logger log = LoggerFactory.getLogger(GameModel.class);
 	
 	private transient AbstractEventTarget<GameEventListener> eventTarget = new AbstractEventTarget<GameEventListener>();
+	
+	private final Set<Color> remainingColors;
 	
 	private final GameMode gameMode;
 	
@@ -47,6 +52,8 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	private Dimension screenSize;
 	
 	public GameModel(final GameMode gameMode, final BubbleMesh bubbleMesh) {
+		log.info("Constructed {} with {} and {}", this, gameMode, bubbleMesh);
+		
 		this.bubbleMesh = bubbleMesh;
 		this.remainingColors = Sets.newHashSet(bubbleMesh.getRemainingColours());
 		this.gameMode = gameMode;
