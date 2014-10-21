@@ -3,12 +3,9 @@ package nl.tudelft.ti2206.bubbles;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 
 import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
-
-import com.google.common.annotations.VisibleForTesting;
 
 /**
  * The Bubbles on the mesh with various colours
@@ -22,8 +19,6 @@ public class ColouredBubble extends AbstractBubble {
 
 	protected Color color;
 	
-	protected Point paintStart = new Point(center.x, center.y);
-
 	/**
 	 * Construct a new {@code ColouredBubble}
 	 * 
@@ -33,24 +28,8 @@ public class ColouredBubble extends AbstractBubble {
 	public ColouredBubble(final Color color) {
 		snapBehaviour = new SnapToClosest(this);
 		this.color = color;
-		int offset = -getRadius();
-		paintStart.translate(offset, offset);
 	}
 
-	@Override
-	public void setPosition(final Point position) {
-		super.setPosition(position);
-		int offset = getWidth() / 2 - getRadius();
-		this.paintStart = new Point(position.x + offset, position.y + offset);
-	}
-	
-	@Override
-	public void setCenter(final Point center) {
-		super.setCenter(center);
-		int offset = getWidth() / 2 - getRadius();
-		this.paintStart = new Point(position.x + offset, position.y + offset);
-	}
-	
 	@Override
 	public void render(final Graphics graphics) {
 		super.render(graphics);
@@ -64,8 +43,9 @@ public class ColouredBubble extends AbstractBubble {
 
 	protected void fillBaseColour(final Graphics2D graphics, final Color baseColor) {
 		graphics.setColor(baseColor);
-		int diameter = getRadius() * 2;
-		graphics.fillOval(paintStart.x, paintStart.y, diameter, diameter);
+		int diameter = getDiameter();
+		int offset = getWidth() / 2 - getRadius();
+		graphics.fillOval(position.x + offset, position.y + offset, diameter, diameter);
 	}
 
 	public void setColor(final Color color) {
@@ -91,11 +71,6 @@ public class ColouredBubble extends AbstractBubble {
 	@Override
 	public boolean popsWith(Bubble target) {
 		return target.hasColor() && target.getColor().equals(color);
-	}
-
-	@VisibleForTesting
-	Point getPaintStart() {
-		return paintStart;
 	}
 
 	@Override

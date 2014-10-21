@@ -23,10 +23,12 @@ public class HighscorePopup extends JDialog{
 		this.hs = hs;
 		displayHighscores();
 		this.setTitle(hs.getTitle());
-		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.setVisible(true);
+
+		this.setModal(true);
 		this.pack();
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 	}
 	
 	private void displayHighscores(){

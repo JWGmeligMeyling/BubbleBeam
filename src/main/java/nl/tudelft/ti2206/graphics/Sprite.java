@@ -24,6 +24,13 @@ public interface Sprite {
 	void setPosition(Point position);
 	
 	/**
+	 * Translate this sprite
+	 * @param dx
+	 * @param dy
+	 */
+	void translate(int dx, int dy);
+	
+	/**
 	 * @return the position for this {@code Sprite}
 	 */
 	Point getPosition();
@@ -31,12 +38,16 @@ public interface Sprite {
 	/**
 	 * @return the X variable for this {@code Sprite}
 	 */
-	int getX();
+	default int getX() {
+		return getPosition().x;
+	}
 	
 	/**
 	 * @return the Y variable for this {@code Sprite}
 	 */
-	int getY();
+	default int getY() {
+		return getPosition().y;
+	}
 	
 	/**
 	 * @return the width for this {@code Sprite}

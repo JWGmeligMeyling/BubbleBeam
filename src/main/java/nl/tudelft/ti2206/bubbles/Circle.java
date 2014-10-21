@@ -45,17 +45,6 @@ public interface Circle {
 	}
 	
 	/**
-	 * Translate this circle
-	 * @param dx
-	 * @param dy
-	 */
-	default void translate(int dx, int dy) {
-		Point center = getCenter();
-		center.translate(dx, dy);
-		setCenter(center);
-	}
-	
-	/**
 	 * Get the distance between two circles
 	 * @param other another {@code Circle}
 	 * @return the distance between this {@code Circle} and the other {@code Circle}

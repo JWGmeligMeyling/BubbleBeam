@@ -10,6 +10,7 @@ import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
+import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.Packet;
@@ -25,7 +26,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
 	
 	private static final float MOVING_BUBBLE_SPEED = 15f;
-	private final static int MAX_MISSES = 5;
 	
 	protected final GameModel model;
 	protected final CannonController cannonController;
@@ -71,9 +71,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	@Override
 	public void gameTick() {
+		BubbleMesh bubbleMesh = model.getBubbleMesh();
+
 		if (model.isShooting()) {
 			MovingBubble shotBubble = model.getShotBubble();
-			BubbleMesh bubbleMesh = model.getBubbleMesh();
 			
 			shotBubble.addVelocity();
 			shotBubble.gameTick();
@@ -85,6 +86,17 @@ public class GameController implements Controller<GameModel>, Tickable {
 							&& (bubble.isHittable() || bubbleMesh.bubbleIsTop(bubble))).findAny()
 					.ifPresent(bubble -> this.collide(bubbleMesh, shotBubble, bubble));
 		}
+		
+		if(!model.isGameOver()) {
+			try {
+				model.getGameMode().gameTick(this, model);
+			}
+			catch (GameOver e) {
+				cannonController.setState(new CannonShootState());
+				gameOver();
+			}
+		}
+		
 	}
 	
 	/**
@@ -144,7 +156,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 			
 			if (!bubbleMesh.pop(shotBubble)) {
-				incrementMisses();
+				model.getGameMode().missed(this, model);
 			}
 			else if(bubbleMesh.isEmpty()){
 				throw new GameOver();
@@ -165,20 +177,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.setGameOver(true);
 		model.notifyObservers();
 		model.trigger(GameOverEventListener.class, GameOverEventListener::gameOver);
-	}
-	
-	/**
-	 * No bubbles popped, increment misses
-	 * 
-	 * @throws GameOver
-	 */
-	protected void incrementMisses() throws GameOver {
-		int misses = model.getMisses();
-		if (++misses == MAX_MISSES) {
-			misses = 0;
-			insertRow();
-		}
-		model.setMisses(misses);
 	}
 	
 	/**

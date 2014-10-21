@@ -166,4 +166,9 @@ public class DecoratedBubble implements Bubble {
 		return bubble.getColor();
 	}
 
+	@Override
+	public void translate(int dx, int dy) {
+		bubble.translate(dx, dy);
+	}
+
 }
