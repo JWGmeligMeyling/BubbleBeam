@@ -3,9 +3,6 @@ package nl.tudelft.ti2206.cannon;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 
-import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.CannonRotate;
-import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.util.DefaultMouseClickListener;
 import nl.tudelft.util.DefaultMouseMoveListener;
 import nl.tudelft.util.Vector2f;
@@ -48,13 +45,6 @@ public class MouseCannonController extends AbstractCannonController {
 				}
 			}
 			
-		});
-	}
-	
-	public void bindConnectorAsMaster(final Connector connector) {
-		model.addObserver((a,b) -> {
-			Packet packet = new CannonRotate(model.getAngle());
-			connector.sendPacket(packet);
 		});
 	}
 	

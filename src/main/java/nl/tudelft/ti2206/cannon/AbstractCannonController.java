@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.cannon;
 
 import nl.tudelft.util.Vector2f;
+import nl.tudelft.ti2206.game.event.CannonListener.*;
 
 public class AbstractCannonController implements CannonController {
 
@@ -14,6 +15,12 @@ public class AbstractCannonController implements CannonController {
 	public AbstractCannonController(final CannonModel cannonModel) {
 		super();
 		this.model = cannonModel;
+		
+		this.model.addObserver((a,b) -> {
+			CannonRotateEvent event = new CannonRotateEvent(this, cannonModel
+					.getDirection(), cannonModel.getAngle());
+			this.model.trigger(listener -> listener.rotate(event));
+		});
 	}
 
 	@Override

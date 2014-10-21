@@ -86,7 +86,6 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 
 		cannonController.bindConnectorAsSlave(connector);
 		slaveGameController.bindConnectorAsSlave(connector);
-		super.cannonController.bindConnectorAsMaster(connector);
 		super.gameController.bindConnectorAsMaster(connector);
 		
 	}

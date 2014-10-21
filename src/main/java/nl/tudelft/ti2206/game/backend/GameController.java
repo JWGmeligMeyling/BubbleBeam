@@ -17,7 +17,9 @@ import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.AmmoPacket;
 import nl.tudelft.ti2206.network.packets.BubbleMeshSync;
+import nl.tudelft.ti2206.network.packets.CannonRotate;
 import nl.tudelft.ti2206.network.packets.CannonShoot;
+import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketHandler;
 import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.ti2206.util.mvc.Controller;
@@ -27,8 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
+import nl.tudelft.ti2206.game.event.CannonListener;
 import nl.tudelft.ti2206.game.event.GameListener;
-import nl.tudelft.ti2206.game.event.CannonListener.*;
 import nl.tudelft.ti2206.game.event.GameListener.*;
 
 public class GameController implements Controller<GameModel>, Tickable {
@@ -70,8 +72,19 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.getBubbleMesh().calculatePositions();
 		prepareAmmo();
 		
-		cannonController.getModel().addEventListener(CannonShootListener.class, (event) -> {
-			GameController.this.shoot(event);
+		cannonController.getModel().addEventListener(new CannonListener() {
+
+			@Override
+			public void shoot(final CannonShootEvent event) {
+				model.trigger(listener -> listener.shoot(event));
+				GameController.this.shoot(event.getDirection());
+			}
+
+			@Override
+			public void rotate(final CannonRotateEvent event) {
+				model.trigger(listener -> listener.rotate(event));
+			}
+			
 		});
 		
 		model.getBubbleMesh().getEventTarget().addEventListener(new BubbleMeshListener() {
@@ -150,9 +163,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * @throws IllegalStateException
 	 *             if there already is a bubble being shot
 	 */
-	protected void shoot(final CannonShootEvent event) {
-		
-		final Vector2f direction = event.getDirection();
+	protected void shoot(final Vector2f direction) {
 		
 		direction.normalise();
 		
@@ -168,7 +179,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 		updateBubbles();
 		model.setShotBubble(shotBubble);
 		model.notifyObservers();
-		model.trigger(listener -> listener.shoot(event));
 	}
 	
 	protected void updateBubbles() {
@@ -177,6 +187,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 			Bubble previousNextBubble = model.getNextBubble();
 			model.setNextBubble(nextBubble);
 			model.setLoadedBubble(previousNextBubble);
+			
+			AmmoLoadEvent event = new AmmoLoadEvent(this, previousNextBubble, nextBubble);
+			model.trigger(listener -> listener.ammo(event));
 		}
 	}
 	
@@ -292,11 +305,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 			public void shoot(CannonShootEvent event) {
 				log.info("Sending shoot packet");
 				connector.sendPacket(new CannonShoot(event.getDirection()));
-				
-				Bubble loadedBubble = model.getLoadedBubble();
-				Bubble nextBubble = model.getNextBubble();
-				log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
-				connector.sendPacket(new AmmoPacket(loadedBubble, nextBubble));
 			}
 
 			@Override
@@ -305,6 +313,20 @@ public class GameController implements Controller<GameModel>, Tickable {
 
 			@Override
 			public void shotMissed(ShotMissedEvent event) {
+			}
+			
+			@Override
+			public void rotate(CannonRotateEvent event) {
+				Packet packet = new CannonRotate(event.getAngle());
+				connector.sendPacket(packet);
+			}
+			
+			@Override
+			public void ammo(AmmoLoadEvent event) {
+				Bubble loadedBubble = model.getLoadedBubble();
+				Bubble nextBubble = model.getNextBubble();
+				log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
+				connector.sendPacket(new AmmoPacket(loadedBubble, nextBubble));
 			}
 			
 		});

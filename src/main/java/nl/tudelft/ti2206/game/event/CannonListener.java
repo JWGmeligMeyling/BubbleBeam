@@ -54,7 +54,49 @@ public interface CannonListener extends EventListener {
 	
 	void shoot(CannonShootEvent event);
 	
+	class CannonRotateEvent extends CannonEvent {
+		
+		private static final long serialVersionUID = -2197998161546093925L;
+		
+		protected final Vector2f direction;
+		protected final double angle;
+	
+		public CannonRotateEvent(CannonController cannonController, Vector2f direction, double angle) {
+			super(cannonController);
+			this.direction = direction;
+			this.angle = angle;
+		}
+		
+		public Vector2f getDirection() {
+			return direction;
+		}
+		
+		public double getAngle() {
+			return angle;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if(CannonRotateEvent.class.isInstance(obj)) {
+				CannonRotateEvent other = CannonRotateEvent.class.cast(obj);
+				return direction.equals(other.direction)
+						&& cannonController.equals(other.cannonController);
+			}
+			return super.equals(obj);
+		}
+		
+	}
+	
+	void rotate(CannonRotateEvent event);
+
 	@FunctionalInterface
-	interface CannonShootListener extends CannonListener {};
+	interface CannonShootListener extends CannonListener {
+		@Override default void rotate(CannonRotateEvent event) {};
+	}
+	
+	@FunctionalInterface
+	interface CannonRotateListener extends CannonListener {
+		@Override default void shoot(CannonShootEvent event) {};
+	}
 	
 }

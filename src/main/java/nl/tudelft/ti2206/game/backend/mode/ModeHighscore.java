@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.game.backend.mode;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,6 +14,7 @@ import nl.tudelft.ti2206.highscore.Highscore;
  * @author Jan-Willem Gmelig Meyling
  *
  */
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE) 
 public @interface ModeHighscore {

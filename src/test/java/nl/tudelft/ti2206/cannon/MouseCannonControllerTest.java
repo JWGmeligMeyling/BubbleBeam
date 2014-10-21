@@ -8,10 +8,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Observer;
 
-import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.CannonRotate;
 import nl.tudelft.util.Vector2f;
 import nl.tudelft.ti2206.game.event.CannonListener.*;
 
@@ -104,20 +101,4 @@ public class MouseCannonControllerTest extends AbstractCannonControllerTest {
 		verify(mouseCannonController, never()).shoot();
 	}
 	
-	@Test
-	public void testConnectorBinding() {
-		Connector connector = mock(Connector.class);
-		mouseCannonController.bindConnectorAsMaster(connector);
-		verify(cannonModel, times(1)).addObserver(any(Observer.class));
-		
-		mouseCannonController.setAngle( new Vector2f(0, 1));
-		double angle = cannonModel.getAngle(); 
-
-		ArgumentCaptor<CannonRotate> cannonRotate = ArgumentCaptor
-				.forClass(CannonRotate.class);
-		
-		verify(connector, times(1)).sendPacket(cannonRotate.capture());
-		assertEquals(angle, cannonRotate.getValue().rotation, 1e-4);
-	}
-
 }

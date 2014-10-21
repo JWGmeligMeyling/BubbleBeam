@@ -257,9 +257,8 @@ public class GameControllerTest {
 		gameModel.trigger(listener -> {
 			listener.shoot(event);
 		});
-		verify(connector, times(2)).sendPacket(any(Packet.class));
-		verify(gameModel).getLoadedBubble();
-		verify(gameModel).getNextBubble();
+		
+		verify(connector).sendPacket(any(Packet.class));
 	}
 	
 	@Test

@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.game.backend.mode;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.annotation.RetentionPolicy;
@@ -11,6 +12,7 @@ import java.lang.annotation.ElementType;
  * @author Jan-Willem Gmelig Meyling
  *
  */
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE) 
 public @interface ModeName {

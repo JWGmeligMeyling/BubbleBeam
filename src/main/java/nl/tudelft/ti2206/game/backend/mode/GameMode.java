@@ -27,6 +27,10 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 		// No-op on default, but subtypes may rely on gametick, for example Timed mode
 	}
 	
+	@Override default void ammo(AmmoLoadEvent event) {
+		// No-op on default, but subtypes may rely on ammo
+	}
+	
 	/**
 	 * Get the name for this {@code GameMode}
 	 * @return the name
