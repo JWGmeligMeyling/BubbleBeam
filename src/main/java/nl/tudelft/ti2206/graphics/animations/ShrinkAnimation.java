@@ -36,6 +36,5 @@ public class ShrinkAnimation extends FiniteAnimation {
 				- bubble.getHeight() / 2 + this.time, this.position.x + bubble.getWidth() / 2
 				- this.time, this.position.y + bubble.getHeight() / 2 - this.time, 0, 0,
 				bubble.getWidth(), bubble.getHeight(), null);
-		this.time++;
 	}
 }

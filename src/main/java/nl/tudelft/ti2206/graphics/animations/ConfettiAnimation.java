@@ -11,7 +11,6 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.cannon.Cannon;
 
 public class ConfettiAnimation extends FiniteAnimation {
 	protected static Random random = new Random();
@@ -68,16 +67,6 @@ public class ConfettiAnimation extends FiniteAnimation {
 		g2.setComposite(ac);
 		g2.drawImage(img, this.position.x - size / 2, this.position.y - size / 2, this.position.x
 				+ size / 2, this.position.y + size / 2, 0, 0, size, size, null);
-		this.time++;
-		
-		// graphics.rotate(-angle + Math.PI / 2, position.x, position.y);
-		// graphics.drawImage(CONFETTI_STRIP, position.x - WIDTH / 2, position.y
-		// - HEIGHT / 2
-		// - ROTATE_TRANSLATION, position.x + WIDTH / 2, position.y + HEIGHT / 2
-		// - ROTATE_TRANSLATION, 0, 0, CONFETTI_STRIP.getWidth(),
-		// CONFETTI_STRIP.getHeight(),
-		// null);
-		// graphics.rotate(bAngle, position.x, position.y);
 	}
 	
 	private static BufferedImage _getCannonImage() {

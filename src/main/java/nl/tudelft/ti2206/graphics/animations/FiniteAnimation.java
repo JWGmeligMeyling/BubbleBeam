@@ -1,7 +1,7 @@
 package nl.tudelft.ti2206.graphics.animations;
 
 /**
- * A FiniteAnimation has a finite duration. 
+ * A FiniteAnimation has a finite duration.
  * 
  * @author Sam Smulders
  */
@@ -15,6 +15,10 @@ public abstract class FiniteAnimation implements Animation {
 	
 	public boolean isDone() {
 		return time == maxTime;
+	}
+	
+	public void addTime() {
+		time++;
 	}
 	
 }
