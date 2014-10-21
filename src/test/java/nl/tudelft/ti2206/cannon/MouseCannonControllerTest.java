@@ -11,7 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.Observer;
 
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet.CannonRotate;
+import nl.tudelft.ti2206.network.packets.CannonRotate;
 import nl.tudelft.util.Vector2f;
 
 import org.junit.Before;

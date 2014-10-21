@@ -18,10 +18,10 @@ import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.network.Connector;
+import nl.tudelft.ti2206.network.packets.AmmoPacket;
+import nl.tudelft.ti2206.network.packets.BubbleMeshSync;
 import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
-import nl.tudelft.ti2206.network.packets.Packet.AmmoPacket;
-import nl.tudelft.ti2206.network.packets.Packet.BubbleMeshSync;
+import nl.tudelft.ti2206.network.packets.PacketHandler;
 import nl.tudelft.util.Vector2f;
 
 import org.junit.Before;
@@ -257,18 +257,17 @@ public class GameControllerTest {
 	@Test
 	public void testBindConnectorAsSlave() {
 		Connector connector = mock(Connector.class);
-		PacketHandlerCollection phc = spy(new PacketHandlerCollection());
+		PacketHandler phc = spy(new PacketHandler());
 		when(connector.getPacketHandlerCollection()).thenReturn(phc);		
 		gameController.bindConnectorAsSlave(connector);
 		
-		verify(phc).registerBubbleMeshSyncListener(any());
-		verify(phc).registerLoadNewBubbleListener(any());
+		verify(phc, times(2)).addEventListener(any(), any());
 	}
 	
 	@Test
 	public void testUpdateAmmoPacket() {
 		Connector connector = mock(Connector.class);
-		PacketHandlerCollection phc = spy(new PacketHandlerCollection());
+		PacketHandler phc = spy(new PacketHandler());
 		when(connector.getPacketHandlerCollection()).thenReturn(phc);		
 		gameController.bindConnectorAsSlave(connector);
 		
@@ -285,7 +284,7 @@ public class GameControllerTest {
 	@Test
 	public void testBubbleMeshReceive() {
 		Connector connector = mock(Connector.class);
-		PacketHandlerCollection phc = spy(new PacketHandlerCollection());
+		PacketHandler phc = spy(new PacketHandler());
 		when(connector.getPacketHandlerCollection()).thenReturn(phc);		
 		gameController.bindConnectorAsSlave(connector);
 		

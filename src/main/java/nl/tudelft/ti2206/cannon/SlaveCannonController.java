@@ -1,7 +1,8 @@
 package nl.tudelft.ti2206.cannon;
 
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
+import nl.tudelft.ti2206.network.packets.PacketHandler;
+import nl.tudelft.ti2206.network.packets.PacketListener;
 
 /**
  * The {@code SlaveCannonController} is a controller who's behaviour is
@@ -23,17 +24,21 @@ public class SlaveCannonController extends AbstractCannonController {
 	}
 
 	public void bindConnectorAsSlave(final Connector connector) {
-		final PacketHandlerCollection packetHandlerCollection = connector.getPacketHandlerCollection();
+		final PacketHandler packetHandlerCollection = connector.getPacketHandlerCollection();
 		
-		packetHandlerCollection.registerCannonShootHandler((packet) -> {
-			SlaveCannonController.this.setAngle(packet.getDirection());
-			SlaveCannonController.this.shoot();
-		});
+		packetHandlerCollection.addEventListener(
+				PacketListener.CannonShootPacketListener.class, (packet) -> {
+					SlaveCannonController.this.setAngle(packet.getDirection());
+					SlaveCannonController.this.shoot();
+				});
 		
-		packetHandlerCollection.registerCannonRotateHandler((packet) -> {
-			SlaveCannonController.this.getModel().setAngle(packet.getRotation());
-			SlaveCannonController.this.getModel().notifyObservers();
-		});
+		packetHandlerCollection.addEventListener(
+				PacketListener.CannonRotatePacketListener.class,
+				(packet) -> {
+					SlaveCannonController.this.getModel().setAngle(
+							packet.getRotation());
+					SlaveCannonController.this.getModel().notifyObservers();
+				});
 	}
 	
 }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
+import nl.tudelft.ti2206.network.packets.PacketHandler;
 import nl.tudelft.util.AbstractEventTarget;
 
 /**
@@ -27,19 +27,26 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 	
 	public final static int PORT = 8989;
 	
-	protected PacketHandlerCollection packetHandlerCollection = new PacketHandlerCollection();
-	
 	protected boolean open = true;
 	protected final Socket socket;
 	protected final ObjectInputStream in;
 	protected final ObjectOutputStream out;
+	protected final PacketHandler packetHandlerCollection;
+	protected final Thread thread;
 	
 	public Connector(final Socket socket) throws IOException {
+		this(socket, new PacketHandler());
+	}
+	
+	public Connector(final Socket socket, final PacketHandler packetHandlerCollection) throws IOException {
 		this.socket = socket;
 		this.out = new ObjectOutputStream(socket.getOutputStream());
 		this.out.flush();
 		this.in = new ObjectInputStream(socket.getInputStream());
+		this.packetHandlerCollection = packetHandlerCollection;
 		
+		thread = new Thread(this, "Connector-Worker");
+		thread.start();
 	}
 	
 	/**
@@ -57,7 +64,8 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 			log.error(e.getMessage(), e);
 			try {
 				close();
-			} catch (IOException e1) {
+				thread.join();
+			} catch (IOException | InterruptedException e1) {
 				log.warn(e1.getMessage(), e1);
 			}
 		}
@@ -103,7 +111,7 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 		readPacket(inputstream).notify(packetHandlerCollection);
 	}
 	
-	public PacketHandlerCollection getPacketHandlerCollection() {
+	public PacketHandler getPacketHandlerCollection() {
 		return packetHandlerCollection;
 	}
 	

@@ -1,39 +1,28 @@
 package nl.tudelft.ti2206.cannon;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.Packet.CannonRotate;
-import nl.tudelft.ti2206.network.packets.Packet.CannonShoot;
-import nl.tudelft.ti2206.network.packets.PacketHandlerCollection;
+import nl.tudelft.ti2206.network.packets.CannonRotate;
+import nl.tudelft.ti2206.network.packets.CannonShoot;
+import nl.tudelft.ti2206.network.packets.MockedPacketHandler;
 import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.util.Vector2f;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SlaveCannonControllerTest extends AbstractCannonControllerTest {
 
 	protected SlaveCannonController slaveCannonController;
 	
-	@Captor
-	private ArgumentCaptor<PacketListener<CannonShoot>> cannonShootCaptor;
-	
-	@Captor
-	private ArgumentCaptor<PacketListener<CannonRotate>> cannonRotateCaptor;
-	
-	protected PacketListener<CannonShoot> cannonShootHandler;
-	protected PacketListener<CannonRotate> cannonRotateHandler;
+	protected PacketListener.CannonShootPacketListener cannonShootHandler;
+	protected PacketListener.CannonRotatePacketListener cannonRotateHandler;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -48,26 +37,22 @@ public class SlaveCannonControllerTest extends AbstractCannonControllerTest {
 	
 	protected void bindConnector() {
 		Connector connector = mock(Connector.class);
-		PacketHandlerCollection collection = spy(new PacketHandlerCollection());
+		MockedPacketHandler collection = spy(new MockedPacketHandler());
 		when(connector.getPacketHandlerCollection()).thenReturn(collection);
 		
 		slaveCannonController.bindConnectorAsSlave(connector);
-		verify(collection, times(1)).registerCannonShootHandler(
-				cannonShootCaptor.capture());
-		verify(collection, times(1)).registerCannonRotateHandler(
-				cannonRotateCaptor.capture());
-		
-		cannonShootHandler = cannonShootCaptor.getValue();
-		cannonRotateHandler = cannonRotateCaptor.getValue();
+		verify(collection, times(2)).addEventListener(any(), any());
+		cannonShootHandler = collection.getListenerOfType(PacketListener.CannonShootPacketListener.class);
+		cannonRotateHandler = collection.getListenerOfType(PacketListener.CannonRotatePacketListener.class);
 	}
 
 	@Test
 	public void testCannonShootHandler() {
-		Packet.CannonShoot packet = mock(Packet.CannonShoot.class);
+		CannonShoot packet = mock(CannonShoot.class);
 		Vector2f direction = new Vector2f(1f,1f);
 		
 		when(packet.getDirection()).thenReturn(direction);
-		cannonShootHandler.update(packet);
+		cannonShootHandler.receivedCannonShoot(packet);
 		
 		verify(slaveCannonController, times(1)).setAngle(direction);
 		verify(slaveCannonController, times(1)).shoot();
@@ -76,11 +61,11 @@ public class SlaveCannonControllerTest extends AbstractCannonControllerTest {
 
 	@Test
 	public void testCannonRotateHandler() {
-		Packet.CannonRotate packet = mock(Packet.CannonRotate.class);
+		CannonRotate packet = mock(CannonRotate.class);
 		double rotation = 0.89d;
 		
 		when(packet.getRotation()).thenReturn(rotation);
-		cannonRotateHandler.update(packet);
+		cannonRotateHandler.receivedCannonRotate(packet);
 		
 		verify(cannonModel, times(1)).setAngle(rotation);
 		verify(cannonModel, times(1)).notifyObservers();

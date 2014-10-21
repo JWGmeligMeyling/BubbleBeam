@@ -7,14 +7,13 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.SlaveCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.game.backend.GameMode;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.GameOverEventListener;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.Packet;
+import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.network.packets.PoppedPacket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,31 +30,29 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 	protected final Connector connector;
 	private int bubblesPopped;
 	
-	public MultiplayerFrame(Connector connector) throws IOException {
+	public MultiplayerFrame(final GameModel masterModel, final GameModel slaveModel, Connector connector) throws IOException {
 		
-		super();
+		super(masterModel);
 		
-		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
-		GameModel gameModel = new GameModel(GameMode.POWERUP, bubbleMesh);
 		final SlaveCannonController cannonController = new SlaveCannonController();
-
-		this.slaveGameController = new GameController(gameModel, cannonController, gameTick, true);
+		this.slaveGameController = new GameController(slaveModel, cannonController, gameTick, true);
 		this.slaveGamePanel = new GamePanel(slaveGameController);
 		this.slaveGamePanel.setBackground(new Color(225,225,225));
 		this.connector = connector;
 		
 		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
 			log.info(b.size()+" bubbles popped");
-			connector.sendPacket(new Packet.PoppedPacket(b.size()));
+			connector.sendPacket(new PoppedPacket(b.size()));
 		});;
 		
-		connector.getPacketHandlerCollection().registerPopHandler((a)->{
-			bubblesPopped+=a.getAmount();
-			if(bubblesPopped>=10){
-				gameController.insertRow();
-				bubblesPopped=0;
-			}
-		});
+		connector.getPacketHandlerCollection().addEventListener(
+				PacketListener.PoppedPacketListener.class, (a) -> {
+					bubblesPopped += a.getAmount();
+					if (bubblesPopped >= 10) {
+						gameController.insertRow();
+						bubblesPopped = 0;
+					}
+				});
 		
 		slaveGameController.getModel().addEventListener(new GameOverEventListener(){
 
@@ -90,7 +87,6 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		cannonController.bindConnectorAsSlave(connector);
 		slaveGameController.bindConnectorAsSlave(connector);
 		super.cannonController.bindConnectorAsMaster(connector);
-		this.getScheduledExecutorService().submit(connector);
 		super.gameController.bindConnectorAsMaster(connector);
 		
 	}
