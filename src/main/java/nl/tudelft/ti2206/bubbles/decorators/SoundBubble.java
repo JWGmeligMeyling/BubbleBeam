@@ -34,4 +34,11 @@ public class SoundBubble extends DecoratedBubble {
 		bubble.popHook();
 	}
 	
+	@Override
+	public void snapHook(){
+		if(sound!= null)
+			sound.play();
+		bubble.snapHook();
+	}
+	
 }

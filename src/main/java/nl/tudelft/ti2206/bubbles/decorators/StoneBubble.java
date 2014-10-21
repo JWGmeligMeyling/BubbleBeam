@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.bubbles.decorators;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -23,12 +25,14 @@ public class StoneBubble extends DecoratedBubble {
 	private static final long serialVersionUID = -8390605724378971542L;
 	private transient Image stoneImage;
 	
+	protected final static AudioClip STONE_SOUND = Applet.newAudioClip(SoundBubble.class.getResource("/stone.wav"));
+	
 	public StoneBubble() {
 		this(new AbstractBubble());
 	}
 	
 	public StoneBubble(Bubble bubble) {
-		super(bubble);
+		super(new SoundBubble(STONE_SOUND,bubble));
 	}
 	
 	protected Image getBubbleImage() {
