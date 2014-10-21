@@ -1,5 +1,9 @@
 package nl.tudelft.ti2206.game.backend;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
+
+import nl.tudelft.ti2206.bubbles.decorators.SoundBubble;
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
 import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
@@ -11,12 +15,15 @@ import nl.tudelft.ti2206.highscore.PowerupHighscore;
 
 public enum GameMode {
 	
-	CLASSIC("Classic mode", new ClassicBubbleFactory(), new ClassicHighscore()),
-	DRUNK("Drunk mode", new DrunkBubbleFactory(), new DrunkHighscore()),
-	POWERUP("Power-up mode", new PowerUpBubbleFactory(), new PowerupHighscore()),
-	TIMED("Timed mode", new PowerUpBubbleFactory(), new PowerupHighscore()) {
+	
+	
+	CLASSIC("Classic mode", new ClassicBubbleFactory(), new ClassicHighscore(),"/classic_music.wav"),
+	DRUNK("Drunk mode", new DrunkBubbleFactory(), new DrunkHighscore(),"/drunk_music.wav"),
+	POWERUP("Power-up mode", new PowerUpBubbleFactory(), new PowerupHighscore(),"/power_music.wav"),
+	TIMED("Timed mode", new PowerUpBubbleFactory(), new PowerupHighscore(),"/time_music.wav") {
 
 		private int ticks = 0;
+		
 		
 		@Override
 		public void missed(GameController gameController, GameModel gameModel) {
@@ -35,17 +42,23 @@ public enum GameMode {
 	};
 	
 	private final static int MAX_MISSES = 5;
-	
+
 	private final String name;
 	private final BubbleFactory bubbleFactory;
 	private final Highscore highscore;
+	private final AudioClip music;
 	
-	private GameMode(String name, BubbleFactory bubbleFactory, Highscore highscore) {
+	private GameMode(String name, BubbleFactory bubbleFactory, Highscore highscore,String music) {
 		this.name = name;
 		this.bubbleFactory = bubbleFactory;
 		this.highscore = highscore;
+		this.music = Applet.newAudioClip(GameMode.class.getResource(music));
 	}
 
+	public AudioClip getMusic(){
+		return music;
+	}
+	
 	public Highscore getHighscore() {
 		return highscore;
 	}
