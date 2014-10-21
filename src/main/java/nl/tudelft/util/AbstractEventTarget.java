@@ -15,7 +15,7 @@ public class AbstractEventTarget<T extends EventListener> implements EventTarget
 	public void addEventListener(T listener) {
 		listeners.add(listener);
 	}
-
+	
 	@Override
 	public void removeEventListener(T listener) {
 		listeners.remove(listener);

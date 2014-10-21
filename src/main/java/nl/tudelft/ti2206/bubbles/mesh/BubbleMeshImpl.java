@@ -3,6 +3,8 @@ package nl.tudelft.ti2206.bubbles.mesh;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -38,11 +40,11 @@ public class BubbleMeshImpl implements BubbleMesh {
 	protected Bubble topLeftBubble;
 	protected Bubble bottomLeftBubble;
 	protected final Point position = new Point(0,0);
-	protected final transient BubbleMeshEventTarget eventTarget = new BubbleMeshEventTarget();
+	protected transient BubbleMeshEventTarget eventTarget = new BubbleMeshEventTarget();
 	
 	private Point lastUpdatePosition = new Point(0,0);
 	private int bubbleHeight = 22;
-
+	
 	/**
 	 * Construct a new BubbleMesh
 	 * @param topLeftBubble
@@ -417,5 +419,10 @@ public class BubbleMeshImpl implements BubbleMesh {
 			lastUpdatePosition.translate(0, bubbleHeight);
 		}
 	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        eventTarget = new BubbleMeshEventTarget();
+    }
 
 }

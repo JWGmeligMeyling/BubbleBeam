@@ -8,10 +8,6 @@ import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
-import nl.tudelft.util.Vector2f;
-
 /**
  * The {@code Packet} classes are responsible for constructing packets to send
  * over an OutputStream out of data given in the constructor, and the Packets
@@ -37,7 +33,7 @@ public interface Packet extends Serializable {
 	 * 
 	 * @param packetHandlerCollection
 	 */
-	void notify(PacketHandlerCollection packetHandlerCollection);
+	void notify(PacketHandler packetHandlerCollection);
 	
 	default void write(final ObjectOutputStream outputStream) throws IOException {
 		try {
@@ -50,132 +46,6 @@ public interface Packet extends Serializable {
 	
 	static Packet read(final ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
 		return (Packet) inputStream.readObject();
-	}
-	
-	/**
-	 * The {@code CannonRotate} {@link Packet} is used to send and receive
-	 * information about a cannon rotating.
-	 * 
-	 * @author Sam Smulders
-	 */
-	public class CannonRotate implements Packet {
-		
-		private static final long serialVersionUID = -8205066675151884103L;
-		
-		public final double rotation;
-		
-		public CannonRotate(double direction) {
-			this.rotation = direction;
-		}
-		
-		@Override
-		public void notify(PacketHandlerCollection packetHandlerCollection) {
-			packetHandlerCollection.notify(this);
-		}
-		
-		public double getRotation() {
-			return rotation;
-		}
-		
-	}
-	
-	/**
-	 * The {@code CannonShoot} {@link Packet} is used to send and receive
-	 * information about a cannon shooting.
-	 * 
-	 * @author Sam Smulders
-	 */
-	public class CannonShoot implements Packet {
-
-		private static final long serialVersionUID = 1546268759069464515L;
-
-		public final Vector2f direction;
-		
-		public CannonShoot(Vector2f direction) {
-			this.direction = new Vector2f(direction);
-		}
-		
-		@Override
-		public void notify(PacketHandlerCollection packetHandlerCollection) {
-			packetHandlerCollection.notify(this);
-		}
-
-		public Vector2f getDirection() {
-			return direction;
-		}
-	}
-	
-	/**
-	 * The {@code BubbleMeshSync} {@link Packet} is used to send and receive the
-	 * {@link BubbleMesh}.
-	 * 
-	 * @author Sam Smulders
-	 */
-	public class BubbleMeshSync implements Packet {
-
-		private static final long serialVersionUID = -8341409595602559487L;
-
-		public final BubbleMesh bubbleMesh;
-		
-		public BubbleMeshSync(final BubbleMesh bubbleMesh) {
-			this.bubbleMesh = bubbleMesh;
-		}
-		
-		@Override
-		public void notify(PacketHandlerCollection packetHandlerCollection) {
-			packetHandlerCollection.notify(this);
-		}
-	}
-	
-	/**
-	 * The {@code LoadNewBubble} {@link Packet} is used to send and receive the
-	 * colour of new bubbles, to synchronise them with the opponent.
-	 * 
-	 * @author Sam Smulders
-	 */
-	public class AmmoPacket implements Packet {
-
-		private static final long serialVersionUID = -7036909370582903656L;
-
-		public final Bubble loadedBubble, nextBubble;
-		
-		public AmmoPacket(Bubble loadedBubble, Bubble nextBubble) {
-			this.loadedBubble = loadedBubble;
-			this.nextBubble = nextBubble;
-		}
-		
-		@Override
-		public void notify(PacketHandlerCollection packetHandlerCollection) {
-			packetHandlerCollection.notify(this);
-		}
-	}
-	
-	/**
-	 * This is one of four classes needed to send an interger over the network
-	 * @author Liam Clark
-	 *
-	 */
-	public class PoppedPacket implements Packet {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -9118488904921915831L;
-		protected final int amount;
-		
-		public PoppedPacket(int a) {
-			amount=a;
-		}
-		
-		public int getAmount(){
-			return amount;
-		}
-
-		@Override
-		public void notify(PacketHandlerCollection packetHandlerCollection) {
-				packetHandlerCollection.notify(this);
-		}
-		
 	}
 	
 }

@@ -27,7 +27,6 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.actions.ExitAction;
@@ -36,7 +35,6 @@ import nl.tudelft.ti2206.game.actions.HighscoreAction;
 import nl.tudelft.ti2206.game.actions.RestartMultiplayerAction;
 import nl.tudelft.ti2206.game.actions.RestartSinglePlayerAction;
 import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.game.backend.GameMode;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.GameTick;
 import nl.tudelft.ti2206.game.backend.GameTickImpl;
@@ -75,19 +73,13 @@ public class SinglePlayerFrame extends JFrame implements
 
 	protected final GameTick gameTick;
 	
-	public SinglePlayerFrame() throws IOException {
-		this(GameMode.POWERUP);
-	}
-	
-	public SinglePlayerFrame(final GameMode gameMode) throws IOException {
+	public SinglePlayerFrame(final GameModel gameModel) throws IOException {
 		
 		super(FRAME_TITLE);
 		
-		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
-		GameModel gameModel = new GameModel(gameMode, bubbleMesh);
 		cannonController = new MouseCannonController();
 		this.gameTick = new GameTickImpl(FRAME_PERIOD, executor);
-		this.gameController = new GameController(gameModel, cannonController, gameTick);		
+   		this.gameController = new GameController(gameModel, cannonController, gameTick);		
 		gamePanel = new GamePanel(gameController);
 		cannonController.bindListenersTo(gamePanel, gamePanel.getCannon());
 
