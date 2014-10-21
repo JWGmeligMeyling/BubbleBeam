@@ -1,16 +1,14 @@
 package nl.tudelft.ti2206.game.actions;
 
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
-import nl.tudelft.ti2206.game.backend.GameMode;
+import nl.tudelft.ti2206.game.backend.GameModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ public class RestartSinglePlayerAction extends AbstractAction {
 	private static final Logger log = LoggerFactory
 			.getLogger(RestartSinglePlayerAction.class);
 	private static final long serialVersionUID = -7718661789308082267L;
+	protected static final String DEFAULT_BOARD_PATH = "/board.txt";
 	
 	private final SinglePlayerFrame singlePlayerFrame;
 	
@@ -30,47 +29,25 @@ public class RestartSinglePlayerAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-			final JDialog dialog = new JDialog(singlePlayerFrame, false);	//this makes the dialog always stay on top of the singleplayerframe
-			dialog.setTitle("Choose singleplayer gamemode");
-			
-			//adding buttons for all gamemodes to the dialog
-			
-			GameMode[] gameModes = GameMode.values();
-			dialog.setLayout(new GridLayout(2, gameModes.length));
-			
-			for(GameMode gameMode : gameModes) {
-				String label = gameMode.getName();
-				JButton button = new JButton(label);
+			new ChooseGameMode(singlePlayerFrame, gameMode -> {
 				
-				button.addActionListener((a) -> {
-					start(gameMode);
-				});
+				try {
+					BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
+					GameModel gameModel = new GameModel(gameMode, bubbleMesh);
+					
+					SinglePlayerFrame frame = new SinglePlayerFrame(gameModel);
+					frame.pack();
+					frame.setLocationRelativeTo(this.singlePlayerFrame);
+					this.singlePlayerFrame.dispose();
+					frame.setVisible(true);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.getFindMultiplayerAction().setEnabled(true);
+				}
+				catch (IOException e) {
+					log.error(e.getMessage(), e);
+				}
 				
-				dialog.add(button);
-			}
-			
-			//make it so that the dialog is displayed as it should be
-			dialog.setModal(true);
-			dialog.pack();
-			dialog.setLocationRelativeTo(null);
-			dialog.setVisible(true);
-			//add that when on the textfield 'enter' is clicked or the dialogbox is closed to add to the highscore
-			
+			});
 	}
 	
-	public void start(GameMode gameMode){
-		try {
-			SinglePlayerFrame frame = new SinglePlayerFrame(gameMode);
-			frame.pack();
-			frame.setLocationRelativeTo(this.singlePlayerFrame);
-			this.singlePlayerFrame.dispose();
-			frame.setVisible(true);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			frame.getFindMultiplayerAction().setEnabled(true);
-		}
-		catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
 }

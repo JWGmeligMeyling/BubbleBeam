@@ -2,6 +2,9 @@ package nl.tudelft.ti2206.game.backend;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Observable;
 import java.util.Set;
@@ -17,17 +20,19 @@ import nl.tudelft.util.AbstractEventTarget;
 import nl.tudelft.util.EventTarget;
 import nl.tudelft.util.Vector2f;
 
-public class GameModel extends Observable implements EventTarget<GameEventListener> {
+public class GameModel extends Observable implements EventTarget<GameEventListener>, Serializable {
 	
+	private static final long serialVersionUID = 7372457527680874284L;
+
 	private final Set<Color> remainingColors;
 	
-	private final AbstractEventTarget<GameEventListener> eventTarget = new AbstractEventTarget<GameEventListener>();
+	private transient AbstractEventTarget<GameEventListener> eventTarget = new AbstractEventTarget<GameEventListener>();
 	
 	private final GameMode gameMode;
 	
 	private BubbleMesh bubbleMesh;
 	
-	private MovingBubble shotBubble;
+	private transient MovingBubble shotBubble;
 	
 	private Bubble loadedBubble, nextBubble;
 	
@@ -178,5 +183,10 @@ public class GameModel extends Observable implements EventTarget<GameEventListen
 	public GameMode getGameMode() {
 		return gameMode;
 	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        eventTarget = new AbstractEventTarget<GameEventListener>();
+    }
 	
 }

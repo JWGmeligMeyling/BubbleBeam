@@ -1,7 +1,10 @@
 package nl.tudelft.ti2206.network.packets;
 
+import nl.tudelft.ti2206.network.packets.Packet.AmmoPacket;
+import nl.tudelft.ti2206.network.packets.Packet.BubbleMeshSync;
 import nl.tudelft.ti2206.network.packets.Packet.CannonRotate;
 import nl.tudelft.ti2206.network.packets.Packet.CannonShoot;
+import nl.tudelft.ti2206.network.packets.Packet.GameModelPacket;
 import nl.tudelft.ti2206.network.packets.Packet.PoppedPacket;
 
 
@@ -14,19 +17,12 @@ import nl.tudelft.ti2206.network.packets.Packet.PoppedPacket;
  */
 public class PacketHandlerCollection {
 	
-	public PacketHandlerCollection() {
-		this.cannonRotateHandler = new PacketHandler.CannonRotate();
-		this.cannonShootHandler = new PacketHandler.CannonShoot();
-		this.bubbleMeshSyncHandler = new PacketHandler.BubbleMeshSync();
-		this.loadNewBubbleHandler = new PacketHandler.LoadNewBubble();
-		this.popHandler= new PacketHandler.PoppedHandler();
-	}
-	
-	public final PacketHandler.CannonRotate cannonRotateHandler;
-	public final PacketHandler.CannonShoot cannonShootHandler;
-	public final PacketHandler.BubbleMeshSync bubbleMeshSyncHandler;
-	public final PacketHandler.LoadNewBubble loadNewBubbleHandler;
-	public final PacketHandler.PoppedHandler popHandler;
+	private final PacketHandler<CannonRotate> cannonRotateHandler = new PacketHandler<CannonRotate>(false);
+	private final PacketHandler<CannonShoot> cannonShootHandler = new PacketHandler<CannonShoot>(true);
+	private final PacketHandler<BubbleMeshSync> bubbleMeshSyncHandler = new PacketHandler<BubbleMeshSync>(true);
+	private final PacketHandler<AmmoPacket> loadNewBubbleHandler = new PacketHandler<AmmoPacket>(true);
+	private final PacketHandler<PoppedPacket> popHandler = new PacketHandler<PoppedPacket>(true);
+	private final PacketHandler<GameModelPacket> gameModelPacketHandler = new PacketHandler<GameModelPacket>(true);
 	
 	public void registerCannonShootHandler(final PacketListener<CannonShoot> packetListener) {
 		cannonShootHandler.registerObserver(packetListener);
@@ -36,19 +32,22 @@ public class PacketHandlerCollection {
 		cannonRotateHandler.registerObserver(packetListener);
 	}
 	
-	public void registerBubbleMeshSyncListener(final PacketListener<Packet.BubbleMeshSync> packetListener) {
+	public void registerBubbleMeshSyncListener(final PacketListener<BubbleMeshSync> packetListener) {
 		bubbleMeshSyncHandler.registerObserver(packetListener);
 	}
 	
 
-	public void registerLoadNewBubbleListener(final PacketListener<Packet.AmmoPacket> packetListener) {
+	public void registerLoadNewBubbleListener(final PacketListener<AmmoPacket> packetListener) {
 		loadNewBubbleHandler.registerObserver(packetListener);
 	}
 	
-	public void registerPopHandler(final PacketListener<Packet.PoppedPacket> packetListener){
+	public void registerPopHandler(final PacketListener<PoppedPacket> packetListener){
 		popHandler.registerObserver(packetListener);
 	}
 	
+	public void registerGameModelPacketHandler(final PacketListener<GameModelPacket> packetListener) {
+		gameModelPacketHandler.registerObserver(packetListener);
+	}
 	
 	/**
 	 * Notify the desired {@link PacketHandler}
@@ -87,7 +86,11 @@ public class PacketHandlerCollection {
 	}
 
 	public void notify(PoppedPacket poppedPacket) {
-			popHandler.notifyObservers(poppedPacket);
+		popHandler.notifyObservers(poppedPacket);
+	}
+	
+	public void notify(GameModelPacket packet) {
+		gameModelPacketHandler.notifyObservers(packet);
 	}
 
 }

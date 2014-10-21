@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -157,14 +158,11 @@ public interface Packet extends Serializable {
 	 */
 	public class PoppedPacket implements Packet {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -9118488904921915831L;
 		protected final int amount;
 		
-		public PoppedPacket(int a) {
-			amount=a;
+		public PoppedPacket(int amount) {
+			this.amount = amount;
 		}
 		
 		public int getAmount(){
@@ -174,6 +172,32 @@ public interface Packet extends Serializable {
 		@Override
 		public void notify(PacketHandlerCollection packetHandlerCollection) {
 				packetHandlerCollection.notify(this);
+		}
+		
+	}
+	
+	public class GameModelPacket implements Packet {
+
+		private static final long serialVersionUID = -3618436624787528399L;
+		
+		private final GameModel masterGameModel, slaveGameModel;
+		
+		public GameModelPacket(GameModel masterGameModel, GameModel slaveGameModel) {
+			this.masterGameModel = masterGameModel;
+			this.slaveGameModel = slaveGameModel;
+		}
+		
+		@Override
+		public void notify(PacketHandlerCollection packetHandlerCollection) {
+			packetHandlerCollection.notify(this);
+		}
+
+		public GameModel getMasterGameModel() {
+			return masterGameModel;
+		}
+
+		public GameModel getSlaveGameModel() {
+			return slaveGameModel;
 		}
 		
 	}
