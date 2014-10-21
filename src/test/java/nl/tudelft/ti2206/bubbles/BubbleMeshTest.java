@@ -15,9 +15,9 @@ import java.util.Iterator;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshParser;
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshListener.ScoreListener;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 
 import org.junit.Test;
 
@@ -42,7 +42,7 @@ public class BubbleMeshTest {
 		verify(bubbleMesh).pop(a);
 		verify(bubbleMesh, never()).replaceBubble(any(), any());
 		
-		verify(scoreListener, never()).points(any(), anyInt());
+		verify(scoreListener, never()).score(any());
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class BubbleMeshTest {
 				allOf(hasItems(Color.GREEN, Color.BLUE),
 						not(hasItem(Color.RED))));
 		
-		verify(scoreListener).points(any(), anyInt());
+		verify(scoreListener).score(any());
 	}
 	
 	@Test
@@ -100,7 +100,7 @@ public class BubbleMeshTest {
 				allOf(hasItems(Color.BLUE, Color.CYAN),
 						not(hasItems(Color.RED, Color.GREEN))));
 		
-		verify(scoreListener).points(any(), anyInt());
+		verify(scoreListener).score(any());
 	}
 	
 	@Test

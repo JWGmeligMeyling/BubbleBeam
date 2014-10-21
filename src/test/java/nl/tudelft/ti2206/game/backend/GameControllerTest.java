@@ -12,8 +12,8 @@ import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshListener.ScoreListener;
 import nl.tudelft.ti2206.cannon.CannonController;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
@@ -131,7 +131,7 @@ public class GameControllerTest {
 		
 		bubbleMesh.getEventTarget()
 			.trigger(ScoreListener.class, listener -> {
-				listener.points(bubbleMesh, amount);
+				listener.score(new ScoreEvent(bubbleMesh, amount));
 		});
 		
 		verify(gameModel).incrementScore(amount);

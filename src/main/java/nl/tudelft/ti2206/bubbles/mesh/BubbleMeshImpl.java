@@ -16,6 +16,7 @@ import nl.tudelft.ti2206.bubbles.Direction;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +108,7 @@ public class BubbleMeshImpl implements BubbleMesh {
 			
 			calculateScore(bubblesToPop);
 			target.popHook();
-			eventTarget.pop(this, bubblesToPop);
+			eventTarget.pop(new BubblePopEvent(this, bubblesToPop));
 			return true;
 		}
 		
@@ -218,7 +219,7 @@ public class BubbleMeshImpl implements BubbleMesh {
 	 */
 	protected void calculateScore(final Set<Bubble> bubbles) {
 		int amount = bubbles.size() * bubbles.size() * 25;
-		eventTarget.addScore(this, amount);
+		eventTarget.addScore(new ScoreEvent(this, amount));
 	}
 	
 	@Override
@@ -264,7 +265,11 @@ public class BubbleMeshImpl implements BubbleMesh {
 		
 		updateBottomRow();
 		calculatePositions();
-		eventTarget.rowInsert(this);
+		
+		Set<Bubble> insertedBubbles = Sets.newHashSet(topLeftBubble.traverse(
+				Direction.RIGHT).iterator());
+		
+		eventTarget.rowInsert(new RowInsertEvent(this, insertedBubbles));
 		
 		log.info("Finished inserting row");
 	}

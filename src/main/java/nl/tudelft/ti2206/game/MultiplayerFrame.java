@@ -40,9 +40,9 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 		this.slaveGamePanel.setBackground(new Color(225,225,225));
 		this.connector = connector;
 		
-		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((a,b)->{
-			log.info(b.size()+" bubbles popped");
-			connector.sendPacket(new PoppedPacket(b.size()));
+		super.gameController.getModel().getBubbleMesh().getEventTarget().addPopListener((popEvent)->{
+			log.info("{} bubbles popped", popEvent.amountOfPoppedBubbles());
+			connector.sendPacket(new PoppedPacket(popEvent.amountOfPoppedBubbles()));
 		});;
 		
 		connector.getPacketHandlerCollection()

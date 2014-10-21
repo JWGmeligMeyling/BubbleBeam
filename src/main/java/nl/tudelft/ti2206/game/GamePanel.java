@@ -65,7 +65,8 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		positionAmmoBubbles();
 		
-		gameController.getModel().getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
+		gameController.getModel().getBubbleMesh().getEventTarget().addScoreListener((scoreEvent) -> {
+			int amount = scoreEvent.getAmountOfPoints();
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
 			if(POPSOUND != null) POPSOUND.play();
@@ -75,8 +76,8 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.setVisible(true);
 		
 		this.gameController.getModel().getBubbleMesh().getEventTarget()
-				.addPopListener((bubbleMesh, bubblesPopped) -> {
-					bubblesPopped.forEach(bubble -> {
+				.addPopListener((popEvent) -> {
+					popEvent.getPoppedBubbles().forEach(bubble -> {
 						animationList.add(new FallAnimation(bubble));
 					});
 				});

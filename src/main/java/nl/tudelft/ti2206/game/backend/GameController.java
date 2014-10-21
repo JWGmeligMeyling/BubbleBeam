@@ -68,9 +68,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 			GameController.this.shoot(direction);
 		});
 		
-		model.getBubbleMesh().getEventTarget().addScoreListener((bubbleMesh, amount) -> {
+		model.getBubbleMesh().getEventTarget().addScoreListener((scoreEvent) -> {
+			int amount = scoreEvent.getAmountOfPoints();
 			model.incrementScore(amount);
-			model.retainRemainingColors(bubbleMesh.getRemainingColours());
+			model.retainRemainingColors(scoreEvent.getSource().getRemainingColours());
 			model.notifyObservers();
 		});
 		
@@ -253,9 +254,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 		log.info("Binding {} to connector {}", this, connector);
 		sendInitialData(connector);
 		
-		model.getBubbleMesh().getEventTarget().addRowInsertedListener((bubbleMesh) -> {
+		model.getBubbleMesh().getEventTarget().addRowInsertedListener((event) -> {
 			log.info("Sending insert row");
-			connector.sendPacket(new BubbleMeshSync(bubbleMesh));
+			connector.sendPacket(new BubbleMeshSync(event.getSource()));
 		});
 		
 		model.addShootEventListener((direction) -> {

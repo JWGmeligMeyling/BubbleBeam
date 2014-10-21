@@ -1,11 +1,7 @@
 package nl.tudelft.ti2206.bubbles.mesh;
 
-import java.util.Set;
-
-import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshListener.PopListener;
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshListener.RowInstertedListener;
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshListener.ScoreListener;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 import nl.tudelft.util.AbstractEventTarget;
 import nl.tudelft.util.EventTarget;
 
@@ -44,28 +40,26 @@ public class BubbleMeshEventTarget extends AbstractEventTarget<BubbleMeshListene
 	
 	/**
 	 * Trigger a row insert
-	 * @param bubbleMesh
+	 * @param event Event that should be triggered on the listeners
 	 */
-	public void rowInsert(final BubbleMesh bubbleMesh) {
-		listeners.forEach(listener -> listener.rowInserted(bubbleMesh));
+	public void rowInsert(final RowInsertEvent event) {
+		listeners.forEach(listener -> listener.rowInsert(event));
 	}
 	
 	/**
 	 * Trigger a score award
-	 * @param bubbleMesh
-	 * @param amount
+	 * @param event Event that should be triggered on the listeners
 	 */
-	public void addScore(final BubbleMesh bubbleMesh, final int amount) {
-		listeners.forEach(listener -> listener.points(bubbleMesh, amount));
+	public void addScore(final ScoreEvent event) {
+		listeners.forEach(listener -> listener.score(event));
 	}
 	
 	/**
 	 * Trigger a pop
-	 * @param bubbleMesh
-	 * @param bubblesPopped
+	 * @param event Event that should be triggered on the listeners
 	 */
-	public void pop(final BubbleMesh bubbleMesh, Set<Bubble> bubblesPopped) {
-		listeners.forEach(listener -> listener.pop(bubbleMesh, bubblesPopped));
+	public void pop(final BubblePopEvent event) {
+		listeners.forEach(listener -> listener.pop(event));
 	}
 
 }
