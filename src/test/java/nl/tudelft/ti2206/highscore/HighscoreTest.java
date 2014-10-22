@@ -2,6 +2,9 @@ package nl.tudelft.ti2206.highscore;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
+
 import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 
 import org.junit.Test;
@@ -12,8 +15,9 @@ public class HighscoreTest {
 
 	
 	@Test
-	public void testAdd(){
-		Highscore highscore = new HighscoreImpl();
+	public void testAdd() throws IOException{
+		File file = File.createTempFile("doesnt", "matter");
+		Highscore highscore = new HighscoreImpl(file);
 		highscore.clear();
 		
 		HighscoreItem item1 = new HighscoreItem("Michael", new ScoreItem(1200, 0, 0));
@@ -29,9 +33,9 @@ public class HighscoreTest {
 	}
 	
 	@Test
-	public void writeAndRead(){
-		
-		Highscore highscore = new HighscoreImpl();
+	public void writeAndRead() throws IOException{
+		File file = File.createTempFile("doesnt", "matter");
+		Highscore highscore = new HighscoreImpl(file);
 		highscore.clear();
 		
 		HighscoreItem item1 = new HighscoreItem("Michael", new ScoreItem(1200, 0, 0));
@@ -44,7 +48,7 @@ public class HighscoreTest {
 		
 		highscore.save();
 		
-		Highscore other = new HighscoreImpl();
+		Highscore other = new HighscoreImpl(file);
 		other.read();
 		
 		assertEquals(highscore, other);

@@ -41,6 +41,10 @@ public class HighscoreImpl implements Highscore {
 		this(new File(TEMP_BIN, FILENAME), Maps.newHashMap());
 	}
 	
+	public HighscoreImpl(File file) {
+		this(file, Maps.newHashMap());
+	}
+	
 	protected HighscoreImpl(File file, Map<Class<? extends GameMode>, SortedSet<HighscoreItem>> items) {
 		this.file = file;
 		this.items = items;
@@ -107,8 +111,7 @@ public class HighscoreImpl implements Highscore {
 	
 	@Override
 	public void read() {
-		TEMP_BIN.mkdirs();
-		
+		file.getParentFile().mkdirs();
 		try(ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
 			
 			log.debug("Reading the highscores from {}", file);
