@@ -18,6 +18,7 @@ import nl.tudelft.ti2206.highscore.ClassicHighscore;
 @ModeName("Classic Mode")
 @ModeHighscore(ClassicHighscore.class)
 @ModeBubbleFactory(ClassicBubbleFactory.class)
+@ModeMusic("/classic_music.wav")
 public class ClassicGameMode implements GameMode {
 
 	private static final long serialVersionUID = -5322766009361290612L;

@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.game.backend.mode;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.io.Serializable;
 
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
@@ -65,6 +67,15 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 		catch (InstantiationException  | IllegalAccessException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
+	}
+	
+	/**
+	 * Get the music for this {@code GameMode}
+	 * @return {@link AudioClip} music
+	 */
+	default AudioClip getMusic() {
+		String path = this.getClass().getAnnotation(ModeMusic.class).value();
+		return Applet.newAudioClip(GameMode.class.getResource(path));
 	}
 	
 }

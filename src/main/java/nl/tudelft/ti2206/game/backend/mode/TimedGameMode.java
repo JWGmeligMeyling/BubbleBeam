@@ -19,6 +19,7 @@ import nl.tudelft.ti2206.highscore.PowerupHighscore;
 @ModeName("Timed Mode")
 @ModeHighscore(PowerupHighscore.class)
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
+@ModeMusic("/time_music.wav")
 public class TimedGameMode implements GameMode {
 
 	private static final long serialVersionUID = 2150478663941653803L;	

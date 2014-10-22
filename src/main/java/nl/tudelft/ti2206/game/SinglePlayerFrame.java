@@ -1,5 +1,6 @@
 package nl.tudelft.ti2206.game;
 
+import java.applet.AudioClip;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -52,6 +53,8 @@ public class SinglePlayerFrame extends JFrame implements
 	protected static final int FRAME_PERIOD = 1000 / FPS;
 	protected static final Insets NO_PADDING = new Insets(0, 0, 0, 0);
 	protected static final Insets PADDED = new Insets(10, 10, 10, 10);
+	
+	private final AudioClip music;
 
 	protected final Action
 		exitAction = new ExitAction(this),
@@ -74,7 +77,7 @@ public class SinglePlayerFrame extends JFrame implements
 	protected final GameTick gameTick;
 	
 	public SinglePlayerFrame(final MouseCannonController cannonController, final GameController gameController) throws IOException {
-		
+
 		super(FRAME_TITLE);
 		
 		this.cannonController = cannonController;
@@ -84,6 +87,8 @@ public class SinglePlayerFrame extends JFrame implements
    		
 		gamePanel = new GamePanel(gameController);
 		cannonController.bindListenersTo(gamePanel, gamePanel.getCannon());
+		music = gameController.getGameMode().getMusic();
+		music.loop();
 
 		scoreLabel = new JLabel("Score: 0");
 		getModel().addObserver((a, b) ->
@@ -240,6 +245,7 @@ public class SinglePlayerFrame extends JFrame implements
 	@Override
 	public void dispose() {
 		this.stop();
+		music.stop();
 		super.dispose();
 	}
 
