@@ -12,9 +12,15 @@ import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 
+/**
+ * ConfettiAnimation animates confetti thrown around.
+ * 
+ * @author Sam_
+ *
+ */
 public class ConfettiAnimation extends FiniteAnimation {
 	protected static Random random = new Random();
-	protected final static BufferedImage CONFETTI_STRIP = _getCannonImage();
+	protected final static BufferedImage CONFETTI_STRIP = _getConfettiImage();
 	protected final static int STRIP_SIZE = 9;
 	protected static final float MIN_CONFETTI_SPEED = 2f;
 	protected static final float MAX_CONFETTI_SPEED = 5f;
@@ -73,7 +79,7 @@ public class ConfettiAnimation extends FiniteAnimation {
 				+ size / 2, this.position.y + size / 2, 0, 0, size, size, null);
 	}
 	
-	private static BufferedImage _getCannonImage() {
+	private static BufferedImage _getConfettiImage() {
 		try {
 			return ImageIO.read(ConfettiAnimation.class.getResourceAsStream("/confettiStrip.png"));
 		} catch (IOException e) {
