@@ -29,7 +29,7 @@ public class HighscoreAction extends AbstractAction {
 		log.info("Opening Highscore-popup");
 
 		HighscorePopup popup = new HighscorePopup(Highscore.getHighscores(),
-				singlePlayerFrame.getController().getModel().getGameMode());
+				singlePlayerFrame.getModel().getGameMode());
 		
 		popup.setModal(true);
 		popup.pack();
