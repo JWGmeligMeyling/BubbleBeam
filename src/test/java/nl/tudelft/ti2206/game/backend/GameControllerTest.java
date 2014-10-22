@@ -21,14 +21,13 @@ import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.AmmoPacket;
-import nl.tudelft.ti2206.network.packets.BubbleMeshSync;
-import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketHandler;
+import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.util.Vector2f;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -67,11 +66,12 @@ public class GameControllerTest {
 		when(cannonController.getModel()).thenReturn(cannonModel); 
 		when(factory.createBubble(any())).thenReturn(new AbstractBubble());
 
-		gameController = spy(new GameController(gameModel, cannonController, tick));
+		gameController = spy(new GameController(gameModel, cannonController));
+		gameController.bindGameTick(tick);
 		
 		assertEquals(cannonController, gameController.getCannonController());
 		assertEquals(gameModel, gameController.getModel());
-		
+		assertThat(gameController.getGameMode(), Matchers.instanceOf(ClassicGameMode.class));
 
 		verify(bubbleMesh).calculatePositions();
 		verify(cannonModel).addEventListener(any());
@@ -227,11 +227,6 @@ public class GameControllerTest {
 	public void testBindConnectorAsMaster() {
 		Connector connector = mock(Connector.class);
 		gameController.bindConnectorAsMaster(connector);
-		testSendInitialData(connector);
-	}
-	
-	protected static void testSendInitialData(Connector connector) {
-		verify(connector, times(2)).sendPacket(any(Packet.class));
 	}
 	
 	@Test
@@ -241,7 +236,7 @@ public class GameControllerTest {
 		reset(connector);
 		
 		bubbleMesh.insertRow(gameController);
-		verify(connector).sendPacket(any(BubbleMeshSync.class));	
+		verify(connector).sendPacket(any());	
 	}
 	
 	@Test
@@ -254,52 +249,35 @@ public class GameControllerTest {
 		reset(connector);
 		reset(gameModel);
 		
-		gameModel.trigger(listener -> {
-			listener.shoot(event);
-		});
-		
-		verify(connector).sendPacket(any(Packet.class));
+		cannonModel.trigger(listener -> listener.shoot(event));
+		verify(gameListener).shoot(any());
+		verify(gameListener).ammo(any());
 	}
 	
 	@Test
 	public void testBindConnectorAsSlave() {
 		Connector connector = mock(Connector.class);
-		PacketHandler phc = spy(new PacketHandler());
-		when(connector.getPacketHandlerCollection()).thenReturn(phc);		
 		gameController.bindConnectorAsSlave(connector);
-		
-		verify(phc, times(2)).addEventListener(any(), any());
+		verify(connector).addEventListener(any());
 	}
 	
 	@Test
 	public void testUpdateAmmoPacket() {
+		ArgumentCaptor<PacketListener> captor = ArgumentCaptor.forClass(PacketListener.class);
 		Connector connector = mock(Connector.class);
-		PacketHandler phc = spy(new PacketHandler());
-		when(connector.getPacketHandlerCollection()).thenReturn(phc);		
-		gameController.bindConnectorAsSlave(connector);
 		
+		gameController.bindConnectorAsSlave(connector);
+		verify(connector).addEventListener(captor.capture());
+		
+		PacketListener listener = captor.getValue();
+
 		Bubble one = mock(Bubble.class);
 		Bubble two = mock(Bubble.class);
-		AmmoPacket ammoPacket = new AmmoPacket(one, two);
-		phc.notify(ammoPacket);
+		GameListener.AmmoLoadEvent event = new GameListener.AmmoLoadEvent(gameController, one, two);
+		listener.handleAmmoLoad(event);
 		
 		verify(gameModel).setLoadedBubble(one);
 		verify(gameModel).setNextBubble(two);
-		verify(gameModel).notifyObservers();
-	}
-	
-	@Test
-	public void testBubbleMeshReceive() {
-		Connector connector = mock(Connector.class);
-		PacketHandler phc = spy(new PacketHandler());
-		when(connector.getPacketHandlerCollection()).thenReturn(phc);		
-		gameController.bindConnectorAsSlave(connector);
-		
-		BubbleMesh bubbleMesh = mock(BubbleMesh.class);
-		BubbleMeshSync packet = new BubbleMeshSync(bubbleMesh);
-		phc.notify(packet);
-		
-		verify(gameModel).setBubbleMesh(bubbleMesh);
 		verify(gameModel).notifyObservers();
 	}
 	

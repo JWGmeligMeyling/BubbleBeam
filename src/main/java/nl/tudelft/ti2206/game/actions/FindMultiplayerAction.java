@@ -16,12 +16,14 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.tudelft.ti2206.cannon.MouseCannonController;
+import nl.tudelft.ti2206.cannon.AbstractCannonController;
 import nl.tudelft.ti2206.game.MultiplayerFrame;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
+import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.GameModelPacket;
-import nl.tudelft.ti2206.network.packets.PacketHandler;
 import nl.tudelft.ti2206.network.packets.PacketListener.GameModelPacketListener;
 
 public class FindMultiplayerAction extends AbstractAction {
@@ -63,16 +65,16 @@ public class FindMultiplayerAction extends AbstractAction {
 				socket.connect(new InetSocketAddress(singlePlayerFrame.getIpValue(), PORT));
 				log.info("Connected to host {}", socket);
 				
-				final PacketHandler phc = new PacketHandler();
 				final Object lock = new Object();
+				Connector connector = new Connector(socket);
 				
 				AtomicReference<GameModel> masterGameModelRef = new AtomicReference<>();
 				AtomicReference<GameModel>  slaveGameModelRef = new AtomicReference<>();
 				
-				phc.addEventListener(new GameModelPacketListener() {
+				connector.addEventListener(new GameModelPacketListener() {
 
 					@Override
-					public void receivedGameModelPacket(GameModelPacket packet) {
+					public void handleGameModelPacket(GameModelPacket packet) {
 						GameModel masterGameModel = packet.getMasterGameModel();
 						GameModel slaveGameModel = packet.getSlaveGameModel();
 
@@ -91,11 +93,13 @@ public class FindMultiplayerAction extends AbstractAction {
 							log.info("Notifying lock");
 							lock.notifyAll();
 						}
+						
+						connector.removeEventListener(this);
 					}
 
 				});
 				
-				Connector connector = new Connector(socket, phc);
+				connector.start();
 				
 				synchronized(lock) {
 					log.info("Waiting on lock");
@@ -103,7 +107,11 @@ public class FindMultiplayerAction extends AbstractAction {
 					log.info("Lock was notified");
 				}
 				
-				MultiplayerFrame frame = new MultiplayerFrame(masterGameModelRef.get(), slaveGameModelRef.get(), connector);
+				MouseCannonController masterCannonController = new MouseCannonController();
+				GameController masterGameController = new GameController(slaveGameModelRef.get(), masterCannonController);
+				GameController slaveGameController = new GameController(masterGameModelRef.get(), new AbstractCannonController(), true);
+				MultiplayerFrame frame = new MultiplayerFrame(masterCannonController, masterGameController, slaveGameController, connector);
+				
 				frame.pack();
 				frame.setLocationRelativeTo(this.singlePlayerFrame);
 				

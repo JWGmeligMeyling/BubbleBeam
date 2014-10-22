@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -224,6 +225,40 @@ public class BubbleMeshTest {
 		bubbleMesh.replace(other);
 		verify(other).getBottomLeftBubble();
 		verify(other).getTopLeftBubble();
+	}
+	
+	@Test
+	public void testRender() {
+		Bubble a = spy(new AbstractBubble());
+		Bubble b = spy(new AbstractBubble());
+		Bubble c = spy(new AbstractBubble());
+		
+		a.bind(Direction.RIGHT, b);
+		a.bind(Direction.BOTTOMRIGHT, c);
+		b.bind(Direction.BOTTOMLEFT, c);
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c,2);
+		
+		Graphics graphics = mock(Graphics.class);
+		bubbleMesh.render(graphics);
+		
+		verify(a).render(graphics);
+		verify(b).render(graphics);
+		verify(c).render(graphics);
+	}
+	
+	@Test
+	public void testTranslate() {
+		Bubble a = spy(new AbstractBubble());
+		Bubble b = spy(new AbstractBubble());
+		Bubble c = spy(new AbstractBubble());
+		
+		a.bind(Direction.RIGHT, b);
+		a.bind(Direction.BOTTOMRIGHT, c);
+		b.bind(Direction.BOTTOMLEFT, c);
+		BubbleMeshImpl bubbleMesh = new BubbleMeshImpl(a,c,2);
+		
+		bubbleMesh.translate(0, 10);
+		verify(a).translate(0,10);
 	}
 	
 	@Test(expected=UnsupportedOperationException.class)

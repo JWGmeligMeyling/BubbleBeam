@@ -11,11 +11,9 @@ import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
-import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.Direction;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.exception.GameOver;
-import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 
 import org.slf4j.Logger;
@@ -223,7 +221,7 @@ public class BubbleMeshImpl implements BubbleMesh {
 	}
 	
 	@Override
-	public void insertRow(final GameController gameController) throws GameOver {
+	public void insertRow(final Iterator<Bubble> bubbleProvider) throws GameOver {
 		log.info("Inserting row");
 		
 		Iterator<Bubble> bubbles = iterator();
@@ -233,7 +231,7 @@ public class BubbleMeshImpl implements BubbleMesh {
 		boolean shift = !child.hasBubbleAt(Direction.BOTTOMLEFT);
 		
 		for (int i = 0; i < rowWidth; i++) {
-			Bubble bubble = new ColouredBubble(gameController.getRandomRemainingColor());
+			Bubble bubble = bubbleProvider.next();
 			
 			if (shift) {
 				child.bind(Direction.TOPRIGHT, bubble);
@@ -264,12 +262,13 @@ public class BubbleMeshImpl implements BubbleMesh {
 		}
 		
 		updateBottomRow();
+
 		calculatePositions();
 		
-		Set<Bubble> insertedBubbles = Sets.newHashSet(topLeftBubble.traverse(
+		List<Bubble> insertedBubbles = Lists.newArrayList(topLeftBubble.traverse(
 				Direction.RIGHT).iterator());
-		
 		eventTarget.rowInsert(new RowInsertEvent(this, insertedBubbles));
+		
 		
 		log.info("Finished inserting row");
 	}

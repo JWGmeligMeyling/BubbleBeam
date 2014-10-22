@@ -7,11 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -57,7 +59,32 @@ public interface BubbleMesh extends Iterable<Bubble>, Sprite, Serializable {
 	 *             if a new row can't be inserted, the game is over
 	 * @see GameController#getRandomRemainingColor()
 	 */
-	void insertRow(GameController gameController) throws GameOver;
+	default void insertRow(GameController gameController) throws GameOver {
+		insertRow(new Iterator<Bubble>() {
+
+			@Override
+			public boolean hasNext() {
+				return !isEmpty();
+			}
+
+			@Override
+			public Bubble next() {
+				return new ColouredBubble(gameController.getRandomRemainingColor());
+			}
+			
+		});
+	}
+	
+	/**
+	 * Insert a new row of bubbles at the top
+	 * 
+	 * @param bubbleProvider
+	 *            A Iterator containing Bubbles
+	 * @throws GameOver
+	 *             if a new row can't be inserted, the game is over
+	 * @see GameController#getRandomRemainingColor()
+	 */
+	void insertRow(Iterator<Bubble> bubbleProvider) throws GameOver;
 	
 	/**
 	 * Replace a {@code Bubble} in the mesh for another {@code Bubble}

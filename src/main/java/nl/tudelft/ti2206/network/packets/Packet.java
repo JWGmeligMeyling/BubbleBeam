@@ -28,24 +28,21 @@ public interface Packet extends Serializable {
 	
 	static final Logger log = LoggerFactory.getLogger(Packet.class);
 	
-	/**
-	 * Notifies the responsible {@Link PacketHandler} about this packet.
-	 * 
-	 * @param packetHandlerCollection
-	 */
-	void notify(PacketHandler packetHandlerCollection);
-	
 	default void write(final ObjectOutputStream outputStream) throws IOException {
 		try {
-			outputStream.reset();
-			outputStream.writeObject(this);
+			synchronized(outputStream) {
+				outputStream.reset();
+				outputStream.writeObject(this);
+			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 		}
 	}
 	
 	static Packet read(final ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
-		return (Packet) inputStream.readObject();
+		synchronized(inputStream) {
+			return (Packet) inputStream.readObject();
+		}
 	}
 	
 }

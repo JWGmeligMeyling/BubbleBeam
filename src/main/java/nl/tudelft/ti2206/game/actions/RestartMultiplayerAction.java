@@ -6,18 +6,27 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ScheduledExecutorService;
 
+
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.cannon.AbstractCannonController;
+import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.MultiplayerFrame;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
+import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.GameModelPacket;
@@ -73,11 +82,18 @@ public class RestartMultiplayerAction extends AbstractAction {
 							.parse(SinglePlayerFrame.class
 									.getResourceAsStream(DEFAULT_BOARD_PATH)));
 					
+					MouseCannonController masterCannonController = new MouseCannonController();
+					GameController masterGameController = new GameController(masterGameModel, masterCannonController);
+					GameController slaveGameController = new GameController(slaveGameModel, new AbstractCannonController(), true);
+					
+					connector.start();
 					log.info("Sending game model packet");
-					connector.sendPacket(new GameModelPacket(slaveGameModel, masterGameModel));
+					connector.sendPacket(new GameModelPacket(masterGameModel, slaveGameModel));
 					
 					log.info("Found a connection, building {}", MultiplayerFrame.class);
-					MultiplayerFrame frame = new MultiplayerFrame(masterGameModel, slaveGameModel, connector);
+					
+					MultiplayerFrame frame = new MultiplayerFrame(masterCannonController,
+							masterGameController, slaveGameController, connector);
 					frame.pack();
 					frame.setLocationRelativeTo(this.singlePlayerFrame);
 					
@@ -88,7 +104,6 @@ public class RestartMultiplayerAction extends AbstractAction {
 					frame.setVisible(true);
 					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					frame.getFindMultiplayerAction().setEnabled(false);
-					
 				}
 				catch (IOException e) {
 					log.info(e.getMessage(), e);

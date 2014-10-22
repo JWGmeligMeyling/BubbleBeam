@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketHandler;
+import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.util.AbstractEventTarget;
 
 /**
@@ -20,7 +20,7 @@ import nl.tudelft.util.AbstractEventTarget;
  *
  * @author Sam_
  */
-public class Connector extends AbstractEventTarget<DisconnectEvent> implements
+public class Connector extends AbstractEventTarget<PacketListener> implements
 		Runnable, AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(Connector.class);
@@ -31,21 +31,25 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 	protected final Socket socket;
 	protected final ObjectInputStream in;
 	protected final ObjectOutputStream out;
-	protected final PacketHandler packetHandlerCollection;
 	protected final Thread thread;
 	
+	/**
+	 * Construct a new Connector
+	 * @param socket
+	 * @throws IOException
+	 */
 	public Connector(final Socket socket) throws IOException {
-		this(socket, new PacketHandler());
-	}
-	
-	public Connector(final Socket socket, final PacketHandler packetHandlerCollection) throws IOException {
 		this.socket = socket;
 		this.out = new ObjectOutputStream(socket.getOutputStream());
 		this.out.flush();
 		this.in = new ObjectInputStream(socket.getInputStream());
-		this.packetHandlerCollection = packetHandlerCollection;
-		
-		thread = new Thread(this, "Connector-Worker");
+		this.thread = new Thread(this, "Connector-Worker");
+	}
+	
+	/**
+	 * Start the thread for the Connector
+	 */
+	public void start() {
 		thread.start();
 	}
 	
@@ -107,11 +111,8 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 	}
 	
 	protected void acceptPacket(final ObjectInputStream inputstream) throws IOException {
-		readPacket(inputstream).notify(packetHandlerCollection);
-	}
-	
-	public PacketHandler getPacketHandlerCollection() {
-		return packetHandlerCollection;
+		Packet packet = readPacket(inputstream);
+		listeners.forEach(listener -> listener.handlePacket(packet));
 	}
 	
 	public boolean isReady() {
@@ -120,7 +121,7 @@ public class Connector extends AbstractEventTarget<DisconnectEvent> implements
 	
 	@Override
 	public void close() throws IOException {
-		listeners.forEach(DisconnectEvent::clientDisconnected);
+		listeners.forEach(PacketListener::disconnect);
 		log.info("Closing the socket");
 		open = false;
 		socket.close();

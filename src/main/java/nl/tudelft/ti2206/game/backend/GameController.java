@@ -15,13 +15,8 @@ import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.AmmoPacket;
-import nl.tudelft.ti2206.network.packets.BubbleMeshSync;
-import nl.tudelft.ti2206.network.packets.CannonRotate;
-import nl.tudelft.ti2206.network.packets.CannonShoot;
-import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketHandler;
-import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.network.packets.EventPacket;
+import nl.tudelft.ti2206.network.packets.PacketListenerImpl;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
 
@@ -42,22 +37,19 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final GameModel model;
 	protected final GameMode gameMode;
 	protected final CannonController cannonController;
-	protected final boolean kill;
-	protected final GameTick tick;
+	protected final boolean intelligent;
 	
-	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick) {
-		this(model, cannonController, gameTick, false);
+	public GameController(final GameModel model, final CannonController cannonController) {
+		this(model, cannonController, false);
 	}
 	
 	public GameController(final GameModel model, final CannonController cannonController,
-			final GameTick gameTick, boolean kill) {
+			boolean intelligent) {
 
 		log.info("Contructed {} with {} and {}", this, model, cannonController);
 		
-		this.kill = kill;
+		this.intelligent = intelligent;
 		this.model = model;
-		this.tick = gameTick;
 		this.cannonController = cannonController;
 		
 		try {
@@ -109,14 +101,15 @@ public class GameController implements Controller<GameModel>, Tickable {
 			}
 			
 		});
-		
-		gameTick.registerObserver(this);
 	}
 	
 	protected void prepareAmmo() {
-		log.info("Prepare initial ammo for {}", this);
-		model.setLoadedBubble(createAmmoBubble());
-		model.setNextBubble(createAmmoBubble());
+		if(model.getLoadedBubble() == null ||
+			model.getNextBubble() == null ) {
+			log.info("Prepare initial ammo for {}", this);
+			model.setLoadedBubble(createAmmoBubble());
+			model.setNextBubble(createAmmoBubble());
+		}
 	}
 	
 	public CannonController getCannonController() {
@@ -182,7 +175,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected void updateBubbles() {
-		if(!kill) {
+		if(!intelligent) {
 			Bubble nextBubble = createAmmoBubble();
 			Bubble previousNextBubble = model.getNextBubble();
 			model.setNextBubble(nextBubble);
@@ -232,13 +225,19 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 	}
 	
+	private GameTick gameTick;
+	
+	public void bindGameTick(GameTick gameTick) {
+		gameTick.registerObserver(this);
+	}
+	
 	protected void gameOver() {
 		log.info("Sorry dawg, the game is over");
 		cannonController.setState(new CannonShootState());
 		model.setGameOver(true);
 		model.notifyObservers();
 		model.trigger(listener -> listener.gameOver(new GameOverEvent(this)));
-		tick.removeObserver(this);
+		if(gameTick != null) gameTick.removeObserver(this);
 	}
 	
 	/**
@@ -246,7 +245,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 */
 
 	public void insertRow() {
-		if(!kill) {
+		if(!intelligent) {
 			try {
 				model.getBubbleMesh().insertRow(this);
 			} catch (GameOver e) {
@@ -291,20 +290,19 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 */
 	public void bindConnectorAsMaster(final Connector connector) {
 		log.info("Binding {} to connector {}", this, connector);
-		sendInitialData(connector);
-		
+
 		model.addEventListener(new GameListener() {
 
 			@Override
 			public void rowInsert(RowInsertEvent event) {
 				log.info("Sending insert row");
-				connector.sendPacket(new BubbleMeshSync(event.getSource()));
+				connector.sendPacket(new EventPacket(event));
 			}
 			
 			@Override
 			public void shoot(CannonShootEvent event) {
 				log.info("Sending shoot packet");
-				connector.sendPacket(new CannonShoot(event.getDirection()));
+				connector.sendPacket(new EventPacket(event));
 			}
 
 			@Override
@@ -316,17 +314,20 @@ public class GameController implements Controller<GameModel>, Tickable {
 			}
 			
 			@Override
+			public void pop(BubblePopEvent event) {
+				log.info("{} bubbles popped", event.amountOfPoppedBubbles());
+				connector.sendPacket(new EventPacket(event));
+			}
+			
+			@Override
 			public void rotate(CannonRotateEvent event) {
-				Packet packet = new CannonRotate(event.getAngle());
-				connector.sendPacket(packet);
+				connector.sendPacket(new EventPacket(event));
 			}
 			
 			@Override
 			public void ammo(AmmoLoadEvent event) {
-				Bubble loadedBubble = model.getLoadedBubble();
-				Bubble nextBubble = model.getNextBubble();
-				log.info("Sending ammo packet with [{}, {}]", loadedBubble, nextBubble);
-				connector.sendPacket(new AmmoPacket(loadedBubble, nextBubble));
+				log.info("Sending ammo packet with [{}, {}]", event.getLoadedBubble(), event.getNextBubble());
+				connector.sendPacket(new EventPacket(event));
 			}
 			
 		});
@@ -334,30 +335,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	public void bindConnectorAsSlave(final Connector connector) {
-		PacketHandler packetHandlerCollection = connector.getPacketHandlerCollection();
-		
-		packetHandlerCollection.addEventListener(
-				PacketListener.BubbleMeshSyncListener.class, (packet) -> {
-					log.info("Processing packet {}", packet);
-					model.setBubbleMesh(packet.bubbleMesh);
-					model.notifyObservers();
-				});
-
-		packetHandlerCollection.addEventListener(
-				PacketListener.AmmoPacketListener.class, (packet) -> {
-					log.info("Processing packet {}", packet);
-					model.setLoadedBubble(packet.loadedBubble);
-					model.setNextBubble(packet.nextBubble);
-					model.notifyObservers();
-				});
-	}
-	
-	protected void sendInitialData(final Connector connector) {
-		log.info("Sending initial data to {}", connector);
-		connector.sendPacket(new BubbleMeshSync(model.getBubbleMesh()));
-		connector.sendPacket(new AmmoPacket(
-				model.getLoadedBubble(),
-				model.getNextBubble()));
+		connector.addEventListener(new PacketListenerImpl(this, cannonController));
 	}
 	
 	public GameMode getGameMode() {

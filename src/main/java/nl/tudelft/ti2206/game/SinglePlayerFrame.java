@@ -73,13 +73,15 @@ public class SinglePlayerFrame extends JFrame implements
 
 	protected final GameTick gameTick;
 	
-	public SinglePlayerFrame(final GameModel gameModel) throws IOException {
+	public SinglePlayerFrame(final MouseCannonController cannonController, final GameController gameController) throws IOException {
 		
 		super(FRAME_TITLE);
 		
-		cannonController = new MouseCannonController();
+		this.cannonController = cannonController;
 		this.gameTick = new GameTickImpl(FRAME_PERIOD, executor);
-   		this.gameController = new GameController(gameModel, cannonController, gameTick);		
+   		this.gameController = gameController;
+   		gameController.bindGameTick(gameTick);
+   		
 		gamePanel = new GamePanel(gameController);
 		cannonController.bindListenersTo(gamePanel, gamePanel.getCannon());
 

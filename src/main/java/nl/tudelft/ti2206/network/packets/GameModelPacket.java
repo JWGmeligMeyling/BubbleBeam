@@ -13,11 +13,6 @@ public class GameModelPacket implements Packet {
 		this.slaveGameModel = slaveGameModel;
 	}
 	
-	@Override
-	public void notify(PacketHandler packetHandlerCollection) {
-		packetHandlerCollection.notify(this);
-	}
-
 	public GameModel getMasterGameModel() {
 		return masterGameModel;
 	}

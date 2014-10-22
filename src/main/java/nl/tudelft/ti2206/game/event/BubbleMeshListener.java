@@ -2,6 +2,7 @@ package nl.tudelft.ti2206.game.event;
 
 import java.util.EventListener;
 import java.util.EventObject;
+import java.util.List;
 import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
@@ -31,9 +32,9 @@ public interface BubbleMeshListener extends EventListener {
 		
 		private static final long serialVersionUID = 2696579104143658958L;
 		
-		protected final Set<Bubble> insertedBubbles;
+		protected final List<Bubble> insertedBubbles;
 		
-		public RowInsertEvent(BubbleMesh bubbleMesh, Set<Bubble> insertedBubbles) {
+		public RowInsertEvent(BubbleMesh bubbleMesh, List<Bubble> insertedBubbles) {
 			super(bubbleMesh);
 			this.insertedBubbles = insertedBubbles;
 		}
@@ -41,7 +42,7 @@ public interface BubbleMeshListener extends EventListener {
 		/**
 		 * @return the insertedBubbles
 		 */
-		public Set<Bubble> getInsertedBubbles() {
+		public List<Bubble> getInsertedBubbles() {
 			return insertedBubbles;
 		}
 

@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.cannon.MouseCannonController;
+import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.game.backend.mode.PowerupGameMode;
@@ -26,8 +28,11 @@ public class Launcher {
 		Class<? extends GameMode> gameMode = PowerupGameMode.class;
 		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
 		GameModel gameModel = new GameModel(gameMode, bubbleMesh);
+		MouseCannonController masterCannonController = new MouseCannonController();
+		GameController gameController = new GameController(gameModel, masterCannonController);
 		
-		JFrame frame = new SinglePlayerFrame(gameModel);
+		JFrame frame = new SinglePlayerFrame(masterCannonController, gameController);
+		
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
