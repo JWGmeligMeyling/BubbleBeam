@@ -36,14 +36,16 @@ public class GameTickImpl implements GameTick {
 	public GameTickImpl(final int framePeriod, final ScheduledExecutorService scheduler) {
 		this.scheduler = scheduler;
 		this.feature = scheduler.scheduleAtFixedRate(() -> {
-			gameTickObservers.forEach(listener -> {
-				try {
-					listener.gameTick();
-				}
-				catch (Throwable e) {
-					log.error(e.getMessage(), e);
-				}
-			});
+			synchronized(gameTickObservers) {
+				gameTickObservers.forEach(listener -> {
+					try {
+						listener.gameTick();
+					}
+					catch (Throwable e) {
+						log.error(e.getMessage(), e);
+					}
+				});
+			}
 		}, 0l, framePeriod, TimeUnit.MILLISECONDS);
 		
 	}
@@ -51,12 +53,16 @@ public class GameTickImpl implements GameTick {
 
 	@Override
 	public void registerObserver(Tickable observer) {
-		gameTickObservers.add(observer);
+		synchronized(gameTickObservers) {
+			gameTickObservers.add(observer);
+		}
 	}
 	
 	@Override
 	public void removeObserver(Tickable observer) {
-		gameTickObservers.remove(observer);
+		synchronized(gameTickObservers) {
+			gameTickObservers.remove(observer);
+		}
 	}
 	
 	@Override
