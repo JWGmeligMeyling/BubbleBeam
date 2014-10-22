@@ -14,9 +14,9 @@ import nl.tudelft.ti2206.bubbles.Bubble;
  * @author Sam Smulders
  */
 public class FallAnimation extends FiniteAnimation {
-	private static final int FALL_SPEED = 4;
-	public Bubble bubble;
-	private Point position;
+	protected static final int FALL_SPEED = 4;
+	protected Bubble bubble;
+	protected Point position;
 	
 	public FallAnimation(Bubble bubble) {
 		super(bubble.getHeight());
@@ -43,6 +43,5 @@ public class FallAnimation extends FiniteAnimation {
 				this.position.y - bubble.getHeight() / 2 + time * FALL_SPEED, this.position.x
 						+ bubble.getWidth() / 2, this.position.y + bubble.getHeight() / 2 + time
 						* FALL_SPEED, 0, 0, bubble.getWidth(), bubble.getHeight(), null);
-		this.time++;
 	}
 }

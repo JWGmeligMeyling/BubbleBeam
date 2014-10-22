@@ -15,18 +15,15 @@ import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.EventPacket;
-import nl.tudelft.ti2206.network.packets.PacketListenerImpl;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.ti2206.game.event.BubbleMeshListener;
-import nl.tudelft.ti2206.game.event.CannonListener;
-import nl.tudelft.ti2206.game.event.GameListener;
-import nl.tudelft.ti2206.game.event.GameListener.*;
+import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
+import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
+import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
 
 public class GameController implements Controller<GameModel>, Tickable {
 	
@@ -39,6 +36,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final CannonController cannonController;
 	protected final boolean intelligent;
 	
+	protected GameTick gameTick;
+
 	public GameController(final GameModel model, final CannonController cannonController) {
 		this(model, cannonController, false);
 	}
@@ -51,58 +50,34 @@ public class GameController implements Controller<GameModel>, Tickable {
 		this.intelligent = intelligent;
 		this.model = model;
 		this.cannonController = cannonController;
+		this.gameMode = constructGameMode();
+		this.model.addEventListener(gameMode);
+
+		model.getBubbleMesh().calculatePositions();
+		prepareAmmo();
 		
+		cannonController
+			.getModel()
+			.addEventListener(new GameControllerCannonListener(this));
+		
+		model.getBubbleMesh()
+			.getEventTarget()
+			.addEventListener(new GameControllerBubbleMeshListener(model));
+	}
+	
+	protected GameMode constructGameMode() {
 		try {
-			this.gameMode = model.getGameMode().getConstructor(GameController.class).newInstance(this);
-			this.model.addEventListener(gameMode);
+			return model.getGameMode().getConstructor(GameController.class).newInstance(this);
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
 			throw new RuntimeException("Failed to instantiate GameController", e);
 		}
-		
-		model.getBubbleMesh().calculatePositions();
-		prepareAmmo();
-		
-		cannonController.getModel().addEventListener(new CannonListener() {
-
-			@Override
-			public void shoot(final CannonShootEvent event) {
-				model.trigger(listener -> listener.shoot(event));
-				GameController.this.shoot(event.getDirection());
-			}
-
-			@Override
-			public void rotate(final CannonRotateEvent event) {
-				model.trigger(listener -> listener.rotate(event));
-			}
-			
-		});
-		
-		model.getBubbleMesh().getEventTarget().addEventListener(new BubbleMeshListener() {
-
-			@Override
-			public void rowInsert(RowInsertEvent event) {
-				model.trigger(listener -> listener.rowInsert(event));
-			}
-
-			@Override
-			public void pop(BubblePopEvent event) {
-				model.trigger(listener -> listener.pop(event));
-			}
-
-			@Override
-			public void score(ScoreEvent event) {
-				int amount = event.getAmountOfPoints();
-				model.incrementScore(amount);
-				model.retainRemainingColors(event.getSource().getRemainingColours());
-				model.notifyObservers();
-				model.trigger(listener -> listener.score(event));
-			}
-			
-		});
 	}
 	
+	/**
+	 * Prepare initial ammo
+	 */
 	protected void prepareAmmo() {
 		if(model.getLoadedBubble() == null ||
 			model.getNextBubble() == null ) {
@@ -112,10 +87,32 @@ public class GameController implements Controller<GameModel>, Tickable {
 		}
 	}
 	
+	/**
+	 * Bind a {@link GameTick} to this {@code GameController}
+	 * @param gameTick
+	 */
+	public void bindGameTick(GameTick gameTick) {
+		// Store the gameTick so we can unbind after game over
+		this.gameTick = gameTick;
+		gameTick.registerObserver(this);
+	}
+
+	/**
+	 * Get the {@link GameMode} for this {@code GameController}
+	 * @return the {@code GameMode}
+	 */
+	public GameMode getGameMode() {
+		return gameMode;
+	}
+	
+	/**
+	 * Get the {@link CannonController} for this {@code GameController}
+	 * @return the {@code CannonController}
+	 */
 	public CannonController getCannonController() {
 		return cannonController;
 	}
-	
+
 	@Override
 	public void gameTick() {
 		BubbleMesh bubbleMesh = model.getBubbleMesh();
@@ -135,14 +132,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 		}
 		
 		if(model.isGameOver()) {
-			gameOver();
+			gameOver(false);
 		}
 		else {
 			try {
 				gameMode.gameTick();
 			}
 			catch (GameOver e) {
-				gameOver();
+				gameOver(false);
 			}
 		}
 		
@@ -217,7 +214,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 
 			cannonController.load();
 		} catch (GameOver e) {
-			gameOver();
+			gameOver(false);
 		} finally {
 			model.setShotBubble(null);
 		}
@@ -225,19 +222,25 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 	}
 	
-	private GameTick gameTick;
-	
-	public void bindGameTick(GameTick gameTick) {
-		gameTick.registerObserver(this);
-	}
-	
-	protected void gameOver() {
-		log.info("Sorry dawg, the game is over");
+	/**
+	 * Trigger {@code GameOver} on this {@code GameController}
+	 * @param win
+	 */
+	public void gameOver(boolean win) {
+		if(model.isGameOver()) return;
+		
+		if(win)
+			log.info("Hurray, you won the game");
+		else
+			log.info("Sorry dawg, the game is over");
+		
 		cannonController.setState(new CannonShootState());
+		if(gameTick != null) gameTick.removeObserver(this);
+		
 		model.setGameOver(true);
+		model.setWon(win);
 		model.notifyObservers();
 		model.trigger(listener -> listener.gameOver(new GameOverEvent(this)));
-		if(gameTick != null) gameTick.removeObserver(this);
 	}
 	
 	/**
@@ -249,7 +252,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			try {
 				model.getBubbleMesh().insertRow(this);
 			} catch (GameOver e) {
-				gameOver();
+				gameOver(false);
 			}
 		}
 	}
@@ -290,56 +293,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 */
 	public void bindConnectorAsMaster(final Connector connector) {
 		log.info("Binding {} to connector {}", this, connector);
-
-		model.addEventListener(new GameListener() {
-
-			@Override
-			public void rowInsert(RowInsertEvent event) {
-				log.info("Sending insert row");
-				connector.sendPacket(new EventPacket(event));
-			}
-			
-			@Override
-			public void shoot(CannonShootEvent event) {
-				log.info("Sending shoot packet");
-				connector.sendPacket(new EventPacket(event));
-			}
-
-			@Override
-			public void gameOver(GameOverEvent event) {
-			}
-
-			@Override
-			public void shotMissed(ShotMissedEvent event) {
-			}
-			
-			@Override
-			public void pop(BubblePopEvent event) {
-				log.info("{} bubbles popped", event.amountOfPoppedBubbles());
-				connector.sendPacket(new EventPacket(event));
-			}
-			
-			@Override
-			public void rotate(CannonRotateEvent event) {
-				connector.sendPacket(new EventPacket(event));
-			}
-			
-			@Override
-			public void ammo(AmmoLoadEvent event) {
-				log.info("Sending ammo packet with [{}, {}]", event.getLoadedBubble(), event.getNextBubble());
-				connector.sendPacket(new EventPacket(event));
-			}
-			
-		});
-		
+		model.addEventListener(new ConnectorGameListener(connector));
 	}
 	
 	public void bindConnectorAsSlave(final Connector connector) {
-		connector.addEventListener(new PacketListenerImpl(this, cannonController));
-	}
-	
-	public GameMode getGameMode() {
-		return gameMode;
+		connector.addEventListener(new SlaveGamePacketListener(this, cannonController));
 	}
 	
 }

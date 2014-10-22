@@ -6,8 +6,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import nl.tudelft.ti2206.game.backend.SlaveGamePacketListener;
+
 /**
- * Marks that a method in a {@link PacketListenerImpl} is a handler for a
+ * Marks that a method in a {@link SlaveGamePacketListener} is a handler for a
  * specific {@link Packet} type
  * 
  * @author Jan-Willem Gmelig Meyling
@@ -23,6 +25,6 @@ public @interface PacketHandler {
 	 * 
 	 * @return the Type of the {@link Packet} that this handler handles
 	 */
-	Class<? extends Packet> value();
+	Class<? extends Packet> value() default Packet.class;
 	
 }

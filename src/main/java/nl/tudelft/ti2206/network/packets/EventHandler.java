@@ -7,8 +7,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.EventObject;
 
+import nl.tudelft.ti2206.game.backend.SlaveGamePacketListener;
+
 /**
- * Marks that a method in a {@link PacketListenerImpl} is a handler for a
+ * Marks that a method in a {@link SlaveGamePacketListener} is a handler for a
  * specific {@link EventObject} type
  * 
  * @author Jan-Willem Gmelig Meyling
@@ -23,6 +25,6 @@ public @interface EventHandler {
 	 * {@link EventObject} type that this {@code EventHandler} handles
 	 * @return type of the {@code EventObject}
 	 */
-	Class<? extends EventObject> value();
+	Class<? extends EventObject> value() default EventObject.class;
 	
 }

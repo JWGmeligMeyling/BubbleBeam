@@ -8,16 +8,20 @@ import java.util.concurrent.ScheduledExecutorService;
 
 
 
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+
 
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 
@@ -55,7 +59,10 @@ public class RestartMultiplayerAction extends AbstractAction {
 			ScheduledExecutorService executor = singlePlayerFrame.getScheduledExecutorService();
 			
 			final JDialog dialog = new JDialog();
+			JLabel label = new JLabel("Looking for other players");
 			JButton cancelButton = new JButton("Cancel");
+			
+			dialog.add(label);
 			dialog.add(cancelButton);
 			
 			executor.submit(() -> {

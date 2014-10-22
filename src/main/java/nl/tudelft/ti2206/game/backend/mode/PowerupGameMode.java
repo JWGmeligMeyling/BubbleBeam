@@ -18,6 +18,7 @@ import nl.tudelft.ti2206.highscore.PowerupHighscore;
 @ModeName("Power-up Mode")
 @ModeHighscore(PowerupHighscore.class)
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
+@ModeMusic("/power_music.wav")
 public class PowerupGameMode extends ClassicGameMode {
 
 	private static final long serialVersionUID = -2215681432174695925L;

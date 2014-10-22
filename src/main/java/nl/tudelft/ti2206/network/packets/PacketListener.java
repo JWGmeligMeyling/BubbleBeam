@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
-import java.util.function.Predicate;
 
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
@@ -18,16 +17,25 @@ import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 
 import com.google.common.collect.Lists;
-import com.google.inject.ImplementedBy;
 
-@ImplementedBy(PacketListenerImpl.class)
+/**
+ * The {@code PacketListener} listens for {@link Packet Packets}.
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public interface PacketListener extends EventListener {
 
+	/**
+	 * Handle a generic {@link Packet} and delegate it to its
+	 * {@link PacketHandler}
+	 * 
+	 * @param packet
+	 *            {@code Packet} to be handled
+	 */
 	default void handlePacket(Packet packet) {
 		try {
-			Method method = getMethodAnnotatedWith(PacketListener.class,
-					PacketHandler.class, annotation -> annotation
-							.value().equals(packet.getClass()));
+			Method method = getAnnotatedMethodForArgument(PacketListener.class, packet.getClass(), PacketHandler.class);
 			method.invoke(this, packet);
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
@@ -37,11 +45,16 @@ public interface PacketListener extends EventListener {
 		}
 	}
 	
+	/**
+	 * Handle a generic {@link EventObject} and delegate it to its
+	 * {@link EventHandler}
+	 * 
+	 * @param event
+	 *            {@code EventObject} to be triggered
+	 */
 	default void handleEvent(EventObject event) {
 		try {
-			Method method = getMethodAnnotatedWith(PacketListener.class,
-					EventHandler.class, annotation -> annotation
-							.value().equals(event.getClass()));
+			Method method = getAnnotatedMethodForArgument(PacketListener.class, event.getClass(), EventHandler.class);
 			method.invoke(this, event);
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
@@ -51,62 +64,70 @@ public interface PacketListener extends EventListener {
 		}
 	}
 	
-	public static <T extends Annotation> Method getMethodAnnotatedWith(
-			final Class<?> type, final Class<T> annotation,
-			final Predicate<T> predicate) {
-
-		Class<?> klass = type;
-
+	/**
+	 * Search for an annotated {@link Method} with a specific parameter type.
+	 * This is used to find to which {@link EventHandler} a {@link EventObject}
+	 * and to which {@link PacketHandler} a {@link Packet} should be delegated.
+	 * 
+	 * @param type
+	 *            {@link Parameter} type the {@code Method} should have
+	 * @param annotation
+	 *            {@link Annotation} the {@code Method} should have
+	 * @return The {@code Method}
+	 */
+	public static Method getAnnotatedMethodForArgument(Class<?> klass, final Class<?> type,
+			final Class<? extends Annotation> annotation) {
+		
 		while (klass != Object.class) {
 			final List<Method> allMethods = Lists.newArrayList(klass
 					.getDeclaredMethods());
 
 			for (final Method method : allMethods) {
-				if (method.isAnnotationPresent(annotation)) {
-					T annotInstance = method.getAnnotation(annotation);
-					if (predicate.test(annotInstance)) {
-						return method;
-					}
+				Class<?>[] parameters = method.getParameterTypes();
+				if (method.isAnnotationPresent(annotation)
+						&& parameters.length == 1
+						&& parameters[0].equals(type)) {
+					return method;
 				}
 			}
 
 			klass = klass.getSuperclass();
 		}
-
+		
 		throw new RuntimeException("No method found with the annotation "
 				+ annotation.toString() + " and class " + type.getName());
 	}
 	
-	@PacketHandler(EventPacket.class)
+	@PacketHandler
 	default void handleEventPacket(EventPacket packet) {
 		handleEvent(packet.data);
 	}
 
-	@PacketHandler(GameModelPacket.class)
+	@PacketHandler
 	void handleGameModelPacket(GameModelPacket packet);
 
-	@EventHandler(CannonRotateEvent.class)
+	@EventHandler
 	void handleCannonRotate(CannonRotateEvent event);
 
-	@EventHandler(CannonShootEvent.class)
+	@EventHandler
 	void handleCannonShoot(CannonShootEvent event);
 
-	@EventHandler(RowInsertEvent.class)
+	@EventHandler
 	void handleRowInsert(RowInsertEvent event);
 
-	@EventHandler(BubblePopEvent.class)
+	@EventHandler
 	void handleBubblePop(BubblePopEvent event);
 
-	@EventHandler(ScoreEvent.class)
+	@EventHandler
 	void handleScoreEvent(ScoreEvent event);
 
-	@EventHandler(GameOverEvent.class)
+	@EventHandler
 	void handleGameOver(GameOverEvent event);
 	
-	@EventHandler(ShotMissedEvent.class)
+	@EventHandler
 	void handleShotMissed(ShotMissedEvent event);
 	
-	@EventHandler(AmmoLoadEvent.class)
+	@EventHandler
 	void handleAmmoLoad(AmmoLoadEvent event);
 	
 	default void disconnect() {};

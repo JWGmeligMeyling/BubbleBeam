@@ -7,6 +7,8 @@ import java.awt.Color;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.DecoratedBubble;
+import nl.tudelft.ti2206.graphics.animations.ConfettiAnimation;
+import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 
 /**
  * The {@code JokerBubble} is a special type of {@code Bubble} which determines
@@ -19,15 +21,16 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
  *
  */
 public class JokerBubble extends DecoratedBubble {
-
+	
 	private static final long serialVersionUID = -1415122920739845104L;
-	protected final static AudioClip HORN_SOUND = Applet.newAudioClip(PopSoundBubble.class.getResource("/horn.wav"));
+	
+	protected final static AudioClip HORN_SOUND = Applet.newAudioClip(JokerBubble.class
+			.getResource("/horn.wav"));
 
 	protected ColouredBubble bubble;
 	protected boolean hasColor = false;
 	protected boolean snapped = false;
 	
-
 	public JokerBubble() {
 		this(new ColouredBubble(Color.WHITE));
 	}
@@ -39,12 +42,12 @@ public class JokerBubble extends DecoratedBubble {
 		super(new PopSoundBubble(HORN_SOUND, bubble));
 		this.bubble = bubble;
 	}
-
+	
 	@Override
 	public boolean popsWith(Bubble target) {
 		return !snapped || bubble.popsWith(target);
 	}
-
+	
 	@Override
 	public void collideHook(Bubble other) {
 		if (other.hasColor()) {
@@ -53,7 +56,7 @@ public class JokerBubble extends DecoratedBubble {
 		}
 		bubble.snapHook();
 	}
-
+	
 	@Override
 	public void snapHook() {
 		// Switch to ColouredBubble behaviour once this joker snapped to the
@@ -61,15 +64,19 @@ public class JokerBubble extends DecoratedBubble {
 		snapped = hasColor;
 		bubble.snapHook();
 	}
-
+	
 	@Override
 	public Color getColor() {
 		return bubble.getColor();
 	}
-
+	
 	@Override
 	public boolean hasColor() {
 		return hasColor;
 	}
 	
+	@Override
+	public FiniteAnimation getAnimation(Bubble bubble) {
+		return new ConfettiAnimation(60, bubble);
+	}
 }

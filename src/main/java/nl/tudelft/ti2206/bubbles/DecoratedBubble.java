@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
+import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.util.Vector2f;
 
 /**
@@ -21,7 +22,7 @@ import nl.tudelft.util.Vector2f;
 public class DecoratedBubble implements Bubble {
 	
 	private static final long serialVersionUID = -2018291227603535293L;
-
+	
 	protected final Bubble bubble;
 	
 	public DecoratedBubble() {
@@ -141,12 +142,12 @@ public class DecoratedBubble implements Bubble {
 	public void collideHook(Bubble target) {
 		bubble.collideHook(target);
 	}
-
+	
 	@Override
 	public void popHook() {
 		bubble.popHook();
 	}
-
+	
 	@Override
 	public void snapHook() {
 		bubble.snapHook();
@@ -155,20 +156,24 @@ public class DecoratedBubble implements Bubble {
 	public Bubble getParent() {
 		return bubble;
 	}
-
+	
 	@Override
 	public boolean hasColor() {
 		return bubble.hasColor();
 	}
-
+	
 	@Override
 	public Color getColor() {
 		return bubble.getColor();
 	}
-
+	
 	@Override
 	public void translate(int dx, int dy) {
 		bubble.translate(dx, dy);
 	}
-
+	
+	@Override
+	public FiniteAnimation getAnimation(Bubble bubble) {
+		return this.bubble.getAnimation(bubble);
+	}
 }

@@ -18,6 +18,7 @@ import nl.tudelft.ti2206.highscore.DrunkHighscore;
 @ModeName("Drunk Mode")
 @ModeHighscore(DrunkHighscore.class)
 @ModeBubbleFactory(DrunkBubbleFactory.class)
+@ModeMusic("/drunk_music.wav")
 public class DrunkGameMode extends PowerupGameMode {
 
 	private static final long serialVersionUID = -3111557227462971615L;
