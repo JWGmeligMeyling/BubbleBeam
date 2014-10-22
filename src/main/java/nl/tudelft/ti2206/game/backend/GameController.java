@@ -131,16 +131,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 					.ifPresent(bubble -> this.collide(bubbleMesh, shotBubble, bubble));
 		}
 		
-		if(model.isGameOver()) {
-			gameOver(false);
+		try {
+			gameMode.gameTick();
 		}
-		else {
-			try {
-				gameMode.gameTick();
-			}
-			catch (GameOver e) {
-				gameOver(false);
-			}
+		catch (GameOver e) {
+			gameOver(e);
 		}
 		
 	}
@@ -209,12 +204,12 @@ public class GameController implements Controller<GameModel>, Tickable {
 				model.trigger(listener -> listener.shotMissed(event));
 			}
 			else if(bubbleMesh.isEmpty()){
-				throw new GameOver();
+				throw new GameOver(true);
 			}
 
 			cannonController.load();
 		} catch (GameOver e) {
-			gameOver(false);
+			gameOver(e);
 		} finally {
 			model.setShotBubble(null);
 		}
@@ -226,10 +221,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * Trigger {@code GameOver} on this {@code GameController}
 	 * @param win
 	 */
-	public void gameOver(boolean win) {
+	public void gameOver(GameOver gameOver) {
 		if(model.isGameOver()) return;
 		
-		if(win)
+		if(gameOver.isWin())
 			log.info("Hurray, you won the game");
 		else
 			log.info("Sorry dawg, the game is over");
@@ -238,9 +233,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 		if(gameTick != null) gameTick.removeObserver(this);
 		
 		model.setGameOver(true);
-		model.setWon(win);
+		model.setWon(gameOver.isWin());
 		model.notifyObservers();
-		model.trigger(listener -> listener.gameOver(new GameOverEvent(this)));
+		model.trigger(listener -> listener.gameOver(new GameOverEvent(this, gameOver)));
 	}
 	
 	/**
@@ -252,7 +247,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 			try {
 				model.getBubbleMesh().insertRow(this);
 			} catch (GameOver e) {
-				gameOver(false);
+				gameOver(e);
 			}
 		}
 	}

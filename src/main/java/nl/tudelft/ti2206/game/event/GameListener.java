@@ -4,6 +4,7 @@ import java.util.EventListener;
 import java.util.EventObject;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 
 public interface GameListener extends EventListener, BubbleMeshListener, CannonListener {
@@ -28,9 +29,16 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 	class GameOverEvent extends GameEvent {
 
 		private static final long serialVersionUID = 8044024662518190266L;
+		
+		protected final GameOver gameOver;
 
-		public GameOverEvent(GameController gameController) {
+		public GameOverEvent(GameController gameController, GameOver gameOver) {
 			super(gameController);
+			this.gameOver = gameOver;
+		}
+		
+		public GameOver getGameOver() {
+			return gameOver;
 		}
 		
 	}

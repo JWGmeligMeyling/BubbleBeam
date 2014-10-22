@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.JLabel;
 
 import nl.tudelft.ti2206.cannon.MouseCannonController;
+import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.PacketListener;
@@ -58,7 +59,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 			@Override
 			public void gameOver(GameOverEvent event) {
 				// The other player is game over, we have won
-				gameController.gameOver(true);
+				gameController.gameOver(new GameOver(!event.getGameOver().isWin()));
 			}
 			
 		});
@@ -68,7 +69,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 			@Override
 			public void gameOver(GameOverEvent event) {
 				// We're game over, the other player has won
-				slaveGameController.gameOver(true);
+				slaveGameController.gameOver(new GameOver(!event.getGameOver().isWin()));
 			}
 		
 		});

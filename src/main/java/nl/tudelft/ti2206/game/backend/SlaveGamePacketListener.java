@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonModel;
+import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.ScoreEvent;
@@ -104,7 +105,7 @@ public class SlaveGamePacketListener implements PacketListener {
 
 	@Override
 	public void handleGameOver(GameOverEvent event) {
-		gameController.gameOver(false);
+		gameController.gameOver(event.getGameOver());
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class SlaveGamePacketListener implements PacketListener {
 	@Override
 	public void disconnect() {
 		// On disconnect, the other player wins
-		gameController.gameOver(false);
+		gameController.gameOver(new GameOver(false));
 	}
 
 }
