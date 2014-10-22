@@ -13,6 +13,8 @@ import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
 import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
 import nl.tudelft.ti2206.graphics.Sprite;
+import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
+import nl.tudelft.ti2206.graphics.animations.ShrinkAnimation;
 import nl.tudelft.util.Vector2f;
 
 import com.google.common.collect.Lists;
@@ -191,6 +193,10 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 
 	default Vector2f velocityChange() {
 		return new Vector2f(0f, 0f);
+	}
+
+	default FiniteAnimation getAnimation(Bubble bubble){
+		return new ShrinkAnimation(bubble);
 	}
 
 }

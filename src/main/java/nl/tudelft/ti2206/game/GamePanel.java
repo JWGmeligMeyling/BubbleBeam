@@ -15,14 +15,13 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+import javax.swing.Timer;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
-import nl.tudelft.ti2206.bubbles.decorators.PopSoundBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.graphics.animations.FallAnimation;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.util.mvc.View;
 import nl.tudelft.util.ObservableObject;
@@ -45,16 +44,23 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected ArrayList<FiniteAnimation> animationList = new ArrayList<FiniteAnimation>();
 	
-	protected final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x + BUBBLE_QUEUE_SPACING,CANNONPOSITION.y);
-	protected final static AudioClip POPSOUND =  Applet.newAudioClip(PopSoundBubble.class.getResource("/bubble_pop.wav"));
+	protected final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x
+			+ BUBBLE_QUEUE_SPACING, CANNONPOSITION.y);
+	protected final static AudioClip POPSOUND = Applet.newAudioClip(GamePanel.class
+			.getResource("/bubble_pop.wav"));
 	
 	protected final GameController gameController;
 	protected final Cannon cannon;
 	protected final Dimension size = new Dimension(WIDTH, HEIGHT);
 	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
-	protected transient static BufferedImage gameOver =	getGameOverImage();
-	protected transient static Image gameWon =	getGameWonImage();
+	protected transient static BufferedImage gameOver = getGameOverImage();
+	protected transient static Image gameWon = getGameWonImage();
+	
+	protected static final int FPS = 30;
+	protected static final int FRAME_PERIOD = 1000 / FPS;
+	protected boolean animationUpdate = false;
+	protected Timer timer = new Timer(FRAME_PERIOD, a -> animationUpdate = true);
 	
 	public GamePanel(final GameController gameController) {
 		GameModel gameModel = gameController.getModel();
@@ -78,9 +84,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.gameController.getModel().getBubbleMesh().getEventTarget()
 				.addPopListener((popEvent) -> {
 					popEvent.getPoppedBubbles().forEach(bubble -> {
-						animationList.add(new FallAnimation(bubble));
+						animationList.add(bubble.getAnimation(bubble));
 					});
 				});
+		timer.start();
 	}
 	
 	protected void positionAmmoBubbles() {
@@ -118,7 +125,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 			model.getShotBubble().render(graphics);
 		}
 		
-		
 		model.getLoadedBubble().setCenter(AMMO_POSITION);
 		model.getLoadedBubble().render(graphics);
 		model.getNextBubble().setCenter(AMMO_NEXT_POSITION);
@@ -126,23 +132,30 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		Lists.newArrayList(animationList).forEach(animation -> {
 			animation.render(graphics);
-			if (animation.isDone()) {
-				animationList.remove(animation); 
-			}
 		});
-		
-		if(model.isGameOver()&& !model.isWon()){
-			graphics.drawImage(gameOver,0,HEIGHT/2-100,null);
+		if (animationUpdate) {
+			Lists.newArrayList(animationList).forEach(animation -> {
+				animation.addTime();
+				if (animation.isDone()) {
+					animationList.remove(animation);
+				}
+			});
+			animationUpdate = false;
 		}
 		
-		if(model.isWon()){
-			graphics.drawImage(gameWon, WIDTH/2-100, HEIGHT/2-100, null);
+		if (model.isGameOver() && !model.isWon()) {
+			graphics.drawImage(gameOver, 0, HEIGHT / 2 - 100, null);
+		}
+		
+		if (model.isWon()) {
+			graphics.drawImage(gameWon, WIDTH / 2 - 100, HEIGHT / 2 - 100, null);
 		}
 	}
 	
 	protected static BufferedImage getGameOverImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(BombBubble.class.getResourceAsStream("/gameover.jpg"));
+			BufferedImage scaledImage = ImageIO.read(BombBubble.class
+					.getResourceAsStream("/gameover.jpg"));
 			scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			return scaledImage;
 		} catch (IOException e) {
@@ -152,14 +165,14 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected static Image getGameWonImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(BombBubble.class.getResourceAsStream("/gamewon.jpg"));
-			return scaledImage.getScaledInstance(WIDTH/2, HEIGHT/2, Image.SCALE_SMOOTH);
+			BufferedImage scaledImage = ImageIO.read(BombBubble.class
+					.getResourceAsStream("/gamewon.jpg"));
+			return scaledImage.getScaledInstance(WIDTH / 2, HEIGHT / 2, Image.SCALE_SMOOTH);
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
 	
 	@Override
 	public Dimension getPreferredSize() {

@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.DecoratedBubble;
+import nl.tudelft.ti2206.graphics.animations.FallAnimation;
+import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 
 /**
  * Stone bubble implementation
@@ -21,11 +23,12 @@ import nl.tudelft.ti2206.bubbles.DecoratedBubble;
  */
 
 public class StoneBubble extends DecoratedBubble {
-
+	
 	private static final long serialVersionUID = -8390605724378971542L;
 	private transient Image stoneImage;
 	
-	protected final static AudioClip STONE_SOUND = Applet.newAudioClip(PopSoundBubble.class.getResource("/stone.wav"));
+	protected final static AudioClip STONE_SOUND = Applet.newAudioClip(StoneBubble.class
+			.getResource("/stone.wav"));
 	
 	public StoneBubble() {
 		this(new AbstractBubble());
@@ -37,8 +40,10 @@ public class StoneBubble extends DecoratedBubble {
 	
 	protected Image getBubbleImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(StoneBubble.class.getResourceAsStream("/stone.png"));
-			return scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(), Image.SCALE_SMOOTH);
+			BufferedImage scaledImage = ImageIO.read(StoneBubble.class
+					.getResourceAsStream("/stone.png"));
+			return scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(),
+					Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -56,9 +61,15 @@ public class StoneBubble extends DecoratedBubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		if(stoneImage == null) stoneImage = getBubbleImage();
-		graphics.drawImage(stoneImage, bubble.getX(), bubble.getY(), bubble.getWidth(), bubble.getHeight(), null);
+		if (stoneImage == null)
+			stoneImage = getBubbleImage();
+		graphics.drawImage(stoneImage, bubble.getX(), bubble.getY(), bubble.getWidth(),
+				bubble.getHeight(), null);
 		bubble.render(graphics);
 	}
 	
+	@Override
+	public FiniteAnimation getAnimation(Bubble bubble) {
+		return new FallAnimation(bubble);
+	}
 }
