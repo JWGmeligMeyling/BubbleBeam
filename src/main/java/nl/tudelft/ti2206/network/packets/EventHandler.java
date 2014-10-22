@@ -25,6 +25,6 @@ public @interface EventHandler {
 	 * {@link EventObject} type that this {@code EventHandler} handles
 	 * @return type of the {@code EventObject}
 	 */
-	Class<? extends EventObject> value();
+	Class<? extends EventObject> value() default EventObject.class;
 	
 }

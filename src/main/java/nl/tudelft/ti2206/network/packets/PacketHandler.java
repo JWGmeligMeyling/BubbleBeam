@@ -25,6 +25,6 @@ public @interface PacketHandler {
 	 * 
 	 * @return the Type of the {@link Packet} that this handler handles
 	 */
-	Class<? extends Packet> value();
+	Class<? extends Packet> value() default Packet.class;
 	
 }
