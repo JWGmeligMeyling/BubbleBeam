@@ -43,7 +43,7 @@ public class GameOverHighscore implements GameOverEventListener {
 		
 		//choose which highscore to add to depending on the factory
 		//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered
-		if(scores.isEmpty() || scores.last().compareTo(scoreItem) > 0){
+		if(scores.size() < 10 || scores.last().compareTo(scoreItem) > 0){
 			
 			final JDialog dialog = new JDialog(frame, false);
 			dialog.setTitle("Enter your name");
