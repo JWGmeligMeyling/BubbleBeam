@@ -6,10 +6,14 @@ import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 
+import com.google.common.collect.ImmutableSortedSet;
+
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.game.event.GameListener.*;
 import nl.tudelft.ti2206.highscore.Highscore;
+import nl.tudelft.ti2206.highscore.HighscoreItem;
 import nl.tudelft.ti2206.highscore.HighscorePopup;
 import nl.tudelft.ti2206.highscore.ScoreItem;
 
@@ -26,21 +30,20 @@ public class GameOverHighscore implements GameOverEventListener {
 	@Override
 	public void gameOver(GameOverEvent event) {
 		GameModel gameModel = gameController.getModel();
+		Class<? extends GameMode> gameMode = gameModel.getGameMode();
 		gameModel.setGameOver(true);
-		long score = gameModel.getScore();
 		
 		if(frame instanceof MultiplayerFrame){		//don't add scores for multiplayer
 			return;
 		}
 		
-		ScoreItem scoreEntry = new ScoreItem(score,"");
+		Highscore highscore = Highscore.getHighscores();
+		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameModel.getGameMode());
+		ScoreItem scoreItem = ScoreItem.createScoreItem(gameModel);
 		
 		//choose which highscore to add to depending on the factory
-		Highscore hs = gameController.getGameMode().getHighscore();
-		ScoreItem lastPlace = hs.getPlace(hs.getSize());
-	
 		//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered
-		if(lastPlace == null || (lastPlace != null && lastPlace.compareTo(scoreEntry) > 0)){
+		if(scores.isEmpty() || scores.last().compareTo(scoreItem) > 0){
 			
 			final JDialog dialog = new JDialog(frame, false);
 			dialog.setTitle("Enter your name");
@@ -56,25 +59,33 @@ public class GameOverHighscore implements GameOverEventListener {
 				@Override
 				public void windowClosing(WindowEvent e) {
 					String name = nameField.getText();
-					scoreEntry.setName(name);
-					hs.addNewScore(scoreEntry);
+					HighscoreItem highscoreItem = new HighscoreItem(name, scoreItem);
+					highscore.addScore(gameModel.getGameMode(), highscoreItem);
 					dialog.dispose();
-					new HighscorePopup(hs);
+					showHighscorePopup(highscore, gameMode);
 				}
 			});
 			
 			nameField.addActionListener((e) -> {
 				String name = nameField.getText();
-				scoreEntry.setName(name);
-				hs.addNewScore(scoreEntry);
+				HighscoreItem highscoreItem = new HighscoreItem(name, scoreItem);
+				highscore.addScore(gameModel.getGameMode(), highscoreItem);
 				dialog.dispose();
-				new HighscorePopup(hs);
+				showHighscorePopup(highscore, gameMode);
 			});
 			
 		} else {
-			new HighscorePopup(hs);
+			showHighscorePopup(highscore, gameMode);
 		}
 
+	}
+	
+	protected void showHighscorePopup(Highscore highscore, Class<? extends GameMode> gameMode) {
+		HighscorePopup popup = new HighscorePopup(highscore, gameMode);
+		popup.setModal(true);
+		popup.pack();
+		popup.setLocationRelativeTo(frame);
+		popup.setVisible(true);
 	}
 
 }

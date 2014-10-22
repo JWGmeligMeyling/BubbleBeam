@@ -48,6 +48,8 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	
 	private boolean won = false;
 	
+	private final long start = System.currentTimeMillis();
+	
 	private Dimension screenSize;
 	
 	public GameModel(final Class<? extends GameMode> gameMode, final BubbleMesh bubbleMesh) {
@@ -172,5 +174,9 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
         in.defaultReadObject();
         eventTarget = new AbstractEventTarget<GameListener>();
     }
+
+	public long getStart() {
+		return start;
+	}
 	
 }

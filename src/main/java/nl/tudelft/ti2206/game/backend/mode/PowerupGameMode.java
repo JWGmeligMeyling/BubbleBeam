@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.highscore.PowerupHighscore;
 
 /**
  * In the {@code PowerupGameMode}, the {@link PowerUpBubbleFactory} is used to
@@ -16,7 +15,6 @@ import nl.tudelft.ti2206.highscore.PowerupHighscore;
  *
  */
 @ModeName("Power-up Mode")
-@ModeHighscore(PowerupHighscore.class)
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
 @ModeMusic("/power_music.wav")
 public class PowerupGameMode extends ClassicGameMode {
