@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.highscore.PowerupHighscore;
 
 /**
  * In the {@code TimedGameMode}, the {@link PowerUpBubbleFactory} is used to
@@ -17,7 +16,6 @@ import nl.tudelft.ti2206.highscore.PowerupHighscore;
  *
  */
 @ModeName("Timed Mode")
-@ModeHighscore(PowerupHighscore.class)
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
 @ModeMusic("/time_music.wav")
 public class TimedGameMode implements GameMode {

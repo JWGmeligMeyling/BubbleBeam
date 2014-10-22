@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.highscore.ClassicHighscore;
 
 /**
  * In the {@code ClassicGameMode}, the {@link ClassicBubbleFactory} is used to
@@ -16,7 +15,6 @@ import nl.tudelft.ti2206.highscore.ClassicHighscore;
  *
  */
 @ModeName("Classic Mode")
-@ModeHighscore(ClassicHighscore.class)
 @ModeBubbleFactory(ClassicBubbleFactory.class)
 @ModeMusic("/classic_music.wav")
 public class ClassicGameMode implements GameMode {

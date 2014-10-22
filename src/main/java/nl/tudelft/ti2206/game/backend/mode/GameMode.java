@@ -7,7 +7,6 @@ import java.io.Serializable;
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.game.backend.Tickable;
 import nl.tudelft.ti2206.game.event.GameListener;
-import nl.tudelft.ti2206.highscore.Highscore;
 
 /**
  * Base interface for the various {@code GameModes} in the game
@@ -39,20 +38,6 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 	 */
 	default String getModeName() {
 		return this.getClass().getAnnotation(ModeName.class).value();
-	}
-	
-	/**
-	 * Get the {@link Highscore} instance for this {@code GameMode}
-	 * @return the {@code Highscore}
-	 */
-	default Highscore getHighscore() {
-		try {
-			return this.getClass().getAnnotation(ModeHighscore.class).value()
-					.newInstance();
-		}
-		catch (InstantiationException  | IllegalAccessException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
 	}
 	
 	/**

@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import nl.tudelft.ti2206.bubbles.factory.DrunkBubbleFactory;
 import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.highscore.DrunkHighscore;
 
 /**
  * In the {@code DrunkGameMode}, the {@link DrunkBubbleFactory} is used to
@@ -16,7 +15,6 @@ import nl.tudelft.ti2206.highscore.DrunkHighscore;
  *
  */
 @ModeName("Drunk Mode")
-@ModeHighscore(DrunkHighscore.class)
 @ModeBubbleFactory(DrunkBubbleFactory.class)
 @ModeMusic("/drunk_music.wav")
 public class DrunkGameMode extends PowerupGameMode {
