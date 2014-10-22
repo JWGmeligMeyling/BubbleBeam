@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-import javax.swing.Timer;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
@@ -29,8 +28,13 @@ import nl.tudelft.util.ObservableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-
+/**
+ * The GamePanel is the panel which contians and paints the {@link Cannon} and
+ * the {@link BubbleMesh}
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public final class GamePanel extends JPanel implements View<GameController, GameModel> {
 	
 	private static final Logger log = LoggerFactory.getLogger(GamePanel.class);
@@ -57,11 +61,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected transient static BufferedImage gameOver = getGameOverImage();
 	protected transient static Image gameWon = getGameWonImage();
 	
-	protected static final int FPS = 30;
-	protected static final int FRAME_PERIOD = 1000 / FPS;
-	protected boolean animationUpdate = false;
-	protected Timer timer = new Timer(FRAME_PERIOD, a -> animationUpdate = true);
-	
 	public GamePanel(final GameController gameController) {
 		GameModel gameModel = gameController.getModel();
 		gameModel.setScreenSize(this.getPreferredSize());
@@ -82,12 +81,11 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.setVisible(true);
 		
 		this.gameController.getModel().getBubbleMesh().getEventTarget()
-				.addPopListener((popEvent) -> {
-					popEvent.getPoppedBubbles().forEach(bubble -> {
-						animationList.add(bubble.getAnimation(bubble));
-					});
+			.addPopListener((popEvent) -> {
+				popEvent.getPoppedBubbles().forEach(bubble -> {
+					animationList.add(bubble.getAnimation(bubble));
 				});
-		timer.start();
+			});
 	}
 	
 	protected void positionAmmoBubbles() {
@@ -130,25 +128,19 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		model.getNextBubble().setCenter(AMMO_NEXT_POSITION);
 		model.getNextBubble().render(graphics);
 		
-		Lists.newArrayList(animationList).forEach(animation -> {
+		animationList.removeIf(FiniteAnimation::isDone);
+		animationList.forEach(animation -> {
 			animation.render(graphics);
+			animation.addTime();
 		});
-		if (animationUpdate) {
-			Lists.newArrayList(animationList).forEach(animation -> {
-				animation.addTime();
-				if (animation.isDone()) {
-					animationList.remove(animation);
-				}
-			});
-			animationUpdate = false;
-		}
 		
-		if (model.isGameOver() && !model.isWon()) {
-			graphics.drawImage(gameOver, 0, HEIGHT / 2 - 100, null);
-		}
-		
-		if (model.isWon()) {
-			graphics.drawImage(gameWon, WIDTH / 2 - 100, HEIGHT / 2 - 100, null);
+		if(model.isGameOver()) {
+			if(model.isWon()) {
+				graphics.drawImage(gameWon, WIDTH / 2 - 100, HEIGHT / 2 - 100, null);
+			}
+			else {
+				graphics.drawImage(gameOver, 0, HEIGHT / 2 - 100, null);
+			}
 		}
 	}
 	

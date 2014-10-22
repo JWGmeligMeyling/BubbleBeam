@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class MultiplayerFrame extends SinglePlayerFrame {
 	
 
-	private static final Logger log = LoggerFactory.getLogger(SinglePlayerFrame.class);
+	private static final Logger log = LoggerFactory.getLogger(MultiplayerFrame.class);
 	private static final long serialVersionUID = 8466074133798558802L;
 	
 	protected final GameController slaveGameController;

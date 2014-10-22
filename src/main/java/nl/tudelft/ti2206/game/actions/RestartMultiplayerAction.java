@@ -1,29 +1,21 @@
 package nl.tudelft.ti2206.game.actions;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ScheduledExecutorService;
-
-
-
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-
-
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
-
 
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.AbstractCannonController;
@@ -50,26 +42,43 @@ public class RestartMultiplayerAction extends AbstractAction {
 		super("Restart Multi-Player");
 		this.singlePlayerFrame = singlePlayerFrame;
 	}
+	
+	boolean forceShotdown = false;
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		new ChooseGameMode(singlePlayerFrame, gameMode -> {
 			log.info("Setting up host at port {}", PORT);
 			
-			ScheduledExecutorService executor = singlePlayerFrame.getScheduledExecutorService();
-			
-			final JDialog dialog = new JDialog();
+			final JDialog dialog = new JDialog(singlePlayerFrame, "Starting Multiplayer Game");
+			dialog.setLayout(new FlowLayout());
 			JLabel label = new JLabel("Looking for other players");
 			JButton cancelButton = new JButton("Cancel");
 			
 			dialog.add(label);
 			dialog.add(cancelButton);
 			
-			executor.submit(() -> {
+			new Thread(() -> {
 				try(ServerSocket server = new ServerSocket(PORT)) {
+					
+					
+					dialog.addWindowListener(new WindowAdapter() {
+
+						@Override
+						public void windowClosed(WindowEvent e) {
+							try {
+								forceShotdown = true;
+								server.close();
+							} catch (Exception ex) {
+								log.info(ex.getMessage(), ex);
+							}
+						}
+
+					});
 					
 					cancelButton.addActionListener((event2) -> {
 						try {
+							forceShotdown = true;
 							server.close();
 						} catch (Exception ex) {
 							log.info(ex.getMessage(), ex);
@@ -104,22 +113,33 @@ public class RestartMultiplayerAction extends AbstractAction {
 					frame.pack();
 					frame.setLocationRelativeTo(this.singlePlayerFrame);
 					
-					SwingUtilities.invokeLater(() -> {
-						this.singlePlayerFrame.dispose();
-					});
-					
+					singlePlayerFrame.dispose();
 					frame.setVisible(true);
 					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					frame.getFindMultiplayerAction().setEnabled(false);
 				}
 				catch (IOException e) {
+
 					log.info(e.getMessage(), e);
+					
+					if(!forceShotdown) {
+						final JDialog warning = new ExceptionWarning(singlePlayerFrame, e);
+						warning.setModal(true);
+						warning.pack();
+						warning.setLocationRelativeTo(null);
+						warning.setVisible(true);
+					}
+					else {
+						forceShotdown = false;
+					}
+					
 				}
 				finally {
 					dialog.dispose();
 					log.debug("We're done with the ServerSocket");
+					Thread.currentThread().interrupt();
 				}
-			});
+			}, "Multiplayer-Connect").start();
 			
 			dialog.setModal(true);
 			dialog.pack();

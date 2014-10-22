@@ -27,6 +27,9 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.actions.ExitAction;
@@ -43,6 +46,7 @@ import nl.tudelft.ti2206.util.mvc.View;
 public class SinglePlayerFrame extends JFrame implements
 		View<GameController, GameModel> {
 
+	private static final Logger log = LoggerFactory.getLogger(SinglePlayerFrame.class);
 	private static final long serialVersionUID = 5501239542707746229L;
 	protected final static ComponentOrientation ORIENTATION = ComponentOrientation.LEFT_TO_RIGHT;
 	protected static final String FRAME_TITLE = "BubbleBeam";
@@ -261,6 +265,7 @@ public class SinglePlayerFrame extends JFrame implements
 
 	@Override
 	public void dispose() {
+		log.info("Disposing window {}", this);
 		this.stop();
 		if(sound) music.stop();
 		super.dispose();

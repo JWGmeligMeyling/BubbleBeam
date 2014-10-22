@@ -121,10 +121,13 @@ public class Connector extends AbstractEventTarget<PacketListener> implements
 	
 	@Override
 	public void close() throws IOException {
-		listeners.forEach(PacketListener::disconnect);
-		log.info("Closing the socket");
-		open = false;
-		socket.close();
+		if(open) {
+			log.info("Closing the socket");
+			open = false;
+			socket.close();
+			thread.interrupt();
+			listeners.forEach(PacketListener::disconnect);
+		}
 	}
 	
 }
