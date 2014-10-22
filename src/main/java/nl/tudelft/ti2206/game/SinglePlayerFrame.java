@@ -23,7 +23,6 @@ import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
@@ -88,7 +87,7 @@ public class SinglePlayerFrame extends JFrame implements
 		gamePanel = new GamePanel(gameController);
 		cannonController.bindListenersTo(gamePanel, gamePanel.getCannon());
 		music = gameController.getGameMode().getMusic();
-		music.loop();
+		if(sound) music.loop();
 
 		scoreLabel = new JLabel("Score: 0");
 		getModel().addObserver((a, b) ->
@@ -119,11 +118,14 @@ public class SinglePlayerFrame extends JFrame implements
 		contentPane.setLayout(new GridBagLayout());
 		fillFrame(contentPane);
 	}
+	
+	private boolean sound = false;
 
 	protected void fillMenubar() {
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("Settings");
-		JMenuItem item = new JCheckBoxMenuItem(new AbstractAction("Searchlight") {
+		
+		menu.add(new JCheckBoxMenuItem(new AbstractAction("Searchlight") {
 			
 			private static final long serialVersionUID = -8925014850605930693L;
 
@@ -131,8 +133,23 @@ public class SinglePlayerFrame extends JFrame implements
 			public void actionPerformed(ActionEvent e) {
 				layerUI.setEnabled(!layerUI.getEnabled());
 			}
-		});
-		menu.add(item);
+		}));
+		
+		menu.add(new JCheckBoxMenuItem(new AbstractAction("Sound on") {
+			
+			private static final long serialVersionUID = -8925014850605930693L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sound = !sound;
+				if(sound)
+					music.loop();
+				else 
+					music.stop();
+			}
+			
+		}));
+		
 		menubar.add(menu);
 		this.setJMenuBar(menubar);
 	}
@@ -245,7 +262,7 @@ public class SinglePlayerFrame extends JFrame implements
 	@Override
 	public void dispose() {
 		this.stop();
-		music.stop();
+		if(sound) music.stop();
 		super.dispose();
 	}
 
