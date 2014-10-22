@@ -104,7 +104,6 @@ public class BubbleMeshImpl implements BubbleMesh {
 				log.info("Bubble popped: {}", bubble);
 			});
 			
-			calculateScore(bubblesToPop);
 			target.popHook();
 			eventTarget.pop(new BubblePopEvent(this, bubblesToPop));
 			return true;
@@ -208,16 +207,6 @@ public class BubbleMeshImpl implements BubbleMesh {
 		}
 		
 		return connectedToTop;
-	}
-	
-	/**
-	 * Calculate the points for this shot and notify the score listeners
-	 * 
-	 * @param bubbles
-	 */
-	protected void calculateScore(final Set<Bubble> bubbles) {
-		int amount = bubbles.size() * bubbles.size() * 25;
-		eventTarget.addScore(new ScoreEvent(this, amount));
 	}
 	
 	@Override

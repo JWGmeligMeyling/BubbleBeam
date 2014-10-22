@@ -21,6 +21,7 @@ import nl.tudelft.util.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
 import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
@@ -280,6 +281,13 @@ public class GameController implements Controller<GameModel>, Tickable {
 				.createBubble(model.getRemainingColors());
 		log.info("Created new ammo: " + bubble.toString());
 		return bubble;
+	}
+	
+	public void incrementScore(int amount) {
+		model.incrementScore(amount);
+		model.notifyObservers();
+		GameListener.ScoreEvent event = new GameListener.ScoreEvent(this, amount);
+		model.trigger(listener -> listener.score(event));
 	}
 	
 	/**

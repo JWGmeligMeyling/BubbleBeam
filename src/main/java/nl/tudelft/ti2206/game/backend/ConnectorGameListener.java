@@ -56,6 +56,9 @@ public class ConnectorGameListener implements GameListener {
 	}
 	
 	@Override
+	public void score(ScoreEvent event) {}
+	
+	@Override
 	public void pop(BubblePopEvent event) {
 		log.info("{} bubbles popped", event.amountOfPoppedBubbles());
 		connector.sendPacket(new EventPacket(event));

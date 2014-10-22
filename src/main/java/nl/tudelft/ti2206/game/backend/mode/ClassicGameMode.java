@@ -48,5 +48,11 @@ public class ClassicGameMode implements GameMode {
 			gameController.insertRow();
 		}
 	}
-
+	
+	@Override
+	public void pop(BubblePopEvent event) {
+		int amount = event.amountOfPoppedBubbles() * event.amountOfPoppedBubbles() * 25;
+		gameController.incrementScore(amount);
+	}
+	
 }

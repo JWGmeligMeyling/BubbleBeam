@@ -36,15 +36,7 @@ public class GameControllerBubbleMeshListener implements BubbleMeshListener {
 	@Override
 	public void pop(BubblePopEvent event) {
 		gameModel.trigger(listener -> listener.pop(event));
-	}
-	
-	@Override
-	public void score(ScoreEvent event) {
-		int amount = event.getAmountOfPoints();
-		gameModel.incrementScore(amount);
 		gameModel.retainRemainingColors(event.getSource().getRemainingColours());
-		gameModel.notifyObservers();
-		gameModel.trigger(listener -> listener.score(event));
 	}
 	
 }

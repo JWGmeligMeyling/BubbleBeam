@@ -32,6 +32,10 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 		// No-op on default, but subtypes may rely on ammo
 	}
 	
+	@Override default void score(ScoreEvent event) {
+		// No-op on default, but subtypes may rely on score
+	}
+	
 	/**
 	 * Get the name for this {@code GameMode}
 	 * @return the name

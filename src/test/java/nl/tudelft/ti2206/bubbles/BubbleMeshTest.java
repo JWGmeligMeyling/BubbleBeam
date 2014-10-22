@@ -18,7 +18,6 @@ import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshParser;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 
 import org.junit.Test;
 
@@ -31,8 +30,6 @@ public class BubbleMeshTest {
 	@Test
 	public void testNoPop() {
 		BubbleMeshImpl bubbleMesh = spy(new BubbleMeshParser(Lists.newArrayList("rrbgggbbb ", "          ")).parse());
-		ScoreListener scoreListener = mock(ScoreListener.class);
-		bubbleMesh.getEventTarget().addScoreListener(scoreListener);
 
 		Iterator<Bubble> iterator = bubbleMesh.getTopLeftBubble()
 				.traverse(Direction.RIGHT).iterator();
@@ -42,15 +39,11 @@ public class BubbleMeshTest {
 		assertFalse(bubbleMesh.pop(a));
 		verify(bubbleMesh).pop(a);
 		verify(bubbleMesh, never()).replaceBubble(any(), any());
-		
-		verify(scoreListener, never()).score(any());
 	}
 
 	@Test
 	public void testBasicPop() {
 		BubbleMeshImpl bubbleMesh = spy(new BubbleMeshParser(Lists.newArrayList("rrrgggbbb ", "          ")).parse());
-		ScoreListener scoreListener = mock(ScoreListener.class);
-		bubbleMesh.getEventTarget().addScoreListener(scoreListener);
 		
 		Iterator<Bubble> iterator = bubbleMesh.getTopLeftBubble()
 				.traverse(Direction.RIGHT).iterator();
@@ -70,15 +63,11 @@ public class BubbleMeshTest {
 				bubbleMesh.getRemainingColours(),
 				allOf(hasItems(Color.GREEN, Color.BLUE),
 						not(hasItem(Color.RED))));
-		
-		verify(scoreListener).score(any());
 	}
 	
 	@Test
 	public void testPopIsolatedBubbles() {
 		BubbleMeshImpl bubbleMesh = spy(new BubbleMeshParser(Lists.newArrayList("rrrcccbbb ", "g         ", "          ")).parse());
-		ScoreListener scoreListener = mock(ScoreListener.class);
-		bubbleMesh.getEventTarget().addScoreListener(scoreListener);
 		
 		Iterator<Bubble> iterator = bubbleMesh.getTopLeftBubble()
 				.traverse(Direction.RIGHT).iterator();
@@ -100,8 +89,6 @@ public class BubbleMeshTest {
 				bubbleMesh.getRemainingColours(),
 				allOf(hasItems(Color.BLUE, Color.CYAN),
 						not(hasItems(Color.RED, Color.GREEN))));
-		
-		verify(scoreListener).score(any());
 	}
 	
 	@Test

@@ -9,7 +9,7 @@ import java.util.List;
 
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
-import nl.tudelft.ti2206.game.event.BubbleMeshListener.ScoreEvent;
+import nl.tudelft.ti2206.game.event.GameListener.ScoreEvent;
 import nl.tudelft.ti2206.game.event.CannonListener.CannonRotateEvent;
 import nl.tudelft.ti2206.game.event.CannonListener.CannonShootEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;

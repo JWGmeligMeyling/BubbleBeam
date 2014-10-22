@@ -96,32 +96,6 @@ public interface BubbleMeshListener extends EventListener {
 	 */
 	void pop(BubblePopEvent event);
 	
-	class ScoreEvent extends BubbleMeshEvent {
-		
-		private static final long serialVersionUID = 7856300702718622571L;
-		
-		protected final int amountOfPoints;
-		
-		public ScoreEvent(BubbleMesh bubbleMesh, int amountOfPoints) {
-			super(bubbleMesh);
-			this.amountOfPoints = amountOfPoints;
-		}
-
-		/**
-		 * @return the amountOfPoints
-		 */
-		public int getAmountOfPoints() {
-			return amountOfPoints;
-		}
-		
-	}
-	
-	/**
-	 * Invoked on this {@code BubbleMeshListener} when a {@link ScoreEvent} occurred
-	 * @param event {@code ScoreEvent}
-	 */
-	void score(ScoreEvent event);
-	
 	/**
 	 * {@code RowInstertedListener}
 	 * 
@@ -132,20 +106,6 @@ public interface BubbleMeshListener extends EventListener {
 	@FunctionalInterface
 	interface RowInstertedListener extends BubbleMeshListener {
 		@Override default void pop(BubblePopEvent event) {}
-		@Override default void score(ScoreEvent event) {} 
-	}
-	
-	/**
-	 * {@code ScoreListener}
-	 * 
-	 * @author Jan-Willem Gmelig Meyling
-	 * @author Liam Clark
-	 *
-	 */
-	@FunctionalInterface
-	interface ScoreListener extends BubbleMeshListener {
-		@Override default void pop(BubblePopEvent event) {}
-		@Override default void rowInsert(RowInsertEvent event) {} 
 	}
 	
 	/**
@@ -157,7 +117,6 @@ public interface BubbleMeshListener extends EventListener {
 	 */
 	@FunctionalInterface
 	interface PopListener extends BubbleMeshListener {
-		@Override default void score(ScoreEvent event) {} 
 		@Override default void rowInsert(RowInsertEvent event) {} 
 	}
 

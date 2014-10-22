@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import nl.tudelft.ti2206.bubbles.factory.PowerUpBubbleFactory;
 import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.game.backend.GameModel;
 
 /**
  * In the {@code TimedGameMode}, the {@link PowerUpBubbleFactory} is used to
@@ -18,15 +17,12 @@ import nl.tudelft.ti2206.game.backend.GameModel;
 @ModeName("Timed Mode")
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
 @ModeMusic("/time_music.wav")
-public class TimedGameMode implements GameMode {
+public class TimedGameMode extends ClassicGameMode {
 
 	private static final long serialVersionUID = 2150478663941653803L;	
 	
 	protected final static int TICK_AMOUNT = 30;
 	
-	protected final GameController gameController;
-	protected final GameModel gameModel;
-
 	protected int ticks = 0;
 
 	/**
@@ -40,8 +36,7 @@ public class TimedGameMode implements GameMode {
 	 */
 	@Inject
 	public TimedGameMode(GameController gameController) {
-		this.gameController = gameController;
-		this.gameModel = gameController.getModel();
+		super(gameController);
 	}
 
 	@Override
@@ -49,6 +44,11 @@ public class TimedGameMode implements GameMode {
 		if((ticks = ++ticks % TICK_AMOUNT) == 0) {
 			gameModel.getBubbleMesh().translate(0, 1);
 		}
+	}
+	
+	@Override
+	public void shotMissed(ShotMissedEvent event) {
+		// don't insert new row
 	}
 	
 }

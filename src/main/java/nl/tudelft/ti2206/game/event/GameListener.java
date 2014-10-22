@@ -24,6 +24,24 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 		public GameController getSource() {
 			return gameController;
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			GameEvent other = (GameEvent) obj;
+			if (gameController == null) {
+				if (other.gameController != null)
+					return false;
+			} else if (!gameController.equals(other.gameController))
+				return false;
+			return true;
+		}
+		
 	}
 	
 	class GameOverEvent extends GameEvent {
@@ -81,27 +99,83 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 	
 	void ammo(AmmoLoadEvent event);
 	
+	class ScoreEvent extends GameEvent {
+		
+		private static final long serialVersionUID = 7856300702718622571L;
+		
+		protected final int amountOfPoints;
+		
+		public ScoreEvent(GameController gameController, int amountOfPoints) {
+			super(gameController);
+			this.amountOfPoints = amountOfPoints;
+		}
+
+		/**
+		 * @return the amountOfPoints
+		 */
+		public int getAmountOfPoints() {
+			return amountOfPoints;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			ScoreEvent other = (ScoreEvent) obj;
+			if (amountOfPoints != other.amountOfPoints)
+				return false;
+			return true;
+		}
+		
+	}
+	
+	/**
+	 * Invoked on this {@code BubbleMeshListener} when a {@link ScoreEvent} occurred
+	 * @param event {@code ScoreEvent}
+	 */
+	void score(ScoreEvent event);
+	
 	@Override default void rowInsert(RowInsertEvent event) { }
 	@Override default void pop(BubblePopEvent event) { }
-	@Override default void score(ScoreEvent event) { }
 	@Override default void shoot(CannonShootEvent event) { };
 	@Override default void rotate(CannonRotateEvent event) {};
+	
+	/**
+	 * {@code ScoreListener}
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 * @author Liam Clark
+	 *
+	 */
+	@FunctionalInterface
+	interface ScoreListener extends GameListener {
+		@Override default void shotMissed(ShotMissedEvent event) { }
+		@Override default void ammo(AmmoLoadEvent event) {}
+		@Override default void gameOver(GameOverEvent event) { }
+	}
 	
 	@FunctionalInterface
 	interface GameOverEventListener extends GameListener {
 		@Override default void shotMissed(ShotMissedEvent event) { }
 		@Override default void ammo(AmmoLoadEvent event) {}
+		@Override default void score(ScoreEvent event) {}
 	}
 	
 	@FunctionalInterface
 	interface ShotMissedListener extends GameListener {
 		@Override default void gameOver(GameOverEvent event) { }
 		@Override default void ammo(AmmoLoadEvent event) {}
+		@Override default void score(ScoreEvent event) {}
 	}
 	
 	@FunctionalInterface
 	interface AmmoListener extends GameListener {
 		@Override default void gameOver(GameOverEvent event) { }
 		@Override default void shotMissed(ShotMissedEvent event) { }
+		@Override default void score(ScoreEvent event) {}
 	}
 }

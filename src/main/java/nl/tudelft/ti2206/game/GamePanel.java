@@ -21,6 +21,7 @@ import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.util.mvc.View;
 import nl.tudelft.util.ObservableObject;
@@ -70,11 +71,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		positionAmmoBubbles();
 		
-		gameController.getModel().getBubbleMesh().getEventTarget().addScoreListener((scoreEvent) -> {
+		gameController.getModel().addEventListener(GameListener.ScoreListener.class, (scoreEvent) -> {
 			int amount = scoreEvent.getAmountOfPoints();
 			log.info("Awarded {} points", amount);
 			setScore(getScore() + amount);
-			if(POPSOUND != null) POPSOUND.play();
 		});
 		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -85,6 +85,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 				popEvent.getPoppedBubbles().forEach(bubble -> {
 					animationList.add(bubble.getAnimation(bubble));
 				});
+				if(POPSOUND != null) POPSOUND.play();
 			});
 	}
 	

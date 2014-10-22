@@ -14,7 +14,6 @@ import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.game.event.GameListener;
-import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 import nl.tudelft.ti2206.game.event.CannonListener.*;
 import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.exception.GameOver;
@@ -85,17 +84,26 @@ public class GameControllerTest {
 	
 	@Test
 	public void gameTickTest() {
-		ColouredBubble cb=new ColouredBubble(Color.RED);
-		cb.setPosition(new Point(WIDTH/2,HEIGHT));
-		MovingBubble b = spy(new MovingBubble(new Vector2f(-0.054464497F, -0.9985157F), d, cb));
-		gameModel.setShotBubble(b);
+		ColouredBubble colouredBubble = new ColouredBubble(Color.RED);
+		colouredBubble.setPosition(new Point(WIDTH/2,HEIGHT));
+		MovingBubble movingBubble = spy(new MovingBubble(new Vector2f(-0.054464497F, -0.9985157F), d, colouredBubble));
+		gameModel.setShotBubble(movingBubble);
 		tick.tick();
 		
 		verify(gameModel).getShotBubble();
 		verify(gameModel).getBubbleMesh();
-		verify(b).addVelocity();
-		verify(b).gameTick();
+		verify(movingBubble).addVelocity();
+		verify(movingBubble).gameTick();
 		for(int i = 0; i < 1000; i++) tick.tick();
+	}
+	
+	@Test
+	public void testIncrementPoints() {
+		int amount = 2000;
+		gameController.incrementScore(amount);
+		verify(gameModel).incrementScore(amount);
+		verify(gameModel).notifyObservers();
+		verify(gameListener).score(new GameListener.ScoreEvent(gameController, amount));
 	}
 	
 	@Test
@@ -132,21 +140,6 @@ public class GameControllerTest {
 		verify(gameModel).getNextBubble();
 		verify(gameModel).setNextBubble(any());
 		verify(gameModel).setLoadedBubble(any());
-	}
-	
-	@Test
-	public void testScoreListener() {
-		BubbleMesh bubbleMesh = gameModel.getBubbleMesh();
-		int amount = 20;
-		
-		bubbleMesh.getEventTarget()
-			.trigger(listener -> {
-				listener.score(new ScoreEvent(bubbleMesh, amount));
-		});
-		
-		verify(gameModel).incrementScore(amount);
-		verify(gameModel).retainRemainingColors(bubbleMesh.getRemainingColours());
-		verify(gameModel).notifyObservers();
 	}
 	
 	@Test

@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
-import nl.tudelft.ti2206.game.event.BubbleMeshListener.ScoreEvent;
 import nl.tudelft.ti2206.game.event.CannonListener.CannonRotateEvent;
 import nl.tudelft.ti2206.game.event.CannonListener.CannonShootEvent;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
@@ -98,7 +98,7 @@ public class SlaveGamePacketListener implements PacketListener {
 	}
 
 	@Override
-	public void handleScoreEvent(ScoreEvent event) {
+	public void handleScoreEvent(GameListener.ScoreEvent event) {
 		// TODO Auto-generated method stub
 		
 	}
