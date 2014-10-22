@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.network.packets;
+package nl.tudelft.ti2206.game.backend;
 
 import java.awt.Point;
 
@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonModel;
-import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.ScoreEvent;
@@ -17,18 +15,35 @@ import nl.tudelft.ti2206.game.event.CannonListener.CannonShootEvent;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
 import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
+import nl.tudelft.ti2206.network.packets.GameModelPacket;
+import nl.tudelft.ti2206.network.packets.PacketListener;
 
-public class PacketListenerImpl implements PacketListener {
+/**
+ * The {@code SlaveGamePacketListener} listens for {@link Packet Packets} on the
+ * {@link Connector}, and triggers the corresponding {@link GameEvent GameEvents} on
+ * the corresponding {@link GameController}.
+ *  
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
+public class SlaveGamePacketListener implements PacketListener {
 	
-
-	private static final Logger log = LoggerFactory.getLogger(PacketListenerImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(SlaveGamePacketListener.class);
 	
 	protected final GameController gameController;
 	protected final GameModel gameModel;
 	protected final CannonController cannonController;
 	protected final CannonModel cannonModel;
-	
-	public PacketListenerImpl(GameController slaveGameController, CannonController slaveCannonController) {
+
+	/**
+	 * The {@code SlaveGamePacketListener} listens for {@link Packet Packets} on
+	 * the {@link Connector}, and triggers the corresponding {@link GameEvent
+	 * GameEvents} on the corresponding {@link GameController}.
+	 * 
+	 * @param slaveGameController
+	 * @param slaveCannonController
+	 */
+	public SlaveGamePacketListener(GameController slaveGameController, CannonController slaveCannonController) {
 		this.gameController = slaveGameController;
 		this.gameModel = slaveGameController.getModel();
 		this.cannonController = slaveCannonController;
@@ -89,8 +104,7 @@ public class PacketListenerImpl implements PacketListener {
 
 	@Override
 	public void handleGameOver(GameOverEvent event) {
-		// TODO Auto-generated method stub
-		
+		gameController.gameOver(false);
 	}
 
 	@Override
@@ -101,8 +115,8 @@ public class PacketListenerImpl implements PacketListener {
 	
 	@Override
 	public void disconnect() {
-		gameModel.setWon(false);
-		gameModel.setGameOver(true);
+		// On disconnect, the other player wins
+		gameController.gameOver(false);
 	}
 
 }

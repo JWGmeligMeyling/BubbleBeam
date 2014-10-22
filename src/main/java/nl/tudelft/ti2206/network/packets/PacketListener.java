@@ -18,9 +18,7 @@ import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 
 import com.google.common.collect.Lists;
-import com.google.inject.ImplementedBy;
 
-@ImplementedBy(PacketListenerImpl.class)
 public interface PacketListener extends EventListener {
 
 	default void handlePacket(Packet packet) {

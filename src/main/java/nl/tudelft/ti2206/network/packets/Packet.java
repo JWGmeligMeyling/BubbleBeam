@@ -31,7 +31,10 @@ public interface Packet extends Serializable {
 	default void write(final ObjectOutputStream outputStream) throws IOException {
 		try {
 			synchronized(outputStream) {
-				outputStream.reset();
+//				TODO This was required in order to sync bubblemeshes properly
+//				which hopefully isn't required anymore now we're able to send
+//				inserted rows
+//				outputStream.reset();
 				outputStream.writeObject(this);
 			}
 		} catch (Throwable t) {
