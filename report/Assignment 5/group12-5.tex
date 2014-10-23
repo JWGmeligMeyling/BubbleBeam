@@ -55,7 +55,7 @@ We already use event handling a lot: the \texttt{CannonController} triggers a \t
 \par All these actions are in fact events as well, and provide perfect hooks for game mode implementations and  synchronization in the multiplayer. However, in the current version, this eventing system was just not complete enough to make this true. Luckily, the changes don't require a lot of new classes to be introduced, but rather requires to move around a few methods between classes and update their callers.
 
 \subsubsection*{BubbleMesh}
-The \texttt{BubbleMesh} is a data structure for the \texttt{Bubbles}, and this structure needs to be maintained as bubbles gets snapped in to the mesh, popped, or inserted at the top. These events can be useful, as points needs to be rewarded when bubbles pop. Also, when rows get inserted to the mesh, we want to send this to a potential multiplayer client.
+The \texttt{BubbleMesh} is a data structure for the \texttt{Bubbles}, and this structure needs to be maintained as bubbles gets snapped in to the mesh, popped, or inserted at the top. These events can be useful, as points need to be rewarded when bubbles pop. Also, when rows get inserted to the mesh, we want to send this to a potential multiplayer client.
 
 \begin{figure}[H]
     \begin{center}
@@ -81,7 +81,7 @@ The \texttt{BubbleMesh} is a data structure for the \texttt{Bubbles}, and this s
 
 
 \subsubsection*{CannonController}
-The \texttt{CannonController} is responsible for the cannon specific logic. It triggers an event when the cannon shoots, which for example is necessairy for the \texttt{GameController} to start translating the shot bubble.
+The \texttt{CannonController} is responsible for the cannon specific logic. It triggers an event when the cannon shoots, which for example is necessary for the \texttt{GameController} to start translating the shot bubble.
 
 \begin{figure}[H]
     \begin{center}
@@ -192,7 +192,7 @@ We figured out that it would be more clear to let the \texttt{BubbleMesh} be a \
 % 	GAME MODES FOR MULTIPLAYER
 % ==============================
 \subsubsection{Game modes for multiplayer}
-In the previous version we basically only sended the \texttt{CannonEvents} and some \texttt{BubbleMesh} syncs, and let the client then guess what other events might have been triggered. Also, we just hard coded to always pick the \texttt{PowerUpBubbleFactory} (so what now would be the \texttt{PowerUpGameMode}). This did not give us the ability to play other \texttt{GameModes}, or use any of the Game Mode logic introduced in section \ref{sec:gmmde}.
+In the previous version we basically only transmitted the \texttt{CannonEvents} and some \texttt{BubbleMesh} syncs, and let the client then guess what other events might have been triggered. Also, we just hard coded to always pick the \texttt{PowerUpBubbleFactory} (so what now would be the \texttt{PowerUpGameMode}). This did not give us the ability to play other \texttt{GameModes}, or use any of the Game Mode logic introduced in section \ref{sec:gmmde}.
 
 \par{}Therefore we decided to rework the multiplayer. First, when we create a room (player 1 clicks "start multiplayer"), we want to be able to select one of the \texttt{GameModes}. Then we want to create two \texttt{GameModels} with this \texttt{GameMode} and an initial \texttt{BubbleMesh} and ammunition \texttt{Bubbles}. When a client connects (player 2 clicks "find multiplayer"), we need to transmit and process this initial data.
 
@@ -203,7 +203,7 @@ In the previous version we basically only sended the \texttt{CannonEvents} and s
     \label{fig:gmpacket}
 \end{figure}
 
-After transmitting the \texttt{GameModelPacket} both players can start playing. Now we need to transmit all actions between the two clients. In the previous version we used some dedicated packets for this, but the implementation was incomplete. Now we have an advanced event handling system (section \ref{sec:evthdl}), and all we have to do is listen for a \texttt{GameEvent} being triggered in the active game panels, wrap it in a \texttt{EventPacket}, transmit it to the client (figure \ref{fig:connectorgamelistener}).
+After transmitting the \texttt{GameModelPacket} both players can start playing. Now we need to transmit all actions between the two clients. In the previous version we used some dedicated packets for this, but the implementation was incomplete. Now we have an advanced event handling system (section \ref{sec:evthdl}), and all we have to do is listen for a \texttt{GameEvent} being triggered in the active game panels, wrap it in an \texttt{EventPacket}, transmit it to the client (figure \ref{fig:connectorgamelistener}).
 
 \begin{figure}[H]
 	\centering
@@ -212,7 +212,7 @@ After transmitting the \texttt{GameModelPacket} both players can start playing. 
     \label{fig:connectorgamelistener}
 \end{figure}
 
-When the client receives a \texttt{EventPacket}, it needs to update the \texttt{GameController}. Therefore we have made a \texttt{PacketListener} that listens for \texttt{EventPackets}, and then invokes the event on the \texttt{GameController} (figure \ref{fig:slavegamepacketlistener}).
+When the client receives an \texttt{EventPacket}, it needs to update the \texttt{GameController}. Therefore we have made a \texttt{PacketListener} that listens for \texttt{EventPackets}, and then invokes the event on the \texttt{GameController} (figure \ref{fig:slavegamepacketlistener}).
 
 \begin{figure}[H]
 	\centering
