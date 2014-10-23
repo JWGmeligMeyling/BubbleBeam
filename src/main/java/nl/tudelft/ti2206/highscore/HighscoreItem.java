@@ -22,19 +22,6 @@ public class HighscoreItem extends ScoreItem {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == this) return true;
-		if(HighscoreItem.class.isInstance(obj)) {
-			HighscoreItem other = HighscoreItem.class.cast(obj);
-			return other.name.equals(other.name) && super.equals(other);
-		}
-		return false;
-	}
-
 	public String getName() {
 		return name;
 	}

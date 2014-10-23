@@ -3,6 +3,12 @@ package nl.tudelft.ti2206.bubbles.decorators;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
@@ -30,6 +36,8 @@ public class JokerBubble extends DecoratedBubble {
 	protected ColouredBubble bubble;
 	protected boolean hasColor = false;
 	protected boolean snapped = false;
+	
+	private transient Image jokerImage;
 	
 	public JokerBubble() {
 		this(new ColouredBubble(Color.WHITE));
@@ -73,6 +81,28 @@ public class JokerBubble extends DecoratedBubble {
 	@Override
 	public boolean hasColor() {
 		return hasColor;
+	}
+	
+	protected Image getBubbleImage() {
+		try {
+			BufferedImage scaledImage = ImageIO.read(JokerBubble.class
+					.getResourceAsStream("/star.PNG"));
+			return scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(),
+					Image.SCALE_SMOOTH);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public void render(Graphics graphics) {
+		if (jokerImage == null)
+			jokerImage = getBubbleImage();
+		if(!snapped)
+			graphics.drawImage(jokerImage, bubble.getX(), bubble.getY(), bubble.getWidth(),
+				bubble.getHeight(), null);
+		else
+			bubble.render(graphics);
 	}
 	
 	@Override

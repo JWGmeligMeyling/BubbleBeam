@@ -34,20 +34,6 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	}
 
 	@Override
-	public boolean equals(Object other) {
-		if(other == this) return true;
-		if (other instanceof ScoreItem) {
-			ScoreItem that = (ScoreItem) other;
-			if (this.score == that.score
-					&& this.start == that.start
-					&& this.end == that.end) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
 	public int compareTo(ScoreItem o) {
 		int value = Long.signum(o.score - this.score);
 		if(value == 0)

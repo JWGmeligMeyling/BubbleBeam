@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.Random;
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
+
 import nl.tudelft.ti2206.bubbles.Bubble;
 
 public class ClassicBubbleFactory extends AbstractBubbleFactory {
@@ -12,11 +14,8 @@ public class ClassicBubbleFactory extends AbstractBubbleFactory {
 	
 	@Override
 	public Bubble createBubble(Set<Color> remainingColors) {
-		
-		if(remainingColors.isEmpty()) {
-			throw new IllegalArgumentException("There should be a remaining color to create a new bubble");
-		}
-		
+
+		Preconditions.checkArgument(!remainingColors.isEmpty(), "There should be a remaining color to create a new bubble");
 		return createColouredBubble(remainingColors);
 		
 	}
