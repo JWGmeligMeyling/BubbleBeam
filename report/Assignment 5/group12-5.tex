@@ -1,0 +1,245 @@
+\documentclass[a4paper]{article}
+\usepackage[margin=1in]{geometry}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{float}
+
+\title{Bubble Beam - Assignment 5}
+
+\author{
+    Bavdaz, Luka\\
+    \texttt{4228561}
+    \and
+    Clark, Liam\\
+    \texttt{4303423}
+    \and
+    Gmelig Meyling, Jan-Willem\\
+    \texttt{4305167}
+    \and
+    Hoek, Leon\\
+    \texttt{4021606}
+    \and
+    Smulders, Sam\\
+    \texttt{4225007}
+}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{20-Time, revolutions}
+
+% ==========================
+%  MULTIPLE GAME MODES
+% ==========================
+\subsection{Multiple game modes}
+In the previous sprint we introduced serveral game modes (from requirements \texttt{M-191} to \texttt{M-194}). A Game Mode basically defines what kind of bubbles a player can receive in his cannon. We've implemented several \textit{Power-up Bubbles} (bubbles with a special effect). These Bubbles are constructed through a \texttt{BubbleFactory}, and the Game Mode was basically implemented by providing the \texttt{GameController} with another \texttt{BubbleFactory}.
+
+\par{}Ofcourse it's a bit ambigious to let the \texttt{BubbleFactory} be the object that decides the \texttt{GameMode}. It also was a bit limited: we could provide new bubbles, but a more advanced game mode - Timed Game Mode (\texttt{M-193}) - actually failed because we had no possibility to hook on to the required methods - translating the bubbles - and events - time.
+
+\par{}Speaking of events, over time, the game controller logic became a bit cluttered, after adding hooks and observers/listeners in various ways. Thus, in this sprint, we refactored the event handling system as a starting point for the more advanced game modes and multiplayer improvements.
+
+% ==============================
+% 	EVENT HANDLING
+% ==============================
+\subsubsection{Event handling}
+\label{sec:evthdl}
+
+We already use event handling a lot: the \texttt{CannonController} triggers a \texttt{CannonShootEvent} (which is itself most likely triggered by an \texttt{MouseEvent}). The \texttt{GameController} listens for this \texttt{CannonShootEvent} and then starts doing its responsibility: allow the \texttt{MovingBubble} to move and check if it collides with other bubbles on its way, and if so, handle this collision in terms of snapping to the \texttt{BubbleMesh}, or popping with other bubbles.
+
+\par All these actions are in fact events as well, and provide perfect hooks for game mode implementations and  synchronization in the multiplayer. However, in the current version, this eventing system was just not complete enough to make this true. Luckily, the changes don't require a lot of new classes to be introduced, but rather requires to move around a few methods between classes and update their callers.
+
+\subsubsection*{BubbleMesh}
+The \texttt{BubbleMesh} is a data structure for the \texttt{Bubbles}, and this structure needs to be maintained as bubbles gets snapped in to the mesh, popped, or inserted at the top. These events can be useful, as points needs to be rewarded when bubbles pop. Also, when rows get inserted to the mesh, we want to send this to a potential multiplayer client.
+
+\begin{figure}[H]
+    \begin{center}
+    \begin{tabular}{ | p{8cm} | p{4cm} | }
+      \multicolumn{2}{c}{\texttt{BubbleMesh}} \\ \hline
+      \textbf{Responsibilities} & \textbf{Collaborations} \\ \hline
+      Datastructure containing the bubbles & \texttt{Bubble} objects \\
+      Logic to insert a new row of bubbles & \texttt{BubbleMeshListener} \\
+      Logic to snap a bubble into the mesh & \\
+      Logic to see if a snap caused any pops & \\
+      Notify \texttt{BubbleMeshListeners} of above events & \\
+      \hline
+    \end{tabular}
+    \end{center}
+    \caption{CRC-Card for the \texttt{BubbleMesh}}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{BubbleMeshListener.png}
+    \caption{UML Diagram for the \texttt{BubbleMeshListener}}
+\end{figure}
+
+
+\subsubsection*{CannonController}
+The \texttt{CannonController} is responsible for the cannon specific logic. It triggers an event when the cannon shoots, which for example is necessairy for the \texttt{GameController} to start translating the shot bubble.
+
+\begin{figure}[H]
+    \begin{center}
+    \begin{tabular}{ | p{8cm} | p{4cm} | }
+      \multicolumn{2}{c}{\texttt{CannonController}} \\ \hline
+      \textbf{Responsibilities} & \textbf{Collaborations} \\ \hline
+      Updating the \texttt{CannonModel} when the cannon rotates & \texttt{Cannon} instance \\
+      Preventing new shoot while shooting & \texttt{CannonModel} \\
+      Propagating \texttt{ShootEvent} to the \texttt{CannonListeners} & \texttt{CannonListener} \\
+      \hline
+    \end{tabular}
+    \end{center}
+    \caption{CRC-Card for the \texttt{CannonController}}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{CannonListener.png}
+    \caption{UML Class diagram for the \texttt{CannonListener}}
+\end{figure}
+
+\subsubsection*{GameController}
+The \texttt{GameController} is responsible for the generic game logic. See also the following CRC-card:
+
+\begin{figure}[H]
+    \begin{center}
+    \begin{tabular}{ | p{8cm} | p{4cm} | }
+      \multicolumn{2}{c}{\texttt{GameController}} \\ \hline
+      \textbf{Responsibilities} & \textbf{Collaborations} \\ \hline
+      Check collisions shot bubble & \texttt{BubbleMesh} \\
+      Update cannon ammunition & \texttt{CannonController} \\
+      Keep track of remaining colours & \texttt{GameListener} \\
+      Game Over handling & \\
+      Notify \texttt{GameListeners} of above events & \\
+      Propagate \texttt{ShootEvents} and \texttt{BubbleMeshEvents} & \\
+      \hline
+    \end{tabular}
+    \end{center}
+    \caption{CRC-Card for the \texttt{GameController}}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{GameListener.png}
+    \caption{UML Diagram for the \texttt{GameListener}}
+\end{figure}
+
+% ========================
+% GAME MODE 
+% ========================
+\subsubsection{Game Mode}
+\label{sec:gmmde}
+From the requirements \texttt{M-191} to \texttt{M-194} we expect a \texttt{Game Mode} to have the following abilities: (1) it should be able to provide a certain \texttt{BubbleFactory} to the \texttt{GameController}, so that it can create the correct ammunation for the game mode; (2) it should be able to listen for \texttt{GameEvents}, for example to award points or insert new bubbles after a few misses; and (3) it should be able to listen on \texttt{GameTicks} to perform changes over time, such as pushing bubbles slowly to the bottom in the timed mode. Furthermore, we need to have access to the \texttt{GameController} to invoke these actions, and we also need to add some calls to the \texttt{GameModel} in the \texttt{GameController}.
+
+\begin{figure}[H]
+    \begin{center}
+    \begin{tabular}{ | p{8cm} | p{4cm} | }
+      \multicolumn{2}{c}{\texttt{GameMode}} \\ \hline
+      \textbf{Responsibilities} & \textbf{Collaborations} \\ \hline
+      Provide a \texttt{BubbleFactory} & \texttt{BubbleFactory} \\
+      Listen for \texttt{GameEvents} & \texttt{GameController} \\
+      Interact with \texttt{BubbleMesh} & \texttt{BubbleMesh} \\
+      Interact with \texttt{GameControler} & \texttt{GameTick} \\
+      Ability to hook onto \texttt{GameTicks} & \\
+      \hline
+    \end{tabular}
+    \end{center}
+    \caption{CRC-Card for the \texttt{GameMode}}
+\end{figure}
+
+Since we want a \texttt{GameMode} to hook onto \texttt{GameEvents}, we decided it should be a \texttt{GameListener}. Because we also want to hook on \texttt{GameTicks}, we decided a \texttt{GameMode} should also be \texttt{Tickable}. For the \texttt{BubbleFactory} and name of the \texttt{GameMode}, we defined getters in the \texttt{GameMode} interface.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{GameMode.png}
+    \caption{UML class diagram for the \texttt{GameMode}}
+\end{figure}
+
+\subsubsection*{Interactions}
+The \texttt{ClassicGameMode} provides bubbles through the \texttt{DefaultBubbleFactory} (which creates only \texttt{ColouredBubbles} and no Power-up bubbles), this is provided through the \texttt{getBubbleFactory} method. When bubbles pop, the player is awarded some points. This is achieved by overriding the \texttt{pop} method from the \texttt{GameListener}. When a shot bubble snaps into the \texttt{BubbleMesh} without popping, it's concidered a miss. After a few misses, a new row is inserted. The same as with the pop, this is done by implementing the \texttt{shotMissed} method. See also the sequence diagram \ref{fig:seqgamemode} for these interactions between the \texttt{GameMode} and the \texttt{GameController}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{ClassicGameMode.png}
+    \caption{UML sequence diagram for the \texttt{GameMode}}
+    \label{fig:seqgamemode}
+\end{figure}
+
+% ==============================
+% 	BUBBLE MESH IMPROVEMENTS
+% ==============================
+\subsubsection{BubbleMesh improvements}
+In the previous iteration a \texttt{Bubble} knew it's position and was able to paint itself on a \texttt{Graphics} object. In the \texttt{paintComponent} function of the \texttt{GamePanel} we iterate over all bubbles in the \texttt{BubbleMesh}, and invoke the \texttt{render} method.
+For the \texttt{TimedGameMode}, this was not enough. In the \texttt{TimedGameMode} we want all bubbles to slowly fall down at a certain speed. When they reach the bottom, the game is over, or when the \texttt{BubbleMesh} is empty, you have defeated the game mode. We needed to be able to translate the entire \texttt{BubbleMesh}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{BubbleMeshSprite.png}
+    \caption{UML class diagram for the \texttt{BubbleMesh} }
+    \label{fig:bmeshsprite}
+\end{figure}
+
+We figured out that it would be more clear to let the \texttt{BubbleMesh} be a \texttt{Sprite} as well, and give it the ability to draw itself and it's bubbles. Then the \texttt{GamePanel} calls the render method of the \texttt{BubbleMesh} instead of the induvidual bubbles. Also we gave the \texttt{BubbleMesh} a position which can be translated - also moving the bubbles in the \texttt{BubbleMesh}.
+
+\par{} With these adjustments to the \texttt{BubbleMesh} and the event listener changes described in section \ref{sec:evthdl} and \ref{sec:gmmde}, we now have all the ingredients to make the \texttt{TimedGameMode} work: in the \texttt{GameMode} we can now hook onto the \texttt{GameTick} and then slightly translate the \texttt{BubbleMesh}.
+
+% ==============================
+% 	GAME MODES FOR MULTIPLAYER
+% ==============================
+\subsubsection{Game modes for multiplayer}
+In the previous version we basically only sended the \texttt{CannonEvents} and some \texttt{BubbleMesh} syncs, and let the client then guess what other events might have been triggered. Also, we just hard coded to always pick the \texttt{PowerUpBubbleFactory} (so what now would be the \texttt{PowerUpGameMode}). This did not give us the ability to play other \texttt{GameModes}, or use any of the Game Mode logic introduced in section \ref{sec:gmmde}.
+
+\par{}Therefore we decided to rework the multiplayer. First, when we create a room (player 1 clicks "start multiplayer"), we want to be able to select one of the \texttt{GameModes}. Then we want to create two \texttt{GameModels} with this \texttt{GameMode} and an initial \texttt{BubbleMesh} and ammunition \texttt{Bubbles}. When a client connects (player 2 clicks "find multiplayer"), we need to transmit and process this initial data.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{GameModelPacket.png}
+    \caption{UML class diagram for the \texttt{GameModelPacket} }
+    \label{fig:gmpacket}
+\end{figure}
+
+After transmitting the \texttt{GameModelPacket} both players can start playing. Now we need to transmit all actions between the two clients. In the previous version we used some dedicated packets for this, but the implementation was incomplete. Now we have an advanced event handling system (section \ref{sec:evthdl}), and all we have to do is listen for a \texttt{GameEvent} being triggered in the active game panels, wrap it in a \texttt{EventPacket}, transmit it to the client (figure \ref{fig:connectorgamelistener}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{ConnectorGameListenerExtended.png}
+    \caption{UML class diagram for the \texttt{ConnectorGameListener} }
+    \label{fig:connectorgamelistener}
+\end{figure}
+
+When the client receives a \texttt{EventPacket}, it needs to update the \texttt{GameController}. Therefore we have made a \texttt{PacketListener} that listens for \texttt{EventPackets}, and then invokes the event on the \texttt{GameController} (figure \ref{fig:slavegamepacketlistener}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{SlaveGamePacketListener.png}
+    \caption{UML class diagram for the \texttt{SlaveGamePacketListener} }
+    \label{fig:slavegamepacketlistener}
+\end{figure}
+
+Now we have access to all required events in the multiplayer, which also allows the \texttt{GameModes} to work completely in multiplayer.
+
+
+% ==============================
+% 	POP ANIMATIONS
+% ==============================
+\subsubsection{Pop animations}
+
+% ==============================
+% 	POP ANIMATIONS
+% ==============================
+\subsubsection{GUI Improvements}
+
+% ==========================
+% WRAP UP REFLECTION
+% ==========================
+\section{Wrap up - Reflection}
+
+% IDEAS
+
+
+\end{document}
