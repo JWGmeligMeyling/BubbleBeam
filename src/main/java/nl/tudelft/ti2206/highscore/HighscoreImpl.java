@@ -119,6 +119,14 @@ public class HighscoreImpl implements Highscore {
 	@Override
 	public void read() {
 		file.getParentFile().mkdirs();
+		
+		try {
+			file.createNewFile();
+		}
+		catch (IOException e) {
+			log.warn("Highscore file could not be created", e);
+		}
+		
 		try(ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
 			
 			log.debug("Reading the highscores from {}", file);
