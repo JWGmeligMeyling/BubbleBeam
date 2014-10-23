@@ -136,16 +136,6 @@ public interface CannonListener extends EventListener {
 			return angle;
 		}
 		
-		@Override
-		public boolean equals(Object obj) {
-			if(CannonRotateEvent.class.isInstance(obj)) {
-				CannonRotateEvent other = CannonRotateEvent.class.cast(obj);
-				return direction.equals(other.direction)
-						&& cannonController.equals(other.cannonController);
-			}
-			return super.equals(obj);
-		}
-		
 	}
 	
 	/**
