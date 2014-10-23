@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import nl.tudelft.ti2206.game.HighscorePopup;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.highscore.Highscore;
-import nl.tudelft.ti2206.highscore.HighscorePopup;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

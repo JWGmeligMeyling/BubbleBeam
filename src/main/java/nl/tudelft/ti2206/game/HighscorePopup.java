@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.highscore;
+package nl.tudelft.ti2206.game;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,6 +16,8 @@ import javax.swing.JTabbedPane;
 
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.game.backend.mode.ModeName;
+import nl.tudelft.ti2206.highscore.Highscore;
+import nl.tudelft.ti2206.highscore.HighscoreItem;
 
 import org.reflections.Reflections;
 

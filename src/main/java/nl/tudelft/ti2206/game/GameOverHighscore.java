@@ -14,7 +14,6 @@ import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.game.event.GameListener.*;
 import nl.tudelft.ti2206.highscore.Highscore;
 import nl.tudelft.ti2206.highscore.HighscoreItem;
-import nl.tudelft.ti2206.highscore.HighscorePopup;
 import nl.tudelft.ti2206.highscore.ScoreItem;
 
 public class GameOverHighscore implements GameOverEventListener {
