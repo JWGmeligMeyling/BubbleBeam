@@ -77,16 +77,6 @@ public class AbstractBubble implements Bubble {
 		return RADIUS;
 	}
 
-	@Override
-	public int getX() {
-		return position.x;
-	}
-
-	@Override
-	public int getY() {
-		return position.y;
-	}
-
 	private static final List<Direction> inOrderDirections = ImmutableList.of(
 			Direction.TOPLEFT, Direction.TOPRIGHT, Direction.LEFT,
 			Direction.RIGHT, Direction.BOTTOMLEFT, Direction.BOTTOMRIGHT);

@@ -65,16 +65,6 @@ public class Cannon implements Sprite, View<CannonController, CannonModel> {
 	}
 
 	@Override
-	public int getX() {
-		return position.x;
-	}
-
-	@Override
-	public int getY() {
-		return position.y;
-	}
-
-	@Override
 	public int getWidth() {
 		return WIDTH;
 	}
