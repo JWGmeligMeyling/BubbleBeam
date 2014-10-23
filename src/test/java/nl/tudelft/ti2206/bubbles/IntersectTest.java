@@ -18,7 +18,7 @@ public class IntersectTest {
 
 	private final static int RADIUS = 10, DIAMETER = RADIUS * 2;
 	
-	@Parameters
+	@Parameters(name="testIntersect({0},{1})={2}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{ new Point(0,0), new Point(0,0), true },

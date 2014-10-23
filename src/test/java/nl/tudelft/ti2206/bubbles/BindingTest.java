@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 @RunWith(Parameterized.class)
 public class BindingTest {
 
-	@Parameters
+	@Parameters(name="testBind({0})")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 				{ Direction.TOPLEFT },

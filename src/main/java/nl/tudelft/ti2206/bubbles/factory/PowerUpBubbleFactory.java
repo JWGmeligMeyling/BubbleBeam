@@ -2,6 +2,7 @@ package nl.tudelft.ti2206.bubbles.factory;
 
 import java.awt.Color;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Random;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -36,6 +37,15 @@ public class PowerUpBubbleFactory extends AbstractBubbleFactory {
 	protected final Class<?> extraEffects[] = { DrunkBubbleRight.class,
 			DrunkBubbleLeft.class };
 	
+
+	public PowerUpBubbleFactory() {
+		super();
+	}
+
+	PowerUpBubbleFactory(Random random) {
+		super(random);
+	}
+
 	@Override
 	public Bubble createBubble(Set<Color> remainingColors) {
 		Bubble out;

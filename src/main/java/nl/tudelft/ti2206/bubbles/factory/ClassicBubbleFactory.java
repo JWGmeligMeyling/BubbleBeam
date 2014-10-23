@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
-import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 
@@ -22,11 +21,17 @@ public class ClassicBubbleFactory extends AbstractBubbleFactory {
 	
 	protected final Random RANDOM_GENERATOR = new Random();
 	
-	@Override
-	public Bubble createBubble(Set<Color> remainingColors) {
+	public ClassicBubbleFactory() {
+		super();
+	}
 
+	public ClassicBubbleFactory(Random random) {
+		super(random);
+	}
+
+	@Override
+	public ColouredBubble createBubble(Set<Color> remainingColors) {
 		Preconditions.checkArgument(!remainingColors.isEmpty(), "There should be a remaining color to create a new bubble");
 		return createColouredBubble(remainingColors);
-		
 	}
 }

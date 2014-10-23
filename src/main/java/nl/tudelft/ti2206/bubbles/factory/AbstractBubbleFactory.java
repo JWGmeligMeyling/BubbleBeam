@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 
 /**
@@ -16,9 +15,17 @@ import nl.tudelft.ti2206.bubbles.ColouredBubble;
  */
 public abstract class AbstractBubbleFactory implements BubbleFactory {
 	
-	protected final Random random = new Random();
+	protected final Random random;
+	
+	protected AbstractBubbleFactory() {
+		this(new Random());
+	}
+	
+	protected AbstractBubbleFactory(Random random) {
+		this.random = random;
+	}
 
-	protected Bubble createColouredBubble(Set<Color> remainingColors) {
+	protected ColouredBubble createColouredBubble(Set<Color> remainingColors) {
 		return new ColouredBubble(getRandomRemainingColor(remainingColors));
 	}
 	
@@ -26,7 +33,6 @@ public abstract class AbstractBubbleFactory implements BubbleFactory {
 		int index = random.nextInt(remainingColors.size());
 		Iterator<Color> iterator = remainingColors.iterator();
 		for(int i = 0; i < index; i++) iterator.next();
-		assert iterator.hasNext() : "The iterator should have one more item";
 		return iterator.next();
 	}
 
