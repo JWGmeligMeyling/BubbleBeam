@@ -24,7 +24,7 @@ public interface Circle {
 	
 	/**
 	 * Set the center for this {@code Circle}
-	 * @param center
+	 * @param center Center {@link Point} for this {@code Cirkle}
 	 */
 	void setCenter(Point center);
 	

@@ -18,9 +18,11 @@ import javax.swing.border.BevelBorder;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.util.mvc.View;
@@ -30,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The GamePanel is the panel which contians and paints the {@link Cannon} and
+ * The GamePanel is the panel which contains and paints the {@link Cannon} and
  * the {@link BubbleMesh}
  * 
  * @author Jan-Willem Gmelig Meyling
@@ -80,8 +82,10 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
 		
-		this.gameController.getModel().getBubbleMesh().getEventTarget()
-			.addPopListener((popEvent) -> {
+		this.gameController
+			.getModel()
+			.getBubbleMesh()
+			.addEventListener(BubbleMeshListener.PopListener.class, (popEvent) -> {
 				popEvent.getPoppedBubbles().forEach(bubble -> {
 					animationList.add(bubble.getAnimation(bubble));
 				});

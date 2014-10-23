@@ -20,7 +20,7 @@ public final class LogConfig {
 	
 	/**
 	 * Add a {@code LogAppender} to the configuration
-	 * @param appender
+	 * @param appender {@code LogAppender} to use
 	 */
 	public static void addLogAppender(LogAppender appender) {
 		LOG_APPENDERS.add(appender);

@@ -3,6 +3,7 @@ package nl.tudelft.ti2206.network.packets;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
@@ -69,6 +70,8 @@ public interface PacketListener extends EventListener {
 	 * This is used to find to which {@link EventHandler} a {@link EventObject}
 	 * and to which {@link PacketHandler} a {@link Packet} should be delegated.
 	 * 
+	 * @param klass
+	 *            {@link Class} to start search for the method
 	 * @param type
 	 *            {@link Parameter} type the {@code Method} should have
 	 * @param annotation

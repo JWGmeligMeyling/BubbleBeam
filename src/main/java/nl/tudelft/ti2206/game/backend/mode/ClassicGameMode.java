@@ -2,14 +2,16 @@ package nl.tudelft.ti2206.game.backend.mode;
 
 import javax.inject.Inject;
 
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.factory.ClassicBubbleFactory;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 
 /**
  * In the {@code ClassicGameMode}, the {@link ClassicBubbleFactory} is used to
- * create new {@code Bubbles}. It uses only {@link ColouredBubbles}, no power-up
- * bubbles. After 5 misses, a new row is inserted on top.
+ * create new {@code Bubbles}. It uses only {@link ColouredBubble
+ * ColouredBubbles}, no power-up bubbles. After 5 misses, a new row is inserted
+ * on top.
  * 
  * @author Jan-Willem Gmelig Meyling
  *
@@ -30,7 +32,7 @@ public class ClassicGameMode implements GameMode {
 	
 	/**
 	 * In the {@code ClassicGameMode}, the {@link ClassicBubbleFactory} is used to
-	 * create new {@code Bubbles}. It uses only {@link ColouredBubbles}, no power-up
+	 * create new {@code Bubbles}. It uses only {@link ColouredBubble ColouredBubbles}, no power-up
 	 * bubbles. After 5 misses, a new row is inserted on top.
 	 * 
 	 * @param gameController {@link GameController} for this {@code GameMode}

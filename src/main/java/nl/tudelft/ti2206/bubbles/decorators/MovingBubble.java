@@ -29,14 +29,12 @@ public class MovingBubble extends DecoratedBubble implements Tickable {
 	/**
 	 * Construct a new {@code MovingBubble}
 	 * 
-	 * @param position
-	 *            position to initialize the moving bubble (the cannon)
 	 * @param velocity
 	 *            angle for the bubble
 	 * @param screenSize
 	 *            screen size, which is required to perform bounces on the walls
-	 * @param color
-	 *            {@code Color} for this {@code Bubble}
+	 * @param bubble
+	 *            {@code Bubble} to be shot
 	 */
 	public MovingBubble(final Vector2f velocity, final Dimension screenSize,
 			final Bubble bubble) {

@@ -47,7 +47,7 @@ public interface BubbleMeshListener extends EventListener {
 		}
 
 		/**
-		 * @return
+		 * @return amount of inserted bubbles
 		 * @see java.util.Set#size()
 		 */
 		public int amountOfInsertedBubbles() {
@@ -81,7 +81,7 @@ public interface BubbleMeshListener extends EventListener {
 		}
 
 		/**
-		 * @return
+		 * @return amount of bubbles popped
 		 * @see java.util.Set#size()
 		 */
 		public int amountOfPoppedBubbles() {

@@ -9,7 +9,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * The console appender adds {@link LogLines} to the System streams
+ * The console appender adds {@link LogLine LogLines} to the System streams
  * 
  * @author Jan-Willem Gmelig Meyling
  *

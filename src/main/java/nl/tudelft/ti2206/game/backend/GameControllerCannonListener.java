@@ -1,13 +1,15 @@
 package nl.tudelft.ti2206.game.backend;
 
+import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.game.event.CannonListener;
+import nl.tudelft.ti2206.game.event.GameListener.GameEvent;
 
 /**
  * The {@code GameControllerCannonListener} listens for events on the
  * {@link CannonModel}, delegates the event as {@link GameEvent} on the
  * {@link GameModel} and invokes the right actions on the {@link GameController}
  * 
- * @author jgmeligmeyling
+ * @author Jan-Willem Gmelig Meyling
  *
  */
 public class GameControllerCannonListener implements CannonListener {
@@ -23,6 +25,8 @@ public class GameControllerCannonListener implements CannonListener {
 	 * {@link GameController}
 	 * 
 	 * @param gameController
+	 *            {@code GameController} for this
+	 *            {@code GameControllerCannonListener}
 	 */
 	public GameControllerCannonListener(GameController gameController) {
 		this.gameController = gameController;

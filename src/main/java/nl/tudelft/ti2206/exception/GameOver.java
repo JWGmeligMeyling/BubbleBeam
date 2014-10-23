@@ -1,5 +1,8 @@
 package nl.tudelft.ti2206.exception;
 
+import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.backend.mode.GameMode;
+
 /**
  * The {@code GameOver} exception can be thrown in the {@link GameController}
  * and {@link GameMode} to end the game

@@ -45,6 +45,7 @@ public class JokerBubble extends DecoratedBubble {
 	
 	/**
 	 * Construct a new {@code JokerBubble}
+	 * @param bubble The {@link ColouredBubble} for this {@code JokerBubble}
 	 */
 	public JokerBubble(ColouredBubble bubble) {
 		super(new PopSoundBubble(HORN_SOUND, bubble));

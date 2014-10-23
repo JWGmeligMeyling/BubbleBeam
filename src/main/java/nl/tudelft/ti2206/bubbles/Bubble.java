@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
@@ -80,7 +81,7 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @return true if this is a hittable bubble. A hittable bubble for example
 	 *         a {@link ColouredBubble}, whereas the {@link BubblePlaceholder}
 	 *         only functions as a snapping position for new
-	 *         {@link MovingBubbles} and therefore is not hittable - bubbles
+	 *         {@link MovingBubble MovingBubbles} and therefore is not hittable - bubbles
 	 *         just go through it until they hit an hittable {@code Bubble}.
 	 */
 	boolean isHittable();

@@ -1,5 +1,5 @@
 /**
- * The backend package contains the {@link Controller} and {@link Model} classes that provide the logic for the game
+ * The backend package contains the {@link nl.tudelft.ti2206.util.mvc.Controller} and {@link nl.tudelft.ti2206.util.mvc.View} classes that provide the logic for the game
  * 
  * @author Luka Bavdaz
  * @author Liam Clark

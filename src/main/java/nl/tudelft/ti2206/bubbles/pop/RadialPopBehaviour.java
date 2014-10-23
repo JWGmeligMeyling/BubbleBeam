@@ -7,7 +7,7 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import com.google.common.collect.Sets;
 
 /**
- * The RadialPopBehaviour is a {@link PopBehaviour} that causes {@link Bubbles} in a
+ * The RadialPopBehaviour is a {@link PopBehaviour} that causes {@link Bubble Bubbles} in a
  * certain radius from the target {@code Bubble} to pop.
  * 
  * @author Jan-Willem Gmelig Meyling

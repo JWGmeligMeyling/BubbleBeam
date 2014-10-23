@@ -138,11 +138,6 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 		this.setChanged();
 	}
 
-	public void setBubbleMesh(BubbleMesh bubbleMesh) {
-		this.bubbleMesh.replace(bubbleMesh);
-		this.setChanged();
-	}
-
 	@Override
 	public void addEventListener(GameListener listener) {
 		eventTarget.addEventListener(listener);

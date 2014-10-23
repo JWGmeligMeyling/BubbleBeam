@@ -1,6 +1,8 @@
 package nl.tudelft.ti2206.game.backend;
 
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
+import nl.tudelft.ti2206.game.event.GameListener.GameEvent;
 
 /**
  * The {@code GameControllerBubbleMeshListener} listens for events on the
@@ -23,6 +25,8 @@ public class GameControllerBubbleMeshListener implements BubbleMeshListener {
 	 * {@link GameController}
 	 * 
 	 * @param gameModel
+	 *            {@code GameModel} for this
+	 *            {@code GameControllerBubbleMeshListener}
 	 */
 	public GameControllerBubbleMeshListener(GameModel gameModel) {
 		this.gameModel = gameModel;

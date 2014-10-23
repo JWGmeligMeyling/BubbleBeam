@@ -62,7 +62,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 			.addEventListener(new GameControllerCannonListener(this));
 		
 		model.getBubbleMesh()
-			.getEventTarget()
 			.addEventListener(new GameControllerBubbleMeshListener(model));
 	}
 	
@@ -90,7 +89,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	/**
 	 * Bind a {@link GameTick} to this {@code GameController}
-	 * @param gameTick
+	 * @param gameTick The {@link GameTick} for this {@code GameController}
 	 */
 	public void bindGameTick(GameTick gameTick) {
 		// Store the gameTick so we can unbind after game over
@@ -220,7 +219,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	/**
 	 * Trigger {@code GameOver} on this {@code GameController}
-	 * @param win
+	 * @param gameOver {@link GameOver} exception that was thrown
 	 */
 	public void gameOver(GameOver gameOver) {
 		if(model.isGameOver()) return;
@@ -283,6 +282,14 @@ public class GameController implements Controller<GameModel>, Tickable {
 		return bubble;
 	}
 	
+	/**
+	 * Increment the score for the {@code GameController}. This first updates
+	 * the {@link GameModel} and then triggers a {@code ScoreEvent} on the
+	 * {@link GameListener GameListeners}.
+	 * 
+	 * @param amount
+	 *            Amount of points awarded to the player
+	 */
 	public void incrementScore(int amount) {
 		model.incrementScore(amount);
 		model.notifyObservers();
@@ -292,13 +299,21 @@ public class GameController implements Controller<GameModel>, Tickable {
 	
 	/**
 	 * Bind a connector for multiplayer
+	 * 
 	 * @param connector
+	 *            {@link Connector} to bind to this {@code GameController}
 	 */
 	public void bindConnectorAsMaster(final Connector connector) {
 		log.info("Binding {} to connector {}", this, connector);
 		model.addEventListener(new ConnectorGameListener(connector));
 	}
 	
+	/**
+	 * Bind a connector for multiplayer
+	 * 
+	 * @param connector
+	 *            {@link Connector} to bind to this {@code GameController}
+	 */
 	public void bindConnectorAsSlave(final Connector connector) {
 		connector.addEventListener(new SlaveGamePacketListener(this, cannonController));
 	}

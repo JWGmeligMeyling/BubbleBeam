@@ -14,7 +14,9 @@ import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.Direction;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
+import nl.tudelft.util.AbstractEventTarget;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,7 @@ import com.google.common.collect.Sets;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class BubbleMeshImpl implements BubbleMesh {
+public class BubbleMeshImpl extends AbstractEventTarget<BubbleMeshListener> implements BubbleMesh {
 	
 	private static final long serialVersionUID = -2580249152755739807L;
 	private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
@@ -39,15 +41,19 @@ public class BubbleMeshImpl implements BubbleMesh {
 	protected Bubble topLeftBubble;
 	protected Bubble bottomLeftBubble;
 	protected final Point position = new Point(0,0);
-	protected transient BubbleMeshEventTarget eventTarget = new BubbleMeshEventTarget();
 	
 	private Point lastUpdatePosition = new Point(0,0);
 	private int bubbleHeight = 22;
 	
 	/**
 	 * Construct a new BubbleMesh
+	 * 
 	 * @param topLeftBubble
+	 *            The topleft {@code Bubble}
 	 * @param bottomLeftBubble
+	 *            The bottomleft {@code Bubble}
+	 * @param rowWidth
+	 *            the width of this mesh
 	 */
 	public BubbleMeshImpl(final Bubble topLeftBubble, final Bubble bottomLeftBubble, final int rowWidth) {
 		super();
@@ -105,7 +111,9 @@ public class BubbleMeshImpl implements BubbleMesh {
 			});
 			
 			target.popHook();
-			eventTarget.pop(new BubblePopEvent(this, bubblesToPop));
+
+			final BubblePopEvent event = new BubblePopEvent(this, bubblesToPop);
+			listeners.forEach(listener -> listener.pop(event));
 			return true;
 		}
 		
@@ -256,8 +264,8 @@ public class BubbleMeshImpl implements BubbleMesh {
 		
 		List<Bubble> insertedBubbles = Lists.newArrayList(topLeftBubble.traverse(
 				Direction.RIGHT).iterator());
-		eventTarget.rowInsert(new RowInsertEvent(this, insertedBubbles));
-		
+		final RowInsertEvent event = new RowInsertEvent(this, insertedBubbles);
+		listeners.forEach(listener -> listener.rowInsert(event));
 		
 		log.info("Finished inserting row");
 	}
@@ -354,17 +362,6 @@ public class BubbleMeshImpl implements BubbleMesh {
 	}
 
 	@Override
-	public void replace(BubbleMesh bubbleMesh) {
-		this.topLeftBubble = bubbleMesh.getTopLeftBubble();
-		this.bottomLeftBubble = bubbleMesh.getBottomLeftBubble();
-	}
-	
-	@Override
-	public BubbleMeshEventTarget getEventTarget() {
-		return eventTarget;
-	}
-
-	@Override
 	public Bubble getTopLeftBubble() {
 		return topLeftBubble;
 	}
@@ -415,7 +412,7 @@ public class BubbleMeshImpl implements BubbleMesh {
 	
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        eventTarget = new BubbleMeshEventTarget();
+        listeners = Sets.newHashSet();
     }
 
 }

@@ -8,7 +8,7 @@ import com.google.common.collect.Sets;
 
 public class AbstractEventTarget<T extends EventListener> implements EventTarget<T> {
 	
-	protected Set<T> listeners = Sets.newHashSet();
+	protected transient Set<T> listeners = Sets.newHashSet();
 
 	@Override
 	public void addEventListener(T listener) {

@@ -20,7 +20,7 @@ public interface LoggerFactory {
 	}
 
 	/**
-	 * @param name
+	 * @param name Name for this logger
 	 * @return a {@link Logger} with a given name passed as parameter
 	 */
 	static Logger getLogger(String name) {

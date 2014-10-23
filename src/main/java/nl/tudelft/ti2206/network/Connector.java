@@ -35,8 +35,8 @@ public class Connector extends AbstractEventTarget<PacketListener> implements
 	
 	/**
 	 * Construct a new Connector
-	 * @param socket
-	 * @throws IOException
+	 * @param socket {@link Socket} for this {@code Connector}
+	 * @throws IOException Any exception thrown by the underlying strems.
 	 */
 	public Connector(final Socket socket) throws IOException {
 		this.socket = socket;
@@ -92,8 +92,7 @@ public class Connector extends AbstractEventTarget<PacketListener> implements
 	/**
 	 * Send a packet over the DataOutputStream.
 	 * 
-	 * @param packet
-	 * @throws IOException 
+	 * @param packet {@link Packet} to send
 	 */
 	public void sendPacket(final Packet packet)  {
 		try {

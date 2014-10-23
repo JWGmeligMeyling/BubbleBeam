@@ -16,8 +16,9 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
-import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.graphics.Sprite;
+import nl.tudelft.util.EventTarget;
 
 import com.google.common.collect.Lists;
 
@@ -26,16 +27,14 @@ import com.google.common.collect.Lists;
  *  
  * @author Jan-Willem Gmelig Meyling
  */
-public interface BubbleMesh extends Iterable<Bubble>, Sprite, Serializable {
+public interface BubbleMesh extends Iterable<Bubble>, Sprite, Serializable, EventTarget<BubbleMeshListener> {
 	
 	default Stream<Bubble> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}
 	
 	/**
-	 * Pop this bubble and it's neighbors recursively. If bubbles pop, the
-	 * amount of points is calculated and {@link ScoreListener ScoreListeners}
-	 * listening to this {@code BubbleMesh} will be notified.
+	 * Pop this bubble and it's neighbors recursively.
 	 * 
 	 * @param target
 	 *            {@code Bubble} to start popping at
@@ -96,9 +95,6 @@ public interface BubbleMesh extends Iterable<Bubble>, Sprite, Serializable {
 	 */
 	void replaceBubble(Bubble original, Bubble replacement);
 	
-	BubbleMeshEventTarget getEventTarget();
-	
-
 	/**
 	 * Check if a {@code Bubble} is at the top row
 	 * 
@@ -117,17 +113,6 @@ public interface BubbleMesh extends Iterable<Bubble>, Sprite, Serializable {
 	 * @return true if the {@code BubbleMesh} is empty
 	 */
 	boolean isEmpty();
-
-	/**
-	 * Replace the {@code BubbleMesh} with another one
-	 * 
-	 * @param bubbleMesh
-	 *            {@code BubbleMesh} to replace this {@code BubbleMesh} with,
-	 *            taking into account the {@link ScoreListener ScoreListeners}
-	 *            bound to this {@code BubbleMesh}
-	 * @see GameModel#setBubbleMesh(BubbleMesh)
-	 */
-	void replace(BubbleMesh bubbleMesh);
 
 	/**
 	 * @return the top left {@link Bubble} in the mesh

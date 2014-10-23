@@ -25,7 +25,7 @@ public interface Highscore extends Serializable {
 	/**
 	 * Get the highscores for a specific {@link GameMode}. An immutable copy of
 	 * the set is returned, since new {@code ScoreItems} should be inserted through
-	 * {@link Highscore#addScore(Class, ScoreItem)}.
+	 * {@link #addScore(Class, HighscoreItem)}.
 	 * 
 	 * @param gameMode
 	 *            {@code GameMode} for which to seek {@code Highscores}
@@ -35,8 +35,8 @@ public interface Highscore extends Serializable {
 	
 	/**
 	 * Add a Highscore to the 
-	 * @param gameMode
-	 * @param scoreItem
+	 * @param gameMode {@link GameMode} for the {@code HighscoreItem}
+	 * @param scoreItem {@link HighscoreItem} to be stored
 	 */
 	void addScore(Class<? extends GameMode> gameMode, HighscoreItem scoreItem);
 	
@@ -56,7 +56,6 @@ public interface Highscore extends Serializable {
 	void read();
 	
 	/**
-	 * Get the {@link Highscores}
 	 * @return the highscores
 	 */
 	static Highscore getHighscores() {

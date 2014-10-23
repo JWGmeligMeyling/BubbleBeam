@@ -13,10 +13,13 @@ import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
 import nl.tudelft.ti2206.game.event.CannonListener.CannonRotateEvent;
 import nl.tudelft.ti2206.game.event.CannonListener.CannonShootEvent;
+import nl.tudelft.ti2206.game.event.GameListener.GameEvent;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
 import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
+import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.packets.GameModelPacket;
+import nl.tudelft.ti2206.network.packets.Packet;
 import nl.tudelft.ti2206.network.packets.PacketListener;
 
 /**
@@ -42,7 +45,9 @@ public class SlaveGamePacketListener implements PacketListener {
 	 * GameEvents} on the corresponding {@link GameController}.
 	 * 
 	 * @param slaveGameController
+	 *            {@link GameController} for the slave panel
 	 * @param slaveCannonController
+	 *            {@link CannonController} for the slave panel
 	 */
 	public SlaveGamePacketListener(GameController slaveGameController, CannonController slaveCannonController) {
 		this.gameController = slaveGameController;

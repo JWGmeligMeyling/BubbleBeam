@@ -5,7 +5,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 /**
- * Basic {@code Sprite}
+ * The {@code Sprite} interface describes that an object can be rendered on to
+ * the screen, and therefore has a position and a {@link Dimension}.
  * 
  * @author Jan-Willem Gmelig Meyling
  */
@@ -13,20 +14,27 @@ public interface Sprite {
 	
 	/**
 	 * Render this {@code Sprite}
+	 * 
 	 * @param graphics
+	 *            {@link Graphics} instance to paint this {@code Sprite} on
 	 */
 	void render(Graphics graphics);	
 	
 	/**
 	 * Set the position for this {@code Sprite}
+	 * 
 	 * @param position
+	 *            {@link Point} for this position
 	 */
 	void setPosition(Point position);
 	
 	/**
 	 * Translate this sprite
+	 * 
 	 * @param dx
+	 *            the distance to move this point along the X axis
 	 * @param dy
+	 *            the distance to move this point along the Y axis
 	 */
 	void translate(int dx, int dy);
 	

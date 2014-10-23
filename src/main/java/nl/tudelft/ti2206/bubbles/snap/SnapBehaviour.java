@@ -22,9 +22,10 @@ public interface SnapBehaviour extends Serializable {
 	
 	/**
 	 * If a {@link MovingBubble} hits this {@code Bubble}, it should snap to the
-	 * given {@link BubblePlaceHolder}.
+	 * given {@link BubblePlaceholder}.
 	 * 
-	 * @param b
+	 * @param bubble
+	 *            {@link Bubble} that the {@code MovingBubble} collided with
 	 * @return The {@code BubblePlaceHolder} at which the {@code MovingBubble}
 	 *         should snap
 	 */

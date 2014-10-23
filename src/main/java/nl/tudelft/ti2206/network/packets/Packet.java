@@ -18,9 +18,6 @@ import org.slf4j.LoggerFactory;
  * interface to listen with and a {@link PacketHandler} class to register the
  * listeners and notify to from the packet.
  * 
- * Each Packet should have an unique PACKET_ID which should be used to recognise
- * the packet as raw data in the {@link PacketFactory}.
- * 
  * @author Sam Smulders
  * @author Jan-Willem Gmelig Meyling
  */
@@ -28,13 +25,17 @@ public interface Packet extends Serializable {
 	
 	static final Logger log = LoggerFactory.getLogger(Packet.class);
 	
+	/**
+	 * Write a packet to the stream
+	 * 
+	 * @param outputStream
+	 *            {@link ObjectOutputStream} to write this {@code Packet} to
+	 * @throws IOException
+	 *             Any exception thrown by the underlying OutputStream
+	 */
 	default void write(final ObjectOutputStream outputStream) throws IOException {
 		try {
 			synchronized(outputStream) {
-//				TODO This was required in order to sync bubblemeshes properly
-//				which hopefully isn't required anymore now we're able to send
-//				inserted rows
-//				outputStream.reset();
 				outputStream.writeObject(this);
 			}
 		} catch (Throwable t) {
@@ -42,6 +43,17 @@ public interface Packet extends Serializable {
 		}
 	}
 	
+	/**
+	 * Read a {@link Packet} from an {@link ObjectInputStream}
+	 * 
+	 * @param inputStream
+	 *            {@code ObjectInputStream} to read from
+	 * @return the {@code Packet} read
+	 * @throws ClassNotFoundException
+	 *             If the object from the stream could not be deserialized
+	 * @throws IOException
+	 *             Any exception thrown by the underlying InputStream
+	 */
 	static Packet read(final ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
 		synchronized(inputStream) {
 			return (Packet) inputStream.readObject();

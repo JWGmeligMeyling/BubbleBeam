@@ -27,7 +27,7 @@ public class ConnectorGameListener implements GameListener {
 	 * GameEvents} triggered by the {@link GameController} and sends them over
 	 * the {@link Connector}
 	 * 
-	 * @param connector
+	 * @param connector {@code Connector} for this {@code ConnectorGameListener}
 	 */
 	public ConnectorGameListener(Connector connector) {
 		this.connector = connector;

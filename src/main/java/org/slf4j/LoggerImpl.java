@@ -15,7 +15,7 @@ public class LoggerImpl implements Logger {
 	
 	/**
 	 * Construct a new {@code LoggerImpl}
-	 * @param name
+	 * @param name Name for this logger
 	 */
 	public LoggerImpl(String name) {
 		super();

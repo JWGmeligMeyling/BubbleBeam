@@ -17,6 +17,7 @@ public interface BubbleFactory {
 	 * Create a new {@link Bubble} according to the set of remaining colors
 	 * 
 	 * @param remainingColors
+	 *            Set of remaining colors in the mesh
 	 * @return a new {@link Bubble}
 	 */
 	Bubble createBubble(Set<Color> remainingColors);

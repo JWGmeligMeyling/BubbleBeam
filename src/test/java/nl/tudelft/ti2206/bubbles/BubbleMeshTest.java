@@ -204,17 +204,6 @@ public class BubbleMeshTest {
 	}
 	
 	@Test
-	public void testReplace() {
-		BubbleMeshImpl bubbleMesh = new BubbleMeshParser(Lists.newArrayList(
-				"          ", "          ")).parse();
-		BubbleMeshImpl other = spy(new BubbleMeshParser(
-				Lists.newArrayList("rrbgggbbb ", "          ")).parse());
-		bubbleMesh.replace(other);
-		verify(other).getBottomLeftBubble();
-		verify(other).getTopLeftBubble();
-	}
-	
-	@Test
 	public void testRender() {
 		Bubble a = spy(new AbstractBubble());
 		Bubble b = spy(new AbstractBubble());

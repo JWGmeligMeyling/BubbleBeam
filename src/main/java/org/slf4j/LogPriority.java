@@ -1,7 +1,7 @@
 package org.slf4j;
 
 /**
- * Priority for the {@link LogEvent}
+ * Priority for the {@link LogLine}
  * 
  * @author Jan-Willem Gmelig Meyling
  */

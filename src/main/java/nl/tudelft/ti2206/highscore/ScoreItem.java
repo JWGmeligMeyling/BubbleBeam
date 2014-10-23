@@ -48,8 +48,6 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	 * 
 	 * @param gameModel
 	 *            {@code GameModel} for this {@code ScoreItem}
-	 * @param name
-	 *            Player name
 	 * @return new {@code ScoreItem}
 	 */
 	public static ScoreItem createScoreItem(GameModel gameModel) {

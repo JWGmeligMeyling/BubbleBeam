@@ -19,9 +19,9 @@ import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 /**
  * The {@code BombBubble} is a {@link Bubble} that explodes on impact, popping
  * bubbles in a radius of {@code POP_RADIUS}. {@code BombBubble} implements the
- * {@link Decorator} class and is considered a 'powerup' bubble.
+ * {@link DecoratedBubble} class and is considered a 'powerup' bubble.
  * 
- * @author leon
+ * @author Leon Hoek
  */
 public class BombBubble extends DecoratedBubble {
 	
@@ -36,10 +36,19 @@ public class BombBubble extends DecoratedBubble {
 	
 	protected boolean collided = false;
 	
+	/**
+	 * Construct a new {@code BombBubble}
+	 */
 	public BombBubble() {
 		this(new AbstractBubble());
 	}
 	
+	/**
+	 * Construct a new {@code BombBubble}
+	 * 
+	 * @param bubble
+	 *            Decorate the {@code BombBubble} with another {@code Bubble}
+	 */
 	public BombBubble(Bubble bubble) {
 		super(new PopSoundBubble(BOMB_SOUND, bubble));
 		popBehaviour = new RadialPopBehaviour(POP_RADIUS);

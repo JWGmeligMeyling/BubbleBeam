@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * GameTick notifies its observers every {@link framePeriod} milliseconds.
+ * GameTick notifies its observers every framePeriod milliseconds
  * 
  * @author Sam Smulders
  * @author Jan-Willem Gmelig Meyling

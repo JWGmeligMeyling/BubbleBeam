@@ -13,8 +13,8 @@ import nl.tudelft.util.Vector2f;
 /**
  * The {@code DrunkBubble} is a {@link Bubble} that veers off his normal course
  * while it moves and instead goes slightly to either left or right.
- * {@code DrunkBubble} is a {@link Decorator} class and is considered a
- * 'powerup' bubble.
+ * {@code DrunkBubble} is a {@link DecoratedBubble} class and is considered a
+ * Power-up bubble.
  * 
  * @author Luka Bavdaz
  */
