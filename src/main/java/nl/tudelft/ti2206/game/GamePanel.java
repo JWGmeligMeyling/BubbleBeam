@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -23,10 +22,8 @@ import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
-import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.util.mvc.View;
-import nl.tudelft.util.ObservableObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +56,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected final GameController gameController;
 	protected final Cannon cannon;
 	protected final Dimension size = new Dimension(WIDTH, HEIGHT);
-	protected ObservableObject<Long> score = new ObservableObject<Long>(0l);
 	
 	protected transient static BufferedImage gameOver = getGameOverImage();
 	protected transient static Image gameWon = getGameWonImage();
@@ -72,12 +68,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		this.cannon = new Cannon(gameController.getCannonController(), CANNONPOSITION);
 		
 		positionAmmoBubbles();
-		
-		gameController.getModel().addEventListener(GameListener.ScoreListener.class, (scoreEvent) -> {
-			int amount = scoreEvent.getAmountOfPoints();
-			log.info("Awarded {} points", amount);
-			setScore(getScore() + amount);
-		});
 		
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.setVisible(true);
@@ -194,18 +184,6 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	@Override
 	public int getHeight() {
 		return size.height;
-	}
-	
-	public long getScore() {
-		return score.getValue();
-	}
-	
-	public void setScore(final long value) {
-		score.setValue(value);
-	}
-	
-	public void observeScore(final Observer o) {
-		score.addObserver(o);
 	}
 	
 	@Override

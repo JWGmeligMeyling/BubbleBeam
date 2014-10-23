@@ -25,7 +25,7 @@ import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.GameModelPacket;
+import nl.tudelft.ti2206.network.GameModelPacket;
 
 public class RestartMultiplayerAction extends AbstractAction {
 	

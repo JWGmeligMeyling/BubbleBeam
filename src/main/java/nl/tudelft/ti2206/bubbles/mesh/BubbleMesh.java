@@ -14,8 +14,8 @@ import java.util.stream.StreamSupport;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.graphics.Sprite;
 import nl.tudelft.util.EventTarget;

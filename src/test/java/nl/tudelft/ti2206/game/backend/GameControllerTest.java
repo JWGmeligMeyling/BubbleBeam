@@ -16,11 +16,10 @@ import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.game.event.CannonListener.*;
 import nl.tudelft.ti2206.cannon.CannonModel;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.network.PacketListener;
 import nl.tudelft.util.Vector2f;
 
 import org.hamcrest.Matchers;

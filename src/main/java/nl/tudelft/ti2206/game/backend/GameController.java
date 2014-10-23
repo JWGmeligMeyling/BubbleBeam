@@ -12,7 +12,6 @@ import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonShootState;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.util.mvc.Controller;
@@ -26,6 +25,12 @@ import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
 import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
 
+/**
+ * The {@link GameController} is responsible for generic game logic
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public class GameController implements Controller<GameModel>, Tickable {
 	
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
@@ -38,11 +43,29 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final boolean intelligent;
 	
 	protected GameTick gameTick;
-
+	
+	/**
+	 * Construct a new {@link GameController}
+	 * 
+	 * @param model
+	 *            {@link GameModel} to use with the controller
+	 * @param cannonController
+	 *            {@link CannonController} to use with the controller
+	 */
 	public GameController(final GameModel model, final CannonController cannonController) {
 		this(model, cannonController, false);
 	}
 	
+	/**
+	 * Construct a new {@link GameController}
+	 * 
+	 * @param model
+	 *            {@link GameModel} to use with the controller
+	 * @param cannonController
+	 *            {@link CannonController} to use with the controller
+	 * @param intelligent
+	 *            false if we want to disable logic
+	 */
 	public GameController(final GameModel model, final CannonController cannonController,
 			boolean intelligent) {
 
@@ -291,6 +314,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 *            Amount of points awarded to the player
 	 */
 	public void incrementScore(int amount) {
+		log.info("Awarded {} points", amount);
 		model.incrementScore(amount);
 		model.notifyObservers();
 		GameListener.ScoreEvent event = new GameListener.ScoreEvent(this, amount);

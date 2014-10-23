@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.network.packets;
+package nl.tudelft.ti2206.network;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -135,6 +135,12 @@ public interface PacketListener extends EventListener {
 	
 	default void disconnect() {};
 	
+	/**
+	 * Listener for {@link GameModelPacketListener GameModelPacketListeners}
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 *
+	 */
 	@FunctionalInterface
 	interface GameModelPacketListener extends PacketListener {
 		@Override default void handleCannonRotate(CannonRotateEvent event) {}
@@ -147,6 +153,11 @@ public interface PacketListener extends EventListener {
 		@Override default void handleAmmoLoad(AmmoLoadEvent event) {}
 	}
 	
+	/**
+	 * Listener for {@link BubblePopEvent BubblePopEvents}
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 */
 	@FunctionalInterface
 	interface BubblePopListener extends PacketListener {
 		@Override default void handleCannonRotate(CannonRotateEvent event) {}

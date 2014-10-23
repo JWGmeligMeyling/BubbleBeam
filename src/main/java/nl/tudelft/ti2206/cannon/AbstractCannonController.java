@@ -3,15 +3,31 @@ package nl.tudelft.ti2206.cannon;
 import nl.tudelft.util.Vector2f;
 import nl.tudelft.ti2206.game.event.CannonListener.*;
 
+/**
+ * The {@link AbstractCannonController} provides a basic implementation for
+ * {@link CannonController}
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public class AbstractCannonController implements CannonController {
 
 	protected final CannonModel model;
 	
+	/**
+	 * Construct a new {@link AbstractCannonController}
+	 */
 	public AbstractCannonController() {
 		this(new CannonModel());
 		this.load();
 	}
 	
+	/**
+	 * Construct a new {@link AbstractCannonController}
+	 * 
+	 * @param cannonModel
+	 *            {@link CannonModel} to use with this {@link CannonController}
+	 */
 	public AbstractCannonController(final CannonModel cannonModel) {
 		super();
 		this.model = cannonModel;

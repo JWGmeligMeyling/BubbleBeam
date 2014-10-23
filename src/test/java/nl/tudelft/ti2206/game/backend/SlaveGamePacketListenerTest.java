@@ -7,7 +7,6 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonModel;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.game.event.CannonListener;
 import nl.tudelft.ti2206.game.event.GameListener;

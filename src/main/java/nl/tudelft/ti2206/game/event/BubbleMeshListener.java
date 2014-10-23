@@ -5,17 +5,39 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.Set;
 
+import javax.imageio.plugins.bmp.BMPImageWriteParam;
+
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 
+/**
+ * A {@link BubbleMeshListener} listens for changes to the {@link BubbleMesh}
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public interface BubbleMeshListener extends EventListener {
-
+	
+	/**
+	 * Abstract base class for {@link BubbleMeshEvent BubbleMeshEvents}. Extends
+	 * {@link EventObject}, but forces to use a {@link BubbleMesh} as event
+	 * source.
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 *
+	 */
 	abstract class BubbleMeshEvent extends EventObject {
 
 		private static final long serialVersionUID = -7537897994655908360L;
 		
 		protected final transient BubbleMesh bubbleMesh;
-
+		
+		/**
+		 * Construct a new {@link BubbleMeshEvent}
+		 * 
+		 * @param bubbleMesh
+		 *            {@link BubbleMesh} for this {@link BubbleMeshEvent}
+		 */
 		protected BubbleMeshEvent(BubbleMesh bubbleMesh) {
 			super(bubbleMesh);
 			this.bubbleMesh = bubbleMesh;
@@ -28,12 +50,28 @@ public interface BubbleMeshListener extends EventListener {
 
 	}
 	
+	/**
+	 * The {@link RowInsertEvent} is triggered when a row gets inserted into the
+	 * {@link BMPImageWriteParam}
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 *
+	 */
 	class RowInsertEvent extends BubbleMeshEvent {
 		
 		private static final long serialVersionUID = 2696579104143658958L;
 		
 		protected final List<Bubble> insertedBubbles;
 		
+		/**
+		 * Construct a new {@link RowInsertEvent}
+		 * 
+		 * @param bubbleMesh
+		 *            {@link BubbleMesh} for this {@link BubbleMeshEvent}
+		 * @param insertedBubbles
+		 *            a list containing the {@link Bubble Bubbles} that have
+		 *            been inserted
+		 */
 		public RowInsertEvent(BubbleMesh bubbleMesh, List<Bubble> insertedBubbles) {
 			super(bubbleMesh);
 			this.insertedBubbles = insertedBubbles;
@@ -57,17 +95,36 @@ public interface BubbleMeshListener extends EventListener {
 	}
 	
 	/**
-	 * Invoked on this {@code BubbleMeshListener} when a {@link RowInsertEvent} occurred
-	 * @param event {@code RowInsertEvent}
+	 * Invoked on this {@code BubbleMeshListener} when a {@link RowInsertEvent}
+	 * occurred
+	 * 
+	 * @param event
+	 *            {@code RowInsertEvent}
 	 */
 	void rowInsert(RowInsertEvent event);
 	
+	/**
+	 * The {@link BubblePopEvent} is triggered when one or more {@link Bubble
+	 * Bubbles} pop in the {@link BubbleMesh}
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 *
+	 */
 	class BubblePopEvent extends BubbleMeshEvent {
 		
 		private static final long serialVersionUID = 5334939430531797593L;
 		
 		protected final Set<Bubble> bubblesPopped;
-
+		
+		/**
+		 * Construct a new {@link BubblePopEvent}
+		 * 
+		 * @param bubbleMesh
+		 *            {@link BubbleMesh} for this {@link BubbleMeshEvent}
+		 * @param bubblesPopped
+		 *            List containing the {@link Bubble Bubbles} that have
+		 *            popped
+		 */
 		public BubblePopEvent(BubbleMesh bubbleMesh, Set<Bubble> bubblesPopped) {
 			super(bubbleMesh);
 			this.bubblesPopped = bubblesPopped;

@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonModel;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
@@ -18,9 +17,9 @@ import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
 import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.GameModelPacket;
-import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.network.GameModelPacket;
+import nl.tudelft.ti2206.network.Packet;
+import nl.tudelft.ti2206.network.PacketListener;
 
 /**
  * The {@code SlaveGamePacketListener} listens for {@link Packet Packets} on the

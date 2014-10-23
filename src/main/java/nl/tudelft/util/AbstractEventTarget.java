@@ -6,6 +6,13 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Sets;
 
+/**
+ * Implementation for {@link EventTarget}
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ * @param <T> {@link EventListener} type for this {@link EventTarget}
+ */
 public class AbstractEventTarget<T extends EventListener> implements EventTarget<T> {
 	
 	protected transient Set<T> listeners = Sets.newHashSet();

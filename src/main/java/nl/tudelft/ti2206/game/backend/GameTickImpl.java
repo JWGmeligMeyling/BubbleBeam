@@ -28,11 +28,25 @@ public class GameTickImpl implements GameTick {
 	
 	private boolean shutdownExecutor = false;
 	
+	/**
+	 * Construct a new {@link GameTickImpl}
+	 * 
+	 * @param framePeriod
+	 *            FramePeriod to use
+	 */
 	public GameTickImpl(final long framePeriod) {
 		this(framePeriod, Executors.newScheduledThreadPool(2));
 		shutdownExecutor = true;
 	}
 	
+	/**
+	 * Construct a new {@link GameTickImpl}
+	 * 
+	 * @param framePeriod
+	 *            frame period to use
+	 * @param scheduler
+	 *            {@link ScheduledExecutorService} to use
+	 */
 	public GameTickImpl(final long framePeriod, final ScheduledExecutorService scheduler) {
 		this.scheduler = scheduler;
 		this.feature = scheduler.scheduleAtFixedRate(() -> {

@@ -1,6 +1,5 @@
-package nl.tudelft.ti2206.exception;
+package nl.tudelft.ti2206.game.backend;
 
-import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 
 /**

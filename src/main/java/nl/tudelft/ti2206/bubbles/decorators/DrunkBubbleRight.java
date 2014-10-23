@@ -5,11 +5,19 @@ import java.awt.Graphics;
 import nl.tudelft.ti2206.bubbles.Bubble;
 
 /**
+ * Construct a {@link DrunkBubble} that moves to the right
+ * 
  * @author Luka Bavdaz
  */
 public class DrunkBubbleRight extends DrunkBubble {
 	private static final long serialVersionUID = -2286964640875125242L;
 	
+	/**
+	 * Construct a new {@link DrunkBubbleRight}
+	 * 
+	 * @param bubble
+	 *            {@link Bubble} to decorate
+	 */
 	public DrunkBubbleRight(Bubble bubble) {
 		super(bubble);
 		acceleration = DrunkBubble.ACCELERATION;

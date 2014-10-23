@@ -7,7 +7,17 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
+import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 
+/**
+ * The {@link ClassicBubbleFactory} is a {@link BubbleFactory} that creates
+ * {@link ColouredBubble ColouredBubbles} and is used by the
+ * {@link ClassicGameMode}
+ * 
+ * @author Leon Hoek
+ *
+ */
 public class ClassicBubbleFactory extends AbstractBubbleFactory {
 	
 	protected final Random RANDOM_GENERATOR = new Random();

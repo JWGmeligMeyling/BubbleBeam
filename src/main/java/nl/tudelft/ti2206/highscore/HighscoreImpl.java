@@ -37,10 +37,17 @@ public class HighscoreImpl implements Highscore {
 	
 	private final Map<Class<? extends GameMode>, SortedSet<HighscoreItem>> items;
 
+	/**
+	 * Construct a new highscore
+	 */
 	public HighscoreImpl() {
 		this(new File(TEMP_BIN, FILENAME), Maps.newHashMap());
 	}
 	
+	/**
+	 * Construct a new highscore
+	 * @param file file to use
+	 */
 	public HighscoreImpl(File file) {
 		this(file, Maps.newHashMap());
 	}

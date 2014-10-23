@@ -8,6 +8,12 @@ import java.util.Set;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 
+/**
+ * Base class for the {@link BubbleFactory BubbleFactories}
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public abstract class AbstractBubbleFactory implements BubbleFactory {
 	
 	protected final Random random = new Random();

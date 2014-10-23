@@ -6,6 +6,8 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.DecoratedBubble;
 
 /**
+ * The {@code}SoundBubble plays a sound once it is snaps
+ * 
  * @author Liam Clark
  * @author Leon Hoek
  */

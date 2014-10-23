@@ -3,7 +3,7 @@ package nl.tudelft.ti2206.cannon;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 
-import nl.tudelft.util.DefaultMouseClickListener;
+import nl.tudelft.util.MousePressedListener;
 import nl.tudelft.util.DefaultMouseMoveListener;
 import nl.tudelft.util.Vector2f;
 
@@ -36,7 +36,7 @@ public class MouseCannonController extends AbstractCannonController {
 			
 		});
 		
-		component.addMouseListener(new DefaultMouseClickListener() {
+		component.addMouseListener(new MousePressedListener() {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {

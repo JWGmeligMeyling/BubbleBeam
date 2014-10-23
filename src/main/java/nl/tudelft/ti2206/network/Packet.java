@@ -1,4 +1,4 @@
-package nl.tudelft.ti2206.network.packets;
+package nl.tudelft.ti2206.network;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

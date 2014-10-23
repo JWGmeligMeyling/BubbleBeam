@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.EventPacket;
+import nl.tudelft.ti2206.network.EventPacket;
 
 /**
  * The {@code ConnectorGameListener} listens for {@link GameEvent GameEvents}

@@ -7,10 +7,10 @@ import java.io.IOException;
 import javax.swing.JLabel;
 
 import nl.tudelft.ti2206.cannon.MouseCannonController;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.network.Connector;
-import nl.tudelft.ti2206.network.packets.PacketListener;
+import nl.tudelft.ti2206.network.PacketListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.GameListener.*;
 

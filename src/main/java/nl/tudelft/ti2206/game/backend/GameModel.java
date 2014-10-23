@@ -18,12 +18,18 @@ import com.google.common.collect.Sets;
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.game.GamePanel;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.util.AbstractEventTarget;
 import nl.tudelft.util.EventTarget;
-
 import nl.tudelft.ti2206.game.event.GameListener;
 
+/**
+ * The {@link GameModel} is the model for the {@link GameController} and {@link GamePanel}
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public class GameModel extends Observable implements EventTarget<GameListener>, Serializable {
 	
 	private static final long serialVersionUID = 7372457527680874284L;

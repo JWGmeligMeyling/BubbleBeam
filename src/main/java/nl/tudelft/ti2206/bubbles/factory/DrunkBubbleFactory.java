@@ -8,9 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.decorators.DrunkBubble;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
+import nl.tudelft.ti2206.game.backend.mode.DrunkGameMode;
 
+/**
+ * The {@link DrunkBubbleFactory} is a {@link BubbleFactory} that creates only
+ * {@link DrunkBubble DrunkBubbles} and is used for the {@link DrunkGameMode}
+ * 
+ * @author Leon Hoek
+ *
+ */
 public class DrunkBubbleFactory extends AbstractBubbleFactory {
 
 	private static final Logger log = LoggerFactory.getLogger(DrunkBubbleFactory.class);

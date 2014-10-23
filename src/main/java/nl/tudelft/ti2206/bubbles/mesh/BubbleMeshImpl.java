@@ -13,7 +13,7 @@ import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.Direction;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
-import nl.tudelft.ti2206.exception.GameOver;
+import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
 import nl.tudelft.util.AbstractEventTarget;

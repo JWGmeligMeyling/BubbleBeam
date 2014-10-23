@@ -16,8 +16,8 @@ import java.util.Iterator;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshParser;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.backend.GameController;
+import nl.tudelft.ti2206.game.backend.GameOver;
 
 import org.junit.Test;
 

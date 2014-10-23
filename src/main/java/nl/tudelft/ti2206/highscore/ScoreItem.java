@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 import nl.tudelft.ti2206.game.backend.GameModel;
 
+/**
+ * The {@code ScoreItem} contains a score and start and end timestamps
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 
 	/**
@@ -14,7 +20,17 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	protected final long score;
 	protected final long start;
 	protected final long end;
-
+	
+	/**
+	 * Construct a new {@link ScoreItem}
+	 * 
+	 * @param score
+	 *            Amount of points
+	 * @param start
+	 *            Current time millis when the game started
+	 * @param end
+	 *            Current time millis when the game ended
+	 */
 	public ScoreItem(final long score, final long start, final long end){
 		this.score = score;
 		this.start = start;

@@ -3,7 +3,14 @@ package nl.tudelft.util;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public interface DefaultMouseClickListener extends MouseListener {
+/**
+ * {@link MouseListener} for mouse pressed events
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
+@FunctionalInterface
+public interface MousePressedListener extends MouseListener {
 
 	@Override
 	default void mouseClicked(MouseEvent e) {};

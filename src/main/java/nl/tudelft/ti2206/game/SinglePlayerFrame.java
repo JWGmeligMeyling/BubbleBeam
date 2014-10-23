@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.cannon.MouseCannonController;
-import nl.tudelft.ti2206.exception.GameOver;
 import nl.tudelft.ti2206.game.actions.ExitAction;
 import nl.tudelft.ti2206.game.actions.FindMultiplayerAction;
 import nl.tudelft.ti2206.game.actions.HighscoreAction;
@@ -39,6 +38,7 @@ import nl.tudelft.ti2206.game.actions.RestartMultiplayerAction;
 import nl.tudelft.ti2206.game.actions.RestartSinglePlayerAction;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.backend.GameTick;
 import nl.tudelft.ti2206.game.backend.GameTickImpl;
 import nl.tudelft.ti2206.util.mvc.View;

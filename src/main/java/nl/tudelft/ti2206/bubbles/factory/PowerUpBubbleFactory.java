@@ -8,12 +8,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
+import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
 import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
 import nl.tudelft.ti2206.bubbles.decorators.StoneBubble;
+import nl.tudelft.ti2206.game.backend.mode.PowerupGameMode;
 
+/**
+ * The {@link PowerUpBubbleFactory} is a {@link BubbleFactory} that creates
+ * {@link ColouredBubble} and Power-up bubbles. It's used in the
+ * {@link PowerupGameMode}.
+ * 
+ * @author Jan-Willem Gmelig Meyling
+ *
+ */
 public class PowerUpBubbleFactory extends AbstractBubbleFactory {
 	
 	private static final Logger log = LoggerFactory.getLogger(PowerUpBubbleFactory.class);

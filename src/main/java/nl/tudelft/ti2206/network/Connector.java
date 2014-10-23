@@ -8,8 +8,6 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.ti2206.network.packets.Packet;
-import nl.tudelft.ti2206.network.packets.PacketListener;
 import nl.tudelft.util.AbstractEventTarget;
 
 /**
@@ -114,6 +112,10 @@ public class Connector extends AbstractEventTarget<PacketListener> implements
 		listeners.forEach(listener -> listener.handlePacket(packet));
 	}
 	
+	/**
+	 * Check if this connector is still connected
+	 * @return true if the connector is connected
+	 */
 	public boolean isReady() {
 		return open;
 	}
