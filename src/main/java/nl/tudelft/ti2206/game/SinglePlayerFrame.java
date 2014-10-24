@@ -6,16 +6,20 @@ import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -28,12 +32,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.text.MaskFormatter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.actions.ExitAction;
 import nl.tudelft.ti2206.game.actions.FindMultiplayerAction;
@@ -46,6 +47,9 @@ import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.backend.GameTick;
 import nl.tudelft.ti2206.game.backend.GameTickImpl;
 import nl.tudelft.ti2206.util.mvc.View;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SinglePlayerFrame extends JFrame implements
 		View<GameController, GameModel> {
@@ -60,9 +64,12 @@ public class SinglePlayerFrame extends JFrame implements
 	protected static final int FRAME_PERIOD = 1000 / FPS;
 	protected static final Insets NO_PADDING = new Insets(0, 0, 0, 0);
 	protected static final Insets PADDED = new Insets(10, 10, 10, 10);
+
 	
 	private final Color mainBackgroundColor = new Color(111,186,241);
 	private final Color mainborderColor = new Color(41,126,181);
+	private final int BUTTON_WIDTH = 353/2;
+	private final int BUTTON_HEIGHT = 91/2;
 	
 	private final AudioClip music;
 
@@ -213,22 +220,27 @@ public class SinglePlayerFrame extends JFrame implements
 	protected void fillExitButton(Container contentPane) {
 		JButton exit = new JButton(exitAction);
 		exit.setBackground(mainBackgroundColor);
-		exit.setOpaque(true);
+		exit.setIcon(getButtonImage("/exit_button.png"));
+		exit.setIconTextGap(0);
+		exit.setBorder(null);
+		exit.setMargin(NO_PADDING);
+		
+		//exit.setOpaque(true);
 		contentPane.add(exit, new GridBagConstraints(2, 1, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));
 	}
 
 	protected void fillRestartButton(Container contentPane) {
-		JButton exit = new JButton(restartSinglePlayer);
-		contentPane.add(exit, new GridBagConstraints(2, 2, 1, 1, 1d, 0d,
+		JButton restartSingle = new JButton(restartSinglePlayer);
+		contentPane.add(restartSingle, new GridBagConstraints(2, 2, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));
 	}
 
 	protected void fillRestartMultiplayer(Container contentPane) {
-		JButton exit = new JButton(restartMultiplayerAction);
-		contentPane.add(exit, new GridBagConstraints(2, 3, 1, 1, 1d, 0d,
+		JButton restartMulti = new JButton(restartMultiplayerAction);
+		contentPane.add(restartMulti, new GridBagConstraints(2, 3, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));
 	}
@@ -333,4 +345,14 @@ public class SinglePlayerFrame extends JFrame implements
 		return executor;
 	}
 
+	protected ImageIcon getButtonImage(String url) {
+		try {
+			BufferedImage scale = ImageIO.read(Cannon.class.getResourceAsStream(url));
+			scale.getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH);
+			ImageIcon out = new ImageIcon(scale);
+			return out;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
