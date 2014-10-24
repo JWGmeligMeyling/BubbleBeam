@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.game;
 
 import java.applet.AudioClip;
+import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -14,6 +15,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -25,6 +27,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import javax.swing.text.MaskFormatter;
 
 import org.slf4j.Logger;
@@ -56,6 +60,9 @@ public class SinglePlayerFrame extends JFrame implements
 	protected static final int FRAME_PERIOD = 1000 / FPS;
 	protected static final Insets NO_PADDING = new Insets(0, 0, 0, 0);
 	protected static final Insets PADDED = new Insets(10, 10, 10, 10);
+	
+	private final Color mainBackgroundColor = new Color(111,186,241);
+	private final Color mainborderColor = new Color(41,126,181);
 	
 	private final AudioClip music;
 
@@ -116,7 +123,10 @@ public class SinglePlayerFrame extends JFrame implements
 
 		gameController.getModel().addEventListener(new GameOverHighscore(this, gameController));
 
+		
+		
 		Container contentPane = this.getContentPane();
+		fillBackground(contentPane);
 		fillMenubar();
 		contentPane.setComponentOrientation(ORIENTATION);
 		contentPane.setLayout(new GridBagLayout());
@@ -125,6 +135,10 @@ public class SinglePlayerFrame extends JFrame implements
 	
 	private boolean sound = false;
 
+	protected void fillBackground(Container contentPane){
+		contentPane.setBackground(new Color(111,186,241));
+	}
+	
 	protected void fillMenubar() {
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("Settings");
@@ -184,6 +198,7 @@ public class SinglePlayerFrame extends JFrame implements
 	protected void fillGamePanel(Container contentPane) {
 		layerUI = new EffectsLayer();
 		JLayer<JComponent> jlayer = new JLayer<JComponent>(gamePanel, layerUI);
+		gamePanel.setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, mainBackgroundColor,mainborderColor));
 		contentPane.add(jlayer, new GridBagConstraints(0, 0, 1, 4, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.NONE, PADDED, 0,
 				0));
@@ -197,6 +212,8 @@ public class SinglePlayerFrame extends JFrame implements
 
 	protected void fillExitButton(Container contentPane) {
 		JButton exit = new JButton(exitAction);
+		exit.setBackground(mainBackgroundColor);
+		exit.setOpaque(true);
 		contentPane.add(exit, new GridBagConstraints(2, 1, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));
