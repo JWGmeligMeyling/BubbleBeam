@@ -2,9 +2,11 @@ package nl.tudelft.ti2206.game.backend.mode;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.io.IOException;
 import java.io.Serializable;
 
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.game.backend.Tickable;
 import nl.tudelft.ti2206.game.event.GameListener;
 
@@ -68,23 +70,18 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 	}
 	
 	/**
-	 * @return the map paths for this {@link GameMode}
+	 * 
+	 * @return an array of {@link BubbleMesh} files for this {@link GameMode}
 	 */
-	static String[] getMapsFor(Class<? extends GameMode> klasz) {
-		return klasz.getAnnotation(ModeMaps.class).value();
+	default String[] getMaps() {
+		return getClass().getAnnotation(ModeMaps.class).value();
 	}
-	
+
 	/**
-	 * @param currentMap
-	 *            the current map for the game
-	 * @return the next map path
+	 * @return the next {@link BubbleMesh} for this {@link GameMode}
+	 * @throws IOException
+	 *             If an I/O error occurs
 	 */
-	static String getNextMap(Class<? extends GameMode> klasz, String currentMap) {
-		String[] maps = getMapsFor(klasz);
-		int index = 0;
-		while(!maps[index++].equals(currentMap) && index < maps.length);
-		index %= maps.length;
-		return maps[index];
-	}
+	BubbleMesh nextMap() throws IOException;
 	
 }

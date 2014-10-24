@@ -53,7 +53,8 @@ public class GameControllerTest {
 		
 		cannonModel = spy(new CannonModel());
 
-		gameModel = spy(new GameModel(ClassicGameMode.class, bubbleMesh));
+		gameModel = spy(new GameModel(ClassicGameMode.class));
+		gameModel.setBubbleMesh(bubbleMesh);
 		gameListener = mock(GameListener.class);
 		gameModel.addEventListener(gameListener);
 		

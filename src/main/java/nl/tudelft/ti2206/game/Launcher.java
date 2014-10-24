@@ -1,11 +1,9 @@
 package nl.tudelft.ti2206.game;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.swing.JFrame;
 
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -27,13 +25,7 @@ public class Launcher {
 		
 		Class<? extends GameMode> gameMode = PowerupGameMode.class;
 		
-		String path = GameMode.getMapsFor(gameMode)[0];
-		InputStream inputstream = Launcher.class.getResourceAsStream(path);
-		BubbleMesh bubbleMesh = BubbleMesh.parse(inputstream);
-
-		GameModel gameModel = new GameModel(gameMode, bubbleMesh);
-		gameModel.setMapPath(path);
-		
+		GameModel gameModel = new GameModel(gameMode);
 		MouseCannonController masterCannonController = new MouseCannonController();
 		GameController gameController = new GameController(gameModel, masterCannonController);
 		

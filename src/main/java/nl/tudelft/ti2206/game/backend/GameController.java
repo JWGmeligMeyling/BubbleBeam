@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.game.backend;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Random;
@@ -51,8 +52,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 *            {@link GameModel} to use with the controller
 	 * @param cannonController
 	 *            {@link CannonController} to use with the controller
+	 * @throws IOException
+	 *             If an I/O error occurs
 	 */
-	public GameController(final GameModel model, final CannonController cannonController) {
+	public GameController(final GameModel model, final CannonController cannonController) throws IOException {
 		this(model, cannonController, false);
 	}
 	
@@ -65,27 +68,55 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 *            {@link CannonController} to use with the controller
 	 * @param intelligent
 	 *            false if we want to disable logic
+	 * @throws IOException
+	 *             If an I/O error occurs
 	 */
 	public GameController(final GameModel model, final CannonController cannonController,
-			boolean intelligent) {
+			boolean intelligent) throws IOException {
 
 		log.info("Contructed {} with {} and {}", this, model, cannonController);
 		
 		this.intelligent = intelligent;
 		this.model = model;
 		this.cannonController = cannonController;
+		
 		this.gameMode = constructGameMode();
-		this.model.addEventListener(gameMode);
-
-		model.getBubbleMesh().calculatePositions();
-		prepareAmmo();
+		
+		this.model
+			.addEventListener(gameMode);
 		
 		cannonController
 			.getModel()
 			.addEventListener(new GameControllerCannonListener(this));
 		
-		model.getBubbleMesh()
-			.addEventListener(new GameControllerBubbleMeshListener(model));
+		if(model.getBubbleMesh() != null) {
+			setBubbleMesh(model.getBubbleMesh());
+		}
+		else {
+			loadNextBubbleMesh();
+		}
+		
+		prepareAmmo();
+	}
+	
+	/**
+	 * Load the next {@link BubbleMesh} from the {@link GameMode}
+	 * @throws IOException If an I/O error occurs
+	 */
+	public void loadNextBubbleMesh() throws IOException {
+		BubbleMesh bubbleMesh = gameMode.nextMap();
+		setBubbleMesh(bubbleMesh);
+	}
+	
+	protected void setBubbleMesh(BubbleMesh bubbleMesh) {
+		bubbleMesh.calculatePositions();
+		bubbleMesh.addEventListener(new GameControllerBubbleMeshListener(model));
+		
+		model.setGameOver(false);
+		model.setWon(false);
+		model.setBubbleMesh(bubbleMesh);
+		
+		cannonController.load();
 	}
 	
 	protected GameMode constructGameMode() {
@@ -155,7 +186,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 		}
 		
 		try {
-			gameMode.gameTick();
+			if(!model.isGameOver()) {
+				gameMode.gameTick();
+			}
 		}
 		catch (GameOver e) {
 			gameOver(e);
@@ -229,8 +262,10 @@ public class GameController implements Controller<GameModel>, Tickable {
 			else if(bubbleMesh.isEmpty()){
 				throw new GameOver(true);
 			}
-
-			cannonController.load();
+			
+			if(!model.isGameOver())
+				cannonController.load();
+			
 		} catch (GameOver e) {
 			gameOver(e);
 		} finally {
@@ -253,8 +288,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 			log.info("Sorry dawg, the game is over");
 		
 		cannonController.setState(new CannonShootState());
-		if(gameTick != null) gameTick.removeObserver(this);
-		
 		model.setGameOver(true);
 		model.setWon(gameOver.isWin());
 		model.notifyObservers();
