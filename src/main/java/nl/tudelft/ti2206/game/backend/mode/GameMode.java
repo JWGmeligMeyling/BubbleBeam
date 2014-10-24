@@ -84,4 +84,9 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 	 */
 	BubbleMesh nextMap() throws IOException;
 	
+	/**
+	 * @return true if the {@link GameMode} has another map
+	 */
+	boolean hasNextMap();
+	
 }

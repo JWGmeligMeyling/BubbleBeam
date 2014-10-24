@@ -2,7 +2,6 @@ package nl.tudelft.ti2206.game;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 
 import javax.swing.JDialog;
 import javax.swing.JTextField;
@@ -42,16 +41,6 @@ public class GameOverHighscore implements GameOverEventListener {
 		
 		GameModel gameModel = gameController.getModel();
 		Class<? extends GameMode> gameMode = gameModel.getGameMode();
-		
-		if(gameModel.isWon()) {
-			try {
-				event.getSource().loadNextBubbleMesh();
-			}
-			catch (IOException e) {
-				log.warn("Failed to instantiate new level", e);
-			}
-			return;
-		}
 		
 		Highscore highscore = Highscore.getHighscores();
 		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameModel.getGameMode());

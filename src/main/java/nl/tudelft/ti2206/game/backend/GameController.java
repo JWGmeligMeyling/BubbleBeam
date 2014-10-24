@@ -291,6 +291,17 @@ public class GameController implements Controller<GameModel>, Tickable {
 		model.setGameOver(true);
 		model.setWon(gameOver.isWin());
 		model.notifyObservers();
+		
+		if(gameOver.isWin() && gameMode.hasNextMap()) {
+			try {
+				loadNextBubbleMesh();
+			}
+			catch (IOException e) {
+				log.warn("Failed to instantiate new level", e);
+			}
+			return;
+		}
+		
 		model.trigger(listener -> listener.gameOver(new GameOverEvent(this, gameOver)));
 	}
 	

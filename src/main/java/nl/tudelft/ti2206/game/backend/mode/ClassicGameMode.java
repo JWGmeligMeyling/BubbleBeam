@@ -35,7 +35,7 @@ public class ClassicGameMode implements GameMode {
 	
 	protected final GameController gameController;
 	protected final GameModel gameModel;
-	protected Iterator<String> mapIterator;
+	protected final Iterator<String> mapIterator;
 	
 	/**
 	 * In the {@code ClassicGameMode}, the {@link ClassicBubbleFactory} is used to
@@ -48,6 +48,7 @@ public class ClassicGameMode implements GameMode {
 	public ClassicGameMode(GameController gameController) {
 		this.gameController = gameController;
 		this.gameModel = gameController.getModel();
+		this.mapIterator = Arrays.asList(getMaps()).iterator();
 	}
 
 	@Override
@@ -66,10 +67,13 @@ public class ClassicGameMode implements GameMode {
 
 	@Override
 	public BubbleMesh nextMap() throws IOException {
-		if(mapIterator == null || !mapIterator.hasNext())
-			mapIterator = Arrays.asList(getMaps()).iterator();
 		String path = mapIterator.next();
 		return BubbleMesh.parse(ClassicGameMode.class.getResourceAsStream(path));
+	}
+	
+	@Override
+	public boolean hasNextMap() {
+		return mapIterator.hasNext();
 	}
 	
 }
