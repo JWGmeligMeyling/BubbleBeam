@@ -196,8 +196,8 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 		return new Vector2f(0f, 0f);
 	}
 
-	default FiniteAnimation getAnimation(Bubble bubble){
-		return new ShrinkAnimation(bubble);
+	default FiniteAnimation getAnimation(){
+		return new ShrinkAnimation(this);
 	}
 
 }
