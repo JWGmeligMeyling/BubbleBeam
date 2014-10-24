@@ -32,16 +32,14 @@ public class ConfettiAnimation extends FiniteAnimation {
 	protected float[] angle = new float[STRIP_SIZE];
 	protected float[] speed = new float[STRIP_SIZE];
 	
-	public Bubble bubble;
 	private Point position;
 	
 	public ConfettiAnimation(int maxTime, Bubble bubble) {
 		super(maxTime);
-		this.bubble = bubble;
 		Point pos = bubble.getPosition();
 		this.position = new Point(pos.x, pos.y);
-		this.position.translate(this.bubble.getRadius(), this.bubble.getRadius());
-		this.bubble.setPosition(new Point(0, 0));
+		this.position.translate(bubble.getRadius(), bubble.getRadius());
+		bubble.setPosition(new Point(0, 0));
 		for (int i = 0; i < STRIP_SIZE; i++) {
 			direction[i] = (float) (random.nextFloat() * Math.PI);
 			angle[i] = (float) (random.nextFloat() * Math.PI);
