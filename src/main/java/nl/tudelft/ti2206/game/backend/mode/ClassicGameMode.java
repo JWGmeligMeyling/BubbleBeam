@@ -19,6 +19,7 @@ import nl.tudelft.ti2206.game.backend.GameModel;
 @ModeName("Classic Mode")
 @ModeBubbleFactory(ClassicBubbleFactory.class)
 @ModeMusic("/classic_music.wav")
+@ModeMaps({"/board.txt"})
 public class ClassicGameMode implements GameMode {
 
 	private static final long serialVersionUID = -5322766009361290612L;

@@ -2,12 +2,21 @@ package nl.tudelft.ti2206.game;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableSortedSet;
 
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
+import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
@@ -17,6 +26,9 @@ import nl.tudelft.ti2206.highscore.HighscoreItem;
 import nl.tudelft.ti2206.highscore.ScoreItem;
 
 public class GameOverHighscore implements GameOverEventListener {
+	
+	private static final Logger log = LoggerFactory
+			.getLogger(GameOverHighscore.class);
 	
 	private final SinglePlayerFrame frame;
 	private final GameController gameController;
@@ -28,11 +40,21 @@ public class GameOverHighscore implements GameOverEventListener {
 	
 	@Override
 	public void gameOver(GameOverEvent event) {
+		//don't add scores for multiplayer
+		if(frame instanceof MultiplayerFrame) {
+			return;
+		}
+		
 		GameModel gameModel = gameController.getModel();
 		Class<? extends GameMode> gameMode = gameModel.getGameMode();
-		gameModel.setGameOver(true);
 		
-		if(frame instanceof MultiplayerFrame){		//don't add scores for multiplayer
+		if(gameModel.isWon()) {
+			try {
+				createNewGame(gameMode, gameModel);
+			}
+			catch (IOException e) {
+				log.warn("Failed to instantiate new level", e);
+			}
 			return;
 		}
 		
@@ -79,6 +101,28 @@ public class GameOverHighscore implements GameOverEventListener {
 
 	}
 	
+	protected void createNewGame(Class<? extends GameMode> gameMode, GameModel gameModel) throws IOException {
+		String path = GameMode.getNextMap(gameMode, gameModel.getMapPath());
+		InputStream inputstream = Launcher.class.getResourceAsStream(path);
+		BubbleMesh bubbleMesh = BubbleMesh.parse(inputstream);
+
+		GameModel newGameModel = new GameModel(gameMode, bubbleMesh);
+		newGameModel.incrementScore(gameModel.getScore());
+		MouseCannonController masterCannonController = new MouseCannonController();
+		GameController gameController = new GameController(newGameModel, masterCannonController);
+		SinglePlayerFrame newFrame = new SinglePlayerFrame(masterCannonController, gameController);
+		
+		newFrame.pack();
+		newFrame.setLocationRelativeTo(frame);
+		newFrame.setVisible(true);
+		newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		newFrame.getFindMultiplayerAction().setEnabled(true);
+		
+		SwingUtilities.invokeLater(() -> {
+			frame.dispose();
+		});
+	}
+
 	protected void showHighscorePopup(Highscore highscore, Class<? extends GameMode> gameMode) {
 		HighscorePopup popup = new HighscorePopup(highscore, gameMode);
 		popup.setModal(true);

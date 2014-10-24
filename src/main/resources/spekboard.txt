@@ -1,13 +1,17 @@
-    x     
-   xx     
-   xxx    
-   xx     
-    x     
-          
-          
-          
-          
-          
-          
-          
-          
+    xx        
+   xxx        
+   xxxx       
+   xxx        
+    xx        
+    x         
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              

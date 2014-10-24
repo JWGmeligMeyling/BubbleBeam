@@ -56,6 +56,8 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	
 	private final long start = System.currentTimeMillis();
 	
+	private String mapPath;
+	
 	private Dimension screenSize;
 	
 	public GameModel(final Class<? extends GameMode> gameMode, final BubbleMesh bubbleMesh) {
@@ -178,6 +180,14 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 
 	public long getStart() {
 		return start;
+	}
+
+	public void setMapPath(String path) {
+		this.mapPath = path;
+	}
+	
+	public String getMapPath() {
+		return mapPath;
 	}
 	
 }

@@ -93,9 +93,11 @@ public class SinglePlayerFrame extends JFrame implements
 		music = gameController.getGameMode().getMusic();
 		if(sound) music.loop();
 
-		scoreLabel = new JLabel("Score: 0");
-		getModel().addObserver((a, b) ->
-			scoreLabel.setText("Score: " + getModel().getScore()));
+		
+		GameModel model = getModel();
+		scoreLabel = new JLabel("Score: " + model.getScore());
+		model.addObserver((a, b) ->
+			scoreLabel.setText("Score: " + model.getScore()));
 
 		try {
 			MaskFormatter formatter = new MaskFormatter("###.###.###.###");

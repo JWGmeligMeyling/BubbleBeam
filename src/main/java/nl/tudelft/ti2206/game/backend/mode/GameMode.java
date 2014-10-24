@@ -67,4 +67,24 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 		return Applet.newAudioClip(GameMode.class.getResource(path));
 	}
 	
+	/**
+	 * @return the map paths for this {@link GameMode}
+	 */
+	static String[] getMapsFor(Class<? extends GameMode> klasz) {
+		return klasz.getAnnotation(ModeMaps.class).value();
+	}
+	
+	/**
+	 * @param currentMap
+	 *            the current map for the game
+	 * @return the next map path
+	 */
+	static String getNextMap(Class<? extends GameMode> klasz, String currentMap) {
+		String[] maps = getMapsFor(klasz);
+		int index = 0;
+		while(!maps[index++].equals(currentMap) && index < maps.length);
+		index %= maps.length;
+		return maps[index];
+	}
+	
 }

@@ -172,9 +172,6 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 *             if there already is a bubble being shot
 	 */
 	protected void shoot(final Vector2f direction) {
-		
-		direction.normalise();
-		
 		if (model.isShooting()) {
 			throw new IllegalStateException("Wait for another shoot");
 		}

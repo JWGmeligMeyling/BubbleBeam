@@ -18,6 +18,7 @@ import nl.tudelft.ti2206.game.backend.GameController;
 @ModeName("Power-up Mode")
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
 @ModeMusic("/power_music.wav")
+@ModeMaps({"/smallboard.txt", "/spekboard.txt"})
 public class PowerupGameMode extends ClassicGameMode {
 
 	private static final long serialVersionUID = -2215681432174695925L;
