@@ -21,7 +21,7 @@ public class CannonModel extends Observable implements EventTarget<CannonListene
 	
 	private CannonState cannonState = new CannonShootState();
 	private double angle = Math.PI / 2;
-	private Vector2f direction = new Vector2f(0f, 0f);
+	private Vector2f direction = new Vector2f(0f, -1f);
 	
 	public Vector2f getDirection() {
 		return direction;
