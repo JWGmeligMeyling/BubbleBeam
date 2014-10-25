@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
-import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
@@ -138,7 +137,18 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected static BufferedImage getGameOverImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(BombBubble.class
+			BufferedImage scaledImage = ImageIO.read(GamePanel.class
+					.getResourceAsStream("/gameover.jpg"));
+			scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+			return scaledImage;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	protected static BufferedImage getGameLostImage() {
+		try {
+			BufferedImage scaledImage = ImageIO.read(GamePanel.class
 					.getResourceAsStream("/gamelost.png"));
 			scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			return scaledImage;
@@ -149,7 +159,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected static Image getGameWonImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(BombBubble.class
+			BufferedImage scaledImage = ImageIO.read(GamePanel.class
 					.getResourceAsStream("/gamewon.png"));
 			return scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			
