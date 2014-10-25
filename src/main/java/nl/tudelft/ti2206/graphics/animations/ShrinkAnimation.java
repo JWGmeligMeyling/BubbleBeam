@@ -13,28 +13,39 @@ import nl.tudelft.ti2206.bubbles.Bubble;
  * @author Sam Smulders
  */
 public class ShrinkAnimation extends FiniteAnimation {
-	protected Bubble bubble;
-	protected Point position;
+	
+	protected final Bubble bubble;
+	protected final Point position;
+	protected final int width, height;
 	
 	public ShrinkAnimation(Bubble bubble) {
 		super(bubble.getRadius());
-		this.bubble = bubble;
 		Point pos = bubble.getPosition();
-		this.position = new Point(pos.x, pos.y);
-		this.position.translate(this.bubble.getRadius(), this.bubble.getRadius());
+		int radius = bubble.getRadius();
+		
+		this.bubble = bubble;
+		this.position = new Point(pos.x + radius, pos.y + radius);
+		this.width = bubble.getWidth();
+		this.height = bubble.getHeight();
 		this.bubble.setPosition(new Point(0, 0));
 	}
 	
 	@Override
 	public void render(final Graphics graphics) {
 		final Graphics2D g2 = (Graphics2D) graphics;
-		BufferedImage img = new BufferedImage(bubble.getWidth(), bubble.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		
+		int shrink = this.time;
+		
+		int xBegin = this.position.x - width / 2;
+		int xEnd = xBegin + width - shrink;
+		xBegin += shrink;
+		
+		int yBegin = this.position.y - height / 2;
+		int yEnd = yBegin + height - shrink;
+		yBegin += shrink;
 		
 		bubble.render(img.getGraphics());
-		g2.drawImage(img, this.position.x - bubble.getWidth() / 2 + this.time, this.position.y
-				- bubble.getHeight() / 2 + this.time, this.position.x + bubble.getWidth() / 2
-				- this.time, this.position.y + bubble.getHeight() / 2 - this.time, 0, 0,
-				bubble.getWidth(), bubble.getHeight(), null);
+		g2.drawImage(img, xBegin, yBegin, xEnd, yEnd, 0, 0, width, height, null);
 	}
 }

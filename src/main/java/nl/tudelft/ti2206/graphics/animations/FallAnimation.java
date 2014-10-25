@@ -14,34 +14,48 @@ import nl.tudelft.ti2206.bubbles.Bubble;
  * @author Sam Smulders
  */
 public class FallAnimation extends FiniteAnimation {
+	
 	protected static final int FALL_SPEED = 4;
-	protected Bubble bubble;
-	protected Point position;
+	
+	protected final Bubble bubble;
+	protected final Point position;
+	protected final int width, height;
 	
 	public FallAnimation(Bubble bubble) {
 		super(bubble.getHeight());
-		this.bubble = bubble;
 		Point pos = bubble.getPosition();
+
+		this.bubble = bubble;
 		this.position = new Point(pos.x, pos.y);
-		this.position.translate(this.bubble.getRadius(), this.bubble.getRadius());
+		this.width = bubble.getWidth();
+		this.height = bubble.getHeight();
 		this.bubble.setPosition(new Point(0, 0));
 	}
 	
 	@Override
 	public void render(final Graphics graphics) {
 		final Graphics2D g2 = (Graphics2D) graphics;
-		BufferedImage img = new BufferedImage(bubble.getWidth(), bubble.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = renderBubble();
+		setAlpha(g2);
 		
-		bubble.render(img.getGraphics());
+		int drop = time * FALL_SPEED;
+		int xBegin = this.position.x;
+		int xEnd = xBegin + width;
+		int yBegin = this.position.y + drop;
+		int yEnd = yBegin + height;
 		
-		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f / maxTime
-				* (maxTime - time));
+		g2.drawImage(img, xBegin, yBegin, xEnd, yEnd, 0, 0, width, height, null);
+	}
+	
+	private void setAlpha(Graphics2D g2) {
+		float alpha = 1f / maxTime * this.getTimeLeft();
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
 		g2.setComposite(ac);
-		
-		g2.drawImage(img, this.position.x - bubble.getWidth() / 2,
-				this.position.y - bubble.getHeight() / 2 + time * FALL_SPEED, this.position.x
-						+ bubble.getWidth() / 2, this.position.y + bubble.getHeight() / 2 + time
-						* FALL_SPEED, 0, 0, bubble.getWidth(), bubble.getHeight(), null);
+	}
+	
+	private BufferedImage renderBubble() {
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		bubble.render(img.getGraphics());
+		return img;
 	}
 }
