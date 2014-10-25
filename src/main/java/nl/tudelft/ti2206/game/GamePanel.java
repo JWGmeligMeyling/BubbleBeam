@@ -156,6 +156,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 			BufferedImage scaledImage = ImageIO.read(GamePanel.class
 					.getResourceAsStream("/gamewon.png"));
 			return scaledImage;
+
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
