@@ -68,8 +68,7 @@ public class SinglePlayerFrame extends JFrame implements
 	
 	private final Color mainBackgroundColor = new Color(111,186,241);
 	private final Color mainborderColor = new Color(41,126,181);
-	private final int BUTTON_WIDTH = 353/2;
-	private final int BUTTON_HEIGHT = 91/2;
+	
 	
 	private final AudioClip music;
 
@@ -218,12 +217,7 @@ public class SinglePlayerFrame extends JFrame implements
 	}
 
 	protected void fillExitButton(Container contentPane) {
-		JButton exit = new JButton(exitAction);
-		exit.setBackground(mainBackgroundColor);
-		exit.setIcon(getButtonImage("/exit_button.png"));
-		exit.setIconTextGap(0);
-		exit.setBorder(null);
-		exit.setMargin(NO_PADDING);
+		JButton exit = new ImagedButton("/exit_button.png",exitAction);
 		
 		//exit.setOpaque(true);
 		contentPane.add(exit, new GridBagConstraints(2, 1, 1, 1, 1d, 0d,
@@ -345,14 +339,5 @@ public class SinglePlayerFrame extends JFrame implements
 		return executor;
 	}
 
-	protected ImageIcon getButtonImage(String url) {
-		try {
-			BufferedImage scale = ImageIO.read(Cannon.class.getResourceAsStream(url));
-			scale.getScaledInstance(BUTTON_WIDTH, BUTTON_HEIGHT, Image.SCALE_SMOOTH);
-			ImageIcon out = new ImageIcon(scale);
-			return out;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+	
 }
