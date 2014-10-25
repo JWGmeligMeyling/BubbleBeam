@@ -139,7 +139,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected static BufferedImage getGameOverImage() {
 		try {
 			BufferedImage scaledImage = ImageIO.read(BombBubble.class
-					.getResourceAsStream("/gameover.jpg"));
+					.getResourceAsStream("/gamelost.png"));
 			scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			return scaledImage;
 		} catch (IOException e) {
@@ -151,7 +151,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		try {
 			BufferedImage scaledImage = ImageIO.read(BombBubble.class
 					.getResourceAsStream("/gamewon.png"));
-			return scaledImage.getScaledInstance((int)(WIDTH / 1.5), HEIGHT / 2, Image.SCALE_SMOOTH);
+			return scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
