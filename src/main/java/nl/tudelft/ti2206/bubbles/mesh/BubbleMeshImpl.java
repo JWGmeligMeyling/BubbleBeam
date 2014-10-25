@@ -1,5 +1,7 @@
 package nl.tudelft.ti2206.bubbles.mesh;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -15,7 +17,8 @@ import nl.tudelft.ti2206.bubbles.Direction;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
-import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
 import nl.tudelft.util.AbstractEventTarget;
 
 import org.slf4j.Logger;
@@ -36,6 +39,11 @@ public class BubbleMeshImpl extends AbstractEventTarget<BubbleMeshListener> impl
 	
 	private static final long serialVersionUID = -2580249152755739807L;
 	private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);
+	
+	protected final static AudioClip POPSOUND = Applet.newAudioClip(BubbleMeshImpl.class
+			.getResource("/bubble_pop.wav"));
+	protected final static AudioClip SNAPSOUND = Applet.newAudioClip(BubbleMeshImpl.class
+			.getResource("/bubble_snap.wav"));
 	
 	protected final int rowWidth;
 	protected Bubble topLeftBubble;
@@ -111,6 +119,8 @@ public class BubbleMeshImpl extends AbstractEventTarget<BubbleMeshListener> impl
 			});
 			
 			target.popHook();
+			
+			if(POPSOUND != null) POPSOUND.play();
 
 			final BubblePopEvent event = new BubblePopEvent(this, bubblesToPop);
 			listeners.forEach(listener -> listener.pop(event));
@@ -118,6 +128,7 @@ public class BubbleMeshImpl extends AbstractEventTarget<BubbleMeshListener> impl
 		}
 		
 		target.snapHook();
+		if(SNAPSOUND != null) SNAPSOUND.play();
 		return false;
 	}
 	

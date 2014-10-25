@@ -212,7 +212,7 @@ public class SinglePlayerFrame extends JFrame implements
 	}
 
 	protected void fillExitButton(Container contentPane) {
-		JButton exit = new ImagedButton("/exit_button.png",exitAction,mainBackgroundColor);
+		JButton exit = new ImagedButton("/exit_button_v2.png",exitAction,mainBackgroundColor);
 		
 		contentPane.add(exit, new GridBagConstraints(2, 1, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
@@ -220,7 +220,7 @@ public class SinglePlayerFrame extends JFrame implements
 	}
 
 	protected void fillRestartButton(Container contentPane) {
-		JButton restartSingle = new ImagedButton("/single_button.png",restartSinglePlayer,mainBackgroundColor);
+		JButton restartSingle = new ImagedButton("/single_button_v2.png",restartSinglePlayer,mainBackgroundColor);
 		contentPane.add(restartSingle, new GridBagConstraints(2, 2, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));

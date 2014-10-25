@@ -1,7 +1,5 @@
 package nl.tudelft.ti2206.game;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -50,8 +48,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected final static Point AMMO_NEXT_POSITION = new Point(CANNONPOSITION.x
 			+ BUBBLE_QUEUE_SPACING, CANNONPOSITION.y);
-	protected final static AudioClip POPSOUND = Applet.newAudioClip(GamePanel.class
-			.getResource("/bubble_pop.wav"));
+	
 	
 	protected final GameController gameController;
 	protected final Cannon cannon;
@@ -79,7 +76,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 				popEvent.getPoppedBubbles().forEach(bubble -> {
 					animationList.add(bubble.getAnimation(bubble));
 				});
-				if(POPSOUND != null) POPSOUND.play();
+				
 			});
 	}
 	
