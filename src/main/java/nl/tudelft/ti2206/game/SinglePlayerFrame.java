@@ -4,6 +4,7 @@ import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -57,12 +58,16 @@ public class SinglePlayerFrame extends JFrame implements
 	protected static final String DEFAULT_BOARD_PATH = "/board.txt";
 	protected static final int FPS = 30;
 	protected static final int FRAME_PERIOD = 1000 / FPS;
+	
+	//Gridbag Constants
 	protected static final Insets NO_PADDING = new Insets(0, 0, 0, 0);
 	protected static final Insets PADDED = new Insets(10, 10, 10, 10);
+	//protected final int gb
+	//protected final int gb_rowGame = 1;
 
 	
 	private final Color mainBackgroundColor = new Color(111,186,241);
-	private final Color mainborderColor = new Color(41,126,181);
+	private final Color secondaryColor = new Color(41,126,181);
 	
 	
 	private final AudioClip music;
@@ -199,13 +204,15 @@ public class SinglePlayerFrame extends JFrame implements
 	protected void fillGamePanel(Container contentPane) {
 		layerUI = new EffectsLayer();
 		JLayer<JComponent> jlayer = new JLayer<JComponent>(gamePanel, layerUI);
-		gamePanel.setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, mainBackgroundColor,mainborderColor));
+		gamePanel.setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, mainBackgroundColor,secondaryColor));
 		contentPane.add(jlayer, new GridBagConstraints(0, 0, 1, 4, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.NONE, PADDED, 0,
 				0));
 	}
 
 	protected void fillScoreLabel(Container contentPane) {
+		scoreLabel.setFont(new Font("Sans",Font.BOLD,40));
+		scoreLabel.setForeground(secondaryColor);
 		contentPane.add(scoreLabel, new GridBagConstraints(0, 4, 1, 1, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
 				PADDED, 40, 30));
