@@ -17,7 +17,7 @@ public class ExitAction extends AbstractAction {
 	private final SinglePlayerFrame singlePlayerFrame;
 
 	public ExitAction(SinglePlayerFrame singlePlayerFrame) {
-		super("Exit");
+		super();
 		this.singlePlayerFrame = singlePlayerFrame;
 	}
 

@@ -15,7 +15,8 @@ import nl.tudelft.ti2206.bubbles.Direction;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
-import nl.tudelft.ti2206.game.event.BubbleMeshListener.*;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
+import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
 import nl.tudelft.util.AbstractEventTarget;
 
 import org.slf4j.Logger;

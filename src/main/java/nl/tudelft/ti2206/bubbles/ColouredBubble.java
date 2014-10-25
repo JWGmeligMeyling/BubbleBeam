@@ -1,10 +1,13 @@
 package nl.tudelft.ti2206.bubbles;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMeshImpl;
 import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
 
 /**
@@ -16,6 +19,11 @@ import nl.tudelft.ti2206.bubbles.snap.SnapToClosest;
 public class ColouredBubble extends AbstractBubble {
 
 	private static final long serialVersionUID = -5892206967489729767L;
+	
+	protected final static AudioClip POPSOUND = Applet.newAudioClip(BubbleMeshImpl.class
+			.getResource("/bubble_pop.wav"));
+	protected final static AudioClip SNAPSOUND = Applet.newAudioClip(BubbleMeshImpl.class
+			.getResource("/bubble_snap.wav"));
 
 	protected Color color;
 	
@@ -66,6 +74,16 @@ public class ColouredBubble extends AbstractBubble {
 	@Override
 	public boolean isHittable() {
 		return true;
+	}
+	
+	@Override
+	public void snapHook(){
+		if(SNAPSOUND != null) SNAPSOUND.play();
+	}
+	
+	@Override
+	public void popHook(){
+		if(POPSOUND != null) POPSOUND.play();
 	}
 	
 	@Override
