@@ -75,7 +75,7 @@ The \texttt{BubbleMesh} is a data structure for the \texttt{Bubbles}, and this s
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{BubbleMeshListener.png}
+	\includegraphics[scale=0.5]{BubbleMeshListener.png}
     \caption{UML Diagram for the \texttt{BubbleMeshListener}}
 \end{figure}
 
@@ -227,19 +227,109 @@ Now we have access to all required events in the multiplayer, which also allows 
 % ==============================
 % 	POP ANIMATIONS
 % ==============================
-\subsubsection{Pop animations}
+\subsection{Pop animations}
+In the prvious sprint we already implemented two pop animmations for our requirement \texttt{C-193}, "When a bubble is popped, a pop animation should be played". But we could only play a the same pop animation for all bubbles. In this sprint we want to add multiple pop animations and give different bubbles different animations.
+
+We already developed a \texttt{FallDownAnimation} and a \texttt{ShrinkAnimation}. We decided to give all normal bubbles the \texttt{ShrinkAnimation} and the \texttt{SteneBubble} the \texttt{FallDownAnimation}. For our \texttt{JokerBubble} we added the \texttt{ConfettiAnimation} class and for the \texttt{BombBubble} the \texttt{ExplosionAnimation} class.
+
+To use different bubble animations for different bubbles we had to add a way to get the animation from the bubble. Therefore we added a method in the \texttt{Bubble} interface: \texttt{getAnimation() : FiniteAnimation}. In this method a \texttt{Bubble} returns the corresponding animation for when the (decorated) bubble pops. We also changed the way the animations are added to the game panel, we nog use the getAnimation method to get the annimation to be added. See Figure \ref{fig:addPopAnimations}.
+
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{ | p{8cm} | p{4cm} | }
+      \multicolumn{2}{c}{\texttt{Bubble}} \\ \hline
+      \textbf{New Responsibilities} & \textbf{New Collaborations} \\ \hline
+      Logic to create a new  \texttt{FiniteAnimation} on request & \texttt{FiniteAnimation} \\
+      \hline
+    \end{tabular}
+    \caption{CRC-card for the \texttt{Bubble}}
+\end{figure}
+
+%
+%	NOTE
+%		As nothing changed here since the previous version,
+%		I suggest to leave this out of the RDD document (JW)
+%
+% \begin{figure}[H]
+%	\centering
+%\begin{tabular}{ | p{8cm} | p{4cm} | }
+%      \multicolumn{2}{c}{\texttt{GamePanel}} \\ \hline
+%      \textbf{New Responsibilities} & \textbf{New Collaborations} \\ \hline
+%      Requesting the \texttt{FiniteAnimation} for each popped bubble & \texttt{FiniteAnimation}  \\
+%      \hline
+%    \end{tabular}
+%    \caption{CRC-card for the \texttt{GamePanel}}
+%\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{newAnimationClassDiagram.png}
+    \caption{UML class diagram for the annimations }
+    \label{fig:newAnimationClassDiagram}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{addPopAnimations.png}
+    \caption{UML class diagram for the annimations }
+    \label{fig:addPopAnimations}
+\end{figure}
 
 % ==============================
-% 	POP ANIMATIONS
+% 	MULTIPLE LEVELS
 % ==============================
-\subsubsection{GUI Improvements}
+\subsection{Multiple levels in game modes}
+
+According to requirement \texttt{M-128} we want new levels (new maps of bubbles) to appear when a player finishes in the singleplayer mode (requirement \texttt{M-127}). In the previous version we could already load a specific \texttt{BubbleMesh} from a text file, but we only used this for the default map. In this version, we updated the game to support a variety maps.
+
+\par{} First, we enrichted the \texttt{GameMode} with two new methods: \texttt{hasNextMap} and \texttt{getNextMap}. This basically makes the \texttt{GameMode} an \texttt{Iterator}. Each \texttt{GameMode} should at least provide one map through these methods, but has the ability to provide more maps.
+
+\par{} Then we needed to call these methods to actually use the maps. This was a bit more difficult: in order to create a game, we first create a \texttt{GameModel} with a \texttt{BubbleMesh}. Therefore it already needs to have the \texttt{BubbleMesh} while we yet do not have access to the \texttt{GameController} nor the \texttt{GameMode} instance - which lives in the \texttt{GameController}.
+
+\par{} Therefore we changed the design a bit. The \texttt{GameModel} contains the \texttt{BubbleMesh}, but not necessarily has to be instantiated with it. It is then provided through the \texttt{GameController}, which also has the ability to reload it when the game is won. See also the sequence diagram in figure \ref{fig:GameModeMap}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{GameModeMap.png}
+    \caption{Sequence diagram for retrieving the next map for the game}
+    \label{fig:GameModeMap}
+\end{figure}
+
+% ==============================
+% 	GUI IMPROVEMENTS
+% ==============================
+% \subsection{GUI Improvements}
+
+% NOTE
+%	Since these changes probably aren't to drastic to the
+%	structure of the program, we may concider to not
+%	describe it in the RDD document (JW)
 
 % ==========================
 % WRAP UP REFLECTION
 % ==========================
 \section{Wrap up - Reflection}
 
+% ==========================
+% Desgin Patterns
+% ==========================
+\subsection{Design Patterns}
+Design patterns have been really valuable to our project. Some problems could easily be solved by implementing a design pattern. These design patterns improved our overal code quality, gave our project some structure and also made it easier to extend our game. Another big advantage was that the code was easier to understand for other project members because of the predefined way the design patterns should work.
+
+The power-ups, for example, would have been implemented with one class for each combination of power-ups, which are resposible for all the behaviour. With the decorator pattern we where albe to split the responsibilities and combine multiple power-ups, like the sound bubble and drunk bubble. This made it easier to add new power ups and prevented a complicated inherentance or copying a lot of code.
+
+We will definitely use design patterns in our future projects. During this project the desing patterns proved themself most useful. Furthermore, in future projects design patterns can be used from the beginning to provide an effective structure for the rest of the code.
 % IDEAS
+
+\subsection{What we have learned about ourselves as a team}
+We have learned the importance of UML and documentation in general. It can be very useful when communicating with team members.
+%iets over aan grotere projecten werken?
+
+
+\subsection{Practical Scrum}
+We highly valued the use of Scrum in our project. The methodology enforces a very task based approach, which in our project lead to a very clear distrubution of tasks. This is a good thing in any project because it gets rid of the "i don't know what i should do"-overhead. The weekly reflection on the previous sprint were an important tool in creating the next sprint. They were a great reference in how much we could do in a week's time.
+
+
+%We should more focus on the documentation the the actual programming for this kind of projects.
 
 
 \end{document}
