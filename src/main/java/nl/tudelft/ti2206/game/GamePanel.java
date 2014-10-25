@@ -135,7 +135,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 			graphics.drawImage(gameOver, 0, HEIGHT / 2 - 100, null);
 			break;
 		case WIN:
-			graphics.drawImage(gameWon, WIDTH / 2 - 100, HEIGHT / 2 - 100, null);
+			graphics.drawImage(gameWon, 0, HEIGHT / 2 - 100, null);
 			break;
 		default:
 			break;
@@ -144,21 +144,17 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	
 	protected static BufferedImage getGameOverImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(BombBubble.class
+			return ImageIO.read(BombBubble.class
 					.getResourceAsStream("/gamelost.png"));
-			scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-			return scaledImage;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	protected static Image getGameWonImage() {
+	protected static BufferedImage getGameWonImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(BombBubble.class
+			return ImageIO.read(BombBubble.class
 					.getResourceAsStream("/gamewon.png"));
-			return scaledImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
