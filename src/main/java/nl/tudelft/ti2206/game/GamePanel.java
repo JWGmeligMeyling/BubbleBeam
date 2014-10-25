@@ -20,7 +20,7 @@ import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
-import nl.tudelft.ti2206.game.event.BubbleMeshListener;
+import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.util.mvc.View;
 
@@ -72,8 +72,7 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		
 		this.gameController
 			.getModel()
-			.getBubbleMesh()
-			.addEventListener(BubbleMeshListener.PopListener.class, (popEvent) -> {
+			.addEventListener(GameListener.PopListener.class, (popEvent) -> {
 				popEvent.getPoppedBubbles().forEach(bubble -> {
 					animationList.add(bubble.getAnimation());
 				});

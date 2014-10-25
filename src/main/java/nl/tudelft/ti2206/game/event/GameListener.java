@@ -241,7 +241,6 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 	void score(ScoreEvent event);
 	
 	@Override default void rowInsert(RowInsertEvent event) { }
-	@Override default void pop(BubblePopEvent event) { }
 	@Override default void shoot(CannonShootEvent event) { };
 	@Override default void rotate(CannonRotateEvent event) {};
 	
@@ -254,6 +253,7 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 	 */
 	@FunctionalInterface
 	interface ScoreListener extends GameListener {
+		@Override default void pop(BubblePopEvent event) { }
 		@Override default void shotMissed(ShotMissedEvent event) { }
 		@Override default void ammo(AmmoLoadEvent event) {}
 		@Override default void gameOver(GameOverEvent event) { }
@@ -269,6 +269,7 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 	 */
 	@FunctionalInterface
 	interface GameOverEventListener extends GameListener {
+		@Override default void pop(BubblePopEvent event) { }
 		@Override default void shotMissed(ShotMissedEvent event) { }
 		@Override default void ammo(AmmoLoadEvent event) {}
 		@Override default void score(ScoreEvent event) {}
@@ -284,6 +285,7 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 	 */
 	@FunctionalInterface
 	interface ShotMissedListener extends GameListener {
+		@Override default void pop(BubblePopEvent event) { }
 		@Override default void gameOver(GameOverEvent event) { }
 		@Override default void ammo(AmmoLoadEvent event) {}
 		@Override default void score(ScoreEvent event) {}
@@ -299,6 +301,22 @@ public interface GameListener extends EventListener, BubbleMeshListener, CannonL
 	 */
 	@FunctionalInterface
 	interface AmmoListener extends GameListener {
+		@Override default void pop(BubblePopEvent event) { }
+		@Override default void gameOver(GameOverEvent event) { }
+		@Override default void shotMissed(ShotMissedEvent event) { }
+		@Override default void score(ScoreEvent event) {}
+	}
+	
+	/**
+	 * {@code PopListener}
+	 * 
+	 * @author Jan-Willem Gmelig Meyling
+	 * @author Liam Clark
+	 *
+	 */
+	@FunctionalInterface
+	interface PopListener extends GameListener {
+		@Override default void ammo(AmmoLoadEvent event) {}
 		@Override default void gameOver(GameOverEvent event) { }
 		@Override default void shotMissed(ShotMissedEvent event) { }
 		@Override default void score(ScoreEvent event) {}
