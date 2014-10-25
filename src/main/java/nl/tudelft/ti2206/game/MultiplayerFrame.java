@@ -5,7 +5,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.border.BevelBorder;
 
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
@@ -104,6 +106,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 	}
 	
 	protected void fillSlaveGamePanel(Container contentPane) {
+		slaveGamePanel.setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, mainBackgroundColor,secondaryColor));
 		contentPane.add(slaveGamePanel, new GridBagConstraints(GB_OPPONENTCOLUMN, 1, 1, GB_PANELHEIGHT, 0d, 0d,
 				GridBagConstraints.WEST, GridBagConstraints.NONE, PADDED, 0,
 				0));
