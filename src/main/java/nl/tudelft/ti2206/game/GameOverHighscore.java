@@ -6,9 +6,6 @@ import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.ImmutableSortedSet;
 
 import nl.tudelft.ti2206.game.backend.GameController;
@@ -20,9 +17,6 @@ import nl.tudelft.ti2206.highscore.HighscoreItem;
 import nl.tudelft.ti2206.highscore.ScoreItem;
 
 public class GameOverHighscore implements GameOverEventListener {
-	
-	private static final Logger log = LoggerFactory
-			.getLogger(GameOverHighscore.class);
 	
 	private final SinglePlayerFrame frame;
 	private final GameController gameController;
@@ -43,7 +37,7 @@ public class GameOverHighscore implements GameOverEventListener {
 		Class<? extends GameMode> gameMode = gameModel.getGameMode();
 		
 		Highscore highscore = Highscore.getHighscores();
-		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameModel.getGameMode());
+		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameMode);
 		ScoreItem scoreItem = ScoreItem.createScoreItem(gameModel);
 		
 		//choose which highscore to add to depending on the factory
