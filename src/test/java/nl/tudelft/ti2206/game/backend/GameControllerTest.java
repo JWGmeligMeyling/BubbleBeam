@@ -3,6 +3,7 @@ package nl.tudelft.ti2206.game.backend;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.Set;
 
 import nl.tudelft.ti2206.bubbles.AbstractBubble;
@@ -18,6 +19,7 @@ import nl.tudelft.ti2206.game.event.CannonListener.*;
 import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
+import nl.tudelft.ti2206.game.backend.mode.PowerupGameMode;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.PacketListener;
 import nl.tudelft.util.Vector2f;
@@ -278,5 +280,13 @@ public class GameControllerTest {
 	public void testInsertRowDelegate() {
 		gameController.insertRow();
 		verify(bubbleMesh).insertRow(gameController);
+	}
+	
+	@Test
+	public void testLoadNewBubbleMesh() throws IOException {
+		GameModel gameModel = spy(new GameModel(PowerupGameMode.class));
+		when(cannonController.getModel()).thenReturn(cannonModel);
+		GameController gameController = new GameController(gameModel, cannonController);
+		gameController.gameOver(new GameOver(true));
 	}
 }

@@ -133,12 +133,13 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * Prepare initial ammo
 	 */
 	protected void prepareAmmo() {
-		if(model.getLoadedBubble() == null ||
-			model.getNextBubble() == null ) {
+		if(model.getLoadedBubble() == null) {
 			log.info("Prepare initial ammo for {}", this);
 			model.setLoadedBubble(createAmmoBubble());
 			model.setNextBubble(createAmmoBubble());
 		}
+		assert model.getNextBubble() != null &&
+				model.getLoadedBubble() != null : "Ammo should not be empty!";
 	}
 	
 	/**
