@@ -107,7 +107,7 @@ public class JokerBubble extends DecoratedBubble {
 	}
 	
 	@Override
-	public FiniteAnimation getAnimation(Bubble bubble) {
-		return new ConfettiAnimation(60, bubble);
+	public FiniteAnimation getAnimation() {
+		return new ConfettiAnimation(60, this);
 	}
 }

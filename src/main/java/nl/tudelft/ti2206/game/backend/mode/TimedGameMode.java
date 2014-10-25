@@ -19,6 +19,7 @@ import nl.tudelft.ti2206.game.backend.GameController;
 @ModeName("Timed Mode")
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
 @ModeMusic("/time_music.wav")
+@ModeMaps({"/board.txt"})
 public class TimedGameMode extends ClassicGameMode {
 
 	private static final long serialVersionUID = 2150478663941653803L;	

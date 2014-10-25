@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import nl.tudelft.ti2206.bubbles.decorators.DrunkBubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.bubbles.pop.PopBehaviour;
 import nl.tudelft.ti2206.bubbles.pop.RecursivePopBehaviour;
 import nl.tudelft.ti2206.bubbles.snap.SnapBehaviour;
+import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.graphics.Sprite;
+import nl.tudelft.ti2206.graphics.animations.Animation;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 import nl.tudelft.ti2206.graphics.animations.ShrinkAnimation;
 import nl.tudelft.util.Vector2f;
@@ -161,13 +164,9 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @see BubbleMesh#replaceBubble(Bubble, Bubble)
 	 */
 	default void replace(final Bubble original) {
-		this.bind(Direction.TOPLEFT, original.getBubbleAt(Direction.TOPLEFT));
-		this.bind(Direction.TOPRIGHT, original.getBubbleAt(Direction.TOPRIGHT));
-		this.bind(Direction.LEFT, original.getBubbleAt(Direction.LEFT));
-		this.bind(Direction.RIGHT, original.getBubbleAt(Direction.RIGHT));
-		this.bind(Direction.BOTTOMLEFT, original.getBubbleAt(Direction.BOTTOMLEFT));
-		this.bind(Direction.BOTTOMRIGHT, original.getBubbleAt(Direction.BOTTOMRIGHT));
-		this.setPosition(original.getPosition());
+		for(Direction direction : Direction.values())
+			bind(direction, original.getBubbleAt(direction));
+		setPosition(original.getPosition());
 	}
 
 	public final static PopBehaviour RECURSIVE_POP = new RecursivePopBehaviour();
@@ -191,13 +190,24 @@ public interface Bubble extends Sprite, Circle, Serializable, SnapBehaviour {
 	 * @return True if this bubble pops with the target
 	 */
 	boolean popsWith(Bubble target);
-
+	
+	/**
+	 * The {@link #velocityChange()} provides a hook for the
+	 * {@link MovingBubble} and {@link GameController} to adjust the speed of
+	 * the shot bubble. This is for example used in the {@link DrunkBubble}.
+	 * 
+	 * @return the velocity adjustment
+	 */
 	default Vector2f velocityChange() {
 		return new Vector2f(0f, 0f);
 	}
-
-	default FiniteAnimation getAnimation(Bubble bubble){
-		return new ShrinkAnimation(bubble);
+	
+	/**
+	 * Bubble animation
+	 * @return the {@link Animation} for when this {@link Bubble} pops
+	 */
+	default FiniteAnimation getAnimation(){
+		return new ShrinkAnimation(this);
 	}
 
 }

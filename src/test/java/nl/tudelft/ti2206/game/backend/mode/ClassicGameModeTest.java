@@ -68,5 +68,5 @@ public class ClassicGameModeTest {
 		gameMode.pop(event);
 		Mockito.verify(gameController).incrementScore(25);
 	}
-
+	
 }

@@ -69,7 +69,7 @@ public class StoneBubble extends DecoratedBubble {
 	}
 	
 	@Override
-	public FiniteAnimation getAnimation(Bubble bubble) {
-		return new FallAnimation(bubble);
+	public FiniteAnimation getAnimation() {
+		return new FallAnimation(this);
 	}
 }

@@ -20,61 +20,103 @@ import nl.tudelft.ti2206.bubbles.Bubble;
  */
 public class ConfettiAnimation extends FiniteAnimation {
 	protected static Random random = new Random();
+	
 	protected final static BufferedImage CONFETTI_STRIP = _getConfettiImage();
+	protected final static int HEIGHT = CONFETTI_STRIP.getHeight();
+	protected final static int CONFETTI_ON_STRIP_WIDTH = HEIGHT;
+	protected static final int CONFETTI_RADIUS = (int) Math.sqrt(HEIGHT * HEIGHT * 2);
+	
 	protected final static int STRIP_SIZE = 9;
-	protected static final float MIN_CONFETTI_SPEED = 2f;
-	protected static final float MAX_CONFETTI_SPEED = 5f;
-	protected static final int CONFETTI_RADIUS = 9;
+	protected static final double MIN_CONFETTI_SPEED = 2f;
+	protected static final double MAX_CONFETTI_SPEED = 5f;
 	protected static final int CONFETTI_HALF_WIDTH = 6;
-	protected static final int CONFETTI_WIDTH = 11;
 	
-	protected float[] direction = new float[STRIP_SIZE];
-	protected float[] angle = new float[STRIP_SIZE];
-	protected float[] speed = new float[STRIP_SIZE];
+	protected final double[] direction = new double[STRIP_SIZE];
+	protected final double[] angle = new double[STRIP_SIZE];
+	protected final double[] speed = new double[STRIP_SIZE];
 	
-	private Point position;
+	private final Point position;
 	
 	public ConfettiAnimation(int maxTime, Bubble bubble) {
 		super(maxTime);
+		int radius = bubble.getRadius();
 		Point pos = bubble.getPosition();
-		this.position = new Point(pos.x, pos.y);
-		this.position.translate(bubble.getRadius(), bubble.getRadius());
-		bubble.setPosition(new Point(0, 0));
+		this.position = new Point(pos.x + radius, pos.y + radius);
 		for (int i = 0; i < STRIP_SIZE; i++) {
-			direction[i] = (float) (random.nextFloat() * Math.PI);
-			angle[i] = (float) (random.nextFloat() * Math.PI);
+			direction[i] = random.nextFloat() * Math.PI * 2;
+			angle[i] = random.nextFloat() * Math.PI * 2;
 			speed[i] = random.nextFloat() * (MAX_CONFETTI_SPEED - MIN_CONFETTI_SPEED)
 					+ MIN_CONFETTI_SPEED;
 		}
 	}
 	
-	// confettiStrip.png
-	
 	@Override
 	public void render(Graphics g) {
-		
-		int size = (int) (time * MAX_CONFETTI_SPEED) + CONFETTI_RADIUS;
-		BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D imgGraphics = (Graphics2D) img.getGraphics();
-		imgGraphics.translate(size / 2, size / 2);
-		for (int i = 0; i < STRIP_SIZE; i++) {
-			int x = (int) (Math.cos(direction[i]) * speed[i] * time);
-			int y = (int) (Math.sin(direction[i]) * speed[i] * time);
-			imgGraphics.translate(x, y);
-			imgGraphics.rotate(angle[i]);
-			imgGraphics.drawImage(CONFETTI_STRIP, -CONFETTI_HALF_WIDTH, -CONFETTI_HALF_WIDTH,
-					CONFETTI_HALF_WIDTH, CONFETTI_HALF_WIDTH, CONFETTI_WIDTH * i, 0, CONFETTI_WIDTH
-							* i + CONFETTI_WIDTH, CONFETTI_WIDTH, null);
-			imgGraphics.rotate(-angle[i]);
-			imgGraphics.translate(-x, -y);
-		}
+		BufferedImage img = createConfettiImage();
 		
 		Graphics2D g2 = (Graphics2D) g;
-		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f / maxTime
-				* (maxTime - time));
+		setAlpha(g2);
+		
+		/*
+		 * The size is equal to the maximum possible travelled time by the
+		 * confetti, multiplied by 2 because the confetti speed can be negative.
+		 */
+		int size = (int) (time * MAX_CONFETTI_SPEED * 2) + CONFETTI_RADIUS;
+		
+		int xBegin = this.position.x - size / 2;
+		int xEnd = xBegin + size;
+		
+		int yBegin = this.position.y - size / 2;
+		int yEnd = yBegin + size;
+		
+		g2.drawImage(img, xBegin, yBegin, xEnd, yEnd, 0, 0, size, size, null);
+	}
+	
+	protected void setAlpha(Graphics2D g2) {
+		float alpha = 1f / maxTime * this.getTimeLeft();
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
 		g2.setComposite(ac);
-		g2.drawImage(img, this.position.x - size / 2, this.position.y - size / 2, this.position.x
-				+ size / 2, this.position.y + size / 2, 0, 0, size, size, null);
+	}
+	
+	protected BufferedImage createConfettiImage() {
+		int size = (int) (time * MAX_CONFETTI_SPEED) * 2 + CONFETTI_RADIUS;
+		BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+		renderConfetti((Graphics2D) img.getGraphics(), size);
+		return img;
+	}
+	
+	protected void renderConfetti(Graphics2D imgGraphics, int size) {
+		int halfSize = size / 2;
+		imgGraphics.translate(halfSize, halfSize);
+		for (int i = 0; i < STRIP_SIZE; i++) {
+			renderTranslatedConfettiParticle(imgGraphics, i);
+		}
+	}
+	
+	protected void renderTranslatedConfettiParticle(Graphics2D imgGraphics, int nr) {
+		int x = (int) (Math.cos(direction[nr]) * speed[nr] * time);
+		int y = (int) (Math.sin(direction[nr]) * speed[nr] * time);
+		imgGraphics.translate(x, y);
+		imgGraphics.rotate(angle[nr]);
+		
+		renderConfettiParticle(imgGraphics, nr);
+		
+		imgGraphics.rotate(-angle[nr]);
+		imgGraphics.translate(-x, -y);
+	}
+	
+	protected void renderConfettiParticle(Graphics2D imgGraphics, int nr) {
+		int beginXOfImageOnStrip = CONFETTI_ON_STRIP_WIDTH * nr;
+		int endXOfImageOnStrip = beginXOfImageOnStrip + CONFETTI_ON_STRIP_WIDTH;
+		
+		int xBegin = -CONFETTI_ON_STRIP_WIDTH / 2;
+		int xEnd = xBegin + CONFETTI_ON_STRIP_WIDTH;
+		
+		int yBegin = -HEIGHT / 2;
+		int yEnd = yBegin + HEIGHT;
+		
+		imgGraphics.drawImage(CONFETTI_STRIP, xBegin, yBegin, xEnd, yEnd, beginXOfImageOnStrip, 0,
+				endXOfImageOnStrip, CONFETTI_ON_STRIP_WIDTH, null);
 	}
 	
 	private static BufferedImage _getConfettiImage() {

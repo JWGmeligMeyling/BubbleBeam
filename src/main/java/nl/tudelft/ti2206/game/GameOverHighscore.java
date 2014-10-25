@@ -5,6 +5,9 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 import com.google.common.collect.ImmutableSortedSet;
 
@@ -28,16 +31,16 @@ public class GameOverHighscore implements GameOverEventListener {
 	
 	@Override
 	public void gameOver(GameOverEvent event) {
-		GameModel gameModel = gameController.getModel();
-		Class<? extends GameMode> gameMode = gameModel.getGameMode();
-		gameModel.setGameOver(true);
-		
-		if(frame instanceof MultiplayerFrame){		//don't add scores for multiplayer
+		//don't add scores for multiplayer
+		if(frame instanceof MultiplayerFrame) {
 			return;
 		}
 		
+		GameModel gameModel = gameController.getModel();
+		Class<? extends GameMode> gameMode = gameModel.getGameMode();
+		
 		Highscore highscore = Highscore.getHighscores();
-		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameModel.getGameMode());
+		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameMode);
 		ScoreItem scoreItem = ScoreItem.createScoreItem(gameModel);
 		
 		//choose which highscore to add to depending on the factory
@@ -47,6 +50,7 @@ public class GameOverHighscore implements GameOverEventListener {
 			final JDialog dialog = new JDialog(frame, false);
 			dialog.setTitle("Enter your name");
 			JTextField nameField = new JTextField("",30);
+			nameField.setDocument(new JTextFieldLimit(20));
 			dialog.add(nameField);
 			dialog.setVisible(true);
 			dialog.pack();
@@ -86,5 +90,29 @@ public class GameOverHighscore implements GameOverEventListener {
 		popup.setLocationRelativeTo(frame);
 		popup.setVisible(true);
 	}
+	
+	class JTextFieldLimit extends PlainDocument {
+		  private static final long serialVersionUID = 7134805879654022590L;
+		private int limit;
+		  JTextFieldLimit(int limit) {
+		    super();
+		    this.limit = limit;
+		  }
+
+		  JTextFieldLimit(int limit, boolean upper) {
+		    super();
+		    this.limit = limit;
+		  }
+
+		  public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+		    if (str == null)
+		      return;
+
+		    if ((getLength() + str.length()) <= limit) {
+		      super.insertString(offset, str, attr);
+		    }
+		  }
+		}
+
 
 }

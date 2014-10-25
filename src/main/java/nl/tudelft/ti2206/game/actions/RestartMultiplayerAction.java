@@ -91,10 +91,13 @@ public class RestartMultiplayerAction extends AbstractAction {
 					Connector connector = new Connector(socket);
 					
 					log.debug("Preparing GameModels");
-					GameModel masterGameModel = new GameModel(gameMode, BubbleMesh
+					GameModel masterGameModel = new GameModel(gameMode);
+					GameModel slaveGameModel = new GameModel(gameMode);
+					
+					masterGameModel.setBubbleMesh(BubbleMesh
 							.parse(SinglePlayerFrame.class
 									.getResourceAsStream(DEFAULT_BOARD_PATH)));
-					GameModel slaveGameModel = new GameModel(gameMode, BubbleMesh
+					slaveGameModel.setBubbleMesh(BubbleMesh
 							.parse(SinglePlayerFrame.class
 									.getResourceAsStream(DEFAULT_BOARD_PATH)));
 					

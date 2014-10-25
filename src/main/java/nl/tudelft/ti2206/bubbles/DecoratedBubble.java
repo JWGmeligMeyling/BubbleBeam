@@ -173,7 +173,7 @@ public class DecoratedBubble implements Bubble {
 	}
 	
 	@Override
-	public FiniteAnimation getAnimation(Bubble bubble) {
-		return this.bubble.getAnimation(bubble);
+	public FiniteAnimation getAnimation() {
+		return bubble.getAnimation();
 	}
 }

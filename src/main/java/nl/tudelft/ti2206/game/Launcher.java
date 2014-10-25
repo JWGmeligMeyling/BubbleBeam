@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 public class Launcher {
 
 	private static final Logger log = LoggerFactory.getLogger(Launcher.class);
-	protected static final String DEFAULT_BOARD_PATH = "/board.txt";
 
 	public static void main(String[] args) throws IOException {
 		// This main method is called when starting your game.
@@ -26,8 +24,8 @@ public class Launcher {
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		
 		Class<? extends GameMode> gameMode = PowerupGameMode.class;
-		BubbleMesh bubbleMesh = BubbleMesh.parse(SinglePlayerFrame.class.getResourceAsStream(DEFAULT_BOARD_PATH));
-		GameModel gameModel = new GameModel(gameMode, bubbleMesh);
+		
+		GameModel gameModel = new GameModel(gameMode);
 		MouseCannonController masterCannonController = new MouseCannonController();
 		GameController gameController = new GameController(gameModel, masterCannonController);
 		
