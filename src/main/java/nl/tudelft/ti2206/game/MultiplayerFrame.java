@@ -104,7 +104,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 	}
 	
 	protected void fillSlaveGamePanel(Container contentPane) {
-		contentPane.add(slaveGamePanel, new GridBagConstraints(3, 0, 1, 4, 0d, 0d,
+		contentPane.add(slaveGamePanel, new GridBagConstraints(GB_OPPONENTCOLUMN, 0, 1, GB_PANELHEIGHT, 0d, 0d,
 				GridBagConstraints.WEST, GridBagConstraints.NONE, PADDED, 0,
 				0));
 	}
@@ -112,7 +112,7 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 	protected void fillSlaveScoreLabel(Container contentPane) {
 		slaveScoreLabel.setFont(new Font("Sans",Font.BOLD,40));
 		slaveScoreLabel.setForeground(secondaryColor);
-		contentPane.add(slaveScoreLabel, new GridBagConstraints(3, 4, 1, 1, 0d, 0d,
+		contentPane.add(slaveScoreLabel, new GridBagConstraints(GB_OPPONENTCOLUMN, GB_PANELHEIGHT, 1, 1, 0d, 0d,
 				GridBagConstraints.WEST, GridBagConstraints.NONE, PADDED, 30,
 				30));
 	}
