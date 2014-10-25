@@ -150,8 +150,8 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 	protected static Image getGameWonImage() {
 		try {
 			BufferedImage scaledImage = ImageIO.read(BombBubble.class
-					.getResourceAsStream("/gamewon.jpg"));
-			return scaledImage.getScaledInstance(WIDTH / 2, HEIGHT / 2, Image.SCALE_SMOOTH);
+					.getResourceAsStream("/gamewon.png"));
+			return scaledImage.getScaledInstance((int)(WIDTH / 1.5), HEIGHT / 2, Image.SCALE_SMOOTH);
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
