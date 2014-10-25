@@ -15,6 +15,7 @@ import javax.swing.border.BevelBorder;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
+import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.game.backend.GameController;
@@ -111,8 +112,9 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		gameController.getModel().getBubbleMesh().render(graphics);
 		cannon.render(graphics);
 		
-		if (model.isShooting()) {
-			model.getShotBubble().render(graphics);
+		MovingBubble shotBubble = model.getShotBubble();
+		if (shotBubble != null) {
+			shotBubble.render(graphics);
 		}
 		
 		model.getLoadedBubble().setCenter(AMMO_POSITION);
@@ -120,19 +122,23 @@ public final class GamePanel extends JPanel implements View<GameController, Game
 		model.getNextBubble().setCenter(AMMO_NEXT_POSITION);
 		model.getNextBubble().render(graphics);
 		
-		animationList.removeIf(FiniteAnimation::isDone);
-		animationList.forEach(animation -> {
-			animation.render(graphics);
-			animation.addTime();
-		});
+		synchronized(animationList) {
+			animationList.removeIf(FiniteAnimation::isDone);
+			animationList.forEach(animation -> {
+				animation.render(graphics);
+				animation.addTime();
+			});
+		}
 		
-		if(model.isGameOver()) {
-			if(model.isWon()) {
-				graphics.drawImage(gameWon, WIDTH / 2 - 100, HEIGHT / 2 - 100, null);
-			}
-			else {
-				graphics.drawImage(gameOver, 0, HEIGHT / 2 - 100, null);
-			}
+		switch(model.getGameState()) {
+		case LOSE:
+			graphics.drawImage(gameOver, 0, HEIGHT / 2 - 100, null);
+			break;
+		case WIN:
+			graphics.drawImage(gameWon, WIDTH / 2 - 100, HEIGHT / 2 - 100, null);
+			break;
+		default:
+			break;
 		}
 	}
 	

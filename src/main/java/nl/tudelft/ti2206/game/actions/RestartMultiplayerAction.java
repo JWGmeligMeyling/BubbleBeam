@@ -102,8 +102,8 @@ public class RestartMultiplayerAction extends AbstractAction {
 									.getResourceAsStream(DEFAULT_BOARD_PATH)));
 					
 					MouseCannonController masterCannonController = new MouseCannonController();
-					GameController masterGameController = new GameController(masterGameModel, masterCannonController);
-					GameController slaveGameController = new GameController(slaveGameModel, new AbstractCannonController(), true);
+					GameController masterGameController = new GameController(masterGameModel, masterCannonController, GameController.GameControllerType.MULTIPLAYER_MASTER);
+					GameController slaveGameController = new GameController(slaveGameModel, new AbstractCannonController(), GameController.GameControllerType.MULTIPLAYER_SLAVE);
 					
 					connector.start();
 					log.info("Sending game model packet");
