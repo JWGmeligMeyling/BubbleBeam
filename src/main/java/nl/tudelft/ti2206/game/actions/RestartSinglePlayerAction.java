@@ -28,7 +28,7 @@ public class RestartSinglePlayerAction extends AbstractAction {
 	private final SinglePlayerFrame singlePlayerFrame;
 	
 	public RestartSinglePlayerAction(SinglePlayerFrame singlePlayerFrame) {
-		super("Restart Single-Player");
+		super();
 		this.singlePlayerFrame = singlePlayerFrame;
 	}
 

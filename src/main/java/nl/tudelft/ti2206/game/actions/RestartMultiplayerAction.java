@@ -39,7 +39,7 @@ public class RestartMultiplayerAction extends AbstractAction {
 	private final SinglePlayerFrame singlePlayerFrame;
 	
 	public RestartMultiplayerAction(SinglePlayerFrame singlePlayerFrame) {
-		super("Restart Multi-Player");
+		super();
 		this.singlePlayerFrame = singlePlayerFrame;
 	}
 	

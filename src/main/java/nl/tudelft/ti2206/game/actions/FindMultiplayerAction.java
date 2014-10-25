@@ -37,7 +37,7 @@ public class FindMultiplayerAction extends AbstractAction {
 			.getLogger(FindMultiplayerAction.class);
 	
 	public FindMultiplayerAction(SinglePlayerFrame singlePlayerFrame) {
-		super("Find Multi-Player");
+		super();
 		this.singlePlayerFrame = singlePlayerFrame;
 	}
 

@@ -6,20 +6,16 @@ import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -34,7 +30,6 @@ import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 import javax.swing.text.MaskFormatter;
 
-import nl.tudelft.ti2206.cannon.Cannon;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.actions.ExitAction;
 import nl.tudelft.ti2206.game.actions.FindMultiplayerAction;
@@ -195,7 +190,7 @@ public class SinglePlayerFrame extends JFrame implements
 	}
 	
 	protected void fillHighscoreButton(Container contentPane){
-		JButton highscoreButton = new JButton(highscoreAction);
+		JButton highscoreButton = new ImagedButton("/highscore_button.png",highscoreAction,mainBackgroundColor);
 		contentPane.add(highscoreButton, new GridBagConstraints(2, 0, 1, 1, 1d, 0d,
 				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));
@@ -217,30 +212,29 @@ public class SinglePlayerFrame extends JFrame implements
 	}
 
 	protected void fillExitButton(Container contentPane) {
-		JButton exit = new ImagedButton("/exit_button.png",exitAction);
+		JButton exit = new ImagedButton("/exit_button.png",exitAction,mainBackgroundColor);
 		
-		//exit.setOpaque(true);
 		contentPane.add(exit, new GridBagConstraints(2, 1, 1, 1, 1d, 0d,
-				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 				PADDED, 30, 30));
 	}
 
 	protected void fillRestartButton(Container contentPane) {
-		JButton restartSingle = new JButton(restartSinglePlayer);
+		JButton restartSingle = new ImagedButton("/single_button.png",restartSinglePlayer,mainBackgroundColor);
 		contentPane.add(restartSingle, new GridBagConstraints(2, 2, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));
 	}
 
 	protected void fillRestartMultiplayer(Container contentPane) {
-		JButton restartMulti = new JButton(restartMultiplayerAction);
+		JButton restartMulti = new ImagedButton("/host_multi_button.png",restartMultiplayerAction,mainBackgroundColor);
 		contentPane.add(restartMulti, new GridBagConstraints(2, 3, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));
 	}
 
 	protected void fillFindMultiplayerRestart(Container contentPane) {
-		JButton button = new JButton(findMultiplayerAction);
+		JButton button = new ImagedButton("/find_multi_button.png",findMultiplayerAction,mainBackgroundColor);
 		contentPane.add(button, new GridBagConstraints(2, 4, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				PADDED, 30, 30));

@@ -20,7 +20,7 @@ public class HighscoreAction extends AbstractAction {
 	private final SinglePlayerFrame singlePlayerFrame;
 
 	public HighscoreAction(SinglePlayerFrame singlePlayerFrame) {
-		super("Highscore");
+		super();
 		this.singlePlayerFrame = singlePlayerFrame;
 	}
 
