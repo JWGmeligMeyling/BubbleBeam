@@ -21,4 +21,7 @@ public abstract class FiniteAnimation implements Animation {
 		time++;
 	}
 	
+	protected int getTimeLeft() {
+		return (maxTime - time);
+	}
 }

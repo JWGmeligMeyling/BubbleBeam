@@ -31,10 +31,18 @@ public class ShrinkAnimation extends FiniteAnimation {
 		BufferedImage img = new BufferedImage(bubble.getWidth(), bubble.getHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		
+		int shrink = this.time;
+		
+		int xBegin = this.position.x - bubble.getWidth() / 2;
+		int xEnd = xBegin + bubble.getWidth() - shrink;
+		xBegin += shrink;
+		
+		int yBegin = this.position.y - bubble.getHeight() / 2;
+		int yEnd = yBegin + bubble.getHeight() - shrink;
+		yBegin += shrink;
+		
 		bubble.render(img.getGraphics());
-		g2.drawImage(img, this.position.x - bubble.getWidth() / 2 + this.time, this.position.y
-				- bubble.getHeight() / 2 + this.time, this.position.x + bubble.getWidth() / 2
-				- this.time, this.position.y + bubble.getHeight() / 2 - this.time, 0, 0,
-				bubble.getWidth(), bubble.getHeight(), null);
+		g2.drawImage(img, xBegin, yBegin, xEnd, yEnd, 0, 0, bubble.getWidth(), bubble.getHeight(),
+				null);
 	}
 }
