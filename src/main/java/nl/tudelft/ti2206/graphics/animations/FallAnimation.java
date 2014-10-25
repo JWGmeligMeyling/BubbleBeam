@@ -14,15 +14,21 @@ import nl.tudelft.ti2206.bubbles.Bubble;
  * @author Sam Smulders
  */
 public class FallAnimation extends FiniteAnimation {
+	
 	protected static final int FALL_SPEED = 4;
-	protected Bubble bubble;
-	protected Point position;
+	
+	protected final Bubble bubble;
+	protected final Point position;
+	protected final int width, height;
 	
 	public FallAnimation(Bubble bubble) {
 		super(bubble.getHeight());
-		this.bubble = bubble;
 		Point pos = bubble.getPosition();
+
+		this.bubble = bubble;
 		this.position = new Point(pos.x, pos.y);
+		this.width = bubble.getWidth();
+		this.height = bubble.getHeight();
 		this.bubble.setPosition(new Point(0, 0));
 	}
 	
@@ -33,15 +39,12 @@ public class FallAnimation extends FiniteAnimation {
 		setAlpha(g2);
 		
 		int drop = time * FALL_SPEED;
-		
 		int xBegin = this.position.x;
-		int xEnd = xBegin + bubble.getWidth();
-		
+		int xEnd = xBegin + width;
 		int yBegin = this.position.y + drop;
-		int yEnd = yBegin + bubble.getHeight();
+		int yEnd = yBegin + height;
 		
-		g2.drawImage(img, xBegin, yBegin, xEnd, yEnd, 0, 0, bubble.getWidth(), bubble.getHeight(),
-				null);
+		g2.drawImage(img, xBegin, yBegin, xEnd, yEnd, 0, 0, width, height, null);
 	}
 	
 	private void setAlpha(Graphics2D g2) {
@@ -51,8 +54,7 @@ public class FallAnimation extends FiniteAnimation {
 	}
 	
 	private BufferedImage renderBubble() {
-		BufferedImage img = new BufferedImage(bubble.getWidth(), bubble.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		bubble.render(img.getGraphics());
 		return img;
 	}

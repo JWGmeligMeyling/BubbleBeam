@@ -27,25 +27,24 @@ public class ConfettiAnimation extends FiniteAnimation {
 	protected static final int CONFETTI_RADIUS = (int) Math.sqrt(HEIGHT * HEIGHT * 2);
 	
 	protected final static int STRIP_SIZE = 9;
-	protected static final float MIN_CONFETTI_SPEED = 2f;
-	protected static final float MAX_CONFETTI_SPEED = 5f;
+	protected static final double MIN_CONFETTI_SPEED = 2f;
+	protected static final double MAX_CONFETTI_SPEED = 5f;
 	protected static final int CONFETTI_HALF_WIDTH = 6;
 	
-	protected float[] direction = new float[STRIP_SIZE];
-	protected float[] angle = new float[STRIP_SIZE];
-	protected float[] speed = new float[STRIP_SIZE];
+	protected final double[] direction = new double[STRIP_SIZE];
+	protected final double[] angle = new double[STRIP_SIZE];
+	protected final double[] speed = new double[STRIP_SIZE];
 	
-	private Point position;
+	private final Point position;
 	
 	public ConfettiAnimation(int maxTime, Bubble bubble) {
 		super(maxTime);
+		int radius = bubble.getRadius();
 		Point pos = bubble.getPosition();
-		this.position = new Point(pos.x, pos.y);
-		this.position.translate(bubble.getRadius(), bubble.getRadius());
-		bubble.setPosition(new Point(0, 0));
+		this.position = new Point(pos.x + radius, pos.y + radius);
 		for (int i = 0; i < STRIP_SIZE; i++) {
-			direction[i] = (float) (random.nextFloat() * Math.PI * 2);
-			angle[i] = (float) (random.nextFloat() * Math.PI * 2);
+			direction[i] = random.nextFloat() * Math.PI * 2;
+			angle[i] = random.nextFloat() * Math.PI * 2;
 			speed[i] = random.nextFloat() * (MAX_CONFETTI_SPEED - MIN_CONFETTI_SPEED)
 					+ MIN_CONFETTI_SPEED;
 		}

@@ -29,8 +29,8 @@ public class PowerUpBubbleFactory extends AbstractBubbleFactory {
 	
 	private static final Logger log = LoggerFactory.getLogger(PowerUpBubbleFactory.class);
 	
-	protected int chanceOfPowerup = 10;	// 1-10. 1 is one in ten chance, 10 is all bubbles are powerups
-	protected int chanceOfExtraEffect = 1;	// 1-10. 1 is one in ten chance, 10 is all bubbles have extra effects
+	protected int chanceOfPowerup = 3;	// 1-10. 1 is one in ten chance, 10 is all bubbles are powerups
+	protected int chanceOfExtraEffect = 2;	// 1-10. 1 is one in ten chance, 10 is all bubbles have extra effects
 	
 	protected final Class<?> primaryEffects[] = {
 			JokerBubble.class, BombBubble.class, StoneBubble.class };
