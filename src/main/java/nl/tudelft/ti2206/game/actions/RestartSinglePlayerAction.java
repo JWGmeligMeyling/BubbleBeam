@@ -40,6 +40,7 @@ public class RestartSinglePlayerAction extends AbstractAction {
 					
 					frame.pack();
 					frame.setLocationRelativeTo(this.singlePlayerFrame);
+					frame.setSound(singlePlayerFrame.hasSound());
 					this.singlePlayerFrame.dispose();
 					frame.setVisible(true);
 					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

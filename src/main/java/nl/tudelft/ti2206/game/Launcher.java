@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
-import nl.tudelft.ti2206.game.backend.mode.PowerupGameMode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class Launcher {
 		
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		
-		Class<? extends GameMode> gameMode = PowerupGameMode.class;
+		Class<? extends GameMode> gameMode = ClassicGameMode.class;
 		
 		GameModel gameModel = new GameModel(gameMode);
 		MouseCannonController masterCannonController = new MouseCannonController();
