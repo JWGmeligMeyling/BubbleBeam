@@ -1,8 +1,6 @@
 package nl.tudelft.ti2206.game.backend;
 
-import static org.junit.Assert.*;
 import nl.tudelft.ti2206.game.event.GameListener;
-import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.EventPacket;
 

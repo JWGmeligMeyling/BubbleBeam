@@ -18,6 +18,7 @@ import nl.tudelft.ti2206.game.backend.GameController;
 @ModeName("Drunk Mode")
 @ModeBubbleFactory(DrunkBubbleFactory.class)
 @ModeMusic("/drunk_music.wav")
+@ModeMaps({"/board.txt"})
 public class DrunkGameMode extends PowerupGameMode {
 
 	private static final long serialVersionUID = -3111557227462971615L;

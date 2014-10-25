@@ -92,7 +92,7 @@ public class BombBubble extends DecoratedBubble {
 	}
 	
 	@Override
-	public FiniteAnimation getAnimation(Bubble bubble) {
-		return new ExplosionAnimation(bubble);
+	public FiniteAnimation getAnimation() {
+		return new ExplosionAnimation(this);
 	}
 }

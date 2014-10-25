@@ -55,7 +55,7 @@ public class PowerUpBubbleFactoryTest {
 	@Test
 	public void testDrunkJokerBubble() {
 		 // Force primary and secundary effect
-		setRandom(CHANCE, 1);
+		setRandom(CHANCE, 0);
 		// Force joker
 		setRandom(PRIMARY_EFFECT, 0);
 		// Force drunk bubble left

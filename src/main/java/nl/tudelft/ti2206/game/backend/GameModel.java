@@ -38,7 +38,7 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	
 	private transient AbstractEventTarget<GameListener> eventTarget = new AbstractEventTarget<GameListener>();
 	
-	private final Set<Color> remainingColors;
+	private Set<Color> remainingColors;
 	
 	private final Class<? extends GameMode> gameMode;
 	
@@ -58,12 +58,14 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	
 	private Dimension screenSize;
 	
-	public GameModel(final Class<? extends GameMode> gameMode, final BubbleMesh bubbleMesh) {
-		log.info("Constructed {} with {} and {}", this, gameMode, bubbleMesh);
-		
+	public GameModel(final Class<? extends GameMode> gameMode) {
+		log.info("Constructed {} with {}", this, gameMode);
+		this.gameMode = gameMode;
+	}
+	
+	public void setBubbleMesh(BubbleMesh bubbleMesh) {
 		this.bubbleMesh = bubbleMesh;
 		this.remainingColors = Sets.newHashSet(bubbleMesh.getRemainingColours());
-		this.gameMode = gameMode;
 	}
 	
 	public void retainRemainingColors(final Collection<Color> colours) {
@@ -179,5 +181,5 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	public long getStart() {
 		return start;
 	}
-	
+
 }
