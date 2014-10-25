@@ -148,7 +148,7 @@ public class SinglePlayerFrame extends JFrame implements
 		fillFrame(contentPane);
 	}
 	
-	private boolean sound = false;
+	private boolean sound = true;
 
 	protected void fillBackground(Container contentPane){
 		contentPane.setBackground(mainBackgroundColor);

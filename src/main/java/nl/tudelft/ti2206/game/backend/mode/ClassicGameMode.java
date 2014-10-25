@@ -23,7 +23,7 @@ import nl.tudelft.ti2206.game.backend.GameModel;
  */
 @ModeName("Classic Mode")
 @ModeBubbleFactory(ClassicBubbleFactory.class)
-@ModeMusic("/classic_music.wav")
+@ModeMusic("/classic.wav")
 @ModeMaps({"/board.txt"})
 public class ClassicGameMode implements GameMode {
 
