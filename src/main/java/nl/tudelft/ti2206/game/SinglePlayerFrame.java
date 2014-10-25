@@ -9,14 +9,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -185,6 +188,7 @@ public class SinglePlayerFrame extends JFrame implements
 	protected void fillFrame(Container contentPane) {
 		fillGamePanel(contentPane);
 		fillMenu(contentPane);
+		fillLogo(contentPane);
 	}
 
 	protected void fillMenu(Container contentPane) {
@@ -198,12 +202,18 @@ public class SinglePlayerFrame extends JFrame implements
 		fillVersionLabel(contentPane);
 	}
 	
+	protected void fillLogo(Container contentPane){
+		JLabel logoLabel = new JLabel(getLogoImage("/logo.png"));
+		contentPane.add(logoLabel, new GridBagConstraints(0, 0, 3, 1, 0d, 0d,
+				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, PADDED, 0,
+				0));
+	}
 	
 	protected void fillGamePanel(Container contentPane) {
 		layerUI = new EffectsLayer();
 		JLayer<JComponent> jlayer = new JLayer<JComponent>(gamePanel, layerUI);
 		gamePanel.setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, mainBackgroundColor,secondaryColor));
-		contentPane.add(jlayer, new GridBagConstraints(0, 0, 1, GB_PANELHEIGHT, 0d, 0d,
+		contentPane.add(jlayer, new GridBagConstraints(0, 1, 1, GB_PANELHEIGHT, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.NONE, PADDED, 0,
 				0));
 	}
@@ -211,14 +221,14 @@ public class SinglePlayerFrame extends JFrame implements
 	protected void fillScoreLabel(Container contentPane) {
 		scoreLabel.setFont(new Font("Sans",Font.BOLD,40));
 		scoreLabel.setForeground(secondaryColor);
-		contentPane.add(scoreLabel, new GridBagConstraints(0, GB_PANELHEIGHT, 1, 1, 0d, 0d,
+		contentPane.add(scoreLabel, new GridBagConstraints(0, 1 + GB_PANELHEIGHT, 1, 1, 0d, 0d,
 				GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
 				HORIZONTAL_PADDING, 40, 30));
 	}
 
 	protected void fillHighscoreButton(Container contentPane){
 		JButton highscoreButton = new ImagedButton("/highscore_button.png",highscoreAction,mainBackgroundColor);
-		contentPane.add(highscoreButton, new GridBagConstraints(GB_MENUCOLUMN, 0, 1, 1, 1d, 0d,
+		contentPane.add(highscoreButton, new GridBagConstraints(GB_MENUCOLUMN, 1, 1, 1, 1d, 0d,
 				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 				NO_BOTTOM_PADDING, 30, 30));
 	}
@@ -226,41 +236,41 @@ public class SinglePlayerFrame extends JFrame implements
 	protected void fillExitButton(Container contentPane) {
 		JButton exit = new ImagedButton("/exit_button_v2.png",exitAction,mainBackgroundColor);
 		
-		contentPane.add(exit, new GridBagConstraints(GB_MENUCOLUMN, 1, 1, 1, 0d, 0d,
+		contentPane.add(exit, new GridBagConstraints(GB_MENUCOLUMN, 2, 1, 1, 0d, 0d,
 				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 				HORIZONTAL_PADDING, 30, 30));
 	}
 
 	protected void fillRestartButton(Container contentPane) {
 		JButton restartSingle = new ImagedButton("/single_button_v2.png",restartSinglePlayer,mainBackgroundColor);
-		contentPane.add(restartSingle, new GridBagConstraints(GB_MENUCOLUMN, 2, 1, 1, 1d, 0d,
+		contentPane.add(restartSingle, new GridBagConstraints(GB_MENUCOLUMN, 3, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				HORIZONTAL_PADDING, 30, 30));
 	}
 
 	protected void fillRestartMultiplayer(Container contentPane) {
 		JButton restartMulti = new ImagedButton("/host_multi_button.png",restartMultiplayerAction,mainBackgroundColor);
-		contentPane.add(restartMulti, new GridBagConstraints(GB_MENUCOLUMN, 3, 1, 1, 1d, 0d,
+		contentPane.add(restartMulti, new GridBagConstraints(GB_MENUCOLUMN, 4, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				HORIZONTAL_PADDING, 30, 30));
 	}
 
 	protected void fillFindMultiplayerRestart(Container contentPane) {
 		JButton button = new ImagedButton("/find_multi_button.png",findMultiplayerAction,mainBackgroundColor);
-		contentPane.add(button, new GridBagConstraints(GB_MENUCOLUMN, 4, 1, 1, 1d, 0d,
+		contentPane.add(button, new GridBagConstraints(GB_MENUCOLUMN, 5, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				HORIZONTAL_PADDING, 30, 30));
 	}
 
 	protected void fillIpAddressField(Container contentPane) {
-		contentPane.add(ipField, new GridBagConstraints(GB_MENUCOLUMN, 5, 1, 1, 1d, 0d,
+		contentPane.add(ipField, new GridBagConstraints(GB_MENUCOLUMN, 6, 1, 1, 1d, 0d,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
 				HORIZONTAL_PADDING, 30, 30));
 	}
 
 	protected void fillVersionLabel(Container contentPane) {
 		JLabel version = new JLabel(VERSION_STRING);
-		contentPane.add(version, new GridBagConstraints(GB_MENUCOLUMN, 6, 1, 1, 1d, 1d,
+		contentPane.add(version, new GridBagConstraints(GB_MENUCOLUMN, 7, 1, 1, 1d, 1d,
 				GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL,
 				HORIZONTAL_PADDING, 30, 30));
 	}
@@ -345,5 +355,13 @@ public class SinglePlayerFrame extends JFrame implements
 		return executor;
 	}
 
-	
+	private ImageIcon getLogoImage(String url) {
+		try {
+			BufferedImage scale = ImageIO.read(ImagedButton.class.getResourceAsStream(url));
+			ImageIcon out = new ImageIcon(scale);
+			return out;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
