@@ -5,7 +5,6 @@ import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -32,12 +31,12 @@ public class JokerBubble extends DecoratedBubble {
 	
 	protected final static AudioClip HORN_SOUND = Applet.newAudioClip(JokerBubble.class
 			.getResource("/horn.wav"));
-
+	
 	protected ColouredBubble bubble;
 	protected boolean hasColor = false;
 	protected boolean snapped = false;
 	
-	private transient Image jokerImage;
+	private final static transient Image JOKER_IMAGE = _getBubbleImage();
 	
 	public JokerBubble() {
 		this(new ColouredBubble(Color.WHITE));
@@ -45,7 +44,9 @@ public class JokerBubble extends DecoratedBubble {
 	
 	/**
 	 * Construct a new {@code JokerBubble}
-	 * @param bubble The {@link ColouredBubble} for this {@code JokerBubble}
+	 * 
+	 * @param bubble
+	 *            The {@link ColouredBubble} for this {@code JokerBubble}
 	 */
 	public JokerBubble(ColouredBubble bubble) {
 		super(new PopSoundBubble(HORN_SOUND, bubble));
@@ -84,12 +85,9 @@ public class JokerBubble extends DecoratedBubble {
 		return hasColor;
 	}
 	
-	protected Image getBubbleImage() {
+	protected static Image _getBubbleImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(JokerBubble.class
-					.getResourceAsStream("/star.PNG"));
-			return scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(),
-					Image.SCALE_SMOOTH);
+			return ImageIO.read(JokerBubble.class.getResourceAsStream("/scaledStar.png"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -97,11 +95,9 @@ public class JokerBubble extends DecoratedBubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		if (jokerImage == null)
-			jokerImage = getBubbleImage();
-		if(!snapped)
-			graphics.drawImage(jokerImage, bubble.getX(), bubble.getY(), bubble.getWidth(),
-				bubble.getHeight(), null);
+		if (!snapped)
+			graphics.drawImage(JOKER_IMAGE, bubble.getX(), bubble.getY(), bubble.getWidth(),
+					bubble.getHeight(), null);
 		else
 			bubble.render(graphics);
 	}
