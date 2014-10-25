@@ -1,6 +1,7 @@
 package nl.tudelft.ti2206.game;
 
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.io.IOException;
 
@@ -109,6 +110,8 @@ public class MultiplayerFrame extends SinglePlayerFrame {
 	}
 	
 	protected void fillSlaveScoreLabel(Container contentPane) {
+		slaveScoreLabel.setFont(new Font("Sans",Font.BOLD,40));
+		slaveScoreLabel.setForeground(secondaryColor);
 		contentPane.add(slaveScoreLabel, new GridBagConstraints(3, 4, 1, 1, 0d, 0d,
 				GridBagConstraints.WEST, GridBagConstraints.NONE, PADDED, 30,
 				30));

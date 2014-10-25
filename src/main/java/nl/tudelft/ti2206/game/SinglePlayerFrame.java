@@ -66,8 +66,8 @@ public class SinglePlayerFrame extends JFrame implements
 	//protected final int gb_rowGame = 1;
 
 	
-	private final Color mainBackgroundColor = new Color(111,186,241);
-	private final Color secondaryColor = new Color(41,126,181);
+	protected final Color mainBackgroundColor = new Color(111,186,241);
+	protected final Color secondaryColor = new Color(41,126,181);
 	
 	
 	private final AudioClip music;
