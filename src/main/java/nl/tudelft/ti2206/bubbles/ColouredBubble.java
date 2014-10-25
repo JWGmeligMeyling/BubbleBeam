@@ -67,13 +67,20 @@ public class ColouredBubble extends AbstractBubble {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setColor(color);
 		g2.setPaint(new RadialGradientPaint(AbstractBubble.ORIGIN, RADIUS,
-				BASE_COLOR_GRADIENT_RANGE, new Color[] { color, darker(color) }));
-		g2.fillOval(0, 0, AbstractBubble.WIDTH, AbstractBubble.HEIGHT);
+				BASE_COLOR_GRADIENT_RANGE, new Color[] { lighter(color), darker(color) }));
+		g2.fillOval(1, 1, AbstractBubble.RADIUS * 2, AbstractBubble.RADIUS * 2);
 		applyHighlight(g2, AbstractBubble.ORIGIN);
 		applyShadow(g2, AbstractBubble.ORIGIN);
 	}
 	
-	public final static float DARKING_FACTOR = 0.8f;
+	public final static float DARKING_FACTOR = 0.85f;
+	public final static float LIGHTING_FACTOR = 1.3f;
+	
+	private static Color lighter(Color color) {
+		return new Color(Math.min((int)  (color.getRed() * LIGHTING_FACTOR), 255),
+				Math.min((int) (color.getGreen() * LIGHTING_FACTOR), 255),
+				Math.min((int) (color.getBlue() * LIGHTING_FACTOR), 255));
+	}
 	
 	private static Color darker(Color color) {
 		return new Color((int) (color.getRed() * DARKING_FACTOR),
@@ -95,7 +102,7 @@ public class ColouredBubble extends AbstractBubble {
 		g2.fillOval(shadowPos.x, shadowPos.y, SHADOW_DIAMETER, SHADOW_DIAMETER);
 	}
 	
-	private static int HIGHLIGHT_OFFSET = 8, HIGHLIGHT_RADIUS = 6,
+	private static int HIGHLIGHT_OFFSET = 2, HIGHLIGHT_RADIUS = 6,
 			HIGHLIGHT_DIAMETER = HIGHLIGHT_RADIUS * 2;
 	private static float[] HIGHLIGHT_GRADIENT_RANGE = new float[] { 0.0f, 1f };
 	private static Color[] HIGHLIGHT_GRADIENT_COLOURS = new Color[] {
