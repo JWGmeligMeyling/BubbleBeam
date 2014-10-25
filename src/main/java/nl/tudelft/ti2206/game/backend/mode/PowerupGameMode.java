@@ -17,7 +17,7 @@ import nl.tudelft.ti2206.game.backend.GameController;
  */
 @ModeName("Power-up Mode")
 @ModeBubbleFactory(PowerUpBubbleFactory.class)
-@ModeMusic("/power_music.wav")
+@ModeMusic("/power_up.wav")
 @ModeMaps({"/board2.txt","/smallboard.txt", "/spekboard.txt"})
 public class PowerupGameMode extends ClassicGameMode {
 

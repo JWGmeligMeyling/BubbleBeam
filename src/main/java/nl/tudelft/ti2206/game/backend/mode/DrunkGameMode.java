@@ -17,7 +17,7 @@ import nl.tudelft.ti2206.game.backend.GameController;
  */
 @ModeName("Drunk Mode")
 @ModeBubbleFactory(DrunkBubbleFactory.class)
-@ModeMusic("/drunk_music.wav")
+@ModeMusic("/dizzy.wav")
 @ModeMaps({"/board.txt"})
 public class DrunkGameMode extends PowerupGameMode {
 
