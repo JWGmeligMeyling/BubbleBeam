@@ -115,7 +115,7 @@ public class RestartMultiplayerAction extends AbstractAction {
 							masterGameController, slaveGameController, connector);
 					frame.pack();
 					frame.setLocationRelativeTo(this.singlePlayerFrame);
-					
+					frame.setSound(false);
 					singlePlayerFrame.dispose();
 					frame.setVisible(true);
 					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

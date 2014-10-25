@@ -96,7 +96,7 @@ public class SinglePlayerFrame extends JFrame implements
 	protected EffectsLayer layerUI;
 	protected final JLabel scoreLabel;
 	protected JTextField ipField;
-
+	protected JCheckBoxMenuItem soundCheckbox;
 	protected final GameTick gameTick;
 	
 	public SinglePlayerFrame(final MouseCannonController cannonController, final GameController gameController) throws IOException {
@@ -137,8 +137,6 @@ public class SinglePlayerFrame extends JFrame implements
 		});
 
 		gameController.getModel().addEventListener(new GameOverHighscore(this, gameController));
-
-		
 		
 		Container contentPane = this.getContentPane();
 		fillBackground(contentPane);
@@ -148,7 +146,7 @@ public class SinglePlayerFrame extends JFrame implements
 		fillFrame(contentPane);
 	}
 	
-	private boolean sound = false;
+	private boolean sound = true;
 
 	protected void fillBackground(Container contentPane){
 		contentPane.setBackground(mainBackgroundColor);
@@ -168,21 +166,19 @@ public class SinglePlayerFrame extends JFrame implements
 			}
 		}));
 		
-		menu.add(new JCheckBoxMenuItem(new AbstractAction("Sound on") {
+		soundCheckbox = new JCheckBoxMenuItem(new AbstractAction("Sound on") {
 			
 			private static final long serialVersionUID = -8925014850605930693L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sound = !sound;
-				if(sound)
-					music.loop();
-				else 
-					music.stop();
+				setSound(!sound);
 			}
 			
-		}));
+		});
 		
+		soundCheckbox.setSelected(sound);
+		menu.add(soundCheckbox);
 		menubar.add(menu);
 		this.setJMenuBar(menubar);
 	}
@@ -202,6 +198,20 @@ public class SinglePlayerFrame extends JFrame implements
 		fillFindMultiplayerRestart(contentPane);
 		fillIpAddressField(contentPane);
 		fillVersionLabel(contentPane);
+	}
+	
+	public boolean hasSound() {
+		return sound;
+	}
+	
+	public void setSound(boolean sound) {
+		if(this.sound != sound)
+			this.sound = sound;
+		if(sound)
+			music.loop();
+		else 
+			music.stop();
+		soundCheckbox.setSelected(sound);
 	}
 	
 	protected void fillLogo(Container contentPane){
