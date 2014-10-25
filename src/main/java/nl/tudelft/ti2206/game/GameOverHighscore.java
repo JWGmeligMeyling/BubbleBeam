@@ -28,16 +28,16 @@ public class GameOverHighscore implements GameOverEventListener {
 	
 	@Override
 	public void gameOver(GameOverEvent event) {
-		GameModel gameModel = gameController.getModel();
-		Class<? extends GameMode> gameMode = gameModel.getGameMode();
-		gameModel.setGameOver(true);
-		
-		if(frame instanceof MultiplayerFrame){		//don't add scores for multiplayer
+		//don't add scores for multiplayer
+		if(frame instanceof MultiplayerFrame) {
 			return;
 		}
 		
+		GameModel gameModel = gameController.getModel();
+		Class<? extends GameMode> gameMode = gameModel.getGameMode();
+		
 		Highscore highscore = Highscore.getHighscores();
-		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameModel.getGameMode());
+		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameMode);
 		ScoreItem scoreItem = ScoreItem.createScoreItem(gameModel);
 		
 		//choose which highscore to add to depending on the factory

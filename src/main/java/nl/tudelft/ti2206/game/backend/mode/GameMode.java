@@ -2,9 +2,11 @@ package nl.tudelft.ti2206.game.backend.mode;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.io.IOException;
 import java.io.Serializable;
 
 import nl.tudelft.ti2206.bubbles.factory.BubbleFactory;
+import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.game.backend.Tickable;
 import nl.tudelft.ti2206.game.event.GameListener;
 
@@ -66,5 +68,25 @@ public interface GameMode extends GameListener, Tickable, Serializable {
 		String path = this.getClass().getAnnotation(ModeMusic.class).value();
 		return Applet.newAudioClip(GameMode.class.getResource(path));
 	}
+	
+	/**
+	 * 
+	 * @return an array of {@link BubbleMesh} files for this {@link GameMode}
+	 */
+	default String[] getMaps() {
+		return getClass().getAnnotation(ModeMaps.class).value();
+	}
+
+	/**
+	 * @return the next {@link BubbleMesh} for this {@link GameMode}
+	 * @throws IOException
+	 *             If an I/O error occurs
+	 */
+	BubbleMesh nextMap() throws IOException;
+	
+	/**
+	 * @return true if the {@link GameMode} has another map
+	 */
+	boolean hasNextMap();
 	
 }

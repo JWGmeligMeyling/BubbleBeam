@@ -1,5 +1,8 @@
 package nl.tudelft.ti2206.cannon;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.util.Vector2f;
 import nl.tudelft.ti2206.game.event.CannonListener.*;
 
@@ -12,6 +15,8 @@ import nl.tudelft.ti2206.game.event.CannonListener.*;
  */
 public class AbstractCannonController implements CannonController {
 
+	private static final Logger log = LoggerFactory.getLogger(AbstractCannonController.class);
+			
 	protected final CannonModel model;
 	
 	/**
@@ -46,6 +51,7 @@ public class AbstractCannonController implements CannonController {
 
 	@Override
 	public void load() {
+		log.info("Loading the cannon");
 		model.setCannonState(new CannonLoadedState(this));
 	}
 
