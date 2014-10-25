@@ -67,7 +67,7 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	 * @return new {@code ScoreItem}
 	 */
 	public static ScoreItem createScoreItem(GameModel gameModel) {
-		return new ScoreItem(gameModel.getScore(), gameModel.getStart(), System.currentTimeMillis());
+		return new ScoreItem(gameModel.getScore(), System.currentTimeMillis(), System.currentTimeMillis());
 	}
 	
 }

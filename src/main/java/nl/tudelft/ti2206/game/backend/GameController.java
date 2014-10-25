@@ -34,6 +34,10 @@ import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
  */
 public class GameController implements Controller<GameModel>, Tickable {
 	
+	public enum GameControllerType {
+		SINGLEPLAYER, MULTIPLAYER_MASTER, MULTIPLAYER_SLAVE;
+	}
+	
 	private static final Logger log = LoggerFactory.getLogger(GameController.class);
 	
 	private static final float MOVING_BUBBLE_SPEED = 15f;
@@ -41,7 +45,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected final GameModel model;
 	protected final GameMode gameMode;
 	protected final CannonController cannonController;
-	protected final boolean intelligent;
+	protected final GameControllerType type;
 	
 	protected GameTick gameTick;
 	
@@ -56,7 +60,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 *             If an I/O error occurs
 	 */
 	public GameController(final GameModel model, final CannonController cannonController) throws IOException {
-		this(model, cannonController, false);
+		this(model, cannonController, GameControllerType.SINGLEPLAYER);
 	}
 	
 	/**
@@ -72,11 +76,11 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 *             If an I/O error occurs
 	 */
 	public GameController(final GameModel model, final CannonController cannonController,
-			boolean intelligent) throws IOException {
+			GameControllerType type) throws IOException {
 
 		log.info("Contructed {} with {} and {}", this, model, cannonController);
 		
-		this.intelligent = intelligent;
+		this.type = type;
 		this.model = model;
 		this.cannonController = cannonController;
 		
@@ -111,11 +115,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 	protected void setBubbleMesh(BubbleMesh bubbleMesh) {
 		bubbleMesh.calculatePositions();
 		bubbleMesh.addEventListener(new GameControllerBubbleMeshListener(model));
-		
-		model.setGameOver(false);
-		model.setWon(false);
+		model.setGameState(GameState.PLAYING);
 		model.setBubbleMesh(bubbleMesh);
-		
 		cannonController.load();
 	}
 	
@@ -171,9 +172,9 @@ public class GameController implements Controller<GameModel>, Tickable {
 	@Override
 	public void gameTick() {
 		BubbleMesh bubbleMesh = model.getBubbleMesh();
-
-		if (model.isShooting()) {
-			MovingBubble shotBubble = model.getShotBubble();
+		final MovingBubble shotBubble = model.getShotBubble();
+		
+		if (shotBubble != null) {
 			
 			shotBubble.addVelocity();
 			shotBubble.gameTick();
@@ -187,7 +188,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		}
 		
 		try {
-			if(!model.isGameOver()) {
+			if(model.getGameState().equals(GameState.PLAYING)) {
 				gameMode.gameTick();
 			}
 		}
@@ -209,7 +210,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 		
 		direction.normalise();
 		
-		if (model.isShooting()) {
+		if (model.getShotBubble() != null) {
 			throw new IllegalStateException("Wait for another shoot");
 		}
 		
@@ -224,7 +225,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	}
 	
 	protected void updateBubbles() {
-		if(!intelligent) {
+		if(!type.equals(GameControllerType.MULTIPLAYER_SLAVE)) {
 			Bubble nextBubble = createAmmoBubble();
 			Bubble previousNextBubble = model.getNextBubble();
 			model.setNextBubble(nextBubble);
@@ -264,7 +265,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 				throw new GameOver(true);
 			}
 			
-			if(!model.isGameOver())
+			if(model.getGameState().equals(GameState.PLAYING))
 				cannonController.load();
 			
 		} catch (GameOver e) {
@@ -281,26 +282,28 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 * @param gameOver {@link GameOver} exception that was thrown
 	 */
 	public void gameOver(GameOver gameOver) {
-		if(model.isGameOver()) return;
+		if(!model.getGameState().equals(GameState.PLAYING)) return;
 		
-		if(gameOver.isWin())
+		if(gameOver.isWin()) {
 			log.info("Hurray, you won the game");
-		else
+			model.setGameState(GameState.WIN);
+		}
+		else {
 			log.info("Sorry dawg, the game is over");
+			model.setGameState(GameState.LOSE);
+		}
 		
 		cannonController.setState(new CannonShootState());
-		model.setGameOver(true);
-		model.setWon(gameOver.isWin());
 		model.notifyObservers();
 		
-		if(gameOver.isWin() && gameMode.hasNextMap()) {
+		if(type.equals(GameControllerType.SINGLEPLAYER) && gameOver.isWin() && gameMode.hasNextMap()) {
 			try {
 				loadNextBubbleMesh();
+				return;
 			}
 			catch (IOException e) {
 				log.warn("Failed to instantiate new level", e);
 			}
-			return;
 		}
 		
 		model.trigger(listener -> listener.gameOver(new GameOverEvent(this, gameOver)));
@@ -311,7 +314,7 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 */
 
 	public void insertRow() {
-		if(!intelligent) {
+		if(!type.equals(GameControllerType.MULTIPLAYER_SLAVE)) {
 			try {
 				model.getBubbleMesh().insertRow(this);
 			} catch (GameOver e) {

@@ -50,11 +50,7 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	
 	private long score = 0;
 	
-	private boolean gameOver = false;
-	
-	private boolean won = false;
-	
-	private final long start = System.currentTimeMillis();
+	private GameState state = GameState.PLAYING;
 	
 	private Dimension screenSize;
 	
@@ -79,11 +75,7 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	public BubbleMesh getBubbleMesh() {
 		return bubbleMesh;
 	}
-	
-	public boolean isShooting() {
-		return shotBubble != null;
-	}
-	
+		
 	public MovingBubble getShotBubble() {
 		return shotBubble;
 	}
@@ -115,26 +107,23 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 		return score;
 	}
 
-	public void setScore(long score) {
-		this.score = score;
-		this.setChanged();
-	}
-	
 	public void incrementScore(long amount) {
-		setScore(score + amount);
+		score += amount;
+		setChanged();
 	}
 
 	public Set<Color> getRemainingColors() {
 		return remainingColors;
 	}
+	
+	public void setGameState(GameState state) {
+		this.state = state;
 
-	public boolean isGameOver() {
-		return gameOver;
-	}
-
-	public void setGameOver(boolean gameOver) {
-		this.gameOver = gameOver;
 		this.setChanged();
+	}
+	
+	public GameState getGameState() {
+		return state;
 	}
 
 	public Dimension getScreenSize() {
@@ -161,14 +150,6 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 		eventTarget.trigger(action);
 	}
 
-	public void setWon(boolean b) {
-		won=b;
-	}
-	
-	public boolean isWon(){
-		return won;
-	}
-
 	public Class<? extends GameMode> getGameMode() {
 		return gameMode;
 	}
@@ -177,9 +158,5 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
         in.defaultReadObject();
         eventTarget = new AbstractEventTarget<GameListener>();
     }
-
-	public long getStart() {
-		return start;
-	}
 
 }

@@ -202,7 +202,7 @@ public class GameControllerTest {
 	}
 	
 	protected static void verifyGameOver(GameModel gameModel) {
-		verify(gameModel).setGameOver(true);
+		verify(gameModel).setGameState(GameState.LOSE);
 		verify(gameModel).notifyObservers();
 		verify(gameModel).trigger(any());
 	}

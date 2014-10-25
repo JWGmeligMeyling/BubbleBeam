@@ -108,8 +108,8 @@ public class FindMultiplayerAction extends AbstractAction {
 				}
 				
 				MouseCannonController masterCannonController = new MouseCannonController();
-				GameController masterGameController = new GameController(slaveGameModelRef.get(), masterCannonController);
-				GameController slaveGameController = new GameController(masterGameModelRef.get(), new AbstractCannonController(), true);
+				GameController masterGameController = new GameController(slaveGameModelRef.get(), masterCannonController, GameController.GameControllerType.MULTIPLAYER_MASTER);
+				GameController slaveGameController = new GameController(masterGameModelRef.get(), new AbstractCannonController(), GameController.GameControllerType.MULTIPLAYER_SLAVE);
 				MultiplayerFrame frame = new MultiplayerFrame(masterCannonController, masterGameController, slaveGameController, connector);
 				
 				frame.pack();
