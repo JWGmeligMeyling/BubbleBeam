@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
  */
 public class BubbleMeshParser {
 	
-	private static final Color PURPLE = new Color(200, 0, 230);
+	public static final Color PURPLE = new Color(200, 0, 230);
 	protected final List<String> rows;
 	protected final int rowAmount;
 	protected final int rowSize;
