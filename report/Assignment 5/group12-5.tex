@@ -147,7 +147,7 @@ The \texttt{GameController} is responsible for the generic game logic. See also 
 % ========================
 \subsubsection{Game Mode}
 \label{sec:gmmde}
-From the requirements \texttt{M-191} to \texttt{M-194} we expect a \texttt{Game Mode} to have the following abilities: (1) it should be able to provide a certain \texttt{BubbleFactory} to the \texttt{GameController}, so that it can create the correct ammunation for the game mode; (2) it should be able to listen for \texttt{GameEvents}, for example to award points or insert new bubbles after a few misses; and (3) it should be able to listen on \texttt{GameTicks} to perform changes over time, such as pushing bubbles slowly to the bottom in the timed mode. Furthermore, we need to have access to the \texttt{GameController} to invoke these actions, and we also need to add some calls to the \texttt{GameModel} in the \texttt{GameController}.
+From the requirements \texttt{M-191} to \texttt{M-194} we expect a \texttt{Game Mode} to have the following abilities: (1) it should be able to provide a certain \texttt{BubbleFactory} to the \texttt{GameController}, so that it can create the correct ammunition for the game mode; (2) it should be able to listen for \texttt{GameEvents}, for example to award points or insert new bubbles after a few misses; and (3) it should be able to listen on \texttt{GameTicks} to perform changes over time, such as pushing bubbles slowly to the bottom in the timed mode. Furthermore, we need to have access to the \texttt{GameController} to invoke these actions, and we also need to add some calls to the \texttt{GameModel} in the \texttt{GameController}.
 
 \begin{figure}[H]
     \begin{center}
@@ -165,7 +165,7 @@ From the requirements \texttt{M-191} to \texttt{M-194} we expect a \texttt{Game 
     \caption{CRC-Card for the \texttt{GameMode}}
 \end{figure}
 
-Since we want a \texttt{GameMode} to hook onto \texttt{GameEvents}, we decided it should be a \texttt{GameListener}. Because we also want to hook on \texttt{GameTicks}, we decided a \texttt{GameMode} should also be \texttt{Tickable}. For the \texttt{BubbleFactory} and name of the \texttt{GameMode}, we defined getters in the \texttt{GameMode} interface.
+Since we want a \texttt{GameMode} to hook onto \texttt{GameEvents}, we decided it should implement \texttt{GameListener}. Because we also want to hook on \texttt{GameTicks}, we decided a \texttt{GameMode} should also implement \texttt{Tickable}. For the \texttt{BubbleFactory} and name of the \texttt{GameMode}, we defined getters in the \texttt{GameMode} interface.
 
 \begin{figure}[H]
 	\centering
@@ -241,11 +241,11 @@ Now we have access to all required events in the multiplayer, which also allows 
 % 	POP ANIMATIONS
 % ==============================
 \subsection{Pop animations}
-In the prvious sprint we already implemented two pop animmations for our requirement \texttt{M-123}. But we could only play a the same pop animation for all bubbles. In this sprint we want to add multiple pop animations and give different bubbles different animations (requirement \texttt{M-166}).
+In the prvious sprint we already implemented two pop animmations for our requirement \texttt{M-123}. But we could only play the same pop animation for all bubbles. In this sprint we want to add multiple pop animations and give different bubbles different animations (requirement \texttt{M-166}).
 
 We already developed a \texttt{FallDownAnimation} and a \texttt{ShrinkAnimation}. We decided to give all normal bubbles the \texttt{ShrinkAnimation} and the \texttt{StoneBubble} the \texttt{FallDownAnimation}. For our \texttt{JokerBubble} we added the \texttt{ConfettiAnimation} class and for the \texttt{BombBubble} the \texttt{ExplosionAnimation} class.
 
-To use different bubble animations for different bubbles we had to add a way to get the animation from the bubble. Therefore we added a method in the \texttt{Bubble} interface: \texttt{getAnimation() : FiniteAnimation}. In this method a \texttt{Bubble} returns the corresponding animation for when the (decorated) bubble pops. We also changed the way the animations are added to the game panel, we nog use the getAnimation method to get the annimation to be added. See Figure \ref{fig:addPopAnimations}.
+To use different bubble animations for different bubbles we had to add a way to get the animation from the bubble. Therefore we added a method in the \texttt{Bubble} interface: \texttt{getAnimation() : FiniteAnimation}. In this method a \texttt{Bubble} returns the corresponding animation for when the (decorated) bubble pops. We also changed the way the animations are added to the game panel, we now use the getAnimation method to get the annimation to be added. See Figure \ref{fig:addPopAnimations}.
 
 \begin{figure}[H]
 	\centering
@@ -292,7 +292,7 @@ To use different bubble animations for different bubbles we had to add a way to 
 % ==============================
 \subsection{Multiple levels in game modes}
 
-According to requirement \texttt{M-201} we want new levels (new maps of bubbles) to appear when a player finishes in the singleplayer mode (requirement \texttt{M-129}). In the previous version we could already load a specific \texttt{BubbleMesh} from a text file, but we only used this for the default map. In this version, we updated the game to support a variety maps.
+According to requirement \texttt{M-201} we want new levels (new maps of bubbles) to appear when a player finishes in the singleplayer mode (requirement \texttt{M-129}). In the previous version we could already load a specific \texttt{BubbleMesh} from a text file, but we only used this for the default map. In this version, we updated the game to support a variety of maps.
 
 \par{} First, we enrichted the \texttt{GameMode} with two new methods: \texttt{hasNextMap} and \texttt{getNextMap}. This basically makes the \texttt{GameMode} an \texttt{Iterator}. Each \texttt{GameMode} should at least provide one map through these methods, but has the ability to provide more maps.
 
@@ -329,17 +329,17 @@ In the next paragraphs we will take a look on our progress and what we have lear
 % Desgin Patterns
 % ==========================
 \subsection{Design Patterns}
-Design patterns have been really valuable to our project. Some complex problems could easily be solved by implementing a design pattern. These design patterns improved our overal code quality, gave our project some structure and also made it easier to extend our game.
+Design patterns have been really valuable to our project. Some complex problems could easily be recognised in a existing design pattern, which provided us a way to deal with it. These design patterns improved our overal code quality, gave our project some structure and also made it easier to extend our game.
 
 Another big advantage was that the code was easier to understand for other project members because of the predefined way the design patterns should work. In combination with the UML and Javadoc it was easier to understand the work of others, without needing to ask them for their explanation.
 
 The code quality was for example improved by implementing the state pattern for the cannon. This design pattern prevented many if-statements and resulted in better organized state handling.
 
-The power-ups, for example, would have been implemented with one class for each combination of power-ups, which are resposible for all the behaviour. With the decorator pattern we where able to split the responsibilities and combine multiple power-ups, like the \texttt{SoundBubble} and \texttt{DrunkBubble}. This made it easier to add new power-ups and prevented a complicated inherentance or copying a lot of code.
+The power-ups, for example, would have been implemented with one class for each combination of power-ups, which are responsible for all the behaviour. With the decorator pattern we where able to split the responsibilities and combine multiple power-ups, like the \texttt{SoundBubble} and \texttt{DrunkBubble}. This made it easier to add new power-ups and prevented a complicated inherentance or copying a lot of code.
 
 By applying the factory method for generating bubbles, multiple game modes could be easily added to extend the game without needing a large generation method with many if-statements.
 
-We will definitely use design patterns in our future projects. During this project the design patterns proved themselves most useful. Furthermore, in future projects design patterns can be used from the beginning to provide an effective structure for the rest of the code.
+We will definitely use design patterns for our future projects. During this project the design patterns proved themselves most useful. Furthermore, in future projects design patterns can be used from the beginning to provide an effective structure for the rest of the code.
 
 \subsection{What we have learned about ourselves as a team}
 We have learned the importance of UML and documentation in general. It is very useful and necessary for communicating with team members about changes team members have made to the code. We learned that every team member has different strenghts, which could all be applied to different parts of the project. 
@@ -370,7 +370,7 @@ During this sprint and the next a lot of bug-hunting was done and many bugs were
 We ran into major trouble with the multiplayer mode. There was not enough time to do it the way we wanted to do it. So we chose to make a more basic play-together mode first. Then in next few sprints we refactored the multiplayer mode the way it was defined in the requirements document.
 
 \subsubsection{Assignment 3 - Test it}
-	With a solid foundation in place, the feature creep could start. We gave the game a solid theme and used more patterns to create more features while trying to maintain a clear control flow of the code. good sprint management was essantial here. We were lacking behind in the  testing department so time was allocated in the plan to make up for this.
+	With a solid foundation in place, the feature creep could start. We gave the game a solid theme and used more patterns to create more features while trying to maintain a clear control flow of the code. good sprint management was essential here. We were lacking behind in the  testing department so time was allocated in the plan to make up for this.
  we quickly achieved around 60\% code coverage. and planned in more time in further sprint to up this to.
  
  \subsubsection{Assigment 4 - Incode the oracle hath speaketh}
