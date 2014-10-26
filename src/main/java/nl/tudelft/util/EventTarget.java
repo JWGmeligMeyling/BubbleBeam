@@ -3,6 +3,8 @@ package nl.tudelft.util;
 import java.util.EventListener;
 import java.util.function.Consumer;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * An {@code EventTarget} is a class on which {@link EventListener
  * EventListeners} can listen for events
@@ -13,6 +15,7 @@ import java.util.function.Consumer;
  *            Type for the {@link EventListener EventListeners} this
  *            {@code EventTarget} can bind
  */
+@ImplementedBy(EventTargetImpl.class)
 public interface EventTarget<T extends EventListener> {
 	
 	/**

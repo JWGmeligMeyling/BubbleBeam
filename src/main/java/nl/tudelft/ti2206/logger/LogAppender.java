@@ -1,4 +1,4 @@
-package org.slf4j;
+package nl.tudelft.ti2206.logger;
 
 /**
  * A log appender acts as a listener for log events

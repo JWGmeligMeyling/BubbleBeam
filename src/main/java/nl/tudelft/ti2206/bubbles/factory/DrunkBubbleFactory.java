@@ -5,14 +5,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubble;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleLeft;
 import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
 import nl.tudelft.ti2206.game.backend.mode.DrunkGameMode;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
 
 /**
  * The {@link DrunkBubbleFactory} is a {@link BubbleFactory} that creates only

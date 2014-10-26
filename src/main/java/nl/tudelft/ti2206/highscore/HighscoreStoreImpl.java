@@ -9,38 +9,37 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.SortedSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
 
 /**
- * Implementation for {@link Highscore}
+ * Implementation for {@link HighscoreStore}
  * 
  * @author Leon Hoek
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class HighscoreImpl implements Highscore {
+public class HighscoreStoreImpl implements HighscoreStore {
 	
 	private static final long serialVersionUID = 8050892681774221931L;
-	private static final Logger log = LoggerFactory.getLogger(HighscoreImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(HighscoreStoreImpl.class);
 	private final static File TEMP_BIN = new File(System.getProperty("user.home"), "BubbleBeam");
 	private final static String FILENAME = "HIGHSCORES";
 	private final static int CAPACITY = 10;
 	
 	private final File file;
 	
-	private final Map<Class<? extends GameMode>, SortedSet<HighscoreItem>> items;
+	private final Map<Class<? extends GameMode>, SortedSet<HighscoreRecord>> items;
 
 	/**
 	 * Construct a new highscore
 	 */
-	public HighscoreImpl() {
+	public HighscoreStoreImpl() {
 		this(new File(TEMP_BIN, FILENAME), Maps.newHashMap());
 	}
 	
@@ -48,11 +47,11 @@ public class HighscoreImpl implements Highscore {
 	 * Construct a new highscore
 	 * @param file file to use
 	 */
-	public HighscoreImpl(File file) {
+	public HighscoreStoreImpl(File file) {
 		this(file, Maps.newHashMap());
 	}
 	
-	protected HighscoreImpl(File file, Map<Class<? extends GameMode>, SortedSet<HighscoreItem>> items) {
+	protected HighscoreStoreImpl(File file, Map<Class<? extends GameMode>, SortedSet<HighscoreRecord>> items) {
 		this.file = file;
 		this.items = items;
 	}
@@ -63,10 +62,10 @@ public class HighscoreImpl implements Highscore {
 	}
 
 	@Override
-	public ImmutableSortedSet<HighscoreItem> getScoresForGameMode(
+	public ImmutableSortedSet<HighscoreRecord> getScoresForGameMode(
 			Class<? extends GameMode> gameMode) {
 		
-		ImmutableSortedSet<HighscoreItem> result;
+		ImmutableSortedSet<HighscoreRecord> result;
 		
 		if(items.containsKey(gameMode)) {
 			result =  ImmutableSortedSet.copyOf(items.get(gameMode));
@@ -79,8 +78,8 @@ public class HighscoreImpl implements Highscore {
 	}
 
 	@Override
-	public void addScore(Class<? extends GameMode> gameMode, HighscoreItem scoreItem) {
-		SortedSet<HighscoreItem> set = items.get(gameMode);
+	public void addScore(Class<? extends GameMode> gameMode, HighscoreRecord scoreItem) {
+		SortedSet<HighscoreRecord> set = items.get(gameMode);
 		
 		if(set == null) {
 			log.debug("Creating new highscore set for game mode {}", gameMode);
@@ -95,7 +94,7 @@ public class HighscoreImpl implements Highscore {
 		save();
 	}
 	
-	protected void cleanUp(SortedSet<HighscoreItem> set) {
+	protected void cleanUp(SortedSet<HighscoreRecord> set) {
 		log.debug("Cleaning up the highscores {}", set);
 		
 		while(set.size() > CAPACITY) {
@@ -132,12 +131,12 @@ public class HighscoreImpl implements Highscore {
 			log.debug("Reading the highscores from {}", file);
 			Object object = input.readObject();
 			
-			if(HighscoreImpl.class.isInstance(object)) {
-				HighscoreImpl highscore = HighscoreImpl.class.cast(object);
+			if(HighscoreStoreImpl.class.isInstance(object)) {
+				HighscoreStoreImpl highscore = HighscoreStoreImpl.class.cast(object);
 				items.putAll(highscore.items);
 			}
 			else {
-				log.warn("Read object {} is not of expected type {}", object, HighscoreImpl.class);
+				log.warn("Read object {} is not of expected type {}", object, HighscoreStoreImpl.class);
 			}
 		}
 		catch (ClassNotFoundException | IOException e) {
@@ -157,8 +156,8 @@ public class HighscoreImpl implements Highscore {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
-		if(HighscoreImpl.class.isInstance(obj)) {
-			HighscoreImpl other = HighscoreImpl.class.cast(obj);
+		if(HighscoreStoreImpl.class.isInstance(obj)) {
+			HighscoreStoreImpl other = HighscoreStoreImpl.class.cast(obj);
 			return file.equals(other.file) && items.equals(other.items); 
 		}
 		return false;

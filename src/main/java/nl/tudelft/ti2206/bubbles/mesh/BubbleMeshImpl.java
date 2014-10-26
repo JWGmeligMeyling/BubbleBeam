@@ -17,10 +17,9 @@ import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
-import nl.tudelft.util.AbstractEventTarget;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
+import nl.tudelft.util.EventTargetImpl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
@@ -33,7 +32,7 @@ import com.google.common.collect.Sets;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class BubbleMeshImpl extends AbstractEventTarget<BubbleMeshListener> implements BubbleMesh {
+public class BubbleMeshImpl extends EventTargetImpl<BubbleMeshListener> implements BubbleMesh {
 	
 	private static final long serialVersionUID = -2580249152755739807L;
 	private static final Logger log = LoggerFactory.getLogger(BubbleMesh.class);

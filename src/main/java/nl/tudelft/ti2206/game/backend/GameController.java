@@ -14,13 +14,11 @@ import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
@@ -70,8 +68,8 @@ public class GameController implements Controller<GameModel>, Tickable {
 	 *            {@link GameModel} to use with the controller
 	 * @param cannonController
 	 *            {@link CannonController} to use with the controller
-	 * @param intelligent
-	 *            false if we want to disable logic
+	 * @param type
+	 *            the {@link GameControllerType} for this {@link GameController}
 	 * @throws IOException
 	 *             If an I/O error occurs
 	 */

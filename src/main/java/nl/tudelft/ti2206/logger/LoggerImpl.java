@@ -1,6 +1,6 @@
-package org.slf4j;
+package nl.tudelft.ti2206.logger;
 
-import static org.slf4j.LogConfig.*;
+import static nl.tudelft.ti2206.logger.LogConfig.*;
 
 import java.util.regex.Matcher;
 

@@ -8,4 +8,4 @@
  * @author Sam Smulders
  *
  */
-package org.slf4j;
+package nl.tudelft.ti2206.logger;

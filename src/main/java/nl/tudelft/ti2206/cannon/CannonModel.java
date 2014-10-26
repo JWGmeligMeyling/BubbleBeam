@@ -3,7 +3,7 @@ package nl.tudelft.ti2206.cannon;
 import java.util.Observable;
 import java.util.function.Consumer;
 
-import nl.tudelft.util.AbstractEventTarget;
+import nl.tudelft.util.EventTargetImpl;
 import nl.tudelft.util.EventTarget;
 import nl.tudelft.util.Vector2f;
 import nl.tudelft.ti2206.game.event.CannonListener;
@@ -17,7 +17,7 @@ import nl.tudelft.ti2206.game.event.CannonListener;
  */
 public class CannonModel extends Observable implements EventTarget<CannonListener> {
 	
-	private AbstractEventTarget<CannonListener> eventTarget = new AbstractEventTarget<>();
+	private EventTargetImpl<CannonListener> eventTarget = new EventTargetImpl<>();
 	
 	private CannonState cannonState = new CannonShootState();
 	private double angle = Math.PI / 2;

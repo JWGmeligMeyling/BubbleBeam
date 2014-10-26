@@ -16,8 +16,8 @@ import javax.swing.JTabbedPane;
 
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.game.backend.mode.ModeName;
-import nl.tudelft.ti2206.highscore.Highscore;
-import nl.tudelft.ti2206.highscore.HighscoreItem;
+import nl.tudelft.ti2206.highscore.HighscoreStore;
+import nl.tudelft.ti2206.highscore.HighscoreRecord;
 
 import org.reflections.Reflections;
 
@@ -28,9 +28,9 @@ public class HighscorePopup extends JDialog{
 
 	private static final long serialVersionUID = 8868501042305536344L;
 	
-	protected final Highscore hs;
+	protected final HighscoreStore hs;
 	
-	public HighscorePopup(Highscore hs, Class<? extends GameMode> selectedGameMode){
+	public HighscorePopup(HighscoreStore hs, Class<? extends GameMode> selectedGameMode){
 		this.hs = hs;
 		
 		Reflections reflections = new Reflections(GameMode.class);
@@ -54,13 +54,13 @@ public class HighscorePopup extends JDialog{
 		
 		gameModes.forEach(gameMode -> {
 			JPanel panel = new JPanel(new GridBagLayout());
-			ImmutableSortedSet<HighscoreItem> items = hs.getScoresForGameMode(gameMode);
+			ImmutableSortedSet<HighscoreRecord> items = hs.getScoresForGameMode(gameMode);
 			
 			GridBagConstraints c = new GridBagConstraints();
 			c.insets = new Insets(0, 0, 0, 10);
 			
 			int i = 1;
-			for(HighscoreItem item : items) {
+			for(HighscoreRecord item : items) {
 				c.gridy = i;
 				c.gridx = 0;
 				panel.add(new JLabel("" + i), c);

@@ -13,7 +13,7 @@ import com.google.common.collect.Sets;
  *
  * @param <T> {@link EventListener} type for this {@link EventTarget}
  */
-public class AbstractEventTarget<T extends EventListener> implements EventTarget<T> {
+public class EventTargetImpl<T extends EventListener> implements EventTarget<T> {
 	
 	protected transient Set<T> listeners = Sets.newHashSet();
 

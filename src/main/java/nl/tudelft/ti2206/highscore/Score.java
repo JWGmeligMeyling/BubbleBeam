@@ -10,7 +10,7 @@ import nl.tudelft.ti2206.game.backend.GameModel;
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class ScoreItem implements Comparable<ScoreItem>, Serializable {
+public class Score implements Comparable<Score>, Serializable {
 
 	/**
 	 * make it serializable for easy file storage
@@ -22,7 +22,7 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	protected final long end;
 	
 	/**
-	 * Construct a new {@link ScoreItem}
+	 * Construct a new {@link Score}
 	 * 
 	 * @param score
 	 *            Amount of points
@@ -31,7 +31,7 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	 * @param end
 	 *            Current time millis when the game ended
 	 */
-	public ScoreItem(final long score, final long start, final long end){
+	public Score(final long score, final long start, final long end){
 		this.score = score;
 		this.start = start;
 		this.end = end;
@@ -50,7 +50,7 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	}
 
 	@Override
-	public int compareTo(ScoreItem o) {
+	public int compareTo(Score o) {
 		int value = Long.signum(o.score - this.score);
 		if(value == 0)
 			value = Long.signum((o.end - o.start) - (this.end - this.start));
@@ -66,8 +66,8 @@ public class ScoreItem implements Comparable<ScoreItem>, Serializable {
 	 *            {@code GameModel} for this {@code ScoreItem}
 	 * @return new {@code ScoreItem}
 	 */
-	public static ScoreItem createScoreItem(GameModel gameModel) {
-		return new ScoreItem(gameModel.getScore(), System.currentTimeMillis(), System.currentTimeMillis());
+	public static Score createScoreItem(GameModel gameModel) {
+		return new Score(gameModel.getScore(), System.currentTimeMillis(), System.currentTimeMillis());
 	}
 	
 }

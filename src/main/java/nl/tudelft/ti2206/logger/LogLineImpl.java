@@ -1,4 +1,4 @@
-package org.slf4j;
+package nl.tudelft.ti2206.logger;
 
 /**
  * The {@code LogLineImpl} is the default implementation for {@link LogLine} and

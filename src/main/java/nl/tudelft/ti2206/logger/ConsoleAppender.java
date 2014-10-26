@@ -1,4 +1,4 @@
-package org.slf4j;
+package nl.tudelft.ti2206.logger;
 
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;

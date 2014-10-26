@@ -5,10 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import nl.tudelft.util.AbstractEventTarget;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
+import nl.tudelft.util.EventTargetImpl;
 
 /**
  * The task of a Connector is to communicate with an other instance of the game.
@@ -18,7 +17,7 @@ import nl.tudelft.util.AbstractEventTarget;
  *
  * @author Sam_
  */
-public class Connector extends AbstractEventTarget<PacketListener> implements
+public class Connector extends EventTargetImpl<PacketListener> implements
 		Runnable, AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(Connector.class);

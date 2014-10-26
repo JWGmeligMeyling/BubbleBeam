@@ -12,13 +12,12 @@ import javax.swing.border.BevelBorder;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameOver;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.PacketListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.GameListener.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MultiplayerFrame extends SinglePlayerFrame {
 	

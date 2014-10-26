@@ -14,8 +14,8 @@ import nl.tudelft.ti2206.game.backend.mode.GameMode;
  * @author Leon Hoek
  *
  */
-@ImplementedBy(HighscoreImpl.class)
-public interface Highscore extends Serializable {
+@ImplementedBy(HighscoreStoreImpl.class)
+public interface HighscoreStore extends Serializable {
 	
 	/**
 	 * @return Get the {@link File} in which the {@code Highscores} are saved
@@ -25,20 +25,20 @@ public interface Highscore extends Serializable {
 	/**
 	 * Get the highscores for a specific {@link GameMode}. An immutable copy of
 	 * the set is returned, since new {@code ScoreItems} should be inserted through
-	 * {@link #addScore(Class, HighscoreItem)}.
+	 * {@link #addScore(Class, HighscoreRecord)}.
 	 * 
 	 * @param gameMode
 	 *            {@code GameMode} for which to seek {@code Highscores}
-	 * @return an {@link ImmutableSortedSet} of {@link ScoreItem ScoreItems}
+	 * @return an {@link ImmutableSortedSet} of {@link Score ScoreItems}
 	 */
-	ImmutableSortedSet<HighscoreItem> getScoresForGameMode(Class<? extends GameMode> gameMode);
+	ImmutableSortedSet<HighscoreRecord> getScoresForGameMode(Class<? extends GameMode> gameMode);
 	
 	/**
 	 * Add a Highscore to the 
 	 * @param gameMode {@link GameMode} for the {@code HighscoreItem}
-	 * @param scoreItem {@link HighscoreItem} to be stored
+	 * @param scoreItem {@link HighscoreRecord} to be stored
 	 */
-	void addScore(Class<? extends GameMode> gameMode, HighscoreItem scoreItem);
+	void addScore(Class<? extends GameMode> gameMode, HighscoreRecord scoreItem);
 	
 	/**
 	 * Clear the highscores
@@ -58,8 +58,8 @@ public interface Highscore extends Serializable {
 	/**
 	 * @return the highscores
 	 */
-	static Highscore getHighscores() {
-		Highscore highscore = new HighscoreImpl();
+	static HighscoreStore getHighscores() {
+		HighscoreStore highscore = new HighscoreStoreImpl();
 		highscore.read();
 		return highscore;
 	}

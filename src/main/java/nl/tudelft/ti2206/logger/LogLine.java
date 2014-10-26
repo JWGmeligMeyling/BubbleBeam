@@ -1,4 +1,4 @@
-package org.slf4j;
+package nl.tudelft.ti2206.logger;
 
 /**
  * A {@code LogLine} acts as a wrapper for a line to be printed to the logger.

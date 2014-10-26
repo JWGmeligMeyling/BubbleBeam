@@ -15,9 +15,9 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
 import nl.tudelft.ti2206.game.event.GameListener.*;
-import nl.tudelft.ti2206.highscore.Highscore;
-import nl.tudelft.ti2206.highscore.HighscoreItem;
-import nl.tudelft.ti2206.highscore.ScoreItem;
+import nl.tudelft.ti2206.highscore.HighscoreStore;
+import nl.tudelft.ti2206.highscore.HighscoreRecord;
+import nl.tudelft.ti2206.highscore.Score;
 
 public class GameOverHighscore implements GameOverEventListener {
 	
@@ -39,9 +39,9 @@ public class GameOverHighscore implements GameOverEventListener {
 		GameModel gameModel = gameController.getModel();
 		Class<? extends GameMode> gameMode = gameModel.getGameMode();
 		
-		Highscore highscore = Highscore.getHighscores();
-		ImmutableSortedSet<HighscoreItem> scores = highscore.getScoresForGameMode(gameMode);
-		ScoreItem scoreItem = ScoreItem.createScoreItem(gameModel);
+		HighscoreStore highscore = HighscoreStore.getHighscores();
+		ImmutableSortedSet<HighscoreRecord> scores = highscore.getScoresForGameMode(gameMode);
+		Score scoreItem = Score.createScoreItem(gameModel);
 		
 		//choose which highscore to add to depending on the factory
 		//either the highscore-list is not yet full or the last highscore on the list is less high than the one to be entered
@@ -62,7 +62,7 @@ public class GameOverHighscore implements GameOverEventListener {
 				@Override
 				public void windowClosing(WindowEvent e) {
 					String name = nameField.getText();
-					HighscoreItem highscoreItem = new HighscoreItem(name, scoreItem);
+					HighscoreRecord highscoreItem = new HighscoreRecord(name, scoreItem);
 					highscore.addScore(gameModel.getGameMode(), highscoreItem);
 					dialog.dispose();
 					showHighscorePopup(highscore, gameMode);
@@ -71,7 +71,7 @@ public class GameOverHighscore implements GameOverEventListener {
 			
 			nameField.addActionListener((e) -> {
 				String name = nameField.getText();
-				HighscoreItem highscoreItem = new HighscoreItem(name, scoreItem);
+				HighscoreRecord highscoreItem = new HighscoreRecord(name, scoreItem);
 				highscore.addScore(gameModel.getGameMode(), highscoreItem);
 				dialog.dispose();
 				showHighscorePopup(highscore, gameMode);
@@ -83,7 +83,7 @@ public class GameOverHighscore implements GameOverEventListener {
 
 	}
 	
-	protected void showHighscorePopup(Highscore highscore, Class<? extends GameMode> gameMode) {
+	protected void showHighscorePopup(HighscoreStore highscore, Class<? extends GameMode> gameMode) {
 		HighscorePopup popup = new HighscorePopup(highscore, gameMode);
 		popup.setModal(true);
 		popup.pack();

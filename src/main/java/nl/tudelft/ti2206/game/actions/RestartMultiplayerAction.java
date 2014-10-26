@@ -14,9 +14,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.AbstractCannonController;
 import nl.tudelft.ti2206.cannon.MouseCannonController;
@@ -24,6 +21,8 @@ import nl.tudelft.ti2206.game.MultiplayerFrame;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.GameModelPacket;
 

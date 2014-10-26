@@ -1,7 +1,7 @@
-package org.slf4j;
+package nl.tudelft.ti2206.logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerImpl;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerImpl;
 
 /**
  * The {@code LoggerFactory} is a utility class producing {@link Logger Loggers}

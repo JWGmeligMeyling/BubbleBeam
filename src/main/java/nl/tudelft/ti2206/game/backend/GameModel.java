@@ -10,9 +10,6 @@ import java.util.Observable;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.Sets;
 
 import nl.tudelft.ti2206.bubbles.Bubble;
@@ -20,9 +17,11 @@ import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.game.GamePanel;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
-import nl.tudelft.util.AbstractEventTarget;
+import nl.tudelft.util.EventTargetImpl;
 import nl.tudelft.util.EventTarget;
 import nl.tudelft.ti2206.game.event.GameListener;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
 
 /**
  * The {@link GameModel} is the model for the {@link GameController} and {@link GamePanel}
@@ -36,7 +35,7 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 
 	private static final Logger log = LoggerFactory.getLogger(GameModel.class);
 	
-	private transient AbstractEventTarget<GameListener> eventTarget = new AbstractEventTarget<GameListener>();
+	private transient EventTargetImpl<GameListener> eventTarget = new EventTargetImpl<GameListener>();
 	
 	private Set<Color> remainingColors;
 	
@@ -156,7 +155,7 @@ public class GameModel extends Observable implements EventTarget<GameListener>, 
 	
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        eventTarget = new AbstractEventTarget<GameListener>();
+        eventTarget = new EventTargetImpl<GameListener>();
     }
 
 }

@@ -6,10 +6,9 @@ import javax.swing.AbstractAction;
 
 import nl.tudelft.ti2206.game.HighscorePopup;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
-import nl.tudelft.ti2206.highscore.Highscore;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nl.tudelft.ti2206.highscore.HighscoreStore;
+import nl.tudelft.ti2206.logger.Logger;
+import nl.tudelft.ti2206.logger.LoggerFactory;
 
 public class HighscoreAction extends AbstractAction {
 
@@ -28,7 +27,7 @@ public class HighscoreAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		log.info("Opening Highscore-popup");
 
-		HighscorePopup popup = new HighscorePopup(Highscore.getHighscores(),
+		HighscorePopup popup = new HighscorePopup(HighscoreStore.getHighscores(),
 				singlePlayerFrame.getModel().getGameMode());
 		
 		popup.setModal(true);

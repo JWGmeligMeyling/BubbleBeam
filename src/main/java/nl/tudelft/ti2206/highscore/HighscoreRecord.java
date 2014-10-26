@@ -1,27 +1,27 @@
 package nl.tudelft.ti2206.highscore;
 
 /**
- * A {@code HighscoreItem} is a {@link ScoreItem} with a name attached to it
+ * A {@code HighscoreItem} is a {@link Score} with a name attached to it
  * 
  * @author Leon Hoek
  * @author Jan-Willem Gmelig Meyling
  *
  */
-public class HighscoreItem extends ScoreItem {
+public class HighscoreRecord extends Score {
 
 	private static final long serialVersionUID = -4413305568318964035L;
 
 	protected final String name;
 	
 	/**
-	 * Construct a new {@link HighscoreItem}
+	 * Construct a new {@link HighscoreRecord}
 	 * 
 	 * @param name
 	 *            the players name
 	 * @param scoreItem
-	 *            {@link ScoreItem} to copy
+	 *            {@link Score} to copy
 	 */
-	public HighscoreItem(String name, ScoreItem scoreItem) {
+	public HighscoreRecord(String name, Score scoreItem) {
 		super(scoreItem.score, scoreItem.start, scoreItem.end);
 		this.name = name;
 	}
