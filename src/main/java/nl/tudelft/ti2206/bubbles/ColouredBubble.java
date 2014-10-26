@@ -88,16 +88,15 @@ public class ColouredBubble extends AbstractBubble {
 				(int) (color.getBlue() * DARKING_FACTOR));
 	}
 	
-	private static int SHADOW_RADIUS = AbstractBubble.WIDTH / 2,
-			SHADOW_DIAMETER = AbstractBubble.WIDTH;
-	private static float[] SHADOW_GRADIENT_RANGE = new float[] { 0.0f, .9f };
+	private static int SHADOW_OFFSET = 9, SHADOW_RADIUS = 6, SHADOW_DIAMETER = SHADOW_RADIUS * 2;
+	private static float[] SHADOW_GRADIENT_RANGE = new float[] { 0.0f, 1f };
 	private static Color[] SHADOW_GRADIENT_COLOURS = new Color[] {
-			new Color(0.0f, 0.0f, 0.0f, 0.1f), new Color(0.0f, 0.0f, 0.0f, 0f) };
+			new Color(0.0f, 0.0f, 0.0f, 0.2f), new Color(0.0f, 0.0f, 0.0f, 0.0f) };
 	
 	protected static void applyShadow(Graphics2D g2, Point origin) {
-		Point shadowPos = new Point(0, 0);
-		Point shadowCenter = new Point(shadowPos.x + SHADOW_RADIUS, shadowPos.y + SHADOW_RADIUS);
-		g2.setPaint(new RadialGradientPaint(shadowCenter, HIGHLIGHT_RADIUS, SHADOW_GRADIENT_RANGE,
+		Point shadowPos = new Point(SHADOW_OFFSET, SHADOW_OFFSET);
+		Point shadowCenter = new Point(SHADOW_OFFSET + SHADOW_RADIUS, SHADOW_RADIUS + SHADOW_OFFSET);
+		g2.setPaint(new RadialGradientPaint(shadowCenter, SHADOW_RADIUS, SHADOW_GRADIENT_RANGE,
 				SHADOW_GRADIENT_COLOURS));
 		g2.fillOval(shadowPos.x, shadowPos.y, SHADOW_DIAMETER, SHADOW_DIAMETER);
 	}
