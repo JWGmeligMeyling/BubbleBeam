@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
  */
 public class BubbleMeshParser {
 	
+	public static final Color PURPLE = new Color(200, 0, 230);
 	protected final List<String> rows;
 	protected final int rowAmount;
 	protected final int rowSize;
@@ -27,8 +28,9 @@ public class BubbleMeshParser {
 	
 	/**
 	 * Construct a new {@code BubbleMeshParser}
+	 * 
 	 * @param rows
-	 * 		The input for the parser
+	 *            The input for the parser
 	 */
 	public BubbleMeshParser(final List<String> rows) {
 		this.rows = rows;
@@ -41,6 +43,7 @@ public class BubbleMeshParser {
 	
 	/**
 	 * Parse
+	 * 
 	 * @return the created {@link BubbleMesh}
 	 */
 	public BubbleMeshImpl parse() {
@@ -73,11 +76,11 @@ public class BubbleMeshParser {
 			
 		}
 		
-		return new BubbleMeshImpl(bubbles[0][0], bubbles[rowAmount-1][0], rowSize);
+		return new BubbleMeshImpl(bubbles[0][0], bubbles[rowAmount - 1][0], rowSize);
 	}
-
+	
 	protected final List<Color> remainingColors = Lists.newArrayList(Color.RED, Color.GREEN,
-			Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
+			Color.BLUE, Color.CYAN, PURPLE, Color.YELLOW);
 	
 	protected Bubble parseBubble(final char character) {
 		final Color color;
@@ -91,30 +94,30 @@ public class BubbleMeshParser {
 		case 'r':
 		case 'R':
 			color = Color.RED;
-			break;
+		break;
 		case 'g':
 		case 'G':
 			color = Color.GREEN;
-			break;
+		break;
 		case 'b':
 		case 'B':
 			color = Color.BLUE;
-			break;
+		break;
 		case 'C':
 		case 'c':
 			color = Color.CYAN;
-			break;
+		break;
 		case 'M':
 		case 'm':
-			color = Color.MAGENTA;
-			break;
+			color = PURPLE;
+		break;
 		case 'Y':
 		case 'y':
 			color = Color.YELLOW;
-			break;
+		break;
 		default:
 			color = getRandomRemainingColor();
-			break;
+		break;
 		}
 		
 		return new ColouredBubble(color);

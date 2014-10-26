@@ -23,7 +23,7 @@ public class BubbleMeshParserTest {
 		Bubble topLeft = mesh.getTopLeftBubble();
 
 		List<Color> expected = ImmutableList.of(Color.RED, Color.GREEN,
-				Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW);
+				Color.BLUE, Color.CYAN, BubbleMeshParser.PURPLE, Color.YELLOW);
 		List<Color> result = Lists
 				.newArrayList(topLeft.traverse(Direction.RIGHT)
 						.map(bubble -> ((ColouredBubble) bubble).getColor())

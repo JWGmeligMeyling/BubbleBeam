@@ -4,7 +4,6 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -26,15 +25,14 @@ import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
 public class BombBubble extends DecoratedBubble {
 	
 	private static final long serialVersionUID = -5406623504377849151L;
-
-	protected static final AudioClip BOMB_SOUND = Applet.newAudioClip(BombBubble.class.getResource("/bomb.wav"));
-
+	
+	protected static final AudioClip BOMB_SOUND = Applet.newAudioClip(BombBubble.class
+			.getResource("/bomb.wav"));
+	
 	protected static final int POP_RADIUS = 2;
 	
 	protected final RadialPopBehaviour popBehaviour;
-	protected transient Image bombImage;
-	
-	protected boolean collided = false;
+	protected final static transient Image BOMB_IMAGE = _getBubbleImage();
 	
 	/**
 	 * Construct a new {@code BombBubble}
@@ -61,12 +59,9 @@ public class BombBubble extends DecoratedBubble {
 		return true;
 	}
 	
-	protected Image getBubbleImage() {
+	protected static Image _getBubbleImage() {
 		try {
-			BufferedImage scaledImage = ImageIO.read(BombBubble.class
-					.getResourceAsStream("/bomb.png"));
-			return scaledImage.getScaledInstance(bubble.getWidth(), bubble.getHeight(),
-					Image.SCALE_SMOOTH);
+			return ImageIO.read(BombBubble.class.getResourceAsStream("/scaledBomb.png"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -74,9 +69,7 @@ public class BombBubble extends DecoratedBubble {
 	
 	@Override
 	public void render(Graphics graphics) {
-		if (bombImage == null)
-			bombImage = getBubbleImage();
-		graphics.drawImage(bombImage, bubble.getX(), bubble.getY(), bubble.getWidth(),
+		graphics.drawImage(BOMB_IMAGE, bubble.getX(), bubble.getY(), bubble.getWidth(),
 				bubble.getHeight(), null);
 		bubble.render(graphics);
 	}
