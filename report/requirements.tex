@@ -33,21 +33,15 @@
 \begin{document}
 \maketitle
 
-% \begin{abstract}
-% Your abstract.
-% \end{abstract}
-
-\pagenumbering{alph}
-
 % ==========================================
 % ASSIGNMENT 1
 % 	REQUIREMENTS ANALYSIS
 % ==========================================
 
 \section{Requirements analysis}
-The stakeholder wants a game like Frozen Bubble, with both the singleplayer and multiplayer modes. Frozen Bubble is a Bubble shooter game, in which players have to shoot colored bubbles with a bubble gun. The bubble gun can be aimed and then shoot a bubble of a specific color. When the shot bubble hits a group of bubbles (two or more) of the same colour, these bubbles will pop and the player will receive an amount of points. When the player fails to hit a bubble of the same colour multiple times, a new row of bubbles will be inserted at the top, pushing the other bubbles. When one of these bubbles reaches the bottom of the screen, or all bubbles are shot, the game is over, and the score will be saved into a highscore board.
+We will develop a game like Frozen Bubble, with both singleplayer and multiplayer modes. Frozen Bubble is a Bubble shooter game, in which players have to shoot colored bubbles with a bubble gun. The bubble gun can be aimed and then shoot a bubble of a specific color. When the shot bubble hits a group of bubbles (two or more) of the same colour, these bubbles will pop and the player will receive an amount of points. When the player fails to hit a bubble of the same colour multiple times, a new row of bubbles will be inserted at the top, pushing the other bubbles. When one of these bubbles reaches the bottom of the screen, or all bubbles are shot, the game is over, and the score will be saved into a highscore board.
 \par In the single player mode, players will face various levels with a different layout of the bubbles.
-\par In the multiplayer mode, each player has his own canvas with a bubble gun and the bubbles to shoot (split screen). The players have different key bindings to rotate and fire the bubble gun.
+\par In the multiplayer mode, each player has his own canvas with a bubble gun and the bubbles to shoot.
 
 
 % ==========================================
@@ -56,9 +50,16 @@ The stakeholder wants a game like Frozen Bubble, with both the singleplayer and 
 % ==========================================
 
 \section{Functional requirements}
-Each requirement is identified by a requirement identifier. This identifier consists of one or more marks pointing priority and status. For the priority status we use the \textit{MoSCoW Prioritisation} \citep{moscow} (\texttt{M} for must have, \texttt{S} for should have, \texttt{C} for could have, \texttt{W} for won't have) and a unique number. Requirements that require further concideration are marked with \texttt{TBD}.
+Each requirement is identified by a requirement identifier. This identifier consists of one or more marks pointing priority and status. For the priority status we use the \textit{MoSCoW Prioritisation} \citep{moscow} (\texttt{M} for must have, \texttt{S} for should have, \texttt{C} for could have, \texttt{W} for won't have) and a unique number.
 
+% 	Note
+%		Removed this sentence from the document as we are not using this
+%
+% Requirements that require further concideration are marked with \texttt{TBD}.
 
+% =====================
+% SECTION: MUST HAVE
+% =====================
 \subsection{Must have}
 
 \begin{itemize}
@@ -66,12 +67,12 @@ Each requirement is identified by a requirement identifier. This identifier cons
 
   \item When the player starts the game...
   \begin{enumerate}
-    \item \texttt{M-114} The canvas is filled with bubbles of certain colours (for example: red, green and blue), the colours are distributed depending on the game mode
+    \item \texttt{M-114} The canvas is filled with bubbles of certain colours (red, green, blue, purple, yellow and cyan), the colours are randomly distributed over the canvas
     \item \texttt{M-115} Bubbles in the canvas are snapped to the top of the canvas
   \end{enumerate}
   
   \item \texttt{M-116} The player should be able to aim the bubble cannon (\texttt{left} and \texttt{right}) using the mouse
-  \item \texttt{M-117} The interface should show the colours for the upcomming bubbles to shoot
+  \item \texttt{M-117} The interface should show the colours for the next two bubbles to shoot (we will also refer to this as ammunition)
 
 % ==========================================
 %  BUBBLE SHOOT BEHAVIOUR
@@ -84,10 +85,11 @@ Each requirement is identified by a requirement identifier. This identifier cons
     \item \texttt{M-120} When a bubble hits a group of bubbles of the same color, these bubbles should pop
     \item \texttt{M-121} When a bubble gets isolated from any bubble at the top of the canvas, they pop
     \item \texttt{M-122} When bubbles pop, points should be awarded to the player
-    \item \texttt{M-123} When you do not succeed in popping bubbles, the player gets a penalty
-    \item \texttt{M-124} For each a to be determined number of penalties a new row of bubbles with the remaining colours is inserted at the top, and other bubbles are shifted down
-    \item \texttt{M-125} When a row of bubbles reaches the bottom of the canvas, the game is over
-    \item \texttt{M-126} When all bubbles have popped, the game is finished
+    \item \texttt{M-123} When a bubble is popped, a pop animation should be played
+    \item \texttt{M-124} When you do not succeed in popping bubbles, the player gets a penalty
+    \item \texttt{M-125} For each a to be determined number of penalties a new row of bubbles with the remaining colours is inserted at the top, and other bubbles are shifted down
+    \item \texttt{M-126} When a row of bubbles reaches the bottom of the canvas, the game is over
+    \item \texttt{M-127} When all bubbles have popped, the game is finished
   \end{enumerate}
   
   \item There are two different modes to play:
@@ -96,10 +98,13 @@ Each requirement is identified by a requirement identifier. This identifier cons
 % ==========================================
 % SINGLEPLAYER GAME REQUIREMENTS
 % ==========================================
-      \item \texttt{M-127} Singleplayer mode
+      \item \texttt{M-128} Singleplayer mode
       \begin{enumerate}
-          \item \texttt{M-128} When a player finishes the game, a new level will appear
-          \item \texttt{M-129} A new level is generated by distributing bubbles randomly within a grid
+      	\item \texttt{M-129} A player wins the game when all bubbles have popped
+        \item \texttt{M-130} A player loses the game when a bubble reaches the bottom of the canvas
+        \item \texttt{M-131} When a player wins the game, a new game level (another canvas of bubbles) is presented
+        \item \texttt{M-132} When a player loses the game, the score will be stored in the highscores and a highscore dialog will appear
+        \item \texttt{M-133} When the player clicks the highscore button he should be able to see a list of highscores
       \end{enumerate}
 
 % ==========================================
@@ -108,14 +113,17 @@ Each requirement is identified by a requirement identifier. This identifier cons
 
       \item \texttt{M-140} Multiplayer mode
       \begin{enumerate}
-          \item \texttt{M-141} In the multiplayer mode, each player has his own canvas with a bubble gun and the bubbles to shoot (split screen)
-          \item \texttt{M-142} The players have different key bindings to rotate and fire the bubble gun
-          \item \texttt{M-143} \textsc{Competitive multiplayer.} When a player shoots a bubble, a new bubble is inserted in the other players screen
-          \item \texttt{M-144} In the multiplayer mode, the bubbles are distrubuted randomly
-          \item \texttt{M-145} The player should be able to play against another player remotely using a network connection
+      	\item \texttt{M-141} In the multiplayer mode, each player has his own canvas with a bubble gun and the bubbles to shoot (split screen)
+      	\item \texttt{M-142} Multiplayer mode can be started through the game menu
+        \item \texttt{M-143} Another player can join a multiplayer game through the menu
+      	\item \texttt{M-144} A player wins the game when all bubbles have popped
+        \item \texttt{M-145} A player loses the game when a bubble reaches the bottom of the canvas
+        \item \texttt{M-146} When a player wins the game, the other player automatically loses
+        \item \texttt{M-147} When a player loses the game, the other player automatically wins
+        \item \texttt{M-148} When a player exits or disconnects from a multiplayer game, the other player automatically wins
+        
+        \item \texttt{M-149} \textsc{Competitive multiplayer.} When a player manage to pop a few bubbles, a new bubble is inserted in the other players screen
       \end{enumerate}
-      
-      \item \texttt{M-146} The user should be able to switch between these modes through a menu
   \end{enumerate}
   
   
@@ -125,14 +133,14 @@ Each requirement is identified by a requirement identifier. This identifier cons
 % ==========================================
   \item \texttt{M-160} Every once in a while a player should get a power-up bubble loaded up in the cannon which has special abilities:
   
-          \begin{enumerate}
-          \item \texttt{M-161} A \textit{Joker Bubble} should pop with a bubble of any color. If it is adjacened to less than two bubbles, the joker receives the colour of the bubble it collided with
-          \item \texttt{M-162} A \textit{Bomb Bubble} should pop all bubbles in a certain radius around it after colliding
-          \item \texttt{M-163} A \textit{Stone Bubble} can't be popped directly but only by popping the bubbles that connect it to the top
-          \item \texttt{M-164} A \textit{Drunk Bubble} should move in a more difficult to predict way, so the user will have more difficulty accurately aiming the bubble
-		 
-          \item \texttt{M-165} A \textit{Sound Bubble} makes a sound when shot, when moving, on impact or when popped
-          \item \texttt{M-166} A \textit{Reversebomb Bubble} should add bubbles in all the empty spots in a certain radius around it after colliding
+        \begin{enumerate}
+          \item \texttt{M-161} A \texttt{JokerBubble} should pop with a bubble of any color. If it is adjacent to less than two bubbles, the joker receives the colour of the bubble it collided with
+          \item \texttt{M-162} A \texttt{BombBubble} should pop all bubbles in a certain radius around it after colliding
+          \item \texttt{M-163} A \texttt{StoneBubble} can't be popped directly but only by popping the bubbles that connect it to the top
+          \item \texttt{M-164} A \texttt{DrunkBubble} should move in a more difficult to predict way, so the user will have more difficulty accurately aiming the bubble
+          \item \texttt{M-165} Sound effects shoud play when power-up bobbles pop or snap into the grid
+          \item \texttt{M-166} Different power-up bubbles should have different pop animations
+          \item \texttt{M-167} The \texttt{DrunkBubble} can be combined with any other \texttt{ColouredBubble} or power-up bubble
       \end{enumerate}
  
 % ==========================================
@@ -181,43 +189,49 @@ Each requirement is identified by a requirement identifier. This identifier cons
 % M-190: 20%-time
 % ==========================================
 
-\item \texttt{M-190} A player should be able to different choose between game modes
+\item \texttt{M-190} A player should be able to choose between different game modes in singleplayer and multiplayer modes
 
         \begin{enumerate}
           \item \texttt{M-191} \textsc{Classic mode.} No power-up bubbles (see \texttt{M-160})
           \item \texttt{M-192} \textsc{Powerup mode.} Power-up bubbles are loaded into the cannon at a small chance
-          \item \texttt{M-193} \textsc{Time mode.} All bubbles should be popped in a certain time
+          \item \texttt{M-193} \textsc{Timed mode.} All bubbles should be popped in a certain time
+          \item \texttt{M-194} \textsc{Drunk mode.} All bubbles are drunk bubbles
       \end{enumerate}     
 
 % ==========================================
 % END M-190: 
 % ==========================================
 
+% ==========================================
+% ASSIGNMENT 5
+% M-200: 20%-time
+% ==========================================
+
+\item \texttt{M-200} The game modes should be available in the multiplayer (see \texttt{M-140})
+\item \texttt{M-201} Multiple levels with different maps should be attached to each game mode (this is more advanced than \texttt{M-131}, which will remain used for game modes that do not provide levels)
+
+% ==========================================
+% END M-200: 
+% ==========================================
 
 \end{itemize}
 
 % ==========================================
-% MOVED THE SHOULD HAVES
+% SECTION : WONT HAVE
 % ==========================================
-\subsection{Should have}
+\subsection{Won't have}
+
+%	NOTE
+%		These changes have degraded from could have to wont have since
+%		it's unlikely to be ever implemented
 
 \begin{itemize}
-      \item \texttt{S-130} In singleplayer mode, a player should also have the option to face various levels predefined by a designer
-      \item \texttt{S-131} When the player clicks the highscore button he should be able to see a list of highscores
-      \item \texttt{S-132} When the game has ended, the score and name of the player should be saved to the highscores
-      \item \texttt{S-167} A power-up bubble can have more than one special ability.
+	\item \texttt{W-150} \textsc{Beginners tutorial.} The controls and the goal of the game are explained when a player selects a button in the menu
+    \item \texttt{W-210} \textsc{Game level editor.} Give players the ability to design their own maps for the game
+    \item \texttt{W-176} Append log to a text file
 \end{itemize}
 
-% ==========================================
-% MOVED THE COULD HAVES
-% ==========================================
-\subsection{Could have}
-
-\begin{itemize}
-	\item \texttt{C-150} \textsc{Beginners tutorial.} The controls and the goal of the game are explained when a player selects a button in the menu
-      \item \texttt{C-176} Append log to a text file
-      \item \texttt{C-193} When a bubble is popped, a pop animation should be played
-\end{itemize}
+\clearpage
 
 % ==========================================
 % ASSIGNMENT 1
