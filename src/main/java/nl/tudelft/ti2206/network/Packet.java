@@ -5,8 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@code Packet} classes are responsible for constructing packets to send

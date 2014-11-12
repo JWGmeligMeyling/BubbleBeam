@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
@@ -14,8 +17,6 @@ import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonShootState;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.util.mvc.Controller;
 import nl.tudelft.util.Vector2f;

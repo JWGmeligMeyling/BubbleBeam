@@ -4,13 +4,14 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.mode.ClassicGameMode;
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 
 public class Launcher {
 

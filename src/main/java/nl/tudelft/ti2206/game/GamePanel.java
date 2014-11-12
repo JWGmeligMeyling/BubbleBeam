@@ -13,6 +13,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
 import nl.tudelft.ti2206.bubbles.mesh.BubbleMesh;
@@ -21,8 +24,6 @@ import nl.tudelft.ti2206.game.backend.GameController;
 import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.event.GameListener;
 import nl.tudelft.ti2206.graphics.animations.FiniteAnimation;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.ti2206.util.mvc.View;
 
 /**

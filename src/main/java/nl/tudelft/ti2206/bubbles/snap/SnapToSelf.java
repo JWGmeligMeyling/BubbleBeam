@@ -1,10 +1,11 @@
 package nl.tudelft.ti2206.bubbles.snap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.decorators.MovingBubble;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 
 /**
  * This {@link SnapBehaviour} snaps {@link MovingBubble MovingBubbles} to this {@link Bubble}

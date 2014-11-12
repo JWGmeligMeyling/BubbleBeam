@@ -9,6 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.BubblePlaceholder;
 import nl.tudelft.ti2206.bubbles.Direction;
@@ -17,8 +20,6 @@ import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.BubblePopEvent;
 import nl.tudelft.ti2206.game.event.BubbleMeshListener.RowInsertEvent;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.util.EventTargetImpl;
 
 import com.google.common.base.Preconditions;

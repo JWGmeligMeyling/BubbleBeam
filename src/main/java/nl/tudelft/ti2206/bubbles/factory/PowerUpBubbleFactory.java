@@ -5,6 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.bubbles.Bubble;
 import nl.tudelft.ti2206.bubbles.ColouredBubble;
 import nl.tudelft.ti2206.bubbles.decorators.BombBubble;
@@ -13,8 +16,6 @@ import nl.tudelft.ti2206.bubbles.decorators.DrunkBubbleRight;
 import nl.tudelft.ti2206.bubbles.decorators.JokerBubble;
 import nl.tudelft.ti2206.bubbles.decorators.StoneBubble;
 import nl.tudelft.ti2206.game.backend.mode.PowerupGameMode;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 
 /**
  * The {@link PowerUpBubbleFactory} is a {@link BubbleFactory} that creates

@@ -1,9 +1,10 @@
 package nl.tudelft.ti2206.cannon;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.util.Vector2f;
 import nl.tudelft.ti2206.game.event.CannonListener.*;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 
 /**
  * The {@link AbstractCannonController} provides a basic implementation for

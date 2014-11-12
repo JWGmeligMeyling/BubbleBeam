@@ -34,6 +34,9 @@ import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 import javax.swing.text.MaskFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.cannon.MouseCannonController;
 import nl.tudelft.ti2206.game.actions.ExitAction;
 import nl.tudelft.ti2206.game.actions.FindMultiplayerAction;
@@ -45,8 +48,6 @@ import nl.tudelft.ti2206.game.backend.GameModel;
 import nl.tudelft.ti2206.game.backend.GameOver;
 import nl.tudelft.ti2206.game.backend.GameTick;
 import nl.tudelft.ti2206.game.backend.GameTickImpl;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.ti2206.util.mvc.View;
 
 public class SinglePlayerFrame extends JFrame implements

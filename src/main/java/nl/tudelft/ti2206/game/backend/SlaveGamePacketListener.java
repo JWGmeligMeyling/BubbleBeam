@@ -2,6 +2,9 @@ package nl.tudelft.ti2206.game.backend;
 
 import java.awt.Point;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.cannon.CannonController;
 import nl.tudelft.ti2206.cannon.CannonModel;
 import nl.tudelft.ti2206.game.event.GameListener;
@@ -13,8 +16,6 @@ import nl.tudelft.ti2206.game.event.GameListener.GameEvent;
 import nl.tudelft.ti2206.game.event.GameListener.AmmoLoadEvent;
 import nl.tudelft.ti2206.game.event.GameListener.GameOverEvent;
 import nl.tudelft.ti2206.game.event.GameListener.ShotMissedEvent;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 import nl.tudelft.ti2206.network.Connector;
 import nl.tudelft.ti2206.network.GameModelPacket;
 import nl.tudelft.ti2206.network.Packet;

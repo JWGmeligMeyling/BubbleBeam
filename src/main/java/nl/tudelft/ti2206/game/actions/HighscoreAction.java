@@ -4,11 +4,12 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.tudelft.ti2206.game.HighscorePopup;
 import nl.tudelft.ti2206.game.SinglePlayerFrame;
 import nl.tudelft.ti2206.highscore.HighscoreStore;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 
 public class HighscoreAction extends AbstractAction {
 

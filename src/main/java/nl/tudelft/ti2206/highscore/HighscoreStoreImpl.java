@@ -9,13 +9,14 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.SortedSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import nl.tudelft.ti2206.game.backend.mode.GameMode;
-import nl.tudelft.ti2206.logger.Logger;
-import nl.tudelft.ti2206.logger.LoggerFactory;
 
 /**
  * Implementation for {@link HighscoreStore}
